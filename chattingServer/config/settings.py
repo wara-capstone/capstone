@@ -81,6 +81,27 @@ DATABASES = {
     }
 }
 
+EUREKA_SERVER_URL = "https://port-0-eureka-jvpb2aln5qmjmz.sel5.cloudtype.app/eureka/"
+
+EUREKA_SERVICE = {
+    "instance": {
+        "hostName": "localhost",
+        "app": "CHATTING_SERVICE",
+        "ipAddr": "127.0.0.1",
+        "port": {
+            "$": 8000,
+            "@enabled": "true"
+        },
+        "vipAddress": "DJANGO_SERVICE",
+        "statusPageUrl": "http://localhost:8000/",
+        "healthCheckUrl": "http://localhost:8000/health",
+        "dataCenterInfo": {
+            "@class": "com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo",
+            "name": "MyOwn"
+        }
+    }
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
