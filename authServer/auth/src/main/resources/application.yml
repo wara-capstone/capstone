@@ -17,7 +17,7 @@ spring:
       matching-strategy: ant_path_matcher
 
   application:
-    name: Auth-Service
+    name: User-Service
 springboot:
   jwt:
     secret: secretKey123

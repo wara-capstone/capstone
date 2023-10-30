@@ -119,7 +119,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         logger.info("[getSignInResult] 패스워드 일치");
-        tokenDTO.setToken(jwtTokenProvider.createToken(String.valueOf(userEntity.getEmail()), userEntity.getRoles()));
+        tokenDTO.setToken("Bearer "+jwtTokenProvider.createToken(String.valueOf(userEntity.getEmail()), userEntity.getRoles()));
         return ResponseEntity.status(200).body(tokenDTO);
 
     }
