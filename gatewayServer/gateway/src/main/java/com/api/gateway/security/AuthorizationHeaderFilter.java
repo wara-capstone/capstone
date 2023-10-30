@@ -47,6 +47,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     @Override
     public GatewayFilter apply(AuthorizationHeaderFilter.Config config) {
         return (exchange, chain) -> {
+            String requiredRole = config.getRequiredRole();
             ServerHttpRequest request = exchange.getRequest();
             // Authorization 헤더 없다면 에러
             if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
@@ -57,6 +58,16 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             logger.info(jwt);
             if (!isJwtValid(jwt)) return onError(exchange, "JWT token is not valid", HttpStatus.UNAUTHORIZED);
             logger.info("JWT VALID");
+            String userRole = resolveTokenRole(jwt).replace("[", "").replace("]", "");
+            logger.info(userRole);
+            // 인가처리
+            if(requiredRole.equalsIgnoreCase("role_admin")){
+                if(!userRole.equalsIgnoreCase("role_admin")) return onError(exchange, "do not have permission", HttpStatus.FORBIDDEN);
+            }else if(requiredRole.equalsIgnoreCase("role_seller")){
+                if(!userRole.equalsIgnoreCase("role_seller") && !userRole.equalsIgnoreCase("role_admin"))
+                    return onError(exchange, "do not have permission", HttpStatus.FORBIDDEN);
+            }
+
             return chain.filter(exchange);
         };
     }
@@ -66,6 +77,17 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         logger.error(err);
         return response.setComplete();
     }
+
+    private String resolveTokenRole(String token){
+        try {
+            String subject = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("roles").toString();
+            return subject;
+        }catch (Exception e){
+            logger.info("유저 권한 체크 실패");
+            return "e";
+        }
+    }
+
     private boolean isJwtValid(String token) {
         logger.info("[JwtTokenProvider] validateToken, 토큰 유효성 체크");
         try{
@@ -77,5 +99,15 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             return false;
         }
     }
-    public static class Config {}
+    public static class Config {
+        private String requiredRole;
+
+        public String getRequiredRole() {
+            return requiredRole;
+        }
+
+        public void setRequiredRole(String requiredRole) {
+            this.requiredRole = requiredRole;
+        }
+    }
 }

@@ -20,9 +20,12 @@ public class RouteConfig {
                         //.filters() filters를 제작하여 인증처리 
                         .uri("lb://USER-SERVICE"))
                 .route("test-service", r -> r.path("/test/**")
-                        .filters(f -> f.filter(authFilter.apply(new AuthorizationHeaderFilter.Config())))
+                        .filters(f -> f.filter(authFilter.apply(config -> {config.setRequiredRole("role_admin");})))
                         .uri("lb://TEST"))
-                .build();
+                .route("test-service", r -> r.path("/testt/**")
+                        .filters(f -> f.filter(authFilter.apply(config -> {config.setRequiredRole("role_seller");})))
+                        .uri("lb://TEST"))
+                        .build();
     }
 
 }
