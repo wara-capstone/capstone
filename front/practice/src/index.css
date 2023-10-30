@@ -1,0 +1,109 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+/*  */
+.home {
+  margin-bottom: 80px; /* 하단 네비게이션 바의 높이에 맞게 조절 */
+}
+
+.item-image {
+  /* margin-top: 20px; *
+  /* border-radius: 20px; */
+  height: 100%;
+  width: 400px;
+  object-fit: cover;
+}
+
+.item-image-container {
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+}
+
+.map-store-data,
+.barcode-item-data {
+  position: fixed;
+  bottom: 50px;
+  width: 100%;
+  text-align: center;
+}
+
+.ad-image {
+  width: 400px;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ad-image-container {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background-size: cover;
+}
+
+/*UserEdit page*/
+.userEdit-image {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.userEdit-image img {
+  margin-top: 20px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+}
+
+.edit-icon {
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  position: relative;
+  top: 55px;
+  right: 30px;
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: #e8e8e8;
+  color: #333;
+}
+
+.userEdit-info-container {
+  margin: 30px;
+  padding: 20px;
+  background-color: #e8e8e8;
+  border-radius: 20px;
+  box-shadow: 0px 4px 8px 0 rgba(0, 0, 0, 0.2);
+  text-align: left;
+  font-size: 0.8em; /* 텍스트 크기를 약간 증가시킵니다 */
+  font-weight: bold;
+  color: #333;
+}
+
+.userEdit-info-container input {
+  display: block;
+  width: 100%;
+  height: 40px;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  margin-top: 5px;
+  margin-right: 10px;
+  background-color: #f2f2f2;
+}

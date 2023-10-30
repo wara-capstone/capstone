@@ -1,0 +1,24 @@
+import React from "react";
+import "./Card.css";
+
+function Card({ title, subTitle, content, content2, mainImage }) {
+  return (
+    <div className="card">
+      <div className="card-image-container">
+        <img src={mainImage} alt={title} className="card-image" />
+      </div>
+      <div>
+        <h1 className="card-title">
+          {title}
+          <span className="card-sub-title">{subTitle}</span>
+        </h1>
+        <p className="card-content">{content}</p>
+        <p className="card-content2">
+          {content2 ? "count: " : null} {content2}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export default Card;
