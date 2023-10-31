@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'chat',
     'accounts',
     'rest_framework',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -84,6 +85,20 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'yourdbname',
+#         'USER': 'yourdbuser',
+#         'PASSWORD': 'yourdbpassword',
+#         'HOST': 'yourdbhost',
+#         'PORT': '5432',
+#         'OPTIONS': {
+#             'driver': 'asyncpg',
+#         },
+#     }
+# }
 
 # django channels layer
 CHANNEL_LAYERS = {

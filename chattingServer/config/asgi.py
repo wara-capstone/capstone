@@ -26,6 +26,7 @@ import chat.routing  # noqa: E402
 application = ProtocolTypeRouter({
     # 웹소켓 요청은 AllowedHostsOriginValidator로 유효성을 검사한 후,
     # AuthMiddlewareStack을 거쳐 URLRouter로 라우팅됩니다.
+    "http": get_asgi_application(),
     "websocket": AllowedHostsOriginValidator(
         AuthMiddlewareStack(
             URLRouter(
