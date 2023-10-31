@@ -25,7 +25,6 @@ const AdComponent = ({ images }) => {
           alt={`Ad ${images[currentIndex].id}`}
           className="ad-image"
         />
-        <p>{`Image ${currentIndex + 1} of ${images.length}`}</p>
         <div className="slider-image-index">
           {Array.from({ length: images.length }, (_, i) => (
             <div
