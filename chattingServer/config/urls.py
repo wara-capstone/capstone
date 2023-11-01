@@ -19,5 +19,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('chat/', include('chat.urls')),  # 여기서 'your_app_name'은 실제 앱의 이름으로 변경해야 합니다.
+    path('chat/', include('chat.urls')),  # chat 앱의 urls 포함
 ]
+
