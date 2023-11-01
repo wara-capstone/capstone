@@ -1,0 +1,225 @@
+/* seller-header */
+
+.seller-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1px 70px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  z-index: 100; /* 다른 요소 위에 나타나도록 높은 z-index 값을 설정 */
+}
+
+.seller-header .title {
+  font-size: 25px;
+  color: black;
+  font-weight: bold;
+}
+
+.seller-header .seller-header-container {
+  display: flex;
+}
+
+.seller-header .seller-title-link {
+  text-decoration: none;
+  color: white;
+  text-align: center;
+}
+
+.seller-header .seller-header-container .seller-header-link {
+  display: block;
+  color: black;
+  font-weight: bold;
+  margin-right: 50px;
+  text-decoration: none;
+}
+
+/* 마지막 seller-header에는 마진을 추가하지 않습니다. */
+.seller-header .seller-header-container .seller-header-link:last-child {
+  margin-right: 0;
+}
+
+.seller-header .seller-header-menu {
+  font-size: 18px;
+}
+/* seller-header */
+
+.seller-home .ad-image-container {
+  width: 100%;
+  height: 777px;
+}
+
+.seller-home .ad-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.seller .header .title {
+  align-items: left;
+}
+
+.seller-home .button {
+  background-color: rgb(233, 116, 116);
+  transform: translateX(-250%);
+  bottom: 250px;
+}
+
+.seller-home .button:active {
+  transform: translateX(-250%) scale(0.9);
+  background-color: rgb(236, 83, 83);
+}
+
+/* seller store management */
+.seller-store-management .store-edit-image {
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.seller-store-management .store-edit-image img {
+  margin: 20px;
+  width: 300px;
+  height: 300px;
+}
+
+.seller-store-management .store-edit-icon {
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  /* position: relative; */
+  /* top: 140px;
+  right: 30px; */
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  font-size: 20px;
+  border-radius: 50%;
+  background-color: #ff7070;
+  color: #333;
+}
+
+.seller-store-management .store-edit-info-container {
+  width: 20%;
+  margin: 20px;
+  padding: 20px;
+  background-color: #e8e8e8;
+  border-radius: 20px;
+  box-shadow: 0px 4px 8px 0 rgba(0, 0, 0, 0.2);
+  text-align: left;
+  font-size: 0.8em; /* 텍스트 크기를 약간 증가시킵니다 */
+  font-weight: bold;
+  color: #333;
+}
+
+.seller-store-management .store-edit-info-container input {
+  display: block;
+  width: 100%;
+  height: 40px;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  margin-top: 5px;
+  margin-right: 10px;
+  background-color: #f2f2f2;
+}
+
+.seller-store-management .store-save-button {
+  background-color: rgb(233, 116, 116);
+  border: none;
+  border-radius: 10px;
+  padding: 10px 15px;
+  font-size: 15px;
+  color: #fff;
+}
+
+.seller-store-management .store-save-button:active {
+  background-color: rgb(236, 83, 83);
+  transform: scale(0.9);
+}
+/* seller store management */
+
+/* seller item, seller item management */
+.seller-item .item-edit-image {
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.seller-item .item-edit-image img {
+  margin-bottom: 10px;
+  width: 190px;
+  height: 190px;
+}
+
+.seller-item .item-edit-icon {
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  /* position: relative; */
+  /* top: 140px;
+  right: 30px; */
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+  font-size: 20px;
+  border-radius: 50%;
+  background-color: #ff7070;
+  color: #333;
+}
+
+.seller-item .item-edit-info-container {
+  width: 80%;
+  margin: 15px;
+  padding: 10px;
+  background-color: #e8e8e8;
+  border-radius: 20px;
+  box-shadow: 0px 4px 8px 0 rgba(0, 0, 0, 0.2);
+  text-align: left;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  font-size: 0.8em; /* 텍스트 크기를 약간 증가시킵니다 */
+  font-weight: bold;
+  color: #333;
+}
+
+.seller-item .item-edit-info-container input {
+  display: block;
+  width: 100%;
+  height: 40px;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  margin-top: 5px;
+  margin-right: 10px;
+  background-color: #f2f2f2;
+}
+
+.seller-item-management .item-save-button {
+  background-color: rgb(233, 116, 116);
+  border: none;
+  border-radius: 10px;
+  padding: 10px 15px;
+  font-size: 12px;
+  color: #fff;
+}
+
+.seller-item-management .item-save-button:active {
+  background-color: rgb(236, 83, 83);
+  transform: scale(0.9);
+}
+/* seller item, seller item management */

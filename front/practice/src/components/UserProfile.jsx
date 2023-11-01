@@ -51,6 +51,24 @@ const UserProfile = () => {
           </button>
         </Link>
       </div>
+
+      <Link to="/login" className="user-link">
+        <button className="login-btn">로그인</button>
+      </Link>
+
+      <button className="move-seller-page-btn">
+        사장님 페이지 연결
+        <div className="move-page-icon">
+          <FontAwesomeIcon icon={faChevronRight} />
+        </div>
+      </button>
+
+      <button className="user-logout-btn">
+        로그아웃
+        <div className="move-page-icon">
+          <FontAwesomeIcon icon={faChevronRight} />
+        </div>
+      </button>
     </div>
   );
 };

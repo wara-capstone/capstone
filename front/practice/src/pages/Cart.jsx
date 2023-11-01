@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import Data from "../DB/Data.json";
+import BottomNav from "../components/BottomNav";
 import Card from "../components/Card"; // Card 컴포넌트 임포트
 import EventButton from "../components/EventButton";
+import Header from "../components/Header";
 
 export default function Cart() {
   const CardInCart = Data.cardData.filter(
@@ -10,6 +12,7 @@ export default function Cart() {
 
   return (
     <div className="cart">
+      <Header />
       {CardInCart.map((card) => (
         <Link to={`/item/${card.id}`} key={card.id} className="card-link">
           <Card
@@ -24,6 +27,7 @@ export default function Cart() {
       ))}
 
       <EventButton buttonText={"구매하기"} />
+      <BottomNav />
     </div>
   );
 }

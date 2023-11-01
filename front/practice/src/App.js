@@ -1,7 +1,4 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./App.css";
-import BottomNav from "./components/BottomNav";
-import Header from "./components/Header";
 
 import Barcode from "./pages/Barcode";
 import Cart from "./pages/Cart";
@@ -16,11 +13,20 @@ import Item from "./pages/Item";
 import Store from "./pages/Store";
 import UserEdit from "./pages/UserEdit";
 
-function App() {
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+
+import SellerChattingManagement from "./pages/Sellers/SellerChattingManagement";
+import SellerHome from "./pages/Sellers/SellerHome";
+import SellerItemManagement from "./pages/Sellers/SellerItemManagement";
+import SellerStoreManagement from "./pages/Sellers/SellerStoreManagement";
+
+import "./App.css";
+
+export default function Customer() {
   return (
     <BrowserRouter>
       <div className="App">
-        <Header />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/map" element={<Map />} />
@@ -33,11 +39,29 @@ function App() {
           <Route path="/chatting" element={<Chatting />} />
           <Route path="/user/edit" element={<UserEdit />} />
           <Route path="/user/chattingList" element={<ChattingList />} />
+
+          {/* 사장님 페이지 */}
+          <Route path="/seller" element={<SellerHome />} />
+          <Route
+            path="/seller/chatting"
+            element={<SellerChattingManagement />}
+          />
+          <Route
+            path="/seller/item/management"
+            element={<SellerItemManagement />}
+          />
+          <Route
+            path="/seller/store/management"
+            element={<SellerStoreManagement />}
+          />
+
+          {/* 로그인 페이지 */}
+          <Route path="/login" element={<Login />} />
+
+          {/* 회원가입 페이지 */}
+          <Route path="/signup" element={<Signup />} />
         </Routes>
-        <BottomNav />
       </div>
     </BrowserRouter>
   );
 }
-
-export default App;

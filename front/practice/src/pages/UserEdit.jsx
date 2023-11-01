@@ -1,13 +1,17 @@
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
+import BottomNav from "../components/BottomNav";
 import EventButton from "../components/EventButton";
+import Header from "../components/Header";
 
 const UserEdit = ({ user }) => {
+  const [email, setEmail] = useState(user?.email || "");
   const [name, setName] = useState(user?.name || "");
   const [nickname, setNickname] = useState(user?.nickname || "");
-  const [email, setEmail] = useState(user?.email || "");
+  const [phoneNumber, setPhoneNumber] = useState(user?.phone || "");
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [image, setImage] = useState();
   const [previewImageSrc, setPreviewImageSrc] = useState(
     user?.profileImage || "https://via.placeholder.com/150x150"
@@ -17,7 +21,7 @@ const UserEdit = ({ user }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: Implement the code to send updated data to the server
-    console.log({ name, nickname, email, password, image });
+    console.log({ email, name, nickname, phoneNumber, password, image });
   };
 
   // image change handler
@@ -30,6 +34,7 @@ const UserEdit = ({ user }) => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <Header />
       <div className="userEdit-image">
         <img src={previewImageSrc} alt="프로필 사진" />
         <label className="edit-icon">
@@ -43,6 +48,15 @@ const UserEdit = ({ user }) => {
       </div>
 
       <div className="userEdit-info-container">
+        <label>이메일</label>
+        <div className="userEdit-email">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+
         <label>이름</label>
         <div className="userEdit-name">
           <input
@@ -61,12 +75,12 @@ const UserEdit = ({ user }) => {
           />
         </div>
 
-        <label>이메일</label>
-        <div className="userEdit-email">
+        <label>전화번호</label>
+        <div className="userEdit-phone">
           <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="phoneNumber"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
           />
         </div>
 
@@ -84,15 +98,16 @@ const UserEdit = ({ user }) => {
         <div className="userEdit-password-confirm">
           <input
             type="password"
-            value={password}
-            placeholder="새로운 비밀번호 입력"
-            onChange={(e) => setPassword(e.target.value)}
+            value={passwordConfirm}
+            placeholder="비밀번호 확인"
+            onChange={(e) => setPasswordConfirm(e.target.value)}
           />
         </div>
       </div>
 
       {/* submit button */}
       <EventButton type="submit" buttonText={"저장하기"} />
+      <BottomNav />
     </form>
   );
 };

@@ -2,6 +2,8 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import Data from "../DB/Data.json";
 import AddToCartButton from "../components/AddToCartButton";
+import BottomNav from "../components/BottomNav";
+import Header from "../components/Header";
 import ImageSlider from "../components/ImageSlider";
 
 export default function Item() {
@@ -10,6 +12,7 @@ export default function Item() {
 
   return (
     <div className="item">
+      <Header />
       {selectedCard.map((card) => (
         <div key={card.id}>
           <div className="item-image-container">
@@ -23,6 +26,7 @@ export default function Item() {
         </div>
       ))}
       <AddToCartButton selectedCard={selectedCard} key={selectedCard.id} />
+      <BottomNav />
     </div>
   );
 }

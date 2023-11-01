@@ -3,7 +3,9 @@ import adImage2 from "../adImages/ad2.png";
 import adImage3 from "../adImages/ad3.png";
 
 import AdComponent from "../components/AdComponent";
+import BottomNav from "../components/BottomNav";
 import CardList from "../components/CardList";
+import Header from "../components/Header";
 
 export default function Home() {
   const adImages = [
@@ -15,10 +17,12 @@ export default function Home() {
 
   return (
     <div className="home">
+      <Header />
       <div className="ad-image-container">
         <AdComponent images={adImages} />
       </div>
       <CardList />
+      <BottomNav />
     </div>
   );
 }

@@ -48,6 +48,32 @@
   color: #333; /* 텍스트 색상을 약간 어두운 회색으로 변경합니다 */
 }
 
+.user-logout-btn,
+.move-seller-page-btn {
+  text-align: center;
+  position: fixed;
+  bottom: 70px;
+  right: 45px;
+  left: 45px;
+  background-color: #ff7070; /* 배경색을 붉은색으로 변경합니다 */
+  color: white; /* 텍스트 색상을 흰색으로 변경합니다 */
+  border: none;
+  border-radius: 15px;
+  padding: 10px 20px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.1s ease;
+  font-size: 1em; /* 텍스트 크기를 약간 증가시킵니다 */
+}
+
+.move-seller-page-btn {
+  bottom: 140px;
+}
+
+.user-logout-btn:active,
+.move-seller-page-btn:active {
+  background-color: #fa5050; /* 배경색을 붉은색으로 변경합니다 */
+}
+
 .edit-profile-btn.active,
 .chattingList-btn.active {
   background-color: #333; /* 배경색을 어두운 회색으로 변경합니다 */

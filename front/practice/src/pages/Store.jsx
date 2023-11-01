@@ -1,7 +1,9 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import Data from "../DB/Data.json";
+import BottomNav from "../components/BottomNav";
 import EventButton from "../components/EventButton";
+import Header from "../components/Header";
 
 export default function Store() {
   const { id } = useParams();
@@ -11,6 +13,7 @@ export default function Store() {
 
   return (
     <div className="store">
+      <Header />
       {selectedStore.map((store) => (
         <div key={store.id}>
           <div className="item-image-container">
@@ -28,6 +31,7 @@ export default function Store() {
       <Link to={"/chatting"} className="button-link">
         <EventButton buttonText={"1대1 상담"} />
       </Link>
+      <BottomNav />
     </div>
   );
 }
