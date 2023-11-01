@@ -19,7 +19,7 @@ public class ProductController {
     /**
      * 단일 상품 정보 조회
      * */
-    @GetMapping()
+    @GetMapping("/1")
     public void singleProductInfo(@RequestParam ProductDTO dto) {
         service.singleProductInfo(dto);
     }
@@ -28,7 +28,7 @@ public class ProductController {
     /**
      * 여러개의 상품 정보 조회
      * */
-    @GetMapping()
+    @GetMapping("/2")
     public void multiProductInfo(@RequestParam ProductDTO dto){
         service.multiProductInfo(dto);
     }
@@ -38,13 +38,13 @@ public class ProductController {
      * 상품정보 수정
      * */
     // TODO: 상품정보 수정의 다양한 경우를 고려 해야함
-    @PostMapping()
+    @PostMapping("/3")
     public void modifyProductInfo(){}
 
     /**
      * 상품정보 등록
      * */
-    @PutMapping()
+    @PutMapping("/4")
     public void configProductInfo(){}
 
 

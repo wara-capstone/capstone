@@ -7,10 +7,11 @@ import org.springframework.stereotype.Component;
 import wara.product.productEntity.ProductEntity;
 
 
-@Component
+
 @Setter @Getter
 @AllArgsConstructor
 public class ProductDTO {
+
 
     Long productId;
     Long storeId;

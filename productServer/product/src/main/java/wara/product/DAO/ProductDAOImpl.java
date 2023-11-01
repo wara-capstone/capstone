@@ -1,11 +1,14 @@
 package wara.product.DAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import wara.product.productEntity.ProductEntity;
 import wara.product.Repository.ProductRepository;
 
 import java.util.List;
 
+
+@Repository
 public class ProductDAOImpl implements ProductDAO{
 
     private final ProductRepository repository;
