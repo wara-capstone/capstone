@@ -17,7 +17,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('rooms', views.ChatRoomListCreateView.as_view(), name='chat_rooms'),
+    path('rooms/', views.ChatRoomListCreateView.as_view(), name='chat_rooms'),
     path('messages/<int:room_id>', views.MessageListView.as_view(), name='chat_messages'),
 
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

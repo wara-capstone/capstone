@@ -9,25 +9,12 @@ class ImmediateResponseException(Exception):
     def __init__(self, response):
         self.response = response
 
-class MessageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Message
-        fields = ('sender_email', 'text', 'timestamp')
-
-class ChatRoomSerializer(serializers.ModelSerializer):
-    messages = MessageSerializer(many=True, read_only=True, source="messages.all")
-    # ... [기존의 다른 필드들]
-
-    class Meta:
-        model = ChatRoom
-        fields = ('id', 'shop_user_email', 'visitor_user_email', 'latest_message', 'opponent_email', 'messages')  # messages 필드 추가
-    # ... [기존의 다른 메서드들]
-
 class ChatRoomListCreateView(generics.ListCreateAPIView):
     serializer_class = ChatRoomSerializer
 
     def get_queryset(self):
         user_email = self.request.query_params.get('email', None)
+
         if not user_email:
             return ChatRoom.objects.none()
         return ChatRoom.objects.filter(shop_user__shop_user_email=user_email) | ChatRoom.objects.filter(visitor_user__visitor_user_email=user_email)
@@ -55,17 +42,17 @@ class ChatRoomListCreateView(generics.ListCreateAPIView):
         visitor_user, _ = VisitorUser.objects.get_or_create(visitor_user_email=visitor_user_email)
         
         # 이미 존재하는 채팅방 확인
-        existing_chatroom = ChatRoom.objects.filter(
-            Q(shop_user=shop_user, visitor_user=visitor_user) | 
-            Q(shop_user=visitor_user, visitor_user=shop_user)
-        ).first()
+        # 이미 존재하는 채팅방 확인
+        existing_chatroom = ChatRoom.objects.filter(shop_user__shop_user_email=shop_user_email, visitor_user__visitor_user_email=visitor_user_email).first()
 
         if existing_chatroom:
             # 이미 존재하는 채팅방이 있다면 해당 채팅방과 메시지 내역을 반환
             serializer = ChatRoomSerializer(existing_chatroom, context={'request': self.request})
             raise ImmediateResponseException(Response(serializer.data, status=status.HTTP_200_OK))
+
         
         serializer.save(shop_user=shop_user, visitor_user=visitor_user)
+
 
 
 
