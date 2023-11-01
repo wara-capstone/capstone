@@ -4,12 +4,12 @@ from .models import ChatRoom, Message
 class ChatRoomSerializer(serializers.ModelSerializer):
     latest_message = serializers.SerializerMethodField()
     opponent_email = serializers.SerializerMethodField()
-    shop_user_email = serializers.SerializerMethodField()  # 추가된 필드
-    visitor_user_email = serializers.SerializerMethodField()  # 추가된 필드
+    shop_user_email = serializers.SerializerMethodField()  
+    visitor_user_email = serializers.SerializerMethodField()  
 
     class Meta:
         model = ChatRoom
-        fields = ('id', 'shop_user_email', 'visitor_user_email', 'latest_message', 'opponent_email')  # shop_user와 visitor_user를 제거하고 새로운 email 필드를 추가
+        fields = ('id', 'shop_user_email', 'visitor_user_email', 'latest_message', 'opponent_email') 
 
     def get_latest_message(self, obj):
         latest_msg = Message.objects.filter(room=obj).order_by('-timestamp').first()
