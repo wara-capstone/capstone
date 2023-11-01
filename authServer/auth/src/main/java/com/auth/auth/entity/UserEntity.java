@@ -33,6 +33,15 @@ public class UserEntity {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    @Column
+    private String nickname;
+
+    @Column
+    private String name;
+
+    @Column
+    private String phone;
+
     @Column(nullable = false)
     @ElementCollection
     @Builder.Default
