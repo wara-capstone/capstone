@@ -59,6 +59,9 @@ public class AuthServiceImpl implements AuthService {
             userEntity = UserEntity.builder()
                     .email(userDTO.getEmail())
                     .password(userDTO.getPassword())
+                    .nickname(userDTO.getNickname())
+                    .name(userDTO.getName())
+                    .phone(userDTO.getPhone())
                     .roles(Collections.singletonList("ROLE_ADMIN"))
                     .build();
         }
@@ -66,6 +69,9 @@ public class AuthServiceImpl implements AuthService {
             userEntity = UserEntity.builder()
                     .email(userDTO.getEmail())
                     .password(userDTO.getPassword())
+                    .nickname(userDTO.getNickname())
+                    .name(userDTO.getName())
+                    .phone(userDTO.getPhone())
                     .roles(Collections.singletonList("ROLE_SELLER"))
                     .build();
         }
@@ -73,6 +79,9 @@ public class AuthServiceImpl implements AuthService {
             userEntity = UserEntity.builder()
                     .email(userDTO.getEmail())
                     .password(userDTO.getPassword())
+                    .nickname(userDTO.getNickname())
+                    .name(userDTO.getName())
+                    .phone(userDTO.getPhone())
                     .roles(Collections.singletonList("ROLE_USER"))
                     .build();
         }
