@@ -4,6 +4,7 @@ server:
 spring:
   application:
     name: API-GATEWAY
+    # Cors 허용
   cloud:
     gateway:
       default-filters:
