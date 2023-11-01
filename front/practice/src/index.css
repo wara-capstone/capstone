@@ -98,7 +98,7 @@ code {
 .userEdit-info-container input {
   display: block;
   width: 100%;
-  height: 40px;
+  height: 30px;
   border: none;
   outline: none;
   border-radius: 10px;
@@ -106,4 +106,108 @@ code {
   margin-top: 5px;
   margin-right: 10px;
   background-color: #f2f2f2;
+}
+
+/* login */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 0 20px;
+  background-color: #f2f2f2;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 300px;
+}
+
+.login-form label {
+  margin-bottom: 5px;
+}
+
+.login-form input {
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.login-form button {
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.signup-link {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.signup-link a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.signup-link a:hover {
+  text-decoration: underline;
+}
+
+/* Signup.css */
+.signup-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 0 20px;
+  background-color: #f2f2f2;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 300px;
+}
+
+.signup-form label {
+  margin-bottom: 5px;
+}
+
+.signup-form input {
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.role-selection {
+  margin-bottom: 10px;
+}
+
+.role-selection label {
+  margin-right: 10px;
+}
+
+.role-selection div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.login-link {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.login-link a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
 }
