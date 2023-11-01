@@ -23,25 +23,26 @@ let map; // 지도 객체
 var searchPlace; // 검색한 장소 정보를 담을 변수
 
 
+
+
 var imageSize = new kakao.maps.Size(42, 56); // 마커의 크기 기존 33, 36
 var choiceImageSize = new kakao.maps.Size(44, 58); // 선택한 마커의 크기 기존 38, 40
-
 
 
 export default function KakaoMap() {
 
 
 let [popupInfo, setPopupInfo] = useState(null); // 현재 열려있는 팝업 정보를 저장하는 변수, boolean
+let [searchText, setSearchText] = useState(""); // 검색창 값
+
 let prevInfo = null;
     
 //Popup창 켜고 끄는 method
 function showPopup(info) {
-
     // 현재 열린 팝업 정보가 null이 아니고, 새로운 팝업이 이전 팝업과 같다면 팝업을 닫고 함수를 종료합니다.
     if(prevInfo !== null && prevInfo.key === info.key){
         prevInfo = null;
         setPopupInfo(prevInfo);
-        console.log("같은 팝업일때");
         return;
     }
 
@@ -49,18 +50,56 @@ function showPopup(info) {
     // 현재 열린 팝업 정보를 새로운 팝업 정보로 업데이트합니다
     prevInfo = info;
     setPopupInfo(prevInfo);
-
-    console.log("다른 팝업일때");
-    console.log("이전 팝업: "+prevInfo.key);
-    console.log("지금 선택한 팝업: "+ info.key);
-
 }
 
-    
-
     useEffect(() => {
-        // 지도 생성 및 기타 작업 수행
-        ininKakaoMap();
+// 위치 정보를 가져오는 함수
+const getLocation = new Promise((resolve, reject) => {
+    if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var lat = position.coords.latitude,
+            lon = position.coords.longitude;
+        var locPosition = new kakao.maps.LatLng(lat, lon);
+        resolve(locPosition);
+      }, function() {
+        var locPosition = new kakao.maps.LatLng(35.8678658, 128.5967954);
+        resolve(locPosition);
+        console.log("현재위치를 가져올 수 없습니다."); 
+      });
+    } else {
+      var locPosition = new kakao.maps.LatLng(35.8678658, 128.5967954);
+      resolve(locPosition);
+      console.log("현재위치를 가져올 수 없습니다."); 
+    }
+  });
+
+  // 위치 정보를 가져온 후에 지도를 초기화하는 함수
+  getLocation.then((locPosition) => {
+    ininKakaoMap(locPosition);
+  });
+
+  // 사용자 위치를 지속적으로 추적
+  let watchId = navigator.geolocation.watchPosition((position) => {
+    var lat = position.coords.latitude,
+        lon = position.coords.longitude;
+    var locPosition = new kakao.maps.LatLng(lat, lon);
+
+    // 사용자의 위치에 마커 표시
+    var marker = new kakao.maps.Marker({
+        map: map,
+        position: locPosition
+    });
+  }, (error) => {
+    console.log(error);
+  }, {
+    enableHighAccuracy: true,
+    maximumAge: 0,
+    timeout: Infinity
+  });
+
+  // 컴포넌트가 unmount될 때 위치 추적을 중지
+  return () => navigator.geolocation.clearWatch(watchId);
+
         }, []);
 
 
@@ -101,16 +140,6 @@ var markerList = [
   ],
   selectedMarker = null; // 클릭한 마커를 담을 변수
 
-  // 지도에 마커를 표시하는 함수입니다
-function displayMarker(place) {
-    
-    // 마커를 생성하고 지도에 표시합니다
-    var marker = new kakao.maps.Marker({
-        map: map,
-        position: new kakao.maps.LatLng(place.y, place.x) 
-    });
-
-}
 
 
   // 키워드 검색 완료 시 호출되는 콜백함수 입니다
@@ -121,8 +150,7 @@ function placesSearchCB (data, status, pagination) {
         // LatLngBounds 객체에 좌표를 추가합니다
         var bounds = new kakao.maps.LatLngBounds();
 
-        for (var i=0; i<1; i++) {
-            displayMarker(data[i]);    
+        for (var i=0; i<1; i++) {   
             bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
         }
 
@@ -131,13 +159,14 @@ function placesSearchCB (data, status, pagination) {
     } 
 }
 
-function ininKakaoMap() {
+function ininKakaoMap(locPosition) {
     
     const mapDiv = document.querySelector("#map");
     mapDiv.async = true;
 
+
     const options = {
-        center: new kakao.maps.LatLng(35.8678658, 128.5967954),
+        center: locPosition,
         level: 1,
         };
 
@@ -146,8 +175,11 @@ function ininKakaoMap() {
         map = new kakao.maps.Map(mapDiv, options);
         
 
+        // 장소 검색 객체를 생성합니다
         const ps = new kakao.maps.services.Places();
 
+
+        // 원을 생성합니다
         var circle = new kakao.maps.Circle({
             center : options.center,
             radius: 100,
@@ -209,9 +241,42 @@ kakao.maps.event.addListener(map, 'center_changed', function() {
     "maxX" : neLatLng.getLng(),
     "maxY" : neLatLng.getLat(),
 };
+
+
+// ********** AJAX 요청 ********** //
+// for (var i = 0; i < markers.length; i++) {
+//     markers[i].setMap(null);
+// }            
+
+// // markers 배열 초기화
+// markers = [];
+
+// var BodyJson = JSON.stringify(circleXY);
+
+// $.ajax({
+//     type: 'POST',
+//     headers:{
+//         "Content-type": "application/json; charset=utf-8",
+//         "Authorization": `${token}`
+//     },
+//     url: "https://port-0-creativefusion-jvpb2aln5qmjmz.sel5.cloudtype.app/store/range",
+//     data: BodyJson,
+//     success: function(data){
+//         // 서버에서 받은 데이터를 markerList에 저장
+//         markerList = data;
+//         console.log("데이터 전송 완료");
+//         console.log(markerList);
+
+//         initKakaoMap();
+//     },
+//     error: function(request, status, error,body) {
+//         console.log(request);
+//         console.log(body);
+//         console.log(error);
+//     }
+// });  
+
 });
-
-
         searchPlace = (place)=>{
         // 키워드로 장소를 검색합니다
         ps.keywordSearch("대구" + place, placesSearchCB); 
@@ -265,23 +330,31 @@ var marker = new kakao.maps.Marker({
         
     
     });
+
+
 });
 map.setCenter(options.center); // 지도 중심을 이동
-        }
+ // 마커를 생성하고 지도에 표시합니다
+ var marker = new kakao.maps.Marker({
+    map: map,
+    position: options.center, 
+});
+}
 
 }
 
 // 검색창 값 변환
 function myFunction(event) {
     event.preventDefault();
-    var searchValue = document.getElementById("searchBox").value;
-    document.getElementById("result").innerHTML = "You entered: " + searchValue;
+    // var searchValue = document.querySelector("Search-ewq").value;
+    var searchValue = searchText;
     searchPlace(searchValue);
   }
 
+
     return (
         <div style={{position: 'relative'}}>
-            <SearchBar onSubmit={myFunction} style={{position: 'absolute',  top: '0', left: '0', right: '0'}}/>
+            <SearchBar searchText={searchText} setSearchText={setSearchText} onSubmit={myFunction} style={{position: 'absolute',  top: '0', left: '0', right: '0'}}/>
             <div id="map" style={{ width: "100%", height: "88vh",zIndex:"0"}}/>
 
         {/* 팝업 정보가 있을 때만 Card 컴포넌트 렌더링 */}

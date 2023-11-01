@@ -11,7 +11,7 @@
 }
 
 
-input[type="search-text"] {
+input[type="search"] {
   flex: 1;
   border: none;
   outline: none;
@@ -21,7 +21,7 @@ input[type="search-text"] {
   color: dark;
 }
 
-button[type="search-submit"] {
+button[type="submit"] {
   border: none;
   outline: none;
   background-color: transparent;
@@ -32,6 +32,6 @@ button[type="search-submit"] {
   font-weight: bold;
 }
 
-button[type="search-submit"]:active {
+button[type="submit"]:active {
   color: black;
 }
