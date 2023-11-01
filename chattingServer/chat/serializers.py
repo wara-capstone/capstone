@@ -1,15 +1,22 @@
 from rest_framework import serializers
 from .models import ChatRoom, Message
 
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = "__all__"
+
+
 class ChatRoomSerializer(serializers.ModelSerializer):
     latest_message = serializers.SerializerMethodField()
     opponent_email = serializers.SerializerMethodField()
     shop_user_email = serializers.SerializerMethodField()  
     visitor_user_email = serializers.SerializerMethodField()  
+    messages = MessageSerializer(many=True, read_only=True, source="messages.all")
 
     class Meta:
         model = ChatRoom
-        fields = ('id', 'shop_user_email', 'visitor_user_email', 'latest_message', 'opponent_email') 
+        fields = ('id', 'shop_user_email', 'visitor_user_email', 'latest_message', 'opponent_email', 'messages') 
 
     def get_latest_message(self, obj):
         latest_msg = Message.objects.filter(room=obj).order_by('-timestamp').first()
@@ -31,7 +38,3 @@ class ChatRoomSerializer(serializers.ModelSerializer):
         return obj.visitor_user.visitor_user_email
 
 
-class MessageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Message
-        fields = "__all__"

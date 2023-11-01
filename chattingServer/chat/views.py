@@ -1,11 +1,27 @@
-from rest_framework import generics
+from rest_framework import generics, serializers, status
+from rest_framework.response import Response
+from django.db.models import Q
 from .models import ChatRoom, Message, ShopUser, VisitorUser
 from .serializers import ChatRoomSerializer, MessageSerializer
 
-from rest_framework import generics, status
-from rest_framework.response import Response
-from .models import ChatRoom, Message, ShopUser, VisitorUser
-from .serializers import ChatRoomSerializer, MessageSerializer
+
+class ImmediateResponseException(Exception):
+    def __init__(self, response):
+        self.response = response
+
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ('sender_email', 'text', 'timestamp')
+
+class ChatRoomSerializer(serializers.ModelSerializer):
+    messages = MessageSerializer(many=True, read_only=True, source="messages.all")
+    # ... [기존의 다른 필드들]
+
+    class Meta:
+        model = ChatRoom
+        fields = ('id', 'shop_user_email', 'visitor_user_email', 'latest_message', 'opponent_email', 'messages')  # messages 필드 추가
+    # ... [기존의 다른 메서드들]
 
 class ChatRoomListCreateView(generics.ListCreateAPIView):
     serializer_class = ChatRoomSerializer
@@ -20,22 +36,38 @@ class ChatRoomListCreateView(generics.ListCreateAPIView):
         context = super(ChatRoomListCreateView, self).get_serializer_context()
         context['request'] = self.request
         return context
-    
+
     def create(self, request, *args, **kwargs):
-        response = super(ChatRoomListCreateView, self).create(request, *args, **kwargs)
-        if response.status_code == status.HTTP_201_CREATED:
-            return Response({"result": "success"}, status=status.HTTP_201_CREATED)
-        else:
-            return Response({"result": "failed"}, status=status.HTTP_400_BAD_REQUEST)
-    
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            self.perform_create(serializer)
+        except ImmediateResponseException as e:
+            return e.response
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
     def perform_create(self, serializer):
         shop_user_email = self.request.data.get('shop_user_email')
         visitor_user_email = self.request.data.get('visitor_user_email')
 
         shop_user, _ = ShopUser.objects.get_or_create(shop_user_email=shop_user_email)
         visitor_user, _ = VisitorUser.objects.get_or_create(visitor_user_email=visitor_user_email)
+        
+        # 이미 존재하는 채팅방 확인
+        existing_chatroom = ChatRoom.objects.filter(
+            Q(shop_user=shop_user, visitor_user=visitor_user) | 
+            Q(shop_user=visitor_user, visitor_user=shop_user)
+        ).first()
 
+        if existing_chatroom:
+            # 이미 존재하는 채팅방이 있다면 해당 채팅방과 메시지 내역을 반환
+            serializer = ChatRoomSerializer(existing_chatroom, context={'request': self.request})
+            raise ImmediateResponseException(Response(serializer.data, status=status.HTTP_200_OK))
+        
         serializer.save(shop_user=shop_user, visitor_user=visitor_user)
+
+
 
 
 
