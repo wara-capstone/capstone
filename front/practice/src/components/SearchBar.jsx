@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import "./SearchBar.css";
 
-const SearchBar = () => {
+const SearchBar = ({style}) => {
   const [searchText, setSearchText] = useState("");
 
   const handleSearchChange = (e) => {
@@ -16,9 +16,10 @@ const SearchBar = () => {
     console.log("검색어:", searchText);
     setSearchText("");
   };
+  
 
   return (
-    <form className="search-bar" onSubmit={handleSearchSubmit}>
+    <form className="search-bar" onSubmit={handleSearchSubmit} style={style}>
       <FontAwesomeIcon icon={faMagnifyingGlass} className="back-icon" />
       <input
         type="search-text"
