@@ -15,6 +15,24 @@ eureka:
 springboot:
   jwt:
     secret: secretKey123
+
+gateway:
+  default-filters:
+    - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+  globalcors:
+    cors-configurations:
+      '[/**]':
+        allowedOrigins: 'http://127.0.0.1:3000'
+        allow-credentials: true
+        allowedHeaders: '*'
+        allowedMethods:
+          - PUT
+          - GET
+          - POST
+          - DELETE
+          - OPTIONS
+
+
 #spring:
 #  cloud:
 #    gateway:
