@@ -19,6 +19,8 @@ public class RouteConfig {
                 .route("user-service", r -> r.path("/auth/**")
                         //.filters() filters를 제작하여 인증처리 
                         .uri("lb://USER-SERVICE"))
+                .route("image-service", r -> r.path("/image/**")
+                        .uri("lb://IMAGE-SERVICE"))
                 .route("test-service", r -> r.path("/test/**")
                         .filters(f -> f.filter(authFilter.apply(config -> {config.setRequiredRole("role_admin");})))
                         .uri("lb://TEST"))
