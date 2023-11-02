@@ -23,24 +23,49 @@ public class ProductDAOImpl implements ProductDAO{
      * 상품 ID기준 단일 값 반환
      * */
     @Override
-    public ProductEntity readSingleData(ProductEntity entity) {
-        return repository.getByProductId(entity.getProductId());
+    public ProductEntity readSingleProductInfo(Long productId) {
+        return repository.getByProductId(productId);
+    }
+
+    /**
+     * ID값 기준 다중 값 반환
+     * */
+    public List<ProductEntity> readMultiProductInfo(Long storeId) {
+        return repository.getAllByStoreId(storeId);
     }
 
 
     /**
-     * 카테고리 기준 다중 값 반환
-     * */
+     * @param productId
+     */
     @Override
-    public List<ProductEntity> readMultiData(ProductEntity entity) {
-        return repository.getAllByProductId(entity.getProductCategory());
+    public void removeSingleProduct(Long productId) {
+        repository.deleteByProductId(productId);
     }
 
+    /**
+     * @param storeId
+     */
+    @Override
+    public void removeMultiProduct(Long storeId) {
+        repository.deleteAllByStoreId(storeId);
+    }
 
+    /**
+     * @param entity
+     */
+    @Override
+    public void modifyProductInfo(ProductEntity entity) {
+        repository.save(entity);
+    }
 
-
-
-
+    /**
+     * @param entity
+     */
+    @Override
+    public void initProductInfo(ProductEntity entity) {
+        repository.save(entity);
+    }
 
 
 }

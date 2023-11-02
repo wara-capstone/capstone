@@ -7,7 +7,10 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<ProductEntity,String> {
 
-    ProductEntity getByProductId(Long Id);
-    List<ProductEntity> getAllByProductId(String category);
+    ProductEntity getByProductId(Long id);
+    List<ProductEntity> getAllByStoreId(Long id);
+
+    void deleteByProductId(Long id);
+    void deleteAllByStoreId(Long id);
 
 }
