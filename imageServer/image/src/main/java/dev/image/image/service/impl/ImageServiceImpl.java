@@ -34,7 +34,7 @@ public class ImageServiceImpl implements ImageService {
         List<String> imagesURI = new ArrayList<>();
         for(MultipartFile image : images){
             ImageEntity imageEntity = this.imageDAO.uploadImage(ImageEntity.builder().image(image.getBytes()).build());
-            imagesURI.add("http://localhost:8000/download/"+imageEntity.getId());
+            imagesURI.add("https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/image/download/"+imageEntity.getId());
         }
 
         return ResponseEntity.status(201)
