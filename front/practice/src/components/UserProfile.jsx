@@ -5,6 +5,14 @@ import { Link } from "react-router-dom";
 import "./UserProfile.css";
 
 const UserProfile = () => {
+  const userId = sessionStorage.getItem('email');
+  const userRole = sessionStorage.getItem('role');
+  const storeId = sessionStorage.getItem('storeid');
+  const token = sessionStorage.getItem('token');
+
+  let url;
+
+
   const [user, setUser] = useState({
     name: "ON&OFF",
     profileImage: "https://via.placeholder.com/150x150",
@@ -12,6 +20,15 @@ const UserProfile = () => {
     nickname: "ONFF",
     phoneNumber: "010-1234-5678",
   });
+
+
+  if (userId) {
+   if (userRole === 'user') {
+      document.querySelector('.move-seller-page-btn').style.display = 'none';
+    }
+}
+
+
 
   return (
     <div className="user-profile">
