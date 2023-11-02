@@ -12,6 +12,22 @@ function Header() {
     navigate(-1);
   };
 
+  const userId = sessionStorage.getItem("email");
+  const userRole = sessionStorage.getItem("role");
+  const storeId = sessionStorage.getItem("storeid");
+  const token = sessionStorage.getItem("token");
+
+  let url;
+
+  const handleConnectCart = () => {
+    // 장바구니아이콘 클릭 시 로그인 상태 체크 후 라우팅 진행.
+    if (userId === null) {
+      navigate("/login");
+    } else if (userId !== null) {
+      navigate("/cart");
+    }
+  };
+
   return (
     <header className="header">
       <div className="back">
@@ -26,7 +42,7 @@ function Header() {
         <h1 className="title">On&Off</h1>
       </Link>
 
-      <Link to="/cart" className="link">
+      <div to="/cart" className="link" onClick={handleConnectCart}>
         <div className="cart">
           <FontAwesomeIcon
             icon={faCartShopping}
@@ -37,7 +53,7 @@ function Header() {
             }
           />
         </div>
-      </Link>
+      </div>
     </header>
   );
 }

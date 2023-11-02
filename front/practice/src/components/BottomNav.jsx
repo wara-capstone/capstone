@@ -1,18 +1,33 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./BottomNav.css";
 // 사용할 아이콘 import
 import "./FontAwesome";
 // FontAwesomIcon 컴포넌트를 사용하기 위해 import
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-
-
-
 const BottomNav = () => {
   // 현재 선택된 아이콘을 관리하는 state
   const locationNow = useLocation();
 
+  const userId = sessionStorage.getItem("email");
+  const userRole = sessionStorage.getItem("role");
+  const storeId = sessionStorage.getItem("storeid");
+  const token = sessionStorage.getItem("token");
+
+  let url;
+
+  const navigate = useNavigate();
+
+  const handleConnectUser = () => {
+    // 유저버튼 클릭 시 로그인 상태 체크 후 라우팅 진행.
+    if (userId === null) {
+      navigate("/login");
+    } else if (userId !== null) {
+      navigate("/user");
+    }
+  };
 
   if (
     locationNow.pathname === "/" ||
@@ -73,18 +88,17 @@ const BottomNav = () => {
             />
           </div>
         </Link>
-        <Link to="/user" className="nav-link">
-          <div>
-            <FontAwesomeIcon
-              icon="user"
-              className={
-                locationNow.pathname === "/user"
-                  ? "nav-item active-nav-item"
-                  : "nav-item"
-              }
-            />
-          </div>
-        </Link>
+
+        <div onClick={handleConnectUser} className="nav-link">
+          <FontAwesomeIcon
+            icon="user"
+            className={
+              locationNow.pathname === "/user"
+                ? "nav-item active-nav-item"
+                : "nav-item"
+            }
+          />
+        </div>
       </nav>
     );
   } else {

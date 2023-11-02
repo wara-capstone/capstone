@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Data from "../DB/Data.json";
 import BottomNav from "../components/BottomNav";
 import EventButton from "../components/EventButton";
@@ -10,6 +10,24 @@ export default function Store() {
   const selectedStore = Data.storeDate.filter(
     (store) => store.id === Number(id)
   );
+
+  const userId = sessionStorage.getItem("email");
+  const userRole = sessionStorage.getItem("role");
+  const storeId = sessionStorage.getItem("storeid");
+  const token = sessionStorage.getItem("token");
+
+  let url;
+
+  const navigate = useNavigate();
+
+  const handleConnectChatting = () => {
+    // 채팅버튼 클릭 시 로그인 상태 체크 후 라우팅 진행.
+    if (userId === null) {
+      navigate("/login");
+    } else if (userId !== null) {
+      navigate("/chatting");
+    }
+  };
 
   return (
     <div className="store">
@@ -28,9 +46,9 @@ export default function Store() {
           <p>store detail: {store.content}</p>
         </div>
       ))}
-      <Link to={"/chatting"} className="button-link">
+      <div className="button-link" onClick={handleConnectChatting}>
         <EventButton buttonText={"1대1 상담"} />
-      </Link>
+      </div>
       <BottomNav />
     </div>
   );
