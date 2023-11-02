@@ -1,4 +1,3 @@
-import { click } from "@testing-library/user-event/dist/click";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -7,9 +6,6 @@ import imageSrc2 from "../adImages/iconImage/shopRed.png";
 import imageSrc3 from "../adImages/iconImage/iconRed.png";
 import imageSrc4 from "../adImages/iconImage/iconBlue.png";
 import SearchBar from "./SearchBar";
-
-import Data from "../DB/Data.json";
-
 
 import Card from "../components/Card"; // Card 컴포넌트 임포트
 import "./SearchBar.css";
@@ -22,9 +18,6 @@ let map; // 지도 객체
 
 var searchPlace; // 검색한 장소 정보를 담을 변수
 
-
-
-
 var imageSize = new kakao.maps.Size(42, 56); // 마커의 크기 기존 33, 36
 var choiceImageSize = new kakao.maps.Size(44, 58); // 선택한 마커의 크기 기존 38, 40
 
@@ -36,7 +29,7 @@ let [popupInfo, setPopupInfo] = useState(null); // 현재 열려있는 팝업 �
 let [searchText, setSearchText] = useState(""); // 검색창 값
 
 let prevInfo = null;
-    
+
 //Popup창 켜고 끄는 method
 function showPopup(info) {
     // 현재 열린 팝업 정보가 null이 아니고, 새로운 팝업이 이전 팝업과 같다면 팝업을 닫고 함수를 종료합니다.
@@ -53,6 +46,7 @@ function showPopup(info) {
 }
 
     useEffect(() => {
+        
 // 위치 정보를 가져오는 함수
 const getLocation = new Promise((resolve, reject) => {
     if(navigator.geolocation) {
@@ -99,7 +93,6 @@ const getLocation = new Promise((resolve, reject) => {
 
   // 컴포넌트가 unmount될 때 위치 추적을 중지
   return () => navigator.geolocation.clearWatch(watchId);
-
         }, []);
 
 
@@ -177,7 +170,6 @@ function ininKakaoMap(locPosition) {
 
         // 장소 검색 객체를 생성합니다
         const ps = new kakao.maps.services.Places();
-
 
         // 원을 생성합니다
         var circle = new kakao.maps.Circle({
