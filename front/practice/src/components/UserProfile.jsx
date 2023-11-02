@@ -1,7 +1,7 @@
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./UserProfile.css";
 
 const UserProfile = () => {
@@ -12,6 +12,22 @@ const UserProfile = () => {
     nickname: "ONFF",
     phoneNumber: "010-1234-5678",
   });
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // 로그아웃 처리 로직을 구현합니다.
+
+    // 페이지 이동
+    navigate("/");
+  };
+
+  const handleConnectSeller = () => {
+    // 로그아웃 처리 로직을 구현합니다.
+
+    // 페이지 이동
+    navigate("/seller");
+  };
 
   return (
     <div className="user-profile">
@@ -56,14 +72,14 @@ const UserProfile = () => {
         <button className="login-btn">로그인</button>
       </Link>
 
-      <button className="move-seller-page-btn">
+      <button className="move-seller-page-btn" onClick={handleConnectSeller}>
         사장님 페이지 연결
         <div className="move-page-icon">
           <FontAwesomeIcon icon={faChevronRight} />
         </div>
       </button>
 
-      <button className="user-logout-btn">
+      <button className="user-logout-btn" onClick={handleLogout}>
         로그아웃
         <div className="move-page-icon">
           <FontAwesomeIcon icon={faChevronRight} />
