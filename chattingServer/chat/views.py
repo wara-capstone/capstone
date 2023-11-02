@@ -3,7 +3,8 @@ from rest_framework.response import Response
 from django.db.models import Q
 from .models import ChatRoom, Message, ShopUser, VisitorUser
 from .serializers import ChatRoomSerializer, MessageSerializer
-
+from rest_framework.exceptions import ValidationError
+from django.http import Http404
 
 class ImmediateResponseException(Exception):
     def __init__(self, response):
@@ -13,11 +14,26 @@ class ChatRoomListCreateView(generics.ListCreateAPIView):
     serializer_class = ChatRoomSerializer
 
     def get_queryset(self):
-        user_email = self.request.query_params.get('email', None)
+        try:
+            user_email = self.request.query_params.get('email', None)
 
-        if not user_email:
-            return ChatRoom.objects.none()
-        return ChatRoom.objects.filter(shop_user__shop_user_email=user_email) | ChatRoom.objects.filter(visitor_user__visitor_user_email=user_email)
+            if not user_email:
+                raise ValidationError('Email 파라미터가 필요합니다.')
+
+            return ChatRoom.objects.filter(
+                shop_user__shop_user_email=user_email
+            ) | ChatRoom.objects.filter(
+                visitor_user__visitor_user_email=user_email
+            )
+        except ValidationError as e:
+            # ValidationError가 발생하면 400 응답을 반환합니다
+            content = {'detail': e.detail}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            # 다른 종류의 예외가 발생하면, 로그를 남기고 400 응답을 반환합니다
+            # 여기에서 예외를 로그로 남길 수 있습니다
+            content = {'detail': str(e)}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
     def get_serializer_context(self):
         context = super(ChatRoomListCreateView, self).get_serializer_context()
@@ -59,9 +75,21 @@ class ChatRoomListCreateView(generics.ListCreateAPIView):
 
 
 
-class MessageListView(generics.ListAPIView):  # ListAPIView를 사용하여 메시지 조회만 가능하게 합니다.
+class MessageListView(generics.ListAPIView):
     serializer_class = MessageSerializer
 
     def get_queryset(self):
         room_id = self.kwargs.get('room_id')
-        return Message.objects.filter(room_id=room_id)
+        
+        if not room_id:
+            # room_id가 제공되지 않았을 때
+            content = {'detail': 'room_id 파라미터가 필요합니다.'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+        queryset = Message.objects.filter(room_id=room_id)
+        
+        if not queryset.exists():
+            # 메시지가 존재하지 않을 때
+            raise Http404('해당 room_id로 메시지를 찾을 수 없습니다.')
+
+        return queryset
