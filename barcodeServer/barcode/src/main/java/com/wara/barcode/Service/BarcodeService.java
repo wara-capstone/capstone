@@ -1,10 +1,10 @@
-package com.wara.barcode.service;
+package com.wara.barcode.Service;
 
 
-import com.wara.barcode.dao.BarcodeDAO;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
-import com.wara.barcode.dto.BarcodeDTO;
+import com.wara.barcode.DTO.BarcodeDTO;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -20,33 +20,23 @@ import java.io.IOException;
 @Service
 public class BarcodeService {
 
+    ObjectMapper objectMapper = new ObjectMapper();
 
-    private BarcodeDTO dto;
-    private final BarcodeDAO dao;
-
-    public BarcodeService(@Autowired BarcodeDTO dto,
-                          @Autowired BarcodeDAO dao) {
-        this.dto = dto;
-        this.dao = dao;
-    }
 
     /**
-     * @param id
      * dto의 id값으로 바코드를 구분/생성
      */
-    public ResponseEntity<byte[]> createBarcode(String id) throws WriterException, IOException {
+    public ResponseEntity<byte[]> createBarcode(BarcodeDTO dto) throws WriterException, IOException {
         // 바코드 사이즈
         int width = 800;
         int height = 200;
-        String url = "";
-        // 아래 try-catch에서 바코드에 등록할 정보 커스텀 해야함
-        try{dto = dao.read(id).dtoToEntity();
-            url = new String(dto.getBarcodeNumber());
-        } catch (Exception e){System.out.println(e.getMessage());}
 
-
+        // TODO: 아래 try-catch에서 바코드에 등록할 정보 커스텀 해야함
         //바코드 이미지 생성
         try {
+            // DTO를 Stirng으로 변환
+            String url = objectMapper.writeValueAsString(dto);
+
             // 바코드 정보 생성
             BitMatrix encode = new MultiFormatWriter().encode(url, BarcodeFormat.CODE_128, width, height);
             //output Stream
@@ -61,6 +51,8 @@ public class BarcodeService {
 
         return null;
     }
+
+
 
 
 }
