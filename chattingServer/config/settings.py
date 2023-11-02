@@ -79,7 +79,7 @@ ASGI_APPLICATION = 'config.asgi.application'
 
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5500",
+    "http://127.0.0.1:5501",
 ]
 
 

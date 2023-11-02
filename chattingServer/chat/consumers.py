@@ -55,7 +55,8 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             # 메시지를 전체 그룹에 전송합니다.
             await self.channel_layer.group_send(group_name, {
                 'type': 'chat_message',
-                'message': message
+                'message': message,
+                'sender_email': sender_email  # 발신자 이메일 정보 추가
             })
 
         except ValueError as e:
@@ -64,11 +65,12 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     async def chat_message(self, event):
         try:
-            # 이벤트에서 메시지를 추출합니다.
+            # 이벤트에서 메시지와 발신자 이메일을 추출합니다.
             message = event['message']
+            sender_email = event['sender_email']  # 발신자 이메일 정보 추출
             
-            # 추출된 메시지를 JSON으로 전송합니다.
-            await self.send_json({'message': message})
+            # 추출된 메시지와 발신자 이메일을 JSON으로 전송합니다.
+            await self.send_json({'message': message, 'sender_email': sender_email})
         except Exception as e:
             # 일반 예외를 처리하여 오류 메시지를 보냅니다.
             await self.send_json({'error': '메시지 전송 실패'})
