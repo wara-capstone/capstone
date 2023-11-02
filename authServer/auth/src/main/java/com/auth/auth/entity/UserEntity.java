@@ -42,6 +42,9 @@ public class UserEntity {
     @Column
     private String phone;
 
+    @Column
+    private String profileImage;
+
     @Column(nullable = false)
     @ElementCollection
     @Builder.Default
