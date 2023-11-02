@@ -2,6 +2,7 @@ package com.auth.auth.service.impl;
 
 import com.auth.auth.dao.UserDAO;
 import com.auth.auth.dto.UserDTO;
+import com.auth.auth.entity.UserEntity;
 import com.auth.auth.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -28,7 +30,6 @@ public class UserServiceImpl implements UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private final DiscoveryClient discoveryClient;
     private final UserDAO userDAO;
-
     public UserServiceImpl(
             @Autowired UserDAO userDAO,
             @Autowired DiscoveryClient discoveryClient
@@ -60,6 +61,29 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<UserDTO> updateUser(UserDTO userDTO) {
-        return null;
+        Optional<UserEntity> user = this.userDAO.readUser(userDTO.getEmail());
+        if(!user.isPresent()){
+            return ResponseEntity.status(400).body(null);
+        }
+        UserEntity userEntity = user.get();
+        userEntity = UserEntity.builder()
+                .id(userEntity.getId())
+                .email(userEntity.getEmail())
+                .name(userEntity.getName())
+                .nickname(userDTO.getNickname())
+                .phone(userDTO.getPhone())
+                .roles(userEntity.getRoles())
+                .password(userEntity.getPassword())
+                .build();
+        userEntity = this.userDAO.createUser(userEntity);
+        userDTO = UserDTO.builder()
+                .id(userEntity.getId())
+                .name(userEntity.getName())
+                .email(userEntity.getEmail())
+                .nickname(userEntity.getNickname())
+                .phone(userEntity.getPhone())
+                .build();
+
+        return ResponseEntity.status(200).body(userDTO);
     }
 }
