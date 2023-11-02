@@ -1,7 +1,7 @@
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./UserProfile.css";
 
 const UserProfile = () => {
@@ -12,23 +12,45 @@ const UserProfile = () => {
 
   let url;
 
+  const [isSeller, setIsSeller] = useState(false);
 
   const [user, setUser] = useState({
     name: "ON&OFF",
     profileImage: "https://via.placeholder.com/150x150",
-    email: "ON&OFF@example.com",
-    nickname: "ONFF",
+    email: userId,
+    nickname: userRole,
     phoneNumber: "010-1234-5678",
   });
 
-
-  if (userId) {
-   if (userRole === 'user') {
-      document.querySelector('.move-seller-page-btn').style.display = 'none';
+  useEffect(() => {
+    if (userRole === 'user') {
+      setIsSeller(false);
+    } else if (userRole === 'seller'){
+      setIsSeller(true);
     }
-}
+  }, []);
 
 
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // 로그아웃 처리 로직을 구현합니다.
+
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('email');
+    sessionStorage.removeItem('role');
+    sessionStorage.removeItem('storeid');
+    // 페이지 이동
+    navigate("/");
+  };
+
+  const handleConnectSeller = () => {
+    // 로그아웃 처리 로직을 구현합니다.
+
+    // 페이지 이동
+    navigate("/seller");
+  };
 
   return (
     <div className="user-profile">
@@ -73,14 +95,16 @@ const UserProfile = () => {
         <button className="login-btn">로그인</button>
       </Link>
 
-      <button className="move-seller-page-btn">
+      {isSeller && (
+    <button className="move-seller-page-btn" onClick={handleConnectSeller}>
         사장님 페이지 연결
         <div className="move-page-icon">
           <FontAwesomeIcon icon={faChevronRight} />
         </div>
       </button>
+      )}
 
-      <button className="user-logout-btn">
+      <button className="user-logout-btn" onClick={handleLogout}>
         로그아웃
         <div className="move-page-icon">
           <FontAwesomeIcon icon={faChevronRight} />
