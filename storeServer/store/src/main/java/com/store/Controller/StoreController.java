@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/store")
-public class Controller {
+public class StoreController {
     private final StoreService storeService;
-    private final static Logger logger = LoggerFactory.getLogger(Controller.class);
+    private final static Logger logger = LoggerFactory.getLogger(StoreController.class);
 
-    public Controller(@Autowired StoreService storeService) {
+    public StoreController(@Autowired StoreService storeService) {
         this.storeService = storeService;
     }
 
