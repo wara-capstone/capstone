@@ -1,0 +1,13 @@
+package com.store.DAO;
+
+import com.store.Entity.StoreEntity;
+import org.springframework.stereotype.Repository;
+
+import java.util.Map;
+
+@Repository
+public interface StoreDAO {
+    public Map<String, Object> createStore(StoreEntity storeEntity);
+    public Map<String, Object> readStore(Long storeId);
+    public Map<String, Object> deleteStore(Long storeId);
+}
