@@ -48,13 +48,19 @@
   color: #333; /* 텍스트 색상을 약간 어두운 회색으로 변경합니다 */
 }
 
-.user-logout-btn,
-.move-seller-page-btn {
-  text-align: center;
+.move-seller-page-btn-container,
+.user-logout-btn-container {
+  display: flex;
+  justify-content: center;
   position: fixed;
   bottom: 70px;
-  right: 45px;
-  left: 45px;
+  left: 0;
+  width: 100%;
+  padding-bottom: 20px;
+}
+
+.user-logout-btn,
+.move-seller-page-btn {
   background-color: #ff7070; /* 배경색을 붉은색으로 변경합니다 */
   color: white; /* 텍스트 색상을 흰색으로 변경합니다 */
   border: none;
@@ -65,7 +71,7 @@
   font-size: 1em; /* 텍스트 크기를 약간 증가시킵니다 */
 }
 
-.move-seller-page-btn {
+.move-seller-page-btn-container {
   bottom: 140px;
 }
 

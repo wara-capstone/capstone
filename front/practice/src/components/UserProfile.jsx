@@ -89,21 +89,28 @@ const UserProfile = () => {
         </Link>
       </div>
 
-      {isSeller && (
-        <button className="move-seller-page-btn" onClick={handleConnectSeller}>
-          사장님 페이지 연결
+      <div className="move-seller-page-btn-container">
+        {isSeller && (
+          <button
+            className="move-seller-page-btn"
+            onClick={handleConnectSeller}
+          >
+            사장님 페이지 연결
+            <div className="move-page-icon">
+              <FontAwesomeIcon icon={faChevronRight} />
+            </div>
+          </button>
+        )}
+      </div>
+
+      <div className="user-logout-btn-container">
+        <button className="user-logout-btn" onClick={handleLogout}>
+          로그아웃
           <div className="move-page-icon">
             <FontAwesomeIcon icon={faChevronRight} />
           </div>
         </button>
-      )}
-
-      <button className="user-logout-btn" onClick={handleLogout}>
-        로그아웃
-        <div className="move-page-icon">
-          <FontAwesomeIcon icon={faChevronRight} />
-        </div>
-      </button>
+      </div>
     </div>
   );
 };

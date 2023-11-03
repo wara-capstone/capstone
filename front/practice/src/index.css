@@ -13,8 +13,22 @@ code {
 }
 
 /*  */
-.home {
-  margin-bottom: 80px; /* 하단 네비게이션 바의 높이에 맞게 조절 */
+.home,
+.barcode,
+.map,
+.search,
+.user,
+.user-profile,
+.user-edit,
+.chatting-list,
+.cart-page,
+.item,
+.store {
+  margin-bottom: 50px; /* 하단 네비게이션 바의 높이에 맞게 조절 */
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  /* background-color: #f2f2f2; */
 }
 
 .item-image {
@@ -35,7 +49,9 @@ code {
 .barcode-item-data {
   position: fixed;
   bottom: 50px;
-  width: 100%;
+  width: 400px;
+  left: auto;
+  right: auto;
   text-align: center;
 }
 

@@ -33,7 +33,7 @@ const UserEdit = ({ user }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="user-edit">
       <Header />
       <div className="userEdit-image">
         <img src={previewImageSrc} alt="프로필 사진" />
