@@ -22,7 +22,4 @@ public class ImageEntity {
     @Lob
     private byte[] image;
 
-    @Column
-    private String email;
-
 }

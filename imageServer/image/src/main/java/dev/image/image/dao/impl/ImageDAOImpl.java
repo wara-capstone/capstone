@@ -31,11 +31,8 @@ public class ImageDAOImpl implements ImageDAO {
     }
 
     @Override
-    public boolean deleteImage(Long id, String email) {
+    public boolean deleteImage(Long id) {
         if(!this.imageRepository.existsById(id)){
-            return false;
-        }
-        if(!this.imageRepository.findById(id).get().getEmail().equals(email)){
             return false;
         }
         this.imageRepository.deleteById(id);

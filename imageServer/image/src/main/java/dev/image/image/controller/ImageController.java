@@ -44,10 +44,9 @@ public class ImageController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteImage(
-            @PathVariable("id") Long id,
-            @RequestParam String email
+            @PathVariable("id") Long id
     ){
-        return this.imageService.deleteImage(id, email);
+        return this.imageService.deleteImage(id);
     }
 
 }

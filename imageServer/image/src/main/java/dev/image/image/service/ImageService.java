@@ -13,6 +13,6 @@ import java.util.List;
 public interface ImageService {
     public ResponseEntity<ImageDTO> uploadImage(List<MultipartFile> images, String email) throws IOException;
     public ResponseEntity<byte[]> downloadImage(Long id);
-    public ResponseEntity<Boolean> deleteImage(Long id, String email);
+    public ResponseEntity<Boolean> deleteImage(Long id);
 
 }

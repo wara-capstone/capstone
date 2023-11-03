@@ -33,7 +33,7 @@ public class ImageServiceImpl implements ImageService {
     public ResponseEntity<ImageDTO> uploadImage(List<MultipartFile> images, String email) throws IOException {
         List<String> imagesURI = new ArrayList<>();
         for(MultipartFile image : images){
-            ImageEntity imageEntity = this.imageDAO.uploadImage(ImageEntity.builder().image(image.getBytes()).email(email).build());
+            ImageEntity imageEntity = this.imageDAO.uploadImage(ImageEntity.builder().image(image.getBytes()).build());
             imagesURI.add("https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/image/download/"+imageEntity.getId());
         }
 
@@ -54,8 +54,8 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public ResponseEntity<Boolean> deleteImage(Long id, String email) {
-        if(!this.imageDAO.deleteImage(id, email)){
+    public ResponseEntity<Boolean> deleteImage(Long id) {
+        if(!this.imageDAO.deleteImage(id)){
             return ResponseEntity.status(400).body(false);
         }
         return ResponseEntity.status(200).body(true);

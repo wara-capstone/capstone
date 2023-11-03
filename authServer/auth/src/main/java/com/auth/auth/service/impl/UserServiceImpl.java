@@ -44,24 +44,33 @@ public class UserServiceImpl implements UserService {
         if(!user.isPresent()){
             return ResponseEntity.status(400).body(null);
         }
-        if()
-        ServiceInstance imageService = discoveryClient.getInstances("IMAGE-SERVICE").get(0);
-        URI uri = new URI(imageService.getUri().toString());
 
+        ServiceInstance imageService = discoveryClient.getInstances("IMAGE-SERVICE").get(0);
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<?> http = new HttpEntity<>(headers);
 
+        String index = user.get().getProfileImage().replace("https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/image/download/", "");
+        if(!index.equals("1")){
+            URI deleteUri = new URI(imageService.getUri()+"/image/"+index+"?email="+email);
+            restTemplate.exchange(deleteUri, HttpMethod.DELETE, http, Boolean.class);
+        }
+
+
+        URI uri = new URI(imageService.getUri()+"/image/upload?email="+email);
         ResponseEntity response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
+
         if(response.getStatusCode().is2xxSuccessful()){
             LinkedHashMap responseBody = (LinkedHashMap) response.getBody();
             List<String> images = (List) responseBody.get("images");
             String imageUri = (String) images.get(0);
+            UserEntity userEntity = user.get();
+            userEntity.setProfileImage(imageUri);
+            this.userDAO.createUser(userEntity);
             return ResponseEntity.status(200).body(imageUri);
         }
 
-
-        return null;
+        return ResponseEntity.status(400).body(null);
     }
 
     @Override
@@ -78,7 +87,7 @@ public class UserServiceImpl implements UserService {
                 .nickname(userDTO.getNickname())
                 .phone(userDTO.getPhone())
                 .roles(userEntity.getRoles())
-                .password(userEntity.getPassword())
+                .password(userDTO.getPassword())
                 .build();
         userEntity = this.userDAO.createUser(userEntity);
         userDTO = UserDTO.builder()
