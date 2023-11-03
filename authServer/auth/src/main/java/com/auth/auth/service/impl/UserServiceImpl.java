@@ -87,7 +87,8 @@ public class UserServiceImpl implements UserService {
                 .profileImage(userEntity.getProfileImage())
                 .nickname(userDTO.getNickname())
                 .phone(userDTO.getPhone())
-                .password(userDTO.getPassword())
+                .password(userDTO.getPassword().equals("") ?
+                        userEntity.getPassword() : userDTO.getPassword())
                 .build();
         userEntity = this.userDAO.createUser(userEntity);
         userDTO = UserDTO.builder()

@@ -31,6 +31,7 @@ public class ImageController {
     public ResponseEntity<ImageDTO> uploadImage(
             @RequestPart List<MultipartFile> images
     ) throws IOException {
+        logger.info("[upload image]");
       return this.imageService.uploadImage(images);
     }
 
@@ -38,6 +39,7 @@ public class ImageController {
     public  ResponseEntity<byte[]> downloadImage(
             @PathVariable("id") Long id
     ){
+        logger.info("[download image] " + id);
         return this.imageService.downloadImage(id);
     }
 
@@ -45,6 +47,7 @@ public class ImageController {
     public ResponseEntity<Boolean> deleteImage(
             @PathVariable("id") Long id
     ){
+        logger.info("[delete Image] "+id);
         return this.imageService.deleteImage(id);
     }
 

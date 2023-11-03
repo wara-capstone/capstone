@@ -27,6 +27,7 @@ public class AuthController {
     public ResponseEntity<UserDTO> signup(
             @RequestBody UserDTO userDTO
     ){
+        logger.info("[SignUp] 회원가입 요청 "+userDTO.toString());
         return this.authService.signUp(userDTO);
     }
 
@@ -34,6 +35,7 @@ public class AuthController {
     public ResponseEntity<TokenDTO> signin(
             @RequestBody UserDTO userDTO
     ){
+        logger.info("[SignIn] 로그인 요청 "+userDTO.toString());
         return this.authService.signIn(userDTO);
     }
 

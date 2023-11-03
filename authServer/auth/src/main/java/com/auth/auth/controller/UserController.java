@@ -29,6 +29,7 @@ public class UserController {
             @RequestPart("image") MultipartFile image,
             @RequestParam("eamil") String email
     ) throws URISyntaxException {
+        logger.info("[create Image] " + email);
         return this.userService.createImage(email, image);
     }
 
@@ -36,6 +37,7 @@ public class UserController {
     public ResponseEntity<UserDTO> updateUser(
             @RequestBody UserDTO userDTO
             ){
+        logger.info("[update User] "+userDTO.toString());
         return this.userService.updateUser(userDTO);
     }
 
@@ -43,6 +45,7 @@ public class UserController {
     public ResponseEntity<UserDTO> readUser(
             @RequestParam("email") String email
     ){
+        logger.info("[read User] " + email);
         return this.userService.readUser(email);
     }
 
