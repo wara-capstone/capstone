@@ -1,14 +1,14 @@
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./UserProfile.css";
 
 const UserProfile = () => {
-  const userId = sessionStorage.getItem('email');
-  const userRole = sessionStorage.getItem('role');
-  const storeId = sessionStorage.getItem('storeid');
-  const token = sessionStorage.getItem('token');
+  const userId = sessionStorage.getItem("email");
+  const userRole = sessionStorage.getItem("role");
+  const storeId = sessionStorage.getItem("storeid");
+  const token = sessionStorage.getItem("token");
 
   let url;
 
@@ -23,30 +23,28 @@ const UserProfile = () => {
   });
 
   useEffect(() => {
-    if (userRole === 'user') {
+    if (userRole === "user") {
       setIsSeller(false);
-    } else if (userRole === 'seller'){
+    } else if (userRole === "seller") {
       setIsSeller(true);
     }
   }, []);
-
-
 
   const navigate = useNavigate();
 
   const handleLogout = () => {
     // 로그아웃 처리 로직을 구현합니다.
 
-    sessionStorage.removeItem('token');
-    sessionStorage.removeItem('email');
-    sessionStorage.removeItem('role');
-    sessionStorage.removeItem('storeid');
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("email");
+    sessionStorage.removeItem("role");
+    sessionStorage.removeItem("storeid");
     // 페이지 이동
     navigate("/");
   };
 
   const handleConnectSeller = () => {
-    // 로그아웃 처리 로직을 구현합니다.
+    // seller사이트 접속 처리 로직을 구현합니다.
 
     // 페이지 이동
     navigate("/seller");
@@ -91,25 +89,28 @@ const UserProfile = () => {
         </Link>
       </div>
 
-      <Link to="/login" className="user-link">
-        <button className="login-btn">로그인</button>
-      </Link>
+      <div className="move-seller-page-btn-container">
+        {isSeller && (
+          <button
+            className="move-seller-page-btn"
+            onClick={handleConnectSeller}
+          >
+            사장님 페이지 연결
+            <div className="move-page-icon">
+              <FontAwesomeIcon icon={faChevronRight} />
+            </div>
+          </button>
+        )}
+      </div>
 
-      {isSeller && (
-    <button className="move-seller-page-btn" onClick={handleConnectSeller}>
-        사장님 페이지 연결
-        <div className="move-page-icon">
-          <FontAwesomeIcon icon={faChevronRight} />
-        </div>
-      </button>
-      )}
-
-      <button className="user-logout-btn" onClick={handleLogout}>
-        로그아웃
-        <div className="move-page-icon">
-          <FontAwesomeIcon icon={faChevronRight} />
-        </div>
-      </button>
+      <div className="user-logout-btn-container">
+        <button className="user-logout-btn" onClick={handleLogout}>
+          로그아웃
+          <div className="move-page-icon">
+            <FontAwesomeIcon icon={faChevronRight} />
+          </div>
+        </button>
+      </div>
     </div>
   );
 };

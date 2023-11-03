@@ -51,7 +51,7 @@
 
 .seller-home .ad-image-container {
   width: 100%;
-  height: 777px;
+  height: 700px;
 }
 
 .seller-home .ad-image {
@@ -64,7 +64,7 @@
   align-items: left;
 }
 
-.seller-home .button {
+.seller-home .event-button {
   background-color: rgb(233, 116, 116);
   transform: translateX(-250%);
   bottom: 250px;

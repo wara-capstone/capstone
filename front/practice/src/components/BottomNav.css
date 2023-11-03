@@ -6,8 +6,11 @@
   right: 0;
   height: 50px;
   background-color: #fff;
-  padding: 1px 20px;
+  padding: 1px 0px;
   box-shadow: 0 0px 10px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* nav태그 아래의 자식들을 수평정렬하기 위한 설정 */

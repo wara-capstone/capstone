@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Data from "../DB/Data.json";
 import AddToCartButton from "../components/AddToCartButton";
 import BottomNav from "../components/BottomNav";
@@ -9,6 +9,22 @@ import ImageSlider from "../components/ImageSlider";
 export default function Item() {
   const { id } = useParams();
   const selectedCard = Data.cardData.filter((card) => card.id === Number(id));
+
+  const userId = sessionStorage.getItem("email");
+  const userRole = sessionStorage.getItem("role");
+  const storeId = sessionStorage.getItem("storeid");
+  const token = sessionStorage.getItem("token");
+
+  let url;
+
+  const navigate = useNavigate();
+
+  const handleAddCart = () => {
+    // 유저버튼 클릭 시 로그인 상태 체크 후 라우팅 진행.
+    if (userId === null) {
+      navigate("/login");
+    }
+  };
 
   return (
     <div className="item">
@@ -25,7 +41,9 @@ export default function Item() {
           <p>count: {card.content2}</p>
         </div>
       ))}
-      <AddToCartButton selectedCard={selectedCard} key={selectedCard.id} />
+      <div onClick={handleAddCart}>
+        <AddToCartButton selectedCard={selectedCard} key={selectedCard.id} />
+      </div>
       <BottomNav />
     </div>
   );

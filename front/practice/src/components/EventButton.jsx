@@ -1,5 +1,5 @@
 import "./Button.css";
 
 export default function EventButton({ buttonText }) {
-  return <button className="button">{buttonText}</button>;
+  return <button className="event-button">{buttonText}</button>;
 }

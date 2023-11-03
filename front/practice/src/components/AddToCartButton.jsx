@@ -11,7 +11,7 @@ export default function AddToCartButton({ selectedCard }) {
 
   return (
     <button
-      className={isCartItems ? "button active-cart" : "button"}
+      className={isCartItems ? "event-button active-cart" : "event-button"}
       onClick={addToCartHandler}
     >
       장바구니 {isCartItems ? "빼기" : "담기"}

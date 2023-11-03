@@ -11,7 +11,7 @@ export default function Cart() {
   );
 
   return (
-    <div className="cart">
+    <div className="cart-page">
       <Header />
       {CardInCart.map((card) => (
         <Link to={`/item/${card.id}`} key={card.id} className="card-link">
