@@ -2,7 +2,7 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
   datasource:
     url: jdbc:mariadb://svc.sel5.cloudtype.app:30261/capstoneAuth?createDatabaseIfNotExist=true

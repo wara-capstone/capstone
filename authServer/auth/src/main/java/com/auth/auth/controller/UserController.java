@@ -27,7 +27,7 @@ public class UserController {
     @PostMapping("/image")
     public ResponseEntity<String> createImage(
             @RequestPart("image") MultipartFile image,
-            @RequestParam("eamil") String email
+            @RequestParam("email") String email
     ) throws URISyntaxException {
         logger.info("[create Image] " + email);
         return this.userService.createImage(email, image);
