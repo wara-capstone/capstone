@@ -29,9 +29,10 @@ public class ImageController {
 
     @PostMapping("/upload")
     public ResponseEntity<ImageDTO> uploadImage(
-            @RequestPart List<MultipartFile> images
+            @RequestPart List<MultipartFile> images,
+            @RequestParam String email
     ) throws IOException {
-      return this.imageService.uploadImage(images);
+      return this.imageService.uploadImage(images, email);
     }
 
     @GetMapping(value = "/download/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
@@ -41,5 +42,12 @@ public class ImageController {
         return this.imageService.downloadImage(id);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> deleteImage(
+            @PathVariable("id") Long id,
+            @RequestParam String email
+    ){
+        return this.imageService.deleteImage(id, email);
+    }
 
 }

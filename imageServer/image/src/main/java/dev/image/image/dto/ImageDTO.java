@@ -15,4 +15,5 @@ public class ImageDTO {
     private String result;
     @Builder.Default
     private List<String> images = new ArrayList<>();
+    private String email;
 }

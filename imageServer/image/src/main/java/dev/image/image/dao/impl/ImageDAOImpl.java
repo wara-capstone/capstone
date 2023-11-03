@@ -29,4 +29,16 @@ public class ImageDAOImpl implements ImageDAO {
     public Optional<ImageEntity> downloadImage(Long id) {
         return this.imageRepository.findById(id);
     }
+
+    @Override
+    public boolean deleteImage(Long id, String email) {
+        if(!this.imageRepository.existsById(id)){
+            return false;
+        }
+        if(!this.imageRepository.findById(id).get().getEmail().equals(email)){
+            return false;
+        }
+        this.imageRepository.deleteById(id);
+        return true;
+    }
 }

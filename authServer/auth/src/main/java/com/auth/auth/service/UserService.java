@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.net.URISyntaxException;
 
 public interface UserService {
-    public ResponseEntity<String> createImage(MultipartFile image) throws URISyntaxException;
+    public ResponseEntity<String> createImage(String email, MultipartFile image) throws URISyntaxException;
     public ResponseEntity<UserDTO> updateUser(UserDTO userDTO);
 
 }

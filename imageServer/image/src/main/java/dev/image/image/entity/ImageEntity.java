@@ -16,11 +16,13 @@ import javax.persistence.*;
 @Table(name = "image")
 public class ImageEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @Column(name = "image_data")
     @Lob
-    byte[] image;
+    private byte[] image;
 
+    @Column
+    private String email;
 
 }

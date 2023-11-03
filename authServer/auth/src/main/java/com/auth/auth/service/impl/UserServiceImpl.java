@@ -39,7 +39,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<String> createImage(MultipartFile image) throws URISyntaxException {
+    public ResponseEntity<String> createImage(String email ,MultipartFile image) throws URISyntaxException {
+        Optional<UserEntity> user = this.userDAO.readUser(email);
+        if(!user.isPresent()){
+            return ResponseEntity.status(400).body(null);
+        }
+        if()
         ServiceInstance imageService = discoveryClient.getInstances("IMAGE-SERVICE").get(0);
         URI uri = new URI(imageService.getUri().toString());
 

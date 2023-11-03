@@ -29,7 +29,7 @@ public class UserController {
             @RequestPart("image") MultipartFile image,
             @RequestParam("eamil") String email
     ) throws URISyntaxException {
-        return this.userService.createImage(image);
+        return this.userService.createImage(email, image);
     }
 
     @PutMapping()
