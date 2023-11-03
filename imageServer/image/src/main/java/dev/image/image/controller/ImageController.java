@@ -29,10 +29,9 @@ public class ImageController {
 
     @PostMapping("/upload")
     public ResponseEntity<ImageDTO> uploadImage(
-            @RequestPart List<MultipartFile> images,
-            @RequestParam String email
+            @RequestPart List<MultipartFile> images
     ) throws IOException {
-      return this.imageService.uploadImage(images, email);
+      return this.imageService.uploadImage(images);
     }
 
     @GetMapping(value = "/download/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})

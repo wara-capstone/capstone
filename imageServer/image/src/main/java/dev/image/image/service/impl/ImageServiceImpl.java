@@ -30,7 +30,7 @@ public class ImageServiceImpl implements ImageService {
 
 
     @Override
-    public ResponseEntity<ImageDTO> uploadImage(List<MultipartFile> images, String email) throws IOException {
+    public ResponseEntity<ImageDTO> uploadImage(List<MultipartFile> images) throws IOException {
         List<String> imagesURI = new ArrayList<>();
         for(MultipartFile image : images){
             ImageEntity imageEntity = this.imageDAO.uploadImage(ImageEntity.builder().image(image.getBytes()).build());
