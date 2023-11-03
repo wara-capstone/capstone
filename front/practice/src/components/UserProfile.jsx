@@ -44,7 +44,7 @@ const UserProfile = () => {
   };
 
   const handleConnectSeller = () => {
-    // 로그아웃 처리 로직을 구현합니다.
+    // seller사이트 접속 처리 로직을 구현합니다.
 
     // 페이지 이동
     navigate("/seller");
