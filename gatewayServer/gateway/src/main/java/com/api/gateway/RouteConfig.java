@@ -16,10 +16,13 @@ public class RouteConfig {
                                       AuthorizationHeaderFilter authFilter) {
         return builder.routes()
                 //first-service
-                .route("user-service", r -> r.path("/auth/**")
+                .route("auth-service", r -> r.path("/auth/**")
                         //.filters() filters를 제작하여 인증처리 
                         .uri("lb://USER-SERVICE"))
-                .route("image-service", r -> r.path("/image/**")
+                .route("user-service", r->r.path("/user/**")
+                        .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
+                        .uri("lb://USER-SERVICE"))
+                .route("image-download", r -> r.path("/image/download/**")
                         .uri("lb://IMAGE-SERVICE"))
                 .route("test-service", r -> r.path("/test/**")
                         .filters(f -> f.filter(authFilter.apply(config -> {config.setRequiredRole("role_admin");})))

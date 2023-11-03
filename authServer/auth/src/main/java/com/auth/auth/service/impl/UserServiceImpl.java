@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<String> createImage(String email ,MultipartFile image) throws URISyntaxException {
+    public ResponseEntity<String> createImage(String email, MultipartFile image) throws URISyntaxException {
         Optional<UserEntity> user = this.userDAO.readUser(email);
         if(!user.isPresent()){
             return ResponseEntity.status(400).body(null);
@@ -52,10 +52,9 @@ public class UserServiceImpl implements UserService {
 
         String index = user.get().getProfileImage().replace("https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/image/download/", "");
         if(!index.equals("1")){
-            URI deleteUri = new URI(imageService.getUri()+"/image/"+index+"?email="+email);
+            URI deleteUri = new URI(imageService.getUri()+"/image/"+index);
             restTemplate.exchange(deleteUri, HttpMethod.DELETE, http, Boolean.class);
         }
-
 
         URI uri = new URI(imageService.getUri()+"/image/upload?email="+email);
         ResponseEntity response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
@@ -84,9 +83,10 @@ public class UserServiceImpl implements UserService {
                 .id(userEntity.getId())
                 .email(userEntity.getEmail())
                 .name(userEntity.getName())
+                .roles(userEntity.getRoles())
+                .profileImage(userEntity.getProfileImage())
                 .nickname(userDTO.getNickname())
                 .phone(userDTO.getPhone())
-                .roles(userEntity.getRoles())
                 .password(userDTO.getPassword())
                 .build();
         userEntity = this.userDAO.createUser(userEntity);
@@ -96,6 +96,26 @@ public class UserServiceImpl implements UserService {
                 .email(userEntity.getEmail())
                 .nickname(userEntity.getNickname())
                 .phone(userEntity.getPhone())
+                .profileImage(userEntity.getProfileImage())
+                .build();
+
+        return ResponseEntity.status(200).body(userDTO);
+    }
+
+    @Override
+    public ResponseEntity<UserDTO> readUser(String email) {
+        Optional<UserEntity> user = this.userDAO.readUser(email);
+        if(!user.isPresent()){
+            return ResponseEntity.status(400).body(null);
+        }
+        UserEntity userEntity = user.get();
+        UserDTO userDTO = UserDTO.builder()
+                .id(userEntity.getId())
+                .name(userEntity.getName())
+                .email(userEntity.getEmail())
+                .nickname(userEntity.getNickname())
+                .phone(userEntity.getPhone())
+                .profileImage(userEntity.getProfileImage())
                 .build();
 
         return ResponseEntity.status(200).body(userDTO);

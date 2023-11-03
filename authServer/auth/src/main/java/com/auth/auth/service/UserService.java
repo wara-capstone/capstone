@@ -10,5 +10,6 @@ import java.net.URISyntaxException;
 public interface UserService {
     public ResponseEntity<String> createImage(String email, MultipartFile image) throws URISyntaxException;
     public ResponseEntity<UserDTO> updateUser(UserDTO userDTO);
+    public ResponseEntity<UserDTO> readUser(String email);
 
 }

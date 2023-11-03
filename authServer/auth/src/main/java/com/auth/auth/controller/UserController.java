@@ -39,5 +39,12 @@ public class UserController {
         return this.userService.updateUser(userDTO);
     }
 
+    @GetMapping()
+    public ResponseEntity<UserDTO> readUser(
+            @RequestParam("email") String email
+    ){
+        return this.userService.readUser(email);
+    }
+
 
 }
