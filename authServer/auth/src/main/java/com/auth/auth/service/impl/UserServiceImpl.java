@@ -9,11 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,7 +55,12 @@ public class UserServiceImpl implements UserService {
             restTemplate.exchange(deleteUri, HttpMethod.DELETE, http, Boolean.class);
         }
 
-        URI uri = new URI(imageService.getUri()+"/image/upload?email="+email);
+        MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
+        bodyMap.add("images", image);
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        http = new HttpEntity<>(bodyMap, headers);
+
+        URI uri = new URI(imageService.getUri()+"/image/upload");
         ResponseEntity response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
 
         if(response.getStatusCode().is2xxSuccessful()){
