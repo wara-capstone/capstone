@@ -17,8 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from chat.views import health
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('chat/', include('chat.urls')),  # chat 앱의 urls 포함
+    path('health/', health, name='health'),
 ]
 

@@ -82,6 +82,26 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5501",
 ]
 
+EUREKA_SERVER_URL = "https://port-0-capstone-jvpb2mlodwuvxm.sel5.cloudtype.app/ "
+
+EUREKA_SERVICE = {
+    "instance": {
+        "hostName": "localhost",
+        "app": "CHATTING-SERVICE",
+        "ipAddr": "127.0.0.1",
+        "port": {
+            "$": 8000,
+            "@enabled": "true"
+        },
+        "vipAddress": "DJANGO_SERVICE",
+        "statusPageUrl": "http://localhost:8000/",
+        "healthCheckUrl": "http://localhost:8000/health",
+        "dataCenterInfo": {
+            "@class": "com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo",
+            "name": "MyOwn"
+        }
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

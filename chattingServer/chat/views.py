@@ -1,11 +1,30 @@
 from rest_framework import generics, serializers, status
 from rest_framework.response import Response
-from django.db.models import Q
 from .models import ChatRoom, Message, ShopUser, VisitorUser
 from .serializers import ChatRoomSerializer, MessageSerializer
 from rest_framework.exceptions import ValidationError
 from django.http import Http404
 
+from django.http import JsonResponse
+from py_eureka_client import eureka_client
+
+from django.conf import settings
+
+
+def health(request):
+    return JsonResponse({"status": "UP"})
+
+
+def register_service():
+    instance_port = int(settings.EUREKA_SERVICE['instance']['port']['$'])
+    eureka_client.init(eureka_server=settings.EUREKA_SERVER_URL,
+                    app_name=settings.EUREKA_SERVICE['instance']['app'],
+                    instance_port=instance_port)
+
+def deregister_service_from_eureka():
+    eureka_client.stop()
+
+    
 class ImmediateResponseException(Exception):
     def __init__(self, response):
         self.response = response
