@@ -50,6 +50,12 @@ const UserProfile = () => {
     navigate("/seller");
   };
 
+  if (userId) {
+    if (userRole === "user") {
+      document.querySelector(".move-seller-page-btn").style.display = "none";
+    }
+  }
+
   return (
     <div className="user-profile">
       <div className="profile-section">
