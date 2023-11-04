@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Data from "../DB/Data.json";
 import BottomNav from "../components/BottomNav";
 import Card from "../components/Card"; // Card 컴포넌트 임포트
+import "../components/Card.css";
 import Header from "../components/Header";
 
 export default function Barcode() {
@@ -10,7 +11,7 @@ export default function Barcode() {
     <div className="barcode">
       <Header />
       <h1>Barcode</h1>
-      <div className="barcode-item-data">
+      <div className="barcode-item-data" style={{ zIndex: 100, width: "100%" }}>
         {SelectedItem.map((card) => (
           <Link to={`/item/${card.id}`} key={card.id} className="card-link">
             <Card

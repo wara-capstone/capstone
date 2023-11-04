@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Data from "../DB/Data.json";
 import Card from "./Card"; // Card 컴포넌트 임포트
+import "./Card.css";
 
 function CardList() {
   return (

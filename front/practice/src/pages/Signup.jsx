@@ -59,8 +59,9 @@ const Signup = () => {
 
   return (
     <div className="signup-container">
-      <h2>회원가입 페이지</h2>
       <form className="signup-form" onSubmit={handleSignup}>
+        <h1>On&Off</h1>
+
         <label htmlFor="email">이메일</label>
         <input
           type="email"
@@ -110,7 +111,7 @@ const Signup = () => {
         />
 
         <div className="role-selection">
-          <label>회원 유형:</label>
+          <label>회원 유형</label>
           <div>
             <input
               type="radio"

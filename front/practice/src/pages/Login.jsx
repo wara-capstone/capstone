@@ -43,8 +43,8 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <h2>로그인 페이지</h2>
       <form className="login-form" onSubmit={handleLogin}>
+        <h1>On&Off</h1>
         <label htmlFor="username">이메일</label>
         <input
           type="text"
@@ -61,7 +61,6 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
         <button onClick={handleLogin}>로그인</button>
-
 
         <p className="signup-link">
           아직 회원이 아니신가요? <Link to="/signup">회원가입</Link>

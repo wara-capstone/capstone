@@ -2,6 +2,7 @@
 
 .seller-header {
   position: sticky;
+  height: 8vh;
   top: 0;
   left: 0;
   right: 0;
@@ -51,7 +52,7 @@
 
 .seller-home .ad-image-container {
   width: 100%;
-  height: 700px;
+  height: 92vh;
 }
 
 .seller-home .ad-image {
