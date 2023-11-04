@@ -16,6 +16,9 @@ const UserEdit = ({ user }) => {
   const [image, setImage] = useState("https://via.placeholder.com/150x150");
   const [previewImageSrc, setPreviewImageSrc] = useState("https://via.placeholder.com/150x150");
 
+  const [loginCheck, setLoginCheck] = useState(false); // 로그인 상태 체크
+  const [imageCheck, setImageCheck] = useState(false); // 이미지 체크
+
   useEffect( () => {
     console.log(token);
     console.log("위에꺼 토큰");
@@ -53,8 +56,10 @@ const UserEdit = ({ user }) => {
 
   // Check if passwords match
   if (password !== passwordConfirm) {
-    alert("비밀번호가 일치하지 않습니다.");
-  return;
+    setLoginCheck(true);
+    return
+  } else {
+    setLoginCheck(false);
   }
 
     // Create payload
@@ -90,7 +95,7 @@ const UserEdit = ({ user }) => {
     }
 
 
-
+  if(imageCheck){
     var formData = new FormData();
         formData.append('image', image); // 이미지
         console.log(formData);
@@ -125,7 +130,8 @@ const UserEdit = ({ user }) => {
             .catch(error => {
                 console.error(error);
             });
-
+            setImageCheck(false);
+          }
 
     console.log({nickname, phoneNumber, password, image });
   };
@@ -135,6 +141,7 @@ const UserEdit = ({ user }) => {
     if (e.target.files[0]) {
       setImage(e.target.files[0]);
       setPreviewImageSrc(URL.createObjectURL(e.target.files[0]));
+      setImageCheck(true);
     }
   };
 
@@ -191,6 +198,9 @@ const UserEdit = ({ user }) => {
             onChange={(e) => setPasswordConfirm(e.target.value)}
           />
         </div>
+        {loginCheck && (
+        <label  style={{color: "red"}}>비밀번호가 일치하지 않습니다.</label>
+        )}
       </div>
 
       {/* submit button */}

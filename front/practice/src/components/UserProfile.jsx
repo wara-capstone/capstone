@@ -15,7 +15,7 @@ const UserProfile = () => {
   const [isSeller, setIsSeller] = useState(false);
 
   const [user, setUser] = useState({
-    name: "ON&OFF",
+    name: "유저",
     profileImage: "https://via.placeholder.com/150x150",
     email: email,
     nickname: userRole,
@@ -43,20 +43,17 @@ const UserProfile = () => {
       if (response.status === 200) {
         setUser({
           ...user, // 기존 user 객체를 복사합니다.
+          name: result.nickname,
           email: result.email, // email 속성만 변경합니다.
-          nickname: result.nickname, // nickname 속성만 변경합니다.
           profileImage: result.profileImage// profileImage 속성만 변경합니다.
         });
         console.log(result.profileImage);
-  
       } else {
         console.log("실패");
+        console.log(result.profileImage);
       }
     };
-  
     fetchData();
-
-
   }, []);
 
   const navigate = useNavigate();

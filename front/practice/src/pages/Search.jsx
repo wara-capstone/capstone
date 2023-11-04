@@ -10,6 +10,9 @@ export default function Search() {
 function myFunction(event) {
   event.preventDefault();
 
+
+
+  
   console.log(searchText);
 }
 

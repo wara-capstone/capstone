@@ -46,7 +46,7 @@ function showPopup(info) {
     useEffect(() => {
         
 // 위치 정보를 가져오는 함수
-const getLocation = new Promise((resolve, reject) => {
+const getLocation = new Promise((resolve) => {
     if(navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(position) {
         var lat = position.coords.latitude,
@@ -198,6 +198,11 @@ var circleXY = {
 
 var prevLatlng// 이전 중심 좌표를 저장할 변수
 
+searchPlace = (place)=>{
+    // 키워드로 장소를 검색합니다
+    ps.keywordSearch("대구" + place, placesSearchCB); 
+    }
+
 // 지도가 이동, 확대, 축소로 인해 중심좌표가 변경되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
 kakao.maps.event.addListener(map, 'center_changed', function() {
 
@@ -267,10 +272,6 @@ kakao.maps.event.addListener(map, 'center_changed', function() {
 // });  
 
 });
-        searchPlace = (place)=>{
-        // 키워드로 장소를 검색합니다
-        ps.keywordSearch("대구" + place, placesSearchCB); 
-        }
 
 
 function initMarkers() {

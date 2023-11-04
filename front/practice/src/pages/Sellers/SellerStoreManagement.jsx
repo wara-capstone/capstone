@@ -28,7 +28,7 @@ const SellerStoreManagement = ({ store }) => {
           "content" : content
       };
       var formData = new FormData();
-      formData.append('images', image); // 이미지
+      formData.append('image', image); // 이미지
       formData.append('data', new Blob([JSON.stringify(data)], { type: "application/json" }));
       console.log(formData);
       // formData에 이미지와 json을 합친
@@ -70,9 +70,6 @@ const SellerStoreManagement = ({ store }) => {
     if (e.target.files[0]) {
       setImage(e.target.files[0]);
       setPreviewImageSrc(URL.createObjectURL(e.target.files[0]));
-
-
-
     }
   };
 
