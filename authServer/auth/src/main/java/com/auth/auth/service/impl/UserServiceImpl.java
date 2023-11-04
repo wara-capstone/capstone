@@ -18,6 +18,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,35 +56,38 @@ public class UserServiceImpl implements UserService {
                 return image.getOriginalFilename();
             }
         };
+        try {
+            ServiceInstance imageService = discoveryClient.getInstances("IMAGE-SERVICE").get(0);
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            HttpEntity<?> http = new HttpEntity<>(headers);
 
-        ServiceInstance imageService = discoveryClient.getInstances("IMAGE-SERVICE").get(0);
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        HttpEntity<?> http = new HttpEntity<>(headers);
-
-        String index = user.get().getProfileImage().replace("https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/image/download/", "");
-        if(!index.equals("1")){
-            URI deleteUri = new URI(imageService.getUri()+"/image/"+index);
-            restTemplate.exchange(deleteUri, HttpMethod.DELETE, http, Boolean.class);
-        }
+            String index = user.get().getProfileImage().replace("https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/image/download/", "");
+            if (!index.equals("1")) {
+                URI deleteUri = new URI(imageService.getUri() + "/image/" + index);
+                restTemplate.exchange(deleteUri, HttpMethod.DELETE, http, Boolean.class);
+            }
 
 
-        MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
-        bodyMap.add("images", body);
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        http = new HttpEntity<>(bodyMap, headers);
+            MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
+            bodyMap.add("images", body);
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+            http = new HttpEntity<>(bodyMap, headers);
 
-        URI uri = new URI(imageService.getUri()+"/image/upload");
-        ResponseEntity response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
+            URI uri = new URI(imageService.getUri() + "/image/upload");
+            ResponseEntity response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
 
-        if(response.getStatusCode().is2xxSuccessful()){
-            LinkedHashMap responseBody = (LinkedHashMap) response.getBody();
-            List<String> images = (List) responseBody.get("images");
-            String imageUri = (String) images.get(0);
-            UserEntity userEntity = user.get();
-            userEntity.setProfileImage(imageUri);
-            this.userDAO.createUser(userEntity);
-            return ResponseEntity.status(200).body(imageUri);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                LinkedHashMap responseBody = (LinkedHashMap) response.getBody();
+                List<String> images = (List) responseBody.get("images");
+                String imageUri = (String) images.get(0);
+                UserEntity userEntity = user.get();
+                userEntity.setProfileImage(imageUri);
+                this.userDAO.createUser(userEntity);
+                return ResponseEntity.status(200).body(imageUri);
+            }
+        }catch (HttpClientErrorException e){
+            return ResponseEntity.status(400).body(null);
         }
 
         return ResponseEntity.status(400).body(null);
