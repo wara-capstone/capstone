@@ -13,7 +13,7 @@ const UserEdit = ({ user }) => {
   const [phoneNumber, setPhoneNumber] = useState();
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
-  var [image, setImage] = useState("");
+  const [image, setImage] = useState("https://via.placeholder.com/150x150");
   const [previewImageSrc, setPreviewImageSrc] = useState("https://via.placeholder.com/150x150");
 
   useEffect( () => {

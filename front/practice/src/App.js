@@ -12,6 +12,7 @@ import ChattingList from "./pages/ChattingList";
 import Item from "./pages/Item";
 import Store from "./pages/Store";
 import UserEdit from "./pages/UserEdit";
+import Purchase from "./pages/Purchase";
 
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -20,6 +21,7 @@ import SellerChattingManagement from "./pages/Sellers/SellerChattingManagement";
 import SellerHome from "./pages/Sellers/SellerHome";
 import SellerItemManagement from "./pages/Sellers/SellerItemManagement";
 import SellerStoreManagement from "./pages/Sellers/SellerStoreManagement";
+
 
 import "./App.css";
 
@@ -39,6 +41,7 @@ export default function Customer() {
           <Route path="/chatting" element={<Chatting />} />
           <Route path="/user/edit" element={<UserEdit />} />
           <Route path="/user/chattingList" element={<ChattingList />} />
+          <Route path="/user/purchase" element={<Purchase />} />
 
           {/* 사장님 페이지 */}
           <Route path="/seller" element={<SellerHome />} />

@@ -5,13 +5,21 @@ import Card from "../components/Card"; // Card 컴포넌트 임포트
 import EventButton from "../components/EventButton";
 import Header from "../components/Header";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
   const CardInCart = Data.cardData.filter(
     (card) => card.isCartItems === Boolean(true)
   );
 
-    //
+  let navigate = useNavigate();
+
+
+  function asd(e) {
+      console.log("구매");
+       navigate("/user/purchase");
+  }
+
     useEffect(() => {
     }
     , []);
@@ -35,7 +43,7 @@ export default function Cart() {
         </Link>
       ))}
 
-      <EventButton buttonText={"구매하기"} />
+      <EventButton buttonText={"구매하기"} onClick={asd}/>
       <BottomNav />
     </div>
   );
