@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import wara.product.DTO.ProductDTO;
 import wara.product.DTO.ResponseDTO;
+import wara.product.Service.PostService;
 import wara.product.Service.ProductService;
 
 import java.util.List;
@@ -14,10 +15,13 @@ import java.util.List;
 @RestController
 public class ProductController {
 
-    private final ProductService service;
+    private final ProductService productService;
+    private final PostService postService;
 
-    public ProductController(@Autowired ProductService service) {
-        this.service = service;
+    public ProductController(@Autowired ProductService productService,
+                             @Autowired PostService postService) {
+        this.productService = productService;
+        this.postService = postService;
     }
 
     /**
@@ -25,7 +29,7 @@ public class ProductController {
      * */
     @GetMapping("/single-read")
     public ResponseDTO<ProductDTO> singleProductInfo(@RequestParam Long ProductId) {
-        return service.singleProductInfo(ProductId);
+        return productService.singleProductInfo(ProductId);
     }
 
 
@@ -35,7 +39,7 @@ public class ProductController {
     @GetMapping("/multi-read")
     public ResponseDTO<List<ProductDTO>> multiProductInfo(Long storeId){
 
-        return service.multiProductInfo(storeId);
+        return productService.multiProductInfo(storeId);
     }
 
 
@@ -45,7 +49,7 @@ public class ProductController {
     // TODO: 상품정보 수정의 다양한 경우를 고려 해야함
     @PostMapping("/modify")
     public HttpStatus modifyProductInfo(@RequestBody ProductDTO dto){
-        return service.modifyProductInfo(dto);
+        return productService.modifyProductInfo(dto);
 
     }
 
@@ -54,19 +58,21 @@ public class ProductController {
      * */
     @PutMapping("/registry")
     public HttpStatus initProductInfo(@RequestBody ProductDTO dto){
-        return service.initProductInfo(dto);
+        return productService.initProductInfo(dto);
     }
 
 
     @DeleteMapping("/single-remove")
     public HttpStatus removeSingleProduct(Long productId){
-        return service.removeSingleProduct(productId);
+        return productService.removeSingleProduct(productId);
     }
 
     @DeleteMapping("/multi-remove")
     public HttpStatus removeMultiProduct(Long productId){
-        return service.removeMultiProduct(productId);
+        return productService.removeMultiProduct(productId);
     }
+
+
 
 
 }
