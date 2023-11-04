@@ -4,11 +4,16 @@ import com.auth.auth.dao.UserDAO;
 import com.auth.auth.dto.UserDTO;
 import com.auth.auth.entity.UserEntity;
 import com.auth.auth.service.UserService;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -16,6 +21,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedHashMap;
@@ -38,11 +44,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<String> createImage(String email, MultipartFile image) throws URISyntaxException {
+    public ResponseEntity<String> createImage(String email, MultipartFile image) throws URISyntaxException, IOException {
         Optional<UserEntity> user = this.userDAO.readUser(email);
         if(!user.isPresent()){
             return ResponseEntity.status(400).body(null);
         }
+        ByteArrayResource body = new ByteArrayResource(image.getBytes()) {
+            @Override
+            public String getFilename() {
+                return image.getOriginalFilename();
+            }
+        };
 
         ServiceInstance imageService = discoveryClient.getInstances("IMAGE-SERVICE").get(0);
         RestTemplate restTemplate = new RestTemplate();
@@ -55,8 +67,9 @@ public class UserServiceImpl implements UserService {
             restTemplate.exchange(deleteUri, HttpMethod.DELETE, http, Boolean.class);
         }
 
+
         MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
-        bodyMap.add("images", image);
+        bodyMap.add("images", body);
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         http = new HttpEntity<>(bodyMap, headers);
 

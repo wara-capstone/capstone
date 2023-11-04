@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 @RestController
@@ -28,7 +29,7 @@ public class UserController {
     public ResponseEntity<String> createImage(
             @RequestPart("image") MultipartFile image,
             @RequestParam("email") String email
-    ) throws URISyntaxException {
+    ) throws URISyntaxException, IOException {
         logger.info("[create Image] " + email);
         return this.userService.createImage(email, image);
     }

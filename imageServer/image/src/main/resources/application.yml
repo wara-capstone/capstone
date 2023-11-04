@@ -6,7 +6,7 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
 
   servlet:
@@ -27,5 +27,4 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: https://port-0-capstone-jvpb2mlodwuvxm.sel5.cloudtype.app/eureka
-
 
