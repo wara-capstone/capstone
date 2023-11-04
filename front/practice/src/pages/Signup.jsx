@@ -8,7 +8,7 @@ const Signup = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState("customer");
+  const [role, setRole] = useState("");
 
   const navigate = useNavigate();
 
@@ -27,6 +27,9 @@ const Signup = () => {
     const payload = {
       email: email,
       password: password,
+      nickname: userNickname,
+      name: username,
+      phone: phoneNumber,
       role: role,
     };
 
@@ -116,9 +119,9 @@ const Signup = () => {
             <input
               type="radio"
               id="customer"
-              value="customer"
-              checked={role === "customer"}
-              onChange={() => setRole("customer")}
+              value="user"
+              checked={role === "user"}
+              onChange={() => setRole("user")}
             />
             <label htmlFor="customer">고객</label>
           </div>

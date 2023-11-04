@@ -12,7 +12,6 @@ import "./SearchBar.css";
 import "./Card.css"
 import "./KakaoMap.css"
 
-
 const { kakao } = window;
 let map; // 지도 객체
 
@@ -20,7 +19,6 @@ var searchPlace; // 검색한 장소 정보를 담을 변수
 
 var imageSize = new kakao.maps.Size(42, 56); // 마커의 크기 기존 33, 36
 var choiceImageSize = new kakao.maps.Size(44, 58); // 선택한 마커의 크기 기존 38, 40
-
 
 export default function KakaoMap() {
 
@@ -251,7 +249,7 @@ kakao.maps.event.addListener(map, 'center_changed', function() {
 //         "Content-type": "application/json; charset=utf-8",
 //         "Authorization": `${token}`
 //     },
-//     url: "https://port-0-creativefusion-jvpb2aln5qmjmz.sel5.cloudtype.app/store/range",
+//     url: "https://https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/range",
 //     data: BodyJson,
 //     success: function(data){
 //         // 서버에서 받은 데이터를 markerList에 저장
@@ -259,7 +257,7 @@ kakao.maps.event.addListener(map, 'center_changed', function() {
 //         console.log("데이터 전송 완료");
 //         console.log(markerList);
 
-//         initKakaoMap();
+//         initMarkers();
 //     },
 //     error: function(request, status, error,body) {
 //         console.log(request);
@@ -274,6 +272,8 @@ kakao.maps.event.addListener(map, 'center_changed', function() {
         ps.keywordSearch("대구" + place, placesSearchCB); 
         }
 
+
+function initMarkers() {
 
 markerList.forEach(function(markerInfo) {
 // 마커를 생성합니다
@@ -319,18 +319,20 @@ var marker = new kakao.maps.Marker({
             selectedMarker = null;
         }
         showPopup(markerInfo);
+
+         // 지도 중심을 클릭된 마커 위치로 이동
+         map.panTo(new kakao.maps.LatLng(markerInfo.lat, markerInfo.lon));
         
     
     });
 
 
 });
+}
+initMarkers();
+
+
 map.setCenter(options.center); // 지도 중심을 이동
- // 마커를 생성하고 지도에 표시합니다
- var marker = new kakao.maps.Marker({
-    map: map,
-    position: options.center, 
-});
 }
 
 }
@@ -338,7 +340,6 @@ map.setCenter(options.center); // 지도 중심을 이동
 // 검색창 값 변환
 function myFunction(event) {
     event.preventDefault();
-    // var searchValue = document.querySelector("Search-ewq").value;
     var searchValue = searchText;
     searchPlace(searchValue);
   }

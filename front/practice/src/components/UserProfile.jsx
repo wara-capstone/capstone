@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./UserProfile.css";
 
 const UserProfile = () => {
-  const userId = sessionStorage.getItem("email");
+  const email = sessionStorage.getItem("email");
   const userRole = sessionStorage.getItem("role");
   const storeId = sessionStorage.getItem("storeid");
   const token = sessionStorage.getItem("token");
@@ -17,7 +17,7 @@ const UserProfile = () => {
   const [user, setUser] = useState({
     name: "ON&OFF",
     profileImage: "https://via.placeholder.com/150x150",
-    email: userId,
+    email: email,
     nickname: userRole,
     phoneNumber: "010-1234-5678",
   });
@@ -28,6 +28,33 @@ const UserProfile = () => {
     } else if (userRole === "seller") {
       setIsSeller(true);
     }
+      const fetchData = async () => {
+      const response = await fetch(
+        'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user?email='+email,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `${token}`
+          },
+        }
+      );
+      const result = await response.json();
+      if (response.status === 200) {
+        setUser({
+          ...user, // 기존 user 객체를 복사합니다.
+          profileImage: result.profileImage// profileImage 속성만 변경합니다.
+        });
+        console.log(result.profileImage);
+  
+      } else {
+        console.log("실패");
+      }
+    };
+  
+    fetchData();
+
+
   }, []);
 
   const navigate = useNavigate();
