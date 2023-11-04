@@ -76,7 +76,6 @@
 }
 
 .user-logout-btn:active,
-
 .move-seller-page-btn:active {
   background-color: #fa5050; /* 배경색을 붉은색으로 변경합니다 */
 }
