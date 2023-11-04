@@ -11,18 +11,18 @@ from py_eureka_client import eureka_client
 from django.conf import settings
 
 
-def health(request):
-    return JsonResponse({"status": "UP"})
+# def health(request):
+#     return JsonResponse({"status": "UP"})
 
 
-def register_service():
-    instance_port = int(settings.EUREKA_SERVICE['instance']['port']['$'])
-    eureka_client.init(eureka_server=settings.EUREKA_SERVER_URL,
-                    app_name=settings.EUREKA_SERVICE['instance']['app'],
-                    instance_port=instance_port)
+# def register_service():
+#     instance_port = int(settings.EUREKA_SERVICE['instance']['port']['$'])
+#     eureka_client.init(eureka_server=settings.EUREKA_SERVER_URL,
+#                     app_name=settings.EUREKA_SERVICE['instance']['app'],
+#                     instance_port=instance_port)
 
-def deregister_service_from_eureka():
-    eureka_client.stop()
+# def deregister_service_from_eureka():
+#     eureka_client.stop()
 
     
 class ImmediateResponseException(Exception):

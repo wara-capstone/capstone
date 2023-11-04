@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-+6c&5e#(@pwwn3unv4i7k%cj@79ai8(t3%4+!+48zh$58!^j6*'
+SECRET_KEY = os.environ.get('SECRET_KEY','django-insecure-+6c&5e#(@pwwn3unv4i7k%cj@79ai8(t3%4+!+48zh$58!^j6*')
 
 DEBUG = int(os.environ.get('DEBUG', 1))
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -35,9 +35,9 @@ else:
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'channels',
     'daphne',
-    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -53,7 +53,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    'django.middleware.common.CommonMiddleware', 
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -86,29 +86,31 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5501",
 ]
 
-EUREKA_SERVER_URL = "https://port-0-capstone-jvpb2mlodwuvxm.sel5.cloudtype.app/ "
+# EUREKA_SERVER_URL = "https://port-0-capstone-jvpb2mlodwuvxm.sel5.cloudtype.app/ "
 
-EUREKA_SERVICE = {
-    "instance": {
-        "hostName": "localhost",
-        "app": "CHATTING-SERVICE",
-        "ipAddr": "127.0.0.1",
-        "port": {
-            "$": 8000,
-            "@enabled": "true"
-        },
-        "vipAddress": "DJANGO_SERVICE",
-        "statusPageUrl": "http://localhost:8000/",
-        "healthCheckUrl": "http://localhost:8000/health",
-        "dataCenterInfo": {
-            "@class": "com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo",
-            "name": "MyOwn"
-        }
-    }
-}
+# EUREKA_SERVICE = {
+#     "instance": {
+#         "hostName": "localhost",
+#         "app": "CHATTING-SERVICE",
+#         "ipAddr": "127.0.0.1",
+#         "port": {
+#             "$": 8000,
+#             "@enabled": "true"
+#         },
+#         "vipAddress": "DJANGO_SERVICE",
+#         "statusPageUrl": "http://localhost:8000/",
+#         "healthCheckUrl": "http://localhost:8000/health",
+#         "dataCenterInfo": {
+#             "@class": "com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo",
+#             "name": "MyOwn"
+#         }
+#     }
+# }
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+
+USE_OPTIONS = os.environ.get('USE_OPTIONS', 'False') == 'True'
 
 DATABASES = {
     'default': {
@@ -118,19 +120,20 @@ DATABASES = {
         'PASSWORD': os.environ.get('SQL_PASSWORD', 'password'),
         'HOST': os.environ.get('SQL_HOST', 'localhost'),
         'PORT': os.environ.get("SQL_PORT", '5432'),
-        'OPTIONS': {
-            'driver': 'asyncpg',
-        },
     }
 }
 
+if USE_OPTIONS:
+    DATABASES['default']['OPTIONS'] = {
+        'driver': 'asyncpg',
+    }
 
 # django channels layer
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('localhost', 6379)],
+            "hosts": [(os.environ.get('REDIS_HOST', 'localhost'), 6379)],
         },
     },
 }
@@ -171,11 +174,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
 STATIC_ROOT = os.path.join(BASE_DIR, '_static')
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
