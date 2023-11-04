@@ -1,16 +1,16 @@
 package com.store.Service;
 
 import com.store.DAO.StoreDAO;
-import com.store.DTO.ResponseDTO;
-import com.store.DTO.StoreDTO;
+import com.store.DTO.*;
 import com.store.Entity.StoreEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Service
-public class StoreServiceImpl implements StoreService{
+public class StoreServiceImpl implements StoreService {
     private final StoreDAO storeDAO;
 
     public StoreServiceImpl(@Autowired StoreDAO storeDAO) {
@@ -18,35 +18,69 @@ public class StoreServiceImpl implements StoreService{
     }
 
     @Override
-    public ResponseDTO createStore(StoreDTO storeDTO) {
+    public SimpleResponseDTO createStore(StoreDTO storeDTO) {
         StoreEntity storeEntity = toEntity(storeDTO);
         Map<String, Object> resultMap = storeDAO.createStore(storeEntity);
 
+        SimpleResponseDTO simpleResponseDTO = toSimpleResponseDTO(resultMap);
+        return simpleResponseDTO;
+    }
+    
+    @Override
+    public ResponseDTO readStoreById(Long storeId) {
+        Map<String, Object> resultMap = storeDAO.readStoreById(storeId);
+
         ResponseDTO responseDTO = toResponseDTO(resultMap);
         return responseDTO;
     }
 
     @Override
-    public ResponseDTO readStore(Long storeId) {
-        Map<String, Object> resultMap = storeDAO.readStore(storeId);
+    public ResponseDTO readStoreByName(String storeName) {
+        Map<String, Object> resultMap = storeDAO.readStoreByName(storeName);
 
         ResponseDTO responseDTO = toResponseDTO(resultMap);
         return responseDTO;
     }
 
     @Override
-    public ResponseDTO deleteStore(Long storeId) {
+    public ResponseDTO readStoreByIdForMap(Long storeId) {
+        Map<String, Object> resultMap = storeDAO.readStoreById(storeId);
+
+        ResponseDTO responseDTO = toResponseForMapDTO(resultMap);
+        return responseDTO;
+    }
+
+    @Override
+    public ResponseDTO readStoreByNameForMap(String storeName) {
+        Map<String, Object> resultMap = storeDAO.readStoreByName(storeName);
+
+        ResponseDTO responseDTO = toResponseForMapDTO(resultMap);
+        return responseDTO;
+    }
+
+    @Override
+    public SimpleResponseDTO existStoreById(Long storeId) {
+        Map<String, Object> resultMap = storeDAO.existStoreById(storeId);
+
+        SimpleResponseDTO simpleResponseDTO = toSimpleResponseDTO(resultMap);
+        return simpleResponseDTO;
+    }
+
+    @Override
+    public SimpleResponseDTO deleteStore(Long storeId) {
         Map<String, Object> resultMap = storeDAO.deleteStore(storeId);
 
-        ResponseDTO responseDTO = toResponseDTO(resultMap);
-        return responseDTO;
+        SimpleResponseDTO simpleResponseDTO = toSimpleResponseDTO(resultMap);
+        return simpleResponseDTO;
     }
 
-    public StoreEntity toEntity(StoreDTO storeDTO){
+    @Override
+    public StoreEntity toEntity(StoreDTO storeDTO) {
         StoreEntity storeEntity = StoreEntity.builder()
                 .storeName(storeDTO.getStoreName())
                 .storeAddress(storeDTO.getStoreAddress())
                 .storeSeller(storeDTO.getStoreSeller())
+                .storePhone(storeDTO.getStorePhone())
                 .storeContents(storeDTO.getStoreContents())
                 .storeImage(storeDTO.getStoreImage())
                 .storeLocationX(storeDTO.getStoreLocationX())
@@ -57,29 +91,117 @@ public class StoreServiceImpl implements StoreService{
         return storeEntity;
     }
 
-    public ResponseDTO toResponseDTO(Map<String, Object> resultMap){
+    @Override
+    public ResponseDTO toResponseDTO(Map<String, Object> resultMap) {
         ResponseDTO responseDTO;
 
-        if(resultMap.containsKey("data")) {
+        if (resultMap.containsKey("data")) {
             StoreEntity storeEntity = (StoreEntity) resultMap.get("data");
-            responseDTO = ResponseDTO.builder()
+            ReadResponseDTO readResponseDTO = ReadResponseDTO.builder()
                     .storeId(storeEntity.getStoreId())
                     .storeName(storeEntity.getStoreName())
                     .storeAddress(storeEntity.getStoreAddress())
                     .storeSeller(storeEntity.getStoreSeller())
+                    .storePhone(storeEntity.getStorePhone())
                     .storeContents(storeEntity.getStoreContents())
                     .storeImage(storeEntity.getStoreImage())
                     .storeLocationX(storeEntity.getStoreLocationX())
                     .storeLocationY(storeEntity.getStoreLocationY())
                     .productId(storeEntity.getProductIds())
+                    .build();
+
+            responseDTO = ResponseDTO.builder()
                     .result((String) resultMap.get("result"))
+                    .data(readResponseDTO)
+                    .build();
+        } else if (resultMap.containsKey("dataList")) {
+            List<StoreEntity> storeEntities = (List<StoreEntity>) resultMap.get("dataList");
+            List<ReadResponseDTO> readResponseDTOS = new ArrayList<>();
+
+            for (StoreEntity storeEntity : storeEntities) {
+                ReadResponseDTO readResponseDTO = ReadResponseDTO.builder()
+                        .storeId(storeEntity.getStoreId())
+                        .storeName(storeEntity.getStoreName())
+                        .storeAddress(storeEntity.getStoreAddress())
+                        .storeSeller(storeEntity.getStoreSeller())
+                        .storePhone(storeEntity.getStorePhone())
+                        .storeContents(storeEntity.getStoreContents())
+                        .storeImage(storeEntity.getStoreImage())
+                        .storeLocationX(storeEntity.getStoreLocationX())
+                        .storeLocationY(storeEntity.getStoreLocationY())
+                        .productId(storeEntity.getProductIds())
+                        .build();
+                readResponseDTOS.add(readResponseDTO);
+            }
+
+            responseDTO = ResponseDTO.builder()
+                    .result((String) resultMap.get("result"))
+                    .data(readResponseDTOS)
                     .build();
         } else{
             responseDTO = ResponseDTO.builder()
                     .result((String) resultMap.get("result"))
+                    .data(null)
                     .build();
         }
 
         return responseDTO;
     }
+
+    @Override
+    public ResponseDTO toResponseForMapDTO(Map<String, Object> resultMap) {
+        ResponseDTO responseDTO;
+
+        if (resultMap.containsKey("data")) {
+            StoreEntity storeEntity = (StoreEntity) resultMap.get("data");
+            ReadResponseForMapDTO readResponseForMapDTO = ReadResponseForMapDTO.builder()
+                    .storeName(storeEntity.getStoreName())
+                    .storeAddress(storeEntity.getStoreAddress())
+                    .storePhone(storeEntity.getStorePhone())
+                    .storeImage(storeEntity.getStoreImage())
+                    .build();
+
+            responseDTO = ResponseDTO.builder()
+                    .result((String) resultMap.get("result"))
+                    .data(readResponseForMapDTO)
+                    .build();
+        } else if(resultMap.containsKey("dataList")){
+            List<StoreEntity> storeEntities = (List<StoreEntity>) resultMap.get("dataList");
+            List<ReadResponseForMapDTO> readResponseForMapDTOS = new ArrayList<>();
+
+            for (StoreEntity storeEntity : storeEntities) {
+                ReadResponseForMapDTO readResponseForMapDTO = ReadResponseForMapDTO.builder()
+                        .storeName(storeEntity.getStoreName())
+                        .storeAddress(storeEntity.getStoreAddress())
+                        .storePhone(storeEntity.getStorePhone())
+                        .storeImage(storeEntity.getStoreImage())
+                        .build();
+                readResponseForMapDTOS.add(readResponseForMapDTO);
+            }
+
+            responseDTO = ResponseDTO.builder()
+                    .result((String) resultMap.get("result"))
+                    .data(readResponseForMapDTOS)
+                    .build();
+        } else {
+            responseDTO = ResponseDTO.builder()
+                    .result((String) resultMap.get("result"))
+                    .data(null)
+                    .build();
+        }
+
+        return responseDTO;
+    }
+
+    @Override
+    public SimpleResponseDTO toSimpleResponseDTO(Map<String, Object> resultMap) {
+        SimpleResponseDTO simpleResponseDTO;
+
+        simpleResponseDTO = SimpleResponseDTO.builder()
+                .result((String) resultMap.get("result"))
+                .build();
+
+        return simpleResponseDTO;
+    }
+
 }

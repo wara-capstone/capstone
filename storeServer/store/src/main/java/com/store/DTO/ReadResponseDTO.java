@@ -4,12 +4,14 @@ import lombok.*;
 
 import java.util.List;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class StoreDTO {
+public class ReadResponseDTO {
+    Long storeId;
     String storeName;
     String storeSeller;
     String storeAddress;
@@ -17,6 +19,6 @@ public class StoreDTO {
     double storeLocationX;
     double storeLocationY;
     String storeImage;
-    List<Long> productId;
     String storeContents;
+    List<Long> productId;
 }

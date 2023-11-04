@@ -1,6 +1,5 @@
 package com.store.Controller;
-import com.store.DTO.ResponseDTO;
-import com.store.DTO.StoreDTO;
+import com.store.DTO.*;
 import com.store.Service.StoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,24 +18,58 @@ public class StoreController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseDTO> createStore(@RequestBody StoreDTO storeDTO){
+    public ResponseEntity<SimpleResponseDTO> createStore(@RequestBody StoreDTO storeDTO){
         logger.info("\n[Request] : CreateStore\n[Data]: " + storeDTO.toString());
-        ResponseDTO response = storeService.createStore(storeDTO);
-        logger.info("\n[Response] : CreateStore\n[Data]: " + response.toString());
+        SimpleResponseDTO response = storeService.createStore(storeDTO);
+        logger.info("\n[Response] : " + response.toString());
         return ResponseEntity.status(200).body(response);
     }
 
-    @GetMapping("read/{storeId}")
-    public ResponseEntity<ResponseDTO> readStore(@PathVariable Long storeId){
-        logger.info("\n[Request] : ReadStore\n[Data]: " + storeId);
-        ResponseDTO response = storeService.readStore(storeId);
+    @GetMapping("read/storeid/{storeId}")
+    public ResponseEntity<ResponseDTO> readStoreById(@PathVariable Long storeId){
+        logger.info("\n[Request] : ReadStoreById\n[Data]: " + storeId);
+        ResponseDTO response = storeService.readStoreById(storeId);
+        logger.info("\n[Response] : " + response.toString());
+        return ResponseEntity.status(200).body(response);
+    }
+
+    @GetMapping("read/storename/{storeName}")
+    public ResponseEntity<ResponseDTO> readStoreByName(@PathVariable String storeName){
+        logger.info("\n[Request] : ReadStoreByName\n[Data]: " + storeName);
+        ResponseDTO response = storeService.readStoreByName(storeName);
+        logger.info("\n[Response] : " + response.toString());
+        return ResponseEntity.status(200).body(response);
+    }
+
+    @GetMapping("read/map/storeid/{storeId}")
+    public ResponseEntity<ResponseDTO> readStoreByIdForMap(@PathVariable Long storeId){
+        logger.info("\n[Request] : ReadStoreById\n[Data]: " + storeId);
+        ResponseDTO response = storeService.readStoreByIdForMap(storeId);
+        logger.info("\n[Response] : " + response.toString());
+        return ResponseEntity.status(200).body(response);
+    }
+
+    @GetMapping("read/map/storename/{storeName}")
+    public ResponseEntity<ResponseDTO> readStoreByNameForMap(@PathVariable String storeName){
+        logger.info("\n[Request] : ReadStoreByName\n[Data]: " + storeName);
+        ResponseDTO response = storeService.readStoreByNameForMap(storeName);
+        logger.info("\n[Response] : " + response.toString());
+        return ResponseEntity.status(200).body(response);
+    }
+
+    @GetMapping("exist/{storeId}")
+    public ResponseEntity<SimpleResponseDTO> existStoreById(@PathVariable Long storeId){
+        logger.info("\n[Request] : ExistStore\n[Data]: " + storeId);
+        SimpleResponseDTO response = storeService.existStoreById(storeId);
+        logger.info("\n[Response] : " + response.toString());
         return ResponseEntity.status(200).body(response);
     }
 
     @DeleteMapping("/delete/{storeId}")
-    public ResponseEntity<ResponseDTO> deleteStore(@PathVariable Long storeId){
+    public ResponseEntity<SimpleResponseDTO> deleteStore(@PathVariable Long storeId){
         logger.info("\n[Request] : DeleteStore\n[Data]: " + storeId);
-        ResponseDTO response = storeService.deleteStore(storeId);
+        SimpleResponseDTO response = storeService.deleteStore(storeId);
+        logger.info("\n[Response] : " + response.toString());
         return ResponseEntity.status(200).body(response);
     }
 }

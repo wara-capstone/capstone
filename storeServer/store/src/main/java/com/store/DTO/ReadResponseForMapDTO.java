@@ -2,21 +2,15 @@ package com.store.DTO;
 
 import lombok.*;
 
-import java.util.List;
-
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class StoreDTO {
+public class ReadResponseForMapDTO {
     String storeName;
-    String storeSeller;
     String storeAddress;
     String storePhone;
-    double storeLocationX;
-    double storeLocationY;
     String storeImage;
-    List<Long> productId;
-    String storeContents;
 }

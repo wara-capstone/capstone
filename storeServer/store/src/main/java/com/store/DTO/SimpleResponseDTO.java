@@ -8,7 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ResponseDTO {
+public class SimpleResponseDTO {
     String result;
-    Object data;
 }

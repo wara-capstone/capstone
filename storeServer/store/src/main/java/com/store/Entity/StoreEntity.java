@@ -17,6 +17,7 @@ public class StoreEntity {
     Long storeId;
     String storeName;
     String storeAddress;
+    String storePhone;
     String storeSeller;
     Double storeLocationX;
     Double storeLocationY;
