@@ -83,7 +83,7 @@ ASGI_APPLICATION = 'config.asgi.application'
 
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5501", "http://127.0.0.1:3000",
+    "http://127.0.0.1:5501","http://127.0.0.1:3000",
 ]
 
 # EUREKA_SERVER_URL = "https://port-0-capstone-jvpb2mlodwuvxm.sel5.cloudtype.app/ "
@@ -110,7 +110,7 @@ CORS_ALLOWED_ORIGINS = [
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-USE_OPTIONS = os.environ.get('USE_OPTIONS', 'False') == 'True'
+
 
 DATABASES = {
     'default': {
@@ -123,10 +123,11 @@ DATABASES = {
     }
 }
 
-if USE_OPTIONS:
-    DATABASES['default']['OPTIONS'] = {
-        'driver': 'asyncpg',
-    }
+# USE_OPTIONS = os.environ.get('USE_OPTIONS', 'False') == 'True'
+# if USE_OPTIONS:
+#     DATABASES['default']['OPTIONS'] = {
+#         'driver': 'asyncpg',
+#     }
 
 # django channels layer
 CHANNEL_LAYERS = {
