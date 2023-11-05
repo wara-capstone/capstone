@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/store")
@@ -17,10 +18,19 @@ public class StoreController {
         this.storeService = storeService;
     }
 
+//    @PostMapping("/create")
+//    public ResponseEntity<SimpleResponseDTO> createStore(@RequestBody StoreDTO storeDTO){
+//        logger.info("\n[Request] : CreateStore\n[Data]: " + storeDTO.toString());
+//        SimpleResponseDTO response = storeService.createStore(storeDTO);
+//        logger.info("\n[Response] : " + response.toString());
+//        return ResponseEntity.status(201).body(response);
+//    }
+
     @PostMapping("/create")
-    public ResponseEntity<SimpleResponseDTO> createStore(@RequestBody StoreDTO storeDTO){
+    public ResponseEntity<SimpleResponseDTO> createStore(@RequestPart("image") MultipartFile image,
+                                                         @RequestBody StoreDTO storeDTO){
         logger.info("\n[Request] : CreateStore\n[Data]: " + storeDTO.toString());
-        SimpleResponseDTO response = storeService.createStore(storeDTO);
+        SimpleResponseDTO response = storeService.createStore(storeDTO, image);
         logger.info("\n[Response] : " + response.toString());
         return ResponseEntity.status(201).body(response);
     }

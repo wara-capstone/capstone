@@ -4,26 +4,88 @@ import com.store.DAO.StoreDAO;
 import com.store.DTO.*;
 import com.store.Entity.StoreEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
 public class StoreServiceImpl implements StoreService {
     private final StoreDAO storeDAO;
+    private final DiscoveryClient discoveryClient;
 
-    public StoreServiceImpl(@Autowired StoreDAO storeDAO) {
+    public StoreServiceImpl(@Autowired StoreDAO storeDAO,
+                            @Autowired DiscoveryClient discoveryClient) {
         this.storeDAO = storeDAO;
+        this.discoveryClient = discoveryClient;
     }
 
     @Override
-    public SimpleResponseDTO createStore(StoreDTO storeDTO) {
+    public SimpleResponseDTO createStore(StoreDTO storeDTO, MultipartFile image) {
         StoreEntity storeEntity = toEntity(storeDTO);
-        Map<String, Object> resultMap = storeDAO.createStore(storeEntity);
 
-        SimpleResponseDTO simpleResponseDTO = toSimpleResponseDTO(resultMap);
-        return simpleResponseDTO;
+        try {
+            String imageUri = imageUpload(image);
+            storeEntity.setStoreImage(imageUri);
+            Map<String, Object> resultMap = storeDAO.createStore(storeEntity);
+            SimpleResponseDTO simpleResponseDTO = toSimpleResponseDTO(resultMap);
+            return simpleResponseDTO;
+        } catch (URISyntaxException | IOException e) {
+            e.printStackTrace(); // 예외를 콘솔에 출력
+            SimpleResponseDTO errorResponse = new SimpleResponseDTO("Failed to upload image");
+            return errorResponse;
+        }
+    }
+
+    public String imageUpload(MultipartFile image) throws URISyntaxException, IOException {
+        ByteArrayResource body = new ByteArrayResource(image.getBytes()) {
+            @Override
+            public String getFilename() {
+                return image.getOriginalFilename();
+            }
+        };
+
+        try {
+            ServiceInstance imageService = discoveryClient.getInstances("IMAGE-SERVICE").get(0);
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            HttpEntity<?> http = new HttpEntity<>(headers);
+
+            MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
+            bodyMap.add("images", body);
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+            http = new HttpEntity<>(bodyMap, headers);
+
+            URI uri = new URI(imageService.getUri() + "/image/upload");
+            ResponseEntity response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
+
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                LinkedHashMap responseBody = (LinkedHashMap) response.getBody();
+                List<String> images = (List) responseBody.get("images");
+                String imageUri = (String) images.get(0);
+
+                return imageUri;
+            }
+        } catch (HttpClientErrorException e) {
+            return "fail";
+        }
+
+        return "fail";
     }
     
     @Override
