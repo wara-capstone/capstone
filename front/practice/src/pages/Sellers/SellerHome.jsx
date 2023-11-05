@@ -4,8 +4,39 @@ import EventButton from "../../components/EventButton";
 
 import "./Seller.css";
 import SellerHeader from "./SellerHeader";
+import React, { useEffect, useState } from "react";
+
 
 export default function SellerHome() {
+  const email = sessionStorage.getItem("email");
+  const token = sessionStorage.getItem("token");
+
+  // useEffect(() => {
+  //     const fetchData = async () => {
+  //     const response = await fetch(
+  //       'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user?email='+email,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           // "Authorization": `${token}`
+  //         },
+  //       }
+  //     );
+  //     const result = await response.json();
+  //     if (response.status === 200) {
+  //       console.log("성공");
+  //     } else {
+  //       console.log("실패");
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
+
+
+
+
+
   return (
     <div className="seller-home">
       <SellerHeader />

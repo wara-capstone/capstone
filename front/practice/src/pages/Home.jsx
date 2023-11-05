@@ -18,28 +18,28 @@ export default function Home() {
 
   var itemList = [];
 
-  useEffect(() => {
-      const fetchData = async () => {
-      const response = await fetch(
-        'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user?',
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const result = await response.json();
-      if (response.status === 200) {
-        // result.map((item) => {
-        // });
-        console.log("성공");
-      } else {
-        console.log("실..패..");
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //     const fetchData = async () => {
+  //     const response = await fetch(
+  //       'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user?',
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+  //     const result = await response.json();
+  //     if (response.status === 200) {
+  //       // result.map((item) => {
+  //       // });
+  //       console.log("성공");
+  //     } else {
+  //       console.log("실..패..");
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
 
 

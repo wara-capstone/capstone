@@ -14,6 +14,7 @@ import "./KakaoMap.css"
 
 const { kakao } = window;
 let map; // 지도 객체
+var markers = []; // 마커를 담을 배열
 
 var searchPlace; // 검색한 장소 정보를 담을 변수
 
@@ -22,6 +23,7 @@ var choiceImageSize = new kakao.maps.Size(44, 58); // 선택한 마커의 크기
 
 export default function KakaoMap() {
 
+const token = sessionStorage.getItem("token");
 
 let [popupInfo, setPopupInfo] = useState(null); // 현재 열려있는 팝업 정보를 저장하는 변수, boolean
 let [searchText, setSearchText] = useState(""); // 검색창 값
@@ -134,7 +136,7 @@ var markerList = [
 
 
   // 키워드 검색 완료 시 호출되는 콜백함수 입니다
-function placesSearchCB (data, status, pagination) {
+function placesSearchCB (data, status) {
     if (status === kakao.maps.services.Status.OK) {
 
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
@@ -183,8 +185,6 @@ function ininKakaoMap(locPosition) {
         var centerAround = circle.getBounds(); 
         console.log(centerAround);
 
-
-
 // centerAround의 남서쪽과 북동쪽 좌표를 가져옵니다
 var swLatLng = centerAround.getSouthWest();
 var neLatLng = centerAround.getNorthEast();
@@ -200,7 +200,7 @@ var prevLatlng// 이전 중심 좌표를 저장할 변수
 
 searchPlace = (place)=>{
     // 키워드로 장소를 검색합니다
-    ps.keywordSearch("대구" + place, placesSearchCB); 
+    ps.keywordSearch("대구" + place, placesSearchCB);
     }
 
 // 지도가 이동, 확대, 축소로 인해 중심좌표가 변경되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
@@ -237,39 +237,47 @@ kakao.maps.event.addListener(map, 'center_changed', function() {
     "maxY" : neLatLng.getLat(),
 };
 
+console.log(circleXY);
 
 // ********** AJAX 요청 ********** //
-// for (var i = 0; i < markers.length; i++) {
-//     markers[i].setMap(null);
-// }            
+for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(null);
+}            
 
-// // markers 배열 초기화
-// markers = [];
+// markers 배열 초기화
+markers = [];
 
-// var BodyJson = JSON.stringify(circleXY);
+var BodyJson = JSON.stringify(circleXY);
 
-// $.ajax({
-//     type: 'POST',
-//     headers:{
-//         "Content-type": "application/json; charset=utf-8",
-//         "Authorization": `${token}`
-//     },
-//     url: "https://https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/range",
-//     data: BodyJson,
-//     success: function(data){
-//         // 서버에서 받은 데이터를 markerList에 저장
-//         markerList = data;
-//         console.log("데이터 전송 완료");
-//         console.log(markerList);
+const fetchData = async () => {
+    try {
+    const response = await fetch(
+    "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/read/coordinate",
+    {
+    method: 'POST',
+    headers:{
+        "Content-type": "application/json",
+        "Authorization": `${token}`
+    },
+    body : BodyJson,
+    }
+);
+    const data = await response.json();
+    if (response.status === 200) {
+        // 서버에서 받은 데이터를 markerList에 저장
+        markerList = data;
+        console.log("데이터 전송 완료");
+        console.log(markerList);
+        initMarkers();
+    }else if (response.status === 400) {
+        console.log("데이터 전송 실패");
+  }
+ } catch (error) {
+  console.error("오류 발생:", error);
+    }
+};
 
-//         initMarkers();
-//     },
-//     error: function(request, status, error,body) {
-//         console.log(request);
-//         console.log(body);
-//         console.log(error);
-//     }
-// });  
+fetchData();
 
 });
 
@@ -281,16 +289,18 @@ markerList.forEach(function(markerInfo) {
 
 if(markerInfo.Shopping){
 var marker = new kakao.maps.Marker({
-    position: new kakao.maps.LatLng(markerInfo.lat, markerInfo.lon),
+    position: new kakao.maps.LatLng(markerInfo.storeLocationX, markerInfo.storeLocationY),
     map: map,
     image: shopNormalImage, // 마커 이미지
 });
     marker.normalImage = shopNormalImage;
     marker.clickImage = shopClickImage;
 
+    markers.push(marker);
+
 }else{
     var marker = new kakao.maps.Marker({
-        position: new kakao.maps.LatLng(markerInfo.lat, markerInfo.lon),
+        position: new kakao.maps.LatLng(markerInfo.storeLocationX, markerInfo.storeLocationY),
         map: map,
         image: normalImage, // 마커 이미지
         
@@ -322,7 +332,7 @@ var marker = new kakao.maps.Marker({
         showPopup(markerInfo);
 
          // 지도 중심을 클릭된 마커 위치로 이동
-         map.panTo(new kakao.maps.LatLng(markerInfo.lat, markerInfo.lon));
+         map.panTo(new kakao.maps.LatLng(markerInfo.storeLocationX,  markerInfo.storeLocationY));
         
     
     });
@@ -357,11 +367,11 @@ function myFunction(event) {
             <div className="map-store-data" id ="popup" style={{ zIndex: 100 }}>
                 <Link to={`/store/${popupInfo.key}`} key={popupInfo.key} className="card-link">
                 <Card
-                    title={popupInfo.place}
-                    subTitle={popupInfo.address}
-                    content={popupInfo.storeItem}
-                    mainImage={imageSrc}
-                    id={popupInfo.id}
+                    title={popupInfo.storeName}
+                    subTitle={popupInfo.storeAddress}
+                    content={popupInfo.storePhone}
+                    mainImage={popupInfo.storeImage}
+                    id={popupInfo.storeId}
                 />
                 </Link>
             </div>
