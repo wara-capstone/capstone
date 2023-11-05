@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class ReadResponseForMapDTO {
+    Long storeId;
     String storeName;
     String storeAddress;
     String storePhone;

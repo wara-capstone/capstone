@@ -54,7 +54,7 @@ public class StoreServiceImpl implements StoreService {
     public ResponseDTO readStoreByCoordinate(CoordinateDTO coordinateDTO) {
         Map<String, Object> resultMap = storeDAO.readStoreByCoordinate(coordinateDTO.getMinX(), coordinateDTO.getMinY(), coordinateDTO.getMaxX(), coordinateDTO.getMaxY());
 
-        ResponseDTO responseDTO = toResponseDTO(resultMap);
+        ResponseDTO responseDTO = toResponseForMapDTO(resultMap);
         return responseDTO;
     }
 
@@ -187,6 +187,7 @@ public class StoreServiceImpl implements StoreService {
         if (resultMap.containsKey("data")) {
             StoreEntity storeEntity = (StoreEntity) resultMap.get("data");
             ReadResponseForMapDTO readResponseForMapDTO = ReadResponseForMapDTO.builder()
+                    .storeId(storeEntity.getStoreId())
                     .storeName(storeEntity.getStoreName())
                     .storeAddress(storeEntity.getStoreAddress())
                     .storePhone(storeEntity.getStorePhone())
@@ -214,6 +215,7 @@ public class StoreServiceImpl implements StoreService {
 
             for (StoreEntity storeEntity : storeEntities) {
                 ReadResponseForMapDTO readResponseForMapDTO = ReadResponseForMapDTO.builder()
+                        .storeId(storeEntity.getStoreId())
                         .storeName(storeEntity.getStoreName())
                         .storeAddress(storeEntity.getStoreAddress())
                         .storePhone(storeEntity.getStorePhone())

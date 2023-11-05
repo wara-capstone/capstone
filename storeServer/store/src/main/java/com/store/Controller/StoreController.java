@@ -22,7 +22,7 @@ public class StoreController {
         logger.info("\n[Request] : CreateStore\n[Data]: " + storeDTO.toString());
         SimpleResponseDTO response = storeService.createStore(storeDTO);
         logger.info("\n[Response] : " + response.toString());
-        return ResponseEntity.status(200).body(response);
+        return ResponseEntity.status(201).body(response);
     }
 
     @GetMapping("/read/storeid/{storeId}")
@@ -49,7 +49,7 @@ public class StoreController {
         return ResponseEntity.status(200).body(response);
     }
 
-    @GetMapping("/read/coordinate")
+    @PostMapping("/read/coordinate")
     public ResponseEntity<ResponseDTO> readStoreByCoordinate(@RequestBody CoordinateDTO coordinateDTO){
         logger.info("\n[Request] : ReadStoreByCoordinate\n[Data]: " + coordinateDTO.toString());
         ResponseDTO response = storeService.readStoreByCoordinate(coordinateDTO);
