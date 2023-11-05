@@ -45,7 +45,7 @@ public class StoreServiceImpl implements StoreService {
             SimpleResponseDTO simpleResponseDTO = toSimpleResponseDTO(resultMap);
             return simpleResponseDTO;
         } catch (URISyntaxException | IOException e) {
-            e.printStackTrace(); // 예외를 콘솔에 출력
+            e.printStackTrace();
             SimpleResponseDTO errorResponse = new SimpleResponseDTO("Failed to upload image");
             return errorResponse;
         }
@@ -70,7 +70,8 @@ public class StoreServiceImpl implements StoreService {
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
             http = new HttpEntity<>(bodyMap, headers);
 
-            URI uri = new URI(imageService.getUri() + "/image/upload");
+//            URI uri = new URI(imageService.getUri() + "/image/upload");
+            URI uri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/upload");
             ResponseEntity response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
 
 
@@ -82,10 +83,10 @@ public class StoreServiceImpl implements StoreService {
                 return imageUri;
             }
         } catch (HttpClientErrorException e) {
-            return "fail";
+            return "Failed to upload image";
         }
 
-        return "fail";
+        return "Failed to upload image";
     }
     
     @Override
@@ -139,6 +140,14 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public SimpleResponseDTO existStoreById(Long storeId) {
         Map<String, Object> resultMap = storeDAO.existStoreById(storeId);
+
+        SimpleResponseDTO simpleResponseDTO = toSimpleResponseDTO(resultMap);
+        return simpleResponseDTO;
+    }
+
+    @Override
+    public SimpleResponseDTO existStoreBySeller(String storeSeller) {
+        Map<String, Object> resultMap = storeDAO.existStoreBySeller(storeSeller);
 
         SimpleResponseDTO simpleResponseDTO = toSimpleResponseDTO(resultMap);
         return simpleResponseDTO;

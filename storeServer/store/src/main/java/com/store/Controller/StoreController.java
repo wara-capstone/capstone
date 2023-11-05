@@ -18,24 +18,16 @@ public class StoreController {
         this.storeService = storeService;
     }
 
-//    @PostMapping("/create")
-//    public ResponseEntity<SimpleResponseDTO> createStore(@RequestBody StoreDTO storeDTO){
-//        logger.info("\n[Request] : CreateStore\n[Data]: " + storeDTO.toString());
-//        SimpleResponseDTO response = storeService.createStore(storeDTO);
-//        logger.info("\n[Response] : " + response.toString());
-//        return ResponseEntity.status(201).body(response);
-//    }
-
     @PostMapping("/create")
     public ResponseEntity<SimpleResponseDTO> createStore(@RequestPart("image") MultipartFile image,
-                                                         @RequestBody StoreDTO storeDTO){
+                                                         @RequestPart("json") StoreDTO storeDTO){
         logger.info("\n[Request] : CreateStore\n[Data]: " + storeDTO.toString());
         SimpleResponseDTO response = storeService.createStore(storeDTO, image);
         logger.info("\n[Response] : " + response.toString());
         return ResponseEntity.status(201).body(response);
     }
 
-    @GetMapping("/read/storeid/{storeId}")
+    @GetMapping("/read/id/{storeId}")
     public ResponseEntity<ResponseDTO> readStoreById(@PathVariable Long storeId){
         logger.info("\n[Request] : ReadStoreById\n[Data]: " + storeId);
         ResponseDTO response = storeService.readStoreById(storeId);
@@ -43,7 +35,7 @@ public class StoreController {
         return ResponseEntity.status(200).body(response);
     }
 
-    @GetMapping("/read/storename/{storeName}")
+    @GetMapping("/read/name/{storeName}")
     public ResponseEntity<ResponseDTO> readStoreByName(@PathVariable String storeName){
         logger.info("\n[Request] : ReadStoreByName\n[Data]: " + storeName);
         ResponseDTO response = storeService.readStoreByName(storeName);
@@ -59,7 +51,7 @@ public class StoreController {
         return ResponseEntity.status(200).body(response);
     }
 
-    @PostMapping("/read/coordinate")
+    @PostMapping("/read/map/coordinate")
     public ResponseEntity<ResponseDTO> readStoreByCoordinate(@RequestBody CoordinateDTO coordinateDTO){
         logger.info("\n[Request] : ReadStoreByCoordinate\n[Data]: " + coordinateDTO.toString());
         ResponseDTO response = storeService.readStoreByCoordinate(coordinateDTO);
@@ -67,7 +59,7 @@ public class StoreController {
         return ResponseEntity.status(200).body(response);
     }
 
-    @GetMapping("/read/map/storeid/{storeId}")
+    @GetMapping("/read/map/id/{storeId}")
     public ResponseEntity<ResponseDTO> readStoreByIdForMap(@PathVariable Long storeId){
         logger.info("\n[Request] : ReadStoreById\n[Data]: " + storeId);
         ResponseDTO response = storeService.readStoreByIdForMap(storeId);
@@ -75,7 +67,7 @@ public class StoreController {
         return ResponseEntity.status(200).body(response);
     }
 
-    @GetMapping("/read/map/storename/{storeName}")
+    @GetMapping("/read/map/name/{storeName}")
     public ResponseEntity<ResponseDTO> readStoreByNameForMap(@PathVariable String storeName){
         logger.info("\n[Request] : ReadStoreByName\n[Data]: " + storeName);
         ResponseDTO response = storeService.readStoreByNameForMap(storeName);
@@ -83,10 +75,18 @@ public class StoreController {
         return ResponseEntity.status(200).body(response);
     }
 
-    @GetMapping("/exist/{storeId}")
+    @GetMapping("/exist/id/{storeId}")
     public ResponseEntity<SimpleResponseDTO> existStoreById(@PathVariable Long storeId){
-        logger.info("\n[Request] : ExistStore\n[Data]: " + storeId);
+        logger.info("\n[Request] : ExistStoreById\n[Data]: " + storeId);
         SimpleResponseDTO response = storeService.existStoreById(storeId);
+        logger.info("\n[Response] : " + response.toString());
+        return ResponseEntity.status(200).body(response);
+    }
+
+    @GetMapping("/exist/seller/{storeSeller}")
+    public ResponseEntity<SimpleResponseDTO> existStoreBySeller(@PathVariable String storeSeller){
+        logger.info("\n[Request] : ExistStoreBySeller\n[Data]: " + storeSeller);
+        SimpleResponseDTO response = storeService.existStoreBySeller(storeSeller);
         logger.info("\n[Response] : " + response.toString());
         return ResponseEntity.status(200).body(response);
     }
@@ -99,7 +99,7 @@ public class StoreController {
         return ResponseEntity.status(200).body(response);
     }
 
-    @DeleteMapping("/delete/{storeId}")
+    @DeleteMapping("/delete/id/{storeId}")
     public ResponseEntity<SimpleResponseDTO> deleteStore(@PathVariable Long storeId){
         logger.info("\n[Request] : DeleteStore\n[Data]: " + storeId);
         SimpleResponseDTO response = storeService.deleteStore(storeId);

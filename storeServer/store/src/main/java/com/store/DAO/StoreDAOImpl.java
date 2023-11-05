@@ -111,6 +111,19 @@ public class StoreDAOImpl implements StoreDAO {
     }
 
     @Override
+    public Map<String, Object> existStoreBySeller(String storeSeller) {
+        Map<String, Object> result = new HashMap<>();
+
+        if (storeRepository.existsByStoreSeller(storeSeller)) {
+            result.put("result", "success");
+        } else {
+            result.put("result", "fail");
+        }
+
+        return result;
+    }
+
+    @Override
     public Map<String, Object> existStoreByNameAndSeller(String storeName, String storeSeller){
         Map<String, Object> result = new HashMap<>();
 

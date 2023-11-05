@@ -15,4 +15,5 @@ public interface StoreRepository extends JpaRepository<StoreEntity, String> {
     StoreEntity findByStoreNameAndStoreSeller(String storeName, String storeSeller);
     Boolean existsByStoreNameAndStoreSeller(String storeName, String storeSeller);
     Boolean existsByStoreId(Long storeId);
+    Boolean existsByStoreSeller(String storeSeller);
 }

@@ -1,5 +1,6 @@
 package com.store.Service;
 
+import com.store.DAO.StoreDAOImpl;
 import com.store.DTO.*;
 import com.store.Entity.StoreEntity;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public interface StoreService {
     public ResponseDTO readStoreByIdForMap(Long storeId);
     public ResponseDTO readStoreByNameForMap(String storeName);
     public SimpleResponseDTO existStoreById(Long storeId);
+    public SimpleResponseDTO existStoreBySeller(String storeSeller);
     public SimpleResponseDTO updateStore(StoreDTO storeDTO);
     public SimpleResponseDTO deleteStore(Long storeId);
     public StoreEntity toEntity(StoreDTO storeDTO);
