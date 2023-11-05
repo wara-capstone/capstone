@@ -4,10 +4,6 @@ import com.auth.auth.dao.UserDAO;
 import com.auth.auth.dto.UserDTO;
 import com.auth.auth.entity.UserEntity;
 import com.auth.auth.service.UserService;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +61,7 @@ public class UserServiceImpl implements UserService {
             String index = user.get().getProfileImage().replace("https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/image/download/", "");
             if (!index.equals("1")) {
                 URI deleteUri = new URI(imageService.getUri() + "/image/" + index);
+                logger.info(deleteUri.toString());
                 restTemplate.exchange(deleteUri, HttpMethod.DELETE, http, Boolean.class);
             }
 
@@ -76,7 +73,7 @@ public class UserServiceImpl implements UserService {
 
             URI uri = new URI(imageService.getUri() + "/image/upload");
             ResponseEntity response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
-
+            logger.info(uri.toString());
             if (response.getStatusCode().is2xxSuccessful()) {
                 LinkedHashMap responseBody = (LinkedHashMap) response.getBody();
                 List<String> images = (List) responseBody.get("images");

@@ -15,6 +15,8 @@ public class RouteConfig {
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder,
                                       AuthorizationHeaderFilter authFilter) {
         return builder.routes()
+                .route("store-service", r->r.path("/store/**")
+                        .uri("lb://STORE-SERVICE"))
                 //first-service
                 .route("auth-service", r -> r.path("/auth/**")
                         //.filters() filters를 제작하여 인증처리 
