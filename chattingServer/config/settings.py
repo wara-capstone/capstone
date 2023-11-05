@@ -24,13 +24,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY','django-insecure-+6c&5e#(@pwwn3unv4i7k%
 
 DEBUG = int(os.environ.get('DEBUG', 1))
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-if os.environ.get('DJANGO_ALLOWED_HOSTS'):
-    ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
-else:
-    ALLOWED_HOSTS = []
 
+# if os.environ.get('DJANGO_ALLOWED_HOSTS'):
+#     ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
+# else:
+#     ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -83,34 +83,35 @@ ASGI_APPLICATION = 'config.asgi.application'
 
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5501", "http://127.0.0.1:3000",
+    "http://127.0.0.1:5501","http://127.0.0.1:3000",
 ]
 
-# EUREKA_SERVER_URL = "https://port-0-capstone-jvpb2mlodwuvxm.sel5.cloudtype.app/ "
+EUREKA_SERVER_URL = "https://port-0-capstone-jvpb2mlodwuvxm.sel5.cloudtype.app/ "
 
-# EUREKA_SERVICE = {
-#     "instance": {
-#         "hostName": "localhost",
-#         "app": "CHATTING-SERVICE",
-#         "ipAddr": "127.0.0.1",
-#         "port": {
-#             "$": 8000,
-#             "@enabled": "true"
-#         },
-#         "vipAddress": "DJANGO_SERVICE",
-#         "statusPageUrl": "http://localhost:8000/",
-#         "healthCheckUrl": "http://localhost:8000/health",
-#         "dataCenterInfo": {
-#             "@class": "com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo",
-#             "name": "MyOwn"
-#         }
-#     }
-# }
+# Eureka 서비스 설정
+EUREKA_SERVICE = {
+    "instance": {
+        "hostName": os.environ.get('EUREKA_HOST', 'localhost'),
+        "app": "CHATTING-SERVICE",
+        "ipAddr": os.environ.get('EUREKA_IP_ADDR', '3.34.227.3'),
+        "port": {
+            "$": int(os.environ.get('EUREKA_PORT', 14000)),
+            "@enabled": "true"
+        },
+        "vipAddress": "DJANGO_SERVICE",
+        "statusPageUrl": f"http://{os.environ.get('EUREKA_HOST', 'localhost')}:14000/",
+        "healthCheckUrl": f"http://{os.environ.get('EUREKA_HOST', 'localhost')}:14000/health",
+        "dataCenterInfo": {
+            "@class": "com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo",
+            "name": "MyOwn"
+        }
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-USE_OPTIONS = os.environ.get('USE_OPTIONS', 'False') == 'True'
+# USE_OPTIONS = os.environ.get('USE_OPTIONS', 'False') == 'True'
 
 DATABASES = {
     'default': {
@@ -123,10 +124,10 @@ DATABASES = {
     }
 }
 
-if USE_OPTIONS:
-    DATABASES['default']['OPTIONS'] = {
-        'driver': 'asyncpg',
-    }
+# if USE_OPTIONS:
+#     DATABASES['default']['OPTIONS'] = {
+#         'driver': 'asyncpg',
+#     }
 
 # django channels layer
 CHANNEL_LAYERS = {
@@ -163,7 +164,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ko-kr'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
