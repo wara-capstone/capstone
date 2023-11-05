@@ -15,15 +15,34 @@ public class RouteConfig {
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder,
                                       AuthorizationHeaderFilter authFilter) {
         return builder.routes()
-                .route("store-service", r->r.path("/store/**")
+                // chat
+                .route("chat-service", r->r.path("/room/**")
+                        .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
+                        .uri("ws://3.34.227.3:14000"))
+                .route("chat-service", r->r.path("/chat/**")
+                        .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
+                        .uri("http://3.34.227.3:14000"))
+                // store
+                .route("store-service", r->r.path("/store/delete")
+                        .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_seller");})))
                         .uri("lb://STORE-SERVICE"))
-                //first-service
+                .route("store-service", r->r.path("/store/update")
+                        .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_seller");})))
+                        .uri("lb://STORE-SERVICE"))
+                .route("store-service", r->r.path("/store/create")
+                        .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_seller");})))
+                        .uri("lb://STORE-SERVICE"))
+                .route("store-service", r->r.path("/store/**")
+                        .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
+                        .uri("lb://STORE-SERVICE"))
+                // auth, user
                 .route("auth-service", r -> r.path("/auth/**")
                         //.filters() filters를 제작하여 인증처리 
                         .uri("lb://USER-SERVICE"))
                 .route("user-service", r->r.path("/user/**")
                         .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
                         .uri("lb://USER-SERVICE"))
+                // image
                 .route("image-download", r -> r.path("/image/download/**")
                         .uri("lb://IMAGE-SERVICE"))
                 .route("test-service", r -> r.path("/test/**")

@@ -52,6 +52,8 @@ public class UserServiceImpl implements UserService {
                 return image.getOriginalFilename();
             }
         };
+
+
         try {
             ServiceInstance imageService = discoveryClient.getInstances("IMAGE-SERVICE").get(0);
             RestTemplate restTemplate = new RestTemplate();
