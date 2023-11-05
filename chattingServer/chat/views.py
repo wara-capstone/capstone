@@ -25,7 +25,8 @@ def register_service():
     # 여기서 Eureka 서버의 URL, 애플리케이션 이름, 인스턴스 포트를 설정합니다.
     eureka_client.init(eureka_server=settings.EUREKA_SERVER_URL,
                     app_name=settings.EUREKA_SERVICE['instance']['app'],
-                    instance_port=instance_port)
+                    instance_port=instance_port,
+                    instance_host=settings.EUREKA_SERVICE['instance']['ipAddr'])
 
 # Eureka 서버에서 현재 서비스의 등록을 해제하는 함수입니다.
 def deregister_service_from_eureka():

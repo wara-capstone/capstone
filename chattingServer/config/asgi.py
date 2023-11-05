@@ -7,11 +7,11 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
 # Django ASGI 애플리케이션 초기화
 django_asgi_app = get_asgi_application()
-# from chat.views import register_service, deregister_service_from_eureka
+from chat.views import register_service, deregister_service_from_eureka
+import atexit
+register_service()
 
-# register_service()
-
-# atexit.register(deregister_service_from_eureka)
+atexit.register(deregister_service_from_eureka)
 # channels 라우팅과 미들웨어는 Django 초기화 이후에 가져와야 합니다.
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
