@@ -18,6 +18,10 @@ var markers = []; // 마커를 담을 배열
 
 var searchPlace; // 검색한 장소 정보를 담을 변수
 
+// 마커 정보를 담은 배열
+var markerList = [],
+  selectedMarker = null; // 클릭한 마커를 담을 변수
+
 var imageSize = new kakao.maps.Size(42, 56); // 마커의 크기 기존 33, 36
 var choiceImageSize = new kakao.maps.Size(44, 58); // 선택한 마커의 크기 기존 38, 40
 
@@ -33,7 +37,7 @@ let prevInfo = null;
 //Popup창 켜고 끄는 method
 function showPopup(info) {
     // 현재 열린 팝업 정보가 null이 아니고, 새로운 팝업이 이전 팝업과 같다면 팝업을 닫고 함수를 종료합니다.
-    if(prevInfo !== null && prevInfo.key === info.key){
+    if(prevInfo !== null && prevInfo === info){
         prevInfo = null;
         setPopupInfo(prevInfo);
         return;
@@ -46,7 +50,6 @@ function showPopup(info) {
 }
 
     useEffect(() => {
-        
 // 위치 정보를 가져오는 함수
 const getLocation = new Promise((resolve) => {
     if(navigator.geolocation) {
@@ -69,7 +72,7 @@ const getLocation = new Promise((resolve) => {
 
   // 위치 정보를 가져온 후에 지도를 초기화하는 함수
   getLocation.then((locPosition) => {
-    ininKakaoMap(locPosition);
+    initKakaoMap(locPosition);
   });
 
   // 사용자 위치를 지속적으로 추적
@@ -90,12 +93,9 @@ const getLocation = new Promise((resolve) => {
     maximumAge: 0,
     timeout: Infinity
   });
-
   // 컴포넌트가 unmount될 때 위치 추적을 중지
   return () => navigator.geolocation.clearWatch(watchId);
         }, []);
-
-
 
 // MakrerImage 객체를 생성하여 반환하는 함수입니다
 function createMarkerImage(markerScr, markerSize) {
@@ -108,32 +108,6 @@ function createMarkerImage(markerScr, markerSize) {
     shopClickImage = createMarkerImage(imageSrc2, choiceImageSize),
     clickImage = createMarkerImage(imageSrc3, choiceImageSize),
     normalImage = createMarkerImage(imageSrc4, imageSize);
-
-
-// 마커 정보를 담은 배열
-var markerList = [
-    { "lat" : 35.8678658, "lon": 128.5967954, "Shopping": true,
-    "place": "빨간바지", // 상점위치 string
-    "address" : "대구 중구 동성로2길 48", // 주소 string
-    "storeItem" : "장바구니 물품 존재 - 아우터 외 2개", // 물건 string
-    "key": 1
-  },
-    { "lat": 35.8709820, "lon": 128.5926346, "Shopping": true,
-    "place": "한우장설렁탕", // 상점위치 string
-    "address" : "대구 중구 국채보상로 567", // 주소 string
-    "storeItem" : "장바구니 물품 존재 - 설렁탕", // 물건 strin
-    "key": 2,
-   },
-    { "lat": 35.8704173, "lon": 128.5953787, "Shopping": false,
-    "place": "CGV 대구한일", // 상점위치 string
-    "address" : "대구광역시 중구 동성로 39", // 주소 string
-    "storeItem" : "장바구니 물품 없음", // 물건 string
-    "key": 3
-  }
-  ],
-  selectedMarker = null; // 클릭한 마커를 담을 변수
-
-
 
   // 키워드 검색 완료 시 호출되는 콜백함수 입니다
 function placesSearchCB (data, status) {
@@ -151,12 +125,39 @@ function placesSearchCB (data, status) {
         map.setBounds(bounds);
     } 
 }
+// fetch 통신 method
+const fetchData = async (BodyJson ,latlng, initMarkers) => {
+    try {
+    const response = await fetch(
+    "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/read/map/coordinate",
+    {
+    method: 'POST',
+    headers:{
+        "Content-type": "application/json",
+        "Authorization": `${token}`
+    },
+    body : BodyJson,
+    }
+);
+    const { data } = await response.json();
+    if (response.status === 200) {
+        // 서버에서 받은 데이터를 markerList에 저장
+        markerList = data;
+        console.log("데이터 전송 완료");
+        console.log(markerList);
+        console.log(latlng);
+        initMarkers();
+    }else if (response.status === 400) {
+        console.log("데이터 전송 실패");
+  }
+ } catch (error) {
+  console.error("오류 발생:", error);
+    }
+};
 
-function ininKakaoMap(locPosition) {
-    
+function initKakaoMap(locPosition) {
     const mapDiv = document.querySelector("#map");
     mapDiv.async = true;
-
 
     const options = {
         center: locPosition,
@@ -174,7 +175,7 @@ function ininKakaoMap(locPosition) {
         // 원을 생성합니다
         var circle = new kakao.maps.Circle({
             center : options.center,
-            radius: 100,
+            radius: 10000,
             strokeWeight: 5, // 선의 두께입니다 
             strokeColor: '#75B8FA', // 선의 색깔입니다
             strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
@@ -196,6 +197,8 @@ var circleXY = {
     "maxY" : neLatLng.getLat(), // 북동쪽 위도
 };
 
+fetchData(JSON.stringify(circleXY), options.center, initMarkers);
+
 var prevLatlng// 이전 중심 좌표를 저장할 변수
 
 searchPlace = (place)=>{
@@ -204,11 +207,10 @@ searchPlace = (place)=>{
     }
 
 // 지도가 이동, 확대, 축소로 인해 중심좌표가 변경되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
-kakao.maps.event.addListener(map, 'center_changed', function() {
+kakao.maps.event.addListener(map, 'dragend', function() {
 
     // 지도의  레벨을 얻어옵니다
     var level = map.getLevel();
-
     // 지도의 중심좌표를 얻어옵니다 
     var latlng = map.getCenter();   
 
@@ -218,7 +220,7 @@ kakao.maps.event.addListener(map, 'center_changed', function() {
     circle.setMap(map); // 원을 지도에 표시합니다
 
     // 이전 중심 좌표가 있고, 새로운 중심 좌표와의 차이가 0.1 미만이면 AJAX 요청을 보내지 않습니다
-    if (prevLatlng && Math.abs(prevLatlng.getLat() - latlng.getLat()) < 0.1 && Math.abs(prevLatlng.getLng() - latlng.getLng()) < 0.1) {
+    if (prevLatlng && Math.abs(prevLatlng.getLat() - latlng.getLat()) < 0.01 && Math.abs(prevLatlng.getLng() - latlng.getLng()) < 0.01) {
         return;
     }
     // 새로운 중심 좌표를 이전 중심 좌표로 저장합니다
@@ -239,7 +241,6 @@ kakao.maps.event.addListener(map, 'center_changed', function() {
 
 console.log(circleXY);
 
-// ********** AJAX 요청 ********** //
 for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(null);
 }            
@@ -248,66 +249,39 @@ for (var i = 0; i < markers.length; i++) {
 markers = [];
 
 var BodyJson = JSON.stringify(circleXY);
-
-const fetchData = async () => {
-    try {
-    const response = await fetch(
-    "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/read/coordinate",
-    {
-    method: 'POST',
-    headers:{
-        "Content-type": "application/json",
-        "Authorization": `${token}`
-    },
-    body : BodyJson,
-    }
-);
-    const data = await response.json();
-    if (response.status === 200) {
-        // 서버에서 받은 데이터를 markerList에 저장
-        markerList = data;
-        console.log("데이터 전송 완료");
-        console.log(markerList);
-        initMarkers();
-    }else if (response.status === 400) {
-        console.log("데이터 전송 실패");
-  }
- } catch (error) {
-  console.error("오류 발생:", error);
-    }
-};
-
-fetchData();
+fetchData(BodyJson, latlng, initMarkers);
 
 });
 
 
 function initMarkers() {
-
+    if(markerList === null){
+        console.log("데이터가 없습니다.");
+        return;
+    }
 markerList.forEach(function(markerInfo) {
 // 마커를 생성합니다
 
-if(markerInfo.Shopping){
-var marker = new kakao.maps.Marker({
-    position: new kakao.maps.LatLng(markerInfo.storeLocationX, markerInfo.storeLocationY),
-    map: map,
-    image: shopNormalImage, // 마커 이미지
-});
-    marker.normalImage = shopNormalImage;
-    marker.clickImage = shopClickImage;
+// if(markerInfo.Shopping){
+// var marker = new kakao.maps.Marker({
+//     position: new kakao.maps.LatLng( markerInfo.storeLocationY,markerInfo.storeLocationX),
+//     map: map,
+//     image: shopNormalImage, // 마커 이미지
+// });
+//     marker.normalImage = shopNormalImage;
+//     marker.clickImage = shopClickImage;
 
-    markers.push(marker);
-
-}else{
+// }else{
     var marker = new kakao.maps.Marker({
-        position: new kakao.maps.LatLng(markerInfo.storeLocationX, markerInfo.storeLocationY),
+        position: new kakao.maps.LatLng(markerInfo.storeLocationY,markerInfo.storeLocationX),
         map: map,
         image: normalImage, // 마커 이미지
         
     });
     marker.normalImage = normalImage;
     marker.clickImage = clickImage;
-}
+// }
+    markers.push(marker);
 
     // 마커에 click 이벤트를 등록합니다
     kakao.maps.event.addListener(marker, 'click', function() {
@@ -332,14 +306,13 @@ var marker = new kakao.maps.Marker({
         showPopup(markerInfo);
 
          // 지도 중심을 클릭된 마커 위치로 이동
-         map.panTo(new kakao.maps.LatLng(markerInfo.storeLocationX,  markerInfo.storeLocationY));
+         map.panTo(new kakao.maps.LatLng(markerInfo.storeLocationY,  markerInfo.storeLocationX));
         
-    
     });
-
 
 });
 }
+
 initMarkers();
 
 

@@ -8,7 +8,7 @@ import SellerHeader from "./SellerHeader";
 const { kakao } = window;
 const token = sessionStorage.getItem('token');
 
-var map ;
+var map;
 var geocoder;
 var marker;
 
@@ -16,7 +16,7 @@ const SellerStoreManagement = ({ store }) => {
   const [name, setName] = useState(store?.name || "");
   const [location, setLocation] = useState(store?.location || "");
   const [content, setContent] = useState(store?.content || "");
-  var [coords, setCoords] = useState({}); // 좌표
+  var coord;
 
   const [image, setImage] = useState();
   const [previewImageSrc, setPreviewImageSrc] = useState(
@@ -24,21 +24,20 @@ const SellerStoreManagement = ({ store }) => {
   );
 
 
-  // useEffect(() => {
-  //   var mapDiv = document.querySelector('#storeMap'), // 지도를 표시할 div 
-  //   mapOption = { 
-  //       center: new kakao.maps.LatLng(35.856047838165004, 128.49278206824263), // 지도의 중심좌표 (35.8678658, 128.5967954)
-  //       level: 3 // 지도의 확대 레벨
-  //   };
+  useEffect(() => {
+    var mapDiv = document.querySelector('#storeMap'), // 지도를 표시할 div 
+    mapOption = { 
+        center: new kakao.maps.LatLng(35.856047838165004, 128.49278206824263), // 지도의 중심좌표 (35.8678658, 128.5967954)
+        level: 3 // 지도의 확대 레벨
+    };
+    //mapDiv에 첫번째 자식이 없다면 지도 생성
+    if(!mapDiv.firstChild){
+      map = new kakao.maps.Map(mapDiv, mapOption);  // 지도를 생성합니다
+    }
+    geocoder = new kakao.maps.services.Geocoder(); // 주소-좌표 변환 객체를 생성합니다
 
-  //   map = new kakao.maps.Map(mapDiv, mapOption);  // 지도를 생성합니다
 
-  //   geocoder = new kakao.maps.services.Geocoder(); // 주소-좌표 변환 객체를 생성합니다
-
-  //   mapDiv.style.width = '50%';   //MapSize 조절
-    
-  //   map.relayout();
-  // }, []);
+  }, []);
 
   // form submission handler
   const handleSubmit = (e) => {
@@ -97,39 +96,35 @@ const SellerStoreManagement = ({ store }) => {
     }
   };
 
-
-
-function asd() {
+function searchAddress() {
           // 주소로 좌표를 검색합니다
           geocoder.addressSearch(location, function(result, status) {
-
             // 정상적으로 검색이 완료됐으면 
              if (status === kakao.maps.services.Status.OK) {
         
                 if (marker) { // 이전에 생성된 마커가 있으면
                     marker.setMap(null); // 마커를 지도에서 제거
                 }
-                setCoords(new kakao.maps.LatLng(result[0].y, result[0].x));
+                coord = new kakao.maps.LatLng(result[0].y, result[0].x);
         
                 // 결과값으로 받은 위치를 마커로 표시합니다
                 marker = new kakao.maps.Marker({
                     map: map,
-                    position: coords
+                    position: coord
                 });
-        
-                map.panTo(coords);
+                map.panTo(coord);
             }
         })
 }
 
   return (
-    <div className="seller-store-management">
-      <SellerHeader />
-      <div style={{ display: "flex", flexDirection: "row" }}> {/* 이 부분을 추가합니다 */}
-      <form onSubmit={handleSubmit} style={{ marginRight: "10%" }}>
-        <div className="store-edit-info-container" style={{width: "100%"}}>
+    <div className="seller-store-management" style={{ position: "relative" }}>
+      <SellerHeader/>
+      <div id="storeMap"style={{ width: '100%', height: '91vh', zIndex:'0' }}></div>
+      <form onSubmit={handleSubmit} style={{ position: "absolute", top: 40, left: 0,zIndex: "2"}}>
+        <div className="store-edit-info-container"style={{width:"70%"}}>
           <div className="store-edit-image">
-            <img src={previewImageSrc} alt="프로필 사진" />
+            <img src={previewImageSrc} alt="프로필 사진" style={{height:"33vh"}}/>
             <label className="store-edit-icon">
               <FontAwesomeIcon icon={faPlus} />
               <input
@@ -156,7 +151,7 @@ function asd() {
               value={location}
               placeholder="가게 주소 입력"
               onChange={(e) => setLocation(e.target.value)}
-              onBlur={asd}
+              onBlur={searchAddress}
             />
           </div>
 
@@ -169,14 +164,69 @@ function asd() {
               onChange={(e) => setContent(e.target.value)}
             />
           </div>
-          {/* submit button */}
           <button className="store-save-button">저장하기</button>
         </div>
       </form>
-      <div id="storeMap"style={{border: "0", boxShadow: "0px 0px 15px rgba(0,0,0,0.15)"}}></div>
-      </div>
     </div>
   );
 };
+
+
+// return (
+//   <div className="seller-store-management">
+//     <SellerHeader />
+//     <div style={{ display: "flex", flexDirection: "row", justifyContent: "center"}}> {/* 이 부분을 추가합니다 */}
+//     <form onSubmit={handleSubmit} style={{ marginRight: "10%" }}>
+//       <div className="store-edit-info-container" style={{width: "100%"}}>
+//         <div className="store-edit-image">
+//           <img src={previewImageSrc} alt="프로필 사진" />
+//           <label className="store-edit-icon">
+//             <FontAwesomeIcon icon={faPlus} />
+//             <input
+//               type="file"
+//               onChange={handleImageChange}
+//               style={{ display: "none" }}
+//             />
+//           </label>
+//         </div>
+//         <label>가게 이름</label>
+//         <div className="store-edit-name">
+//           <input
+//             type="text"
+//             value={name}
+//             placeholder="가게 이름 입력"
+//             onChange={(e) => setName(e.target.value)}
+//           />
+//         </div>
+
+//         <label>가게 주소</label>
+//         <div className="store-edit-location">
+//           <input
+//             type="text"
+//             value={location}
+//             placeholder="가게 주소 입력"
+//             onChange={(e) => setLocation(e.target.value)}
+//             onBlur={searchAddress}
+//           />
+//         </div>
+
+//         <label>가게 정보</label>
+//         <div className="store-edit-content">
+//           <input
+//             type="text"
+//             value={content}
+//             placeholder="가게 정보 입력"
+//             onChange={(e) => setContent(e.target.value)}
+//           />
+//         </div>
+//         {/* submit button */}
+//         <button className="store-save-button">저장하기</button>
+//       </div>
+//     </form>
+//     <div id="storeMap"style={{border: "0", boxShadow: "0px 0px 15px rgba(0,0,0,0.15)"}}></div>
+//     </div>
+//   </div>
+// );
+// };
 
 export default SellerStoreManagement;
