@@ -13,4 +13,6 @@ public class ReadResponseForMapDTO {
     String storeAddress;
     String storePhone;
     String storeImage;
+    Double storeLocationX;
+    Double storeLocationY;
 }

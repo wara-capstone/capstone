@@ -43,6 +43,22 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
+    public ResponseDTO readStoreBySeller(String storeSeller) {
+        Map<String, Object> resultMap = storeDAO.readStoreBySeller(storeSeller);
+
+        ResponseDTO responseDTO = toResponseDTO(resultMap);
+        return responseDTO;
+    }
+
+    @Override
+    public ResponseDTO readStoreByCoordinate(CoordinateDTO coordinateDTO) {
+        Map<String, Object> resultMap = storeDAO.readStoreByCoordinate(coordinateDTO.getMinX(), coordinateDTO.getMinY(), coordinateDTO.getMaxX(), coordinateDTO.getMaxY());
+
+        ResponseDTO responseDTO = toResponseDTO(resultMap);
+        return responseDTO;
+    }
+
+    @Override
     public ResponseDTO readStoreByIdForMap(Long storeId) {
         Map<String, Object> resultMap = storeDAO.readStoreById(storeId);
 
@@ -63,6 +79,22 @@ public class StoreServiceImpl implements StoreService {
         Map<String, Object> resultMap = storeDAO.existStoreById(storeId);
 
         SimpleResponseDTO simpleResponseDTO = toSimpleResponseDTO(resultMap);
+        return simpleResponseDTO;
+    }
+
+    @Override
+    public SimpleResponseDTO updateStore(StoreDTO storeDTO){
+        StoreEntity storeEntity = toEntity(storeDTO);
+        Map<String, Object> existMap = storeDAO.existStoreByNameAndSeller(storeEntity.getStoreName(), storeEntity.getStoreSeller());
+        SimpleResponseDTO simpleResponseDTO;
+
+        if(existMap.get("result").equals("success")){
+            Map<String, Object> resultMap = storeDAO.updateStore(storeEntity);
+            simpleResponseDTO = toSimpleResponseDTO(resultMap);
+        } else{
+            simpleResponseDTO = toSimpleResponseDTO(existMap);
+        }
+
         return simpleResponseDTO;
     }
 
@@ -159,6 +191,8 @@ public class StoreServiceImpl implements StoreService {
                     .storeAddress(storeEntity.getStoreAddress())
                     .storePhone(storeEntity.getStorePhone())
                     .storeImage(storeEntity.getStoreImage())
+                    .storeLocationX(storeEntity.getStoreLocationX())
+                    .storeLocationY(storeEntity.getStoreLocationY())
                     .build();
 
             responseDTO = ResponseDTO.builder()
@@ -167,6 +201,15 @@ public class StoreServiceImpl implements StoreService {
                     .build();
         } else if(resultMap.containsKey("dataList")){
             List<StoreEntity> storeEntities = (List<StoreEntity>) resultMap.get("dataList");
+
+            if(storeEntities.isEmpty()){
+                responseDTO = ResponseDTO.builder()
+                        .result((String) resultMap.get("result"))
+                        .data(null)
+                        .build();
+                return responseDTO;
+            }
+
             List<ReadResponseForMapDTO> readResponseForMapDTOS = new ArrayList<>();
 
             for (StoreEntity storeEntity : storeEntities) {
@@ -175,6 +218,8 @@ public class StoreServiceImpl implements StoreService {
                         .storeAddress(storeEntity.getStoreAddress())
                         .storePhone(storeEntity.getStorePhone())
                         .storeImage(storeEntity.getStoreImage())
+                        .storeLocationX(storeEntity.getStoreLocationX())
+                        .storeLocationY(storeEntity.getStoreLocationY())
                         .build();
                 readResponseForMapDTOS.add(readResponseForMapDTO);
             }
@@ -203,5 +248,4 @@ public class StoreServiceImpl implements StoreService {
 
         return simpleResponseDTO;
     }
-
 }
