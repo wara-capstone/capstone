@@ -92,9 +92,17 @@ public class StoreController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<SimpleResponseDTO> updateStore(@RequestBody StoreDTO storeDTO){
-        logger.info("\n[Request] : UpdateStore\n[Data]: " + storeDTO.toString());
-        SimpleResponseDTO response = storeService.updateStore(storeDTO);
+    public ResponseEntity<SimpleResponseDTO> updateStoreByNameAndSeller(@RequestBody StoreDTO storeDTO){
+        logger.info("\n[Request] : UpdateStoreByNameAndSeller\n[Data]: " + storeDTO.toString());
+        SimpleResponseDTO response = storeService.updateStoreByNameAndSeller(storeDTO);
+        logger.info("\n[Response] : " + response.toString());
+        return ResponseEntity.status(200).body(response);
+    }
+
+    @PutMapping("/update/id")
+    public ResponseEntity<SimpleResponseDTO> updateStoreById(@RequestBody StoreDTO storeDTO){
+        logger.info("\n[Request] : UpdateStoreById\n[Data]: " + storeDTO.toString());
+        SimpleResponseDTO response = storeService.updateStoreById(storeDTO);
         logger.info("\n[Response] : " + response.toString());
         return ResponseEntity.status(200).body(response);
     }

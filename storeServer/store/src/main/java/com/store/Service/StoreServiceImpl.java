@@ -153,13 +153,29 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public SimpleResponseDTO updateStore(StoreDTO storeDTO){
+    public SimpleResponseDTO updateStoreByNameAndSeller(StoreDTO storeDTO){
         StoreEntity storeEntity = toEntity(storeDTO);
         Map<String, Object> existMap = storeDAO.existStoreByNameAndSeller(storeEntity.getStoreName(), storeEntity.getStoreSeller());
         SimpleResponseDTO simpleResponseDTO;
 
         if(existMap.get("result").equals("success")){
-            Map<String, Object> resultMap = storeDAO.updateStore(storeEntity);
+            Map<String, Object> resultMap = storeDAO.updateStoreByNameAndSeller(storeEntity);
+            simpleResponseDTO = toSimpleResponseDTO(resultMap);
+        } else{
+            simpleResponseDTO = toSimpleResponseDTO(existMap);
+        }
+
+        return simpleResponseDTO;
+    }
+
+    @Override
+    public SimpleResponseDTO updateStoreById(StoreDTO storeDTO) {
+        StoreEntity storeEntity = toEntity(storeDTO);
+        Map<String, Object> existMap = storeDAO.existStoreById(storeDTO.getStoreId());
+        SimpleResponseDTO simpleResponseDTO;
+
+        if(existMap.get("result").equals("success")){
+            Map<String, Object> resultMap = storeDAO.updateStoreById(storeEntity);
             simpleResponseDTO = toSimpleResponseDTO(resultMap);
         } else{
             simpleResponseDTO = toSimpleResponseDTO(existMap);
@@ -179,6 +195,7 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public StoreEntity toEntity(StoreDTO storeDTO) {
         StoreEntity storeEntity = StoreEntity.builder()
+                .storeId(storeDTO.getStoreId())
                 .storeName(storeDTO.getStoreName())
                 .storeAddress(storeDTO.getStoreAddress())
                 .storeSeller(storeDTO.getStoreSeller())

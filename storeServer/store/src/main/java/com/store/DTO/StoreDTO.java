@@ -10,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class StoreDTO {
+    Long storeId;
     String storeName;
     String storeSeller;
     String storeAddress;

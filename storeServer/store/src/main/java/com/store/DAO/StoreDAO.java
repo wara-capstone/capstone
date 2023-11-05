@@ -15,6 +15,7 @@ public interface StoreDAO {
     public Map<String, Object> existStoreById(Long storeId);
     public Map<String, Object> existStoreBySeller(String storeSeller);
     public Map<String, Object> existStoreByNameAndSeller(String storeName, String storeSeller);
-    public Map<String, Object> updateStore(StoreEntity storeEntity);
+    public Map<String, Object> updateStoreByNameAndSeller(StoreEntity storeEntity);
+    public Map<String, Object> updateStoreById(StoreEntity storeEntity);
     public Map<String, Object> deleteStore(Long storeId);
 }
