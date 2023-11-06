@@ -1,84 +1,78 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { BrowserMultiFormatReader, NotFoundException } from '@zxing/library';
-import { Link } from "react-router-dom";
-import Data from "../DB/Data.json";
-import Card from "../components/Card";
-import Header from "../components/Header";
+import React from "react";
 import BottomNav from "../components/BottomNav";
-import Modal from "../components/Modal";
+import Header from "../components/Header";
 
 function BarcodeReader() {
-  const [videoInputDevices, setVideoInputDevices] = useState([]);
-  const [selectedDeviceId, setSelectedDeviceId] = useState('');
-  const [result, setResult] = useState('');
-  const [showModal, setShowModal] = useState(false);
-  const videoRef = useRef();
-  const codeReader = useMemo(() => new BrowserMultiFormatReader(), []);
-  const [products, setProducts] = useState([]);
-  const [isBarcodeDetected, setIsBarcodeDetected] = useState(false); // 바코드 인식 상태
-
-  useEffect(() => {
-    codeReader.listVideoInputDevices().then((devices) => {
-      setVideoInputDevices(devices);
-      setSelectedDeviceId(devices[0]?.deviceId || '');
-      startDecoding(devices[0]?.deviceId || ''); // 즉시 디코딩을 시작합니다.
-      setProducts([Data.cardData[0]]);
-    });
-
-    const handleUnload = () => {
-      codeReader.reset();
-    };
-
-    // 바코드 인식을 처리하는 함수 (이 함수는 실제 바코드 인식 로직에 맞게 수정해야 합니다)
-    const handleBarcodeDetection = () => {
-      // 바코드 인식 로직...
-      // 바코드가 인식되면, setIsBarcodeDetected를 true로 설정
-      setIsBarcodeDetected(true);
-    };
-
-
-    window.addEventListener('unload', handleUnload);
-
-    return () => {
-      codeReader.reset();
-      window.removeEventListener('unload', handleUnload);
-    };
-  }, [codeReader]);
+  // const [videoInputDevices, setVideoInputDevices] = useState([]);
+  // const [selectedDeviceId, setSelectedDeviceId] = useState('');
+  // const [result, setResult] = useState('');
+  // const [showModal, setShowModal] = useState(false);
+  // const videoRef = useRef();
+  // const codeReader = useMemo(() => new BrowserMultiFormatReader(), []);
+  // const [products, setProducts] = useState([]);
+  // const [isBarcodeDetected, setIsBarcodeDetected] = useState(false); // 바코드 인식 상태
 
   // useEffect(() => {
-  //   if (selectedDeviceId) {
-  //     startDecoding();
-  //   }
-  // }, [selectedDeviceId, codeReader]);
+  //   codeReader.listVideoInputDevices().then((devices) => {
+  //     setVideoInputDevices(devices);
+  //     setSelectedDeviceId(devices[0]?.deviceId || '');
+  //     startDecoding(devices[0]?.deviceId || ''); // 즉시 디코딩을 시작합니다.
+  //     setProducts([Data.cardData[0]]);
+  //   });
 
-  const startDecoding = (id) => {
-    codeReader.decodeFromVideoDevice(id, videoRef.current, (result, err) => {
-      if (result) {
-        console.log(result);
-        setResult(result.text);
-        setShowModal(true);
-        setIsBarcodeDetected(true); // 바코드가 인식되면 isBarcodeDetected를 true로 설정
-      }
-      if (err && !(err instanceof NotFoundException)) {
-        console.error(err);
-        setResult(err.message);
-      }
-    });
-  };
-  const resetDecoding = () => {
-    codeReader.reset();
-    setResult('');
-    setShowModal(false);
-    setIsBarcodeDetected(false); // 바코드 인식을 리셋하면 isBarcodeDetected를 false로 설정
-  };
+  //   const handleUnload = () => {
+  //     codeReader.reset();
+  //   };
 
-  const selectedCard = Data.cardData.filter(card => card.id.toString() === result);
+  //   // 바코드 인식을 처리하는 함수 (이 함수는 실제 바코드 인식 로직에 맞게 수정해야 합니다)
+  //   const handleBarcodeDetection = () => {
+  //     // 바코드 인식 로직...
+  //     // 바코드가 인식되면, setIsBarcodeDetected를 true로 설정
+  //     setIsBarcodeDetected(true);
+  //   };
+
+  //   window.addEventListener('unload', handleUnload);
+
+  //   return () => {
+  //     codeReader.reset();
+  //     window.removeEventListener('unload', handleUnload);
+  //   };
+  // }, [codeReader]);
+
+  // // useEffect(() => {
+  // //   if (selectedDeviceId) {
+  // //     startDecoding();
+  // //   }
+  // // }, [selectedDeviceId, codeReader]);
+
+  // const startDecoding = (id) => {
+  //   codeReader.decodeFromVideoDevice(id, videoRef.current, (result, err) => {
+  //     if (result) {
+  //       console.log(result);
+  //       setResult(result.text);
+  //       setShowModal(true);
+  //       setIsBarcodeDetected(true); // 바코드가 인식되면 isBarcodeDetected를 true로 설정
+  //     }
+  //     if (err && !(err instanceof NotFoundException)) {
+  //       console.error(err);
+  //       setResult(err.message);
+  //     }
+  //   });
+  // };
+  // const resetDecoding = () => {
+  //   codeReader.reset();
+  //   setResult('');
+  //   setShowModal(false);
+  //   setIsBarcodeDetected(false); // 바코드 인식을 리셋하면 isBarcodeDetected를 false로 설정
+  // };
+
+  // const selectedCard = Data.cardData.filter(card => card.id.toString() === result);
 
   return (
     <div>
       <Header />
       <h1>Barcode</h1>
-      <button onClick={resetDecoding}>Reset</button>
+      {/* <button onClick={resetDecoding}>Reset</button>
       {videoInputDevices.length > 0 && (
         <select
           value={selectedDeviceId}
@@ -96,7 +90,7 @@ function BarcodeReader() {
       </div>
 
       <div>
-         {/* 바코드가 인식되었고, products가 비어있지 않을 때만 Modal을 렌더링 */}
+
       {isBarcodeDetected && products.length > 0 && (
         <Modal message="This is Modal">
           <div className="barcode-item-data">
@@ -125,7 +119,7 @@ function BarcodeReader() {
         </div>
       )}
 
-
+ */}
 
       <BottomNav />
     </div>
