@@ -34,6 +34,7 @@ const SellerStoreManagement = ({ store }) => {
     if(!mapDiv.firstChild){
       map = new kakao.maps.Map(mapDiv, mapOption);  // 지도를 생성합니다
     }
+    
     geocoder = new kakao.maps.services.Geocoder(); // 주소-좌표 변환 객체를 생성합니다
 
 

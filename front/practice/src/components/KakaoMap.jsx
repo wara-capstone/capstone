@@ -33,6 +33,7 @@ let [popupInfo, setPopupInfo] = useState(null); // 현재 열려있는 팝업 �
 let [searchText, setSearchText] = useState(""); // 검색창 값
 
 let prevInfo = null;
+let userMarker; // 사용자 위치 마커
 
 //Popup창 켜고 끄는 method
 function showPopup(info) {
@@ -81,8 +82,14 @@ const getLocation = new Promise((resolve) => {
         lon = position.coords.longitude;
     var locPosition = new kakao.maps.LatLng(lat, lon);
 
+
+   // 이전 위치 마커가 있으면 지도에서 제거
+   if (userMarker) {
+    userMarker.setMap(null);
+    }
+
     // 사용자의 위치에 마커 표시
-    var marker = new kakao.maps.Marker({
+    userMarker = new kakao.maps.Marker({
         map: map,
         position: locPosition
     });
