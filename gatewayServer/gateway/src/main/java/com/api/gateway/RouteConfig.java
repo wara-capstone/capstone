@@ -16,7 +16,7 @@ public class RouteConfig {
                                       AuthorizationHeaderFilter authFilter) {
         return builder.routes()
                 // chat
-                .route("chat-service", r->r.path("/room/**")
+                .route("chat-service", r->r.path("/ws/**")
                         .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
                         .uri("ws://3.34.227.3:14000"))
                 .route("chat-service", r->r.path("/chat/**")
