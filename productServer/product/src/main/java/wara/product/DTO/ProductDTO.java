@@ -14,6 +14,7 @@ import java.util.List;
 @Setter @Getter
 @AllArgsConstructor@NoArgsConstructor
 public class ProductDTO {
+
     Long productId;
     Long storeId;
     String productName;

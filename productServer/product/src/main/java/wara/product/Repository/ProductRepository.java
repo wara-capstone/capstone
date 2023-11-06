@@ -10,6 +10,8 @@ public interface ProductRepository extends JpaRepository<ProductEntity,String> {
     ProductEntity getByProductId(Long id);
     List<ProductEntity> getAllByStoreId(Long id);
 
+    Boolean existsByStoreId(Long storeId);
+    Boolean existsByProductId(Long productId);
     void deleteByProductId(Long id);
     void deleteAllByStoreId(Long id);
 

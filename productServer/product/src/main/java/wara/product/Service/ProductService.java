@@ -10,7 +10,9 @@ import wara.product.DTO.ResponseDTO;
 import wara.product.productEntity.ProductEntity;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+
 
 @Service
 public class ProductService {
@@ -26,32 +28,33 @@ public class ProductService {
      * 단일값 요청에 대한 비즈니스 로직
      */
     public ResponseDTO<ProductDTO> singleProductInfo(Long productId){
-        if(productId == null) return ResponseDTO.of(HttpStatus.OK,"a", new ProductDTO());
-        return ResponseDTO.of(HttpStatus.OK, "a", dao.readSingleProductInfo(productId).ETOD());
+        try{
+            return ResponseDTO.of(HttpStatus.OK, dao.readSingleProductInfo(productId).ETOD()) ; }
+        catch (NullPointerException e) {
+            return ResponseDTO.of(HttpStatus.BAD_REQUEST, new ProductDTO()); }
     }
 
     /**
-     * 카테고리 기준 다중 값 요청에 대한 비즈니스 로직
+     * 한 상점의 모든 상품 정보 조회
      * */
-    // TODO: 현재는 storeId를 기준으로 작성했음, 추후에 매개변수에 따른 분리가 필요
     public ResponseDTO<List<ProductDTO>> multiProductInfo(Long storeId)
     {
-        List<ProductEntity> EList = dao.readMultiProductInfo(storeId);
-        List<ProductDTO> DList = new ArrayList<>();
-        for(var item: EList)
-        {
-            DList.add(item.ETOD());
+        try{
+            List<ProductEntity> EList = dao.readMultiProductInfo(storeId);
+            List<ProductDTO> DList = new ArrayList<>();
+            for(var item: EList) { DList.add(item.ETOD());}
+        }catch (NullPointerException e) {
+            return ResponseDTO.of(HttpStatus.BAD_REQUEST, new LinkedList<>());
         }
-
-        return ResponseDTO.of(HttpStatus.OK, "a",DList);
+        return ResponseDTO.of(HttpStatus.BAD_REQUEST, new LinkedList<>());
     }
-
-
 
 
     /**
      * 상품 등록에 대한 비즈니스 로직
-     * */
+     * @param dto
+     * @return productID
+     */
     public Long initProductInfo(ProductDTO dto)
     {
         return dao.initProductInfo(dto.DTOE());
@@ -62,8 +65,7 @@ public class ProductService {
      * */
     public HttpStatus modifyProductInfo(ProductDTO dto)
     {
-        dao.modifyProductInfo(dto.DTOE());
-        return HttpStatus.OK;
+        return dao.modifyProductInfo(dto.DTOE());
     }
 
 
@@ -80,9 +82,9 @@ public class ProductService {
     /**
      * 다중 상품정보 삭제에 대한 비즈니스 로직
      * */
-    public HttpStatus removeMultiProduct(Long productId)
+    public HttpStatus removeMultiProduct(Long storeId)
     {
-        dao.removeMultiProduct(productId);
+        dao.removeMultiProduct(storeId);
         return HttpStatus.OK;
     }
 

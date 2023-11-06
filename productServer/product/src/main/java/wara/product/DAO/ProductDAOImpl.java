@@ -1,6 +1,7 @@
 package wara.product.DAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import wara.product.productEntity.ProductEntity;
 import wara.product.Repository.ProductRepository;
@@ -55,8 +56,12 @@ public class ProductDAOImpl implements ProductDAO{
      * @param entity
      */
     @Override
-    public void modifyProductInfo(ProductEntity entity) {
-        repository.save(entity);
+    public HttpStatus modifyProductInfo(ProductEntity entity) {
+        if(repository.existsByProductId(entity.getProductId())) {
+            repository.save(entity);
+            return HttpStatus.OK;
+        }
+        else return HttpStatus.NO_CONTENT;
     }
 
     /**
@@ -66,7 +71,6 @@ public class ProductDAOImpl implements ProductDAO{
     @Override
     public Long initProductInfo(ProductEntity entity) {
         repository.save(entity);
-
         return entity.getProductId();
     }
 

@@ -1,8 +1,6 @@
 package wara.product.DTO;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.http.HttpStatus;
 
 
@@ -10,9 +8,7 @@ import org.springframework.http.HttpStatus;
 @Setter
 @RequiredArgsConstructor(staticName = "of")
 public class ResponseDTO<T> {
-
     private final HttpStatus status;
-    private final String message;
     private final T data;
 
 }

@@ -1,16 +1,14 @@
 package wara.product.Service;
 
-import com.netflix.appinfo.InstanceInfo;
 
 import com.netflix.discovery.EurekaClient;
-import org.json.simple.JSONObject;
+import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -30,9 +28,9 @@ import org.slf4j.LoggerFactory;
 
 
 @Service
-public class PostService {
+public class TransrationService {
 
-    private static final Logger logger = LoggerFactory.getLogger(PostService.class);
+    private static final Logger logger = LoggerFactory.getLogger(TransrationService.class);
 
 
 
@@ -41,7 +39,7 @@ public class PostService {
     private final RestTemplate restTemplate;
 
     @Autowired
-    public PostService(EurekaClient eurekaClient, RestTemplate restTemplate, DiscoveryClient discoveryClient) {
+    public TransrationService(EurekaClient eurekaClient, RestTemplate restTemplate, DiscoveryClient discoveryClient) {
         this.eurekaClient = eurekaClient;
         this.restTemplate = restTemplate;
         this.discoveryClient = discoveryClient;
@@ -110,9 +108,10 @@ public class PostService {
             }
 
         }catch (HttpClientErrorException e){
-            return "";
+            return HttpStatus.BAD_REQUEST.toString();
         }
-        return " ";
+
+        return HttpStatus.NO_CONTENT.toString();
     }
 
 
@@ -120,7 +119,7 @@ public class PostService {
 
 
 
-    public String toStore(Long storeId,List<Long> productId) throws URISyntaxException, IOException {
+    public String validCheckFromStore(Long storeId, List<Long> productId) throws URISyntaxException, IOException {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -148,9 +147,10 @@ public class PostService {
             }
 
         }catch (HttpClientErrorException e){
-            return "";
+            return HttpStatus.BAD_REQUEST.toString();
         }
-        return " ";
+
+        return HttpStatus.NO_CONTENT.toString();
     }
 
 }
