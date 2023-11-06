@@ -33,7 +33,6 @@ public class RouteConfig {
                         .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_seller");})))
                         .uri("lb://STORE-SERVICE"))
                 .route("store-service", r->r.path("/store/**")
-                        .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
                         .uri("lb://STORE-SERVICE"))
                 // auth, user
                 .route("auth-service", r -> r.path("/auth/**")
