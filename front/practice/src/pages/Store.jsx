@@ -25,7 +25,7 @@ export default function Store() {
     if (userId === null) {
       navigate("/login");
     } else if (userId !== null) {
-      navigate("/chatting");
+      navigate(`/chatting/${id}`);
     }
   };
 
