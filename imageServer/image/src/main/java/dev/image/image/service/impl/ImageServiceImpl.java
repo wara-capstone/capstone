@@ -54,6 +54,22 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    public ResponseEntity<String> updateImage(Long id, MultipartFile image) throws IOException {
+        Optional<ImageEntity> optionalImage = this.imageDAO.downloadImage(id);
+        if(!optionalImage.isPresent()){
+            return ResponseEntity.status(400).body(null);
+        }
+        ImageEntity imageEntity = optionalImage.get();
+        imageEntity = ImageEntity.builder()
+                .id(imageEntity.getId())
+                .image(image.getBytes())
+                .build();
+        imageEntity = this.imageDAO.uploadImage(imageEntity);
+
+        return ResponseEntity.status(200).body("https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/image/download/"+imageEntity.getId());
+    }
+
+    @Override
     public ResponseEntity<Boolean> deleteImage(Long id) {
         if(!this.imageDAO.deleteImage(id)){
             return ResponseEntity.status(400).body(false);

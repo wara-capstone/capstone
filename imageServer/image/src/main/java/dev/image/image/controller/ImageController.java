@@ -43,6 +43,14 @@ public class ImageController {
         return this.imageService.downloadImage(id);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateImage(
+            @PathVariable("id") Long id,
+            @RequestPart("image") MultipartFile image
+    ) throws IOException {
+        return this.imageService.updateImage(id, image);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteImage(
             @PathVariable("id") Long id
