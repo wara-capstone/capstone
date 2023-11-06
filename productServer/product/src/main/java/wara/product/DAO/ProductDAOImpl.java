@@ -61,10 +61,13 @@ public class ProductDAOImpl implements ProductDAO{
 
     /**
      * @param entity
+     * @return
      */
     @Override
-    public void initProductInfo(ProductEntity entity) {
+    public Long initProductInfo(ProductEntity entity) {
         repository.save(entity);
+
+        return entity.getProductId();
     }
 
 

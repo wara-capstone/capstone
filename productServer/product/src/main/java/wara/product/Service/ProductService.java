@@ -52,10 +52,9 @@ public class ProductService {
     /**
      * 상품 등록에 대한 비즈니스 로직
      * */
-    public HttpStatus initProductInfo(ProductDTO dto)
+    public Long initProductInfo(ProductDTO dto)
     {
-        dao.initProductInfo(dto.DTOE());
-        return HttpStatus.OK;
+        return dao.initProductInfo(dto.DTOE());
     }
 
     /**

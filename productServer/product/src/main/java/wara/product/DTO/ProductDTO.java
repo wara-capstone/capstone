@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+import reactor.util.annotation.Nullable;
 import wara.product.productEntity.ProductEntity;
 
+import java.util.List;
 
 
 @Setter @Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@AllArgsConstructor@NoArgsConstructor
 public class ProductDTO {
     Long productId;
     Long storeId;
@@ -20,7 +22,8 @@ public class ProductDTO {
     String productColor;
     String productStock;
     String productCategory;
-
+    @Nullable
+    String productUrls;
 
 
     /**
@@ -36,9 +39,25 @@ public class ProductDTO {
                 this.productSize,
                 this.productColor,
                 this.productStock,
-                this.productCategory
+                this.productCategory,
+                this.productUrls
         );
     }
+
+
+    public ProductDTO(DummyDTO dto, @Nullable String url)
+    {
+        this.productId =dto.getProductId();
+        this.storeId = dto.getStoreId();
+        this.productName = dto.getProductName();
+        this.productPrice = dto.getProductPrice();
+        this.productSize = dto.getProductSize();
+        this.productColor = dto.getProductColor();
+        this.productStock = dto.getProductStock();
+        this.productCategory = dto.getProductCategory();
+        this.productUrls = url;
+    }
+
 
 
 }

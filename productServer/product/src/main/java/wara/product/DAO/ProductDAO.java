@@ -13,5 +13,5 @@ public interface ProductDAO {
     void removeSingleProduct(Long productId);
     void removeMultiProduct(Long storeId);
     void modifyProductInfo(ProductEntity entity);
-    void initProductInfo(ProductEntity entity);
+    Long initProductInfo(ProductEntity entity);
 }
