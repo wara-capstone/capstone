@@ -34,16 +34,8 @@ export default function KakaoMap() {
   let prevInfo = null;
   let userMarker; // 사용자 위치 마커
 
-<<<<<<< HEAD
-let prevInfo = null;
-let userMarker; // 사용자 위치 마커
-
-//Popup창 켜고 끄는 method
-function showPopup(info) {
-=======
   //Popup창 켜고 끄는 method
   function showPopup(info) {
->>>>>>> 17c3d7f61623ede7d74c43e7e2d8fb23b77824f0
     // 현재 열린 팝업 정보가 null이 아니고, 새로운 팝업이 이전 팝업과 같다면 팝업을 닫고 함수를 종료합니다.
     if (prevInfo !== null && prevInfo === info) {
       prevInfo = null;
@@ -77,41 +69,8 @@ function showPopup(info) {
       } else {
         var locPosition = new kakao.maps.LatLng(35.8678658, 128.5967954);
         resolve(locPosition);
-<<<<<<< HEAD
-        console.log("현재위치를 가져올 수 없습니다."); 
-      });
-    } else {
-      var locPosition = new kakao.maps.LatLng(35.8678658, 128.5967954);
-      resolve(locPosition);
-      console.log("현재위치를 가져올 수 없습니다."); 
-    }
-  });
-
-  // 위치 정보를 가져온 후에 지도를 초기화하는 함수
-  getLocation.then((locPosition) => {
-    initKakaoMap(locPosition);
-  });
-
-  // 사용자 위치를 지속적으로 추적
-  let watchId = navigator.geolocation.watchPosition((position) => {
-    var lat = position.coords.latitude,
-        lon = position.coords.longitude;
-    var locPosition = new kakao.maps.LatLng(lat, lon);
-
-
-   // 이전 위치 마커가 있으면 지도에서 제거
-   if (userMarker) {
-    userMarker.setMap(null);
-    }
-
-    // 사용자의 위치에 마커 표시
-    userMarker = new kakao.maps.Marker({
-        map: map,
-        position: locPosition
-=======
         console.log("현재위치를 가져올 수 없습니다.");
       }
->>>>>>> 17c3d7f61623ede7d74c43e7e2d8fb23b77824f0
     });
 
     // 위치 정보를 가져온 후에 지도를 초기화하는 함수
