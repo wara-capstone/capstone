@@ -38,7 +38,7 @@ export default function Customer() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/item/:id" element={<Item />} />
           <Route path="/store/:id" element={<Store />} />
-          <Route path="/chatting" element={<Chatting />} />
+          <Route path="/chatting/:id" element={<Chatting />} />
           <Route path="/user/edit" element={<UserEdit />} />
           <Route path="/user/chattingList" element={<ChattingList />} />
           <Route path="/user/purchase" element={<Purchase />} />
