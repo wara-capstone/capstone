@@ -59,6 +59,10 @@ public class AuthServiceImpl implements AuthService {
             userEntity = UserEntity.builder()
                     .email(userDTO.getEmail())
                     .password(userDTO.getPassword())
+                    .nickname(userDTO.getNickname())
+                    .name(userDTO.getName())
+                    .phone(userDTO.getPhone())
+                    .profileImage("https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/image/dowload/1")
                     .roles(Collections.singletonList("ROLE_ADMIN"))
                     .build();
         }
@@ -66,6 +70,10 @@ public class AuthServiceImpl implements AuthService {
             userEntity = UserEntity.builder()
                     .email(userDTO.getEmail())
                     .password(userDTO.getPassword())
+                    .nickname(userDTO.getNickname())
+                    .name(userDTO.getName())
+                    .phone(userDTO.getPhone())
+                    .profileImage("https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/image/dowload/1")
                     .roles(Collections.singletonList("ROLE_SELLER"))
                     .build();
         }
@@ -73,6 +81,10 @@ public class AuthServiceImpl implements AuthService {
             userEntity = UserEntity.builder()
                     .email(userDTO.getEmail())
                     .password(userDTO.getPassword())
+                    .nickname(userDTO.getNickname())
+                    .name(userDTO.getName())
+                    .phone(userDTO.getPhone())
+                    .profileImage("https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/image/dowload/1")
                     .roles(Collections.singletonList("ROLE_USER"))
                     .build();
         }
