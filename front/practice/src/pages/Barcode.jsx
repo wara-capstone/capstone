@@ -2,7 +2,7 @@ import React from "react";
 import BottomNav from "../components/BottomNav";
 import Header from "../components/Header";
 
-function BarcodeReader() {
+function Barcode() {
   // const [videoInputDevices, setVideoInputDevices] = useState([]);
   // const [selectedDeviceId, setSelectedDeviceId] = useState('');
   // const [result, setResult] = useState('');
@@ -69,7 +69,7 @@ function BarcodeReader() {
   // const selectedCard = Data.cardData.filter(card => card.id.toString() === result);
 
   return (
-    <div>
+    <div className="barcode">
       <Header />
       <h1>Barcode</h1>
       {/* <button onClick={resetDecoding}>Reset</button>
@@ -126,4 +126,4 @@ function BarcodeReader() {
   );
 }
 
-export default BarcodeReader;
+export default Barcode;
