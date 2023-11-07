@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SellerHeader from "./SellerHeader";
 
 export default function SellerChattingManagement() {
@@ -6,33 +6,38 @@ export default function SellerChattingManagement() {
   const [socket, setSocket] = useState(null);
   const [messageInput, setMessageInput] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
+  const [customerId, setCustomerId] = useState(null);
 
   const userId = sessionStorage.getItem("email");
-  var customerId = "user@naver.com";
+  const roundImage = "https://via.placeholder.com/150x150";
+
+  const chatMessagesRef = useRef(null); // Ref를 생성
+
+  const scrollToBottom = () => {
+    //스크롤 내리는 함수
+    chatMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(scrollToBottom, [chatMessages]); // 메시지가 추가될 때마다 스크롤 내리기
 
   useEffect(() => {
-    openOrCreateRoom(userId);
-  }, []);
+    if (customerId) {
+      openOrCreateRoom();
+    }
+  }, [customerId]);
 
   const handleInputChange = (event) => {
     setMessageInput(event.target.value);
   };
 
-  // const loginAsUser = async (email) => {
-  //   setCurrentUserEmail(email);
-  //   setVisitorUserEmail(
-  //     email === "qw@naver.com" ? "er@naver.com" : "qw@naver.com"
-  //   );
-  //   await openOrCreateRoom();
-  // };
+  const handleCustomerIdChange = (value) => {
+    setCustomerId(value);
+  };
 
   const openOrCreateRoom = async () => {
-    if (socket) {
+    if (socket && socket.readyState !== WebSocket.CLOSED) {
       socket.close();
     }
-
-    // const newSortedEmails = [currentUserEmail, visitorUserEmail].sort();
-    // setSortedEmails(newSortedEmails);
 
     try {
       const response = await fetch("http://3.34.227.3:14000/chat/rooms/", {
@@ -41,8 +46,8 @@ export default function SellerChattingManagement() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          shop_user_email: customerId,
-          visitor_user_email: userId,
+          shop_user_email: userId,
+          visitor_user_email: customerId,
         }),
       });
 
@@ -51,9 +56,11 @@ export default function SellerChattingManagement() {
       }
 
       const roomData = await response.json();
-      setCurrentRoomId(roomData.id);
-      displayMessages(roomData.messages);
-      setupWebSocket(roomData.id);
+      if (response.status === 200) {
+        setCurrentRoomId(roomData.id);
+        displayMessages(roomData.messages);
+        setupWebSocket(roomData.id);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -96,8 +103,8 @@ export default function SellerChattingManagement() {
       const messagePayload = {
         sender_email: userId,
         message: messageInput,
-        shop_user_email: customerId,
-        visitor_user_email: userId,
+        shop_user_email: userId,
+        visitor_user_email: customerId,
       };
 
       socket.send(JSON.stringify(messagePayload));
@@ -105,36 +112,84 @@ export default function SellerChattingManagement() {
     }
   };
 
+  const [visitorUserEmails, setVisitorUserEmails] = useState([]);
+
+  // 서버에서 채팅 목록을 불러오는 기능 추가
+  useEffect(() => {
+    async function fetchChattingList() {
+      try {
+        const response = await fetch(
+          `http://3.34.227.3:14000/chat/rooms/?email=${userId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const userRoomInfo = data.map((room) => ({
+          email: room.visitor_user_email,
+          latestMessage: room.latest_message,
+        }));
+        setVisitorUserEmails(userRoomInfo);
+      } catch (error) {
+        console.error("Error getting visitor_user_emails:", error);
+      }
+    }
+
+    fetchChattingList();
+  }, [userId]);
+
   return (
     <div className="seller-chatting-management">
       <SellerHeader />
-      <div id="chat-container">
-        {/* <!-- 로그인 버튼 --> */}
-        {/* <button onClick={() => loginAsUser("qw@naver.com")}>
-          User 1 (qw@naver.com)
-        </button>
-        <button onClick={() => loginAsUser("er@naver.com")}>
-          User 2 (er@naver.com)
-        </button> */}
+      <div className="seller-chatting-management-container">
+        <div className="chatting-list-container">
+          <div className="chatting-lists">
+            {visitorUserEmails.map((user, index) => (
+              <div
+                key={index}
+                className="list-item"
+                onClick={() => handleCustomerIdChange(user.email)}
+              >
+                <div className="list-item-content">
+                  <img src={roundImage} alt="User" className="round-image" />
+                  <div className="user-details">
+                    <h2>{user.email}</h2>
+                    <p>최근 메세지: {user.latestMessage}</p>
+                  </div>
+                </div>
+                <div className="card-separator"></div>
+              </div>
+            ))}
+          </div>
+        </div>
 
-        {/* <button onClick={() => openOrCreateRoom(userId)}>
-          User 1 (qw@naver.com)
-        </button> */}
+        <div id="chat-container" className="seller-chat-container">
+          {/* <!-- 채팅방 메시지 --> */}
+          <div id="chat-messages">
+            {chatMessages}
+            <div ref={chatMessagesRef} />
+          </div>
 
-        {/* <!-- 채팅방 메시지 --> */}
-        <div id="chat-messages">{chatMessages}</div>
-
-        {/* <!-- 메시지 입력 및 전송 --> */}
-        <input
-          type="text"
-          value={messageInput}
-          onChange={handleInputChange}
-          placeholder="메시지를 입력하세요"
-          id="message-input"
-        />
-        <button id="send-btn" onClick={sendMessage}>
-          보내기
-        </button>
+          {/* <!-- 메시지 입력 및 전송 --> */}
+          <input
+            type="text"
+            value={messageInput}
+            onChange={handleInputChange}
+            placeholder="메시지를 입력하세요"
+            id="message-input"
+          />
+          <button id="send-btn" onClick={sendMessage}>
+            보내기
+          </button>
+        </div>
       </div>
     </div>
   );

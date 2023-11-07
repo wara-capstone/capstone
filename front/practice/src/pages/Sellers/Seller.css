@@ -224,3 +224,25 @@
   transform: scale(0.9);
 }
 /* seller item, seller item management */
+
+/* SellerChattingManagement.css */
+.seller-chatting-management-container {
+  display: flex; /* 가로로 정렬을 위해 Flexbox 사용 */
+  flex-direction: row; /* 가로로 정렬 */
+  flex: 1; /* 남는 공간을 채우도록 확장 */
+  margin: auto;
+  width: 90%;
+}
+
+.seller-chatting-management .chatting-list-container {
+  flex: 1; /* 남는 공간을 채우도록 확장 */
+  width: 800px;
+}
+
+.seller-chatting-management .seller-chat-container {
+  width: 900px; /* 채팅 컨테이너를 가로로 50% 차지하도록 설정 */
+}
+
+.seller-chatting-management .chatting-lists {
+  width: 80%; /* 채팅 목록 컨테이너를 가로로 50% 차지하도록 설정 */
+}
