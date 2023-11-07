@@ -9,7 +9,7 @@ class StoreAdmin(admin.ModelAdmin):
 
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
-    list_display = ('id', 'store', 'user_email', 'date_added')  
+    list_display = ('store', 'user_email', 'date_added')  
     list_filter = ('date_added', 'store')  
     search_fields = ('user_email',) 
 

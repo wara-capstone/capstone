@@ -19,7 +19,7 @@ def add_to_cart(request):
 
 
     store, created= Store.objects.get_or_create(store_id=store_id)
-    product, created = Product.objects.get_or_creat(product_id=product_id, name=product_name, price=product_price, size=size, color=color)
+    product, created = Product.objects.get_or_create(product_id=product_id, name=product_name, price=product_price, size__size=size, color__color=color)
 
     # cart 인스턴스 가져오기, 없으면 생성
     cart, created = Cart.objects.get_or_create(user_email=user_email, store=store)

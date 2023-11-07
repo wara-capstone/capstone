@@ -6,7 +6,7 @@ class Store(models.Model):
     class Meta:
         db_table = 'Store'
     def __str__(self):
-        return self.id
+        return str(self.store_id)
     
 class Cart(models.Model):
     store=models.ForeignKey(Store, on_delete=models.CASCADE)
@@ -18,7 +18,7 @@ class Cart(models.Model):
         ordering = ['date_added']
 
     def __str__(self):
-        return str(self.id)  
+        return str(self.user_email)  
 
 class Size(models.Model):
     size = models.CharField(max_length=20)
@@ -59,7 +59,7 @@ class CartItem(models.Model):
         db_table = 'CartItem'
 
     def sub_total(self):
-            return self.product.price * self.c_quantity
+            return self.product.price * self.quantity
 
     def __str__(self):
         return f"{self.product.name} ({self.quantity})"
