@@ -344,7 +344,7 @@ function myFunction(event) {
         
         {popupInfo && (
             <div className="map-store-data" id ="popup" style={{ zIndex: 100 }}>
-                <Link to={`/store/${popupInfo.key}`} key={popupInfo.key} className="card-link">
+                <Link to={`/store/${popupInfo.storeId}`} key={popupInfo.storeId} className="card-link">
                 <Card
                     title={popupInfo.storeName}
                     subTitle={popupInfo.storeAddress}

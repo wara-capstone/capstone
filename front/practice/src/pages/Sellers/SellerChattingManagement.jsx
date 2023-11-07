@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import SellerHeader from "./SellerHeader";
 
 export default function SellerChattingManagement() {
@@ -9,6 +9,16 @@ export default function SellerChattingManagement() {
 
   const userId = sessionStorage.getItem("email");
   var customerId = "user@naver.com";
+
+  const messagesEndRef = useRef(null);  // 스크롤 내리기 위한 ref
+
+  const scrollToBottom = () => {  //스크롤 내리는 함수
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(scrollToBottom, [chatMessages]);  // 메시지가 추가될 때마다 스크롤 내리기
+
+
 
   useEffect(() => {
     openOrCreateRoom(userId);
@@ -41,8 +51,8 @@ export default function SellerChattingManagement() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          shop_user_email: customerId,
-          visitor_user_email: userId,
+          shop_user_email: userId,
+          visitor_user_email: customerId,
         }),
       });
 
@@ -96,8 +106,8 @@ export default function SellerChattingManagement() {
       const messagePayload = {
         sender_email: userId,
         message: messageInput,
-        shop_user_email: customerId,
-        visitor_user_email: userId,
+        shop_user_email: userId,
+        visitor_user_email: customerId,
       };
 
       socket.send(JSON.stringify(messagePayload));
@@ -122,7 +132,8 @@ export default function SellerChattingManagement() {
         </button> */}
 
         {/* <!-- 채팅방 메시지 --> */}
-        <div id="chat-messages">{chatMessages}</div>
+        <div id="chat-messages">{chatMessages}
+        <div ref={messagesEndRef} /></div>
 
         {/* <!-- 메시지 입력 및 전송 --> */}
         <input

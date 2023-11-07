@@ -4,8 +4,9 @@ import React, { useState, useEffect } from "react";
 import "./Seller.css";
 import SellerHeader from "./SellerHeader";
 
-
 const { kakao } = window;
+
+const email = sessionStorage.getItem('email');
 const token = sessionStorage.getItem('token');
 
 var map;
@@ -16,6 +17,10 @@ const SellerStoreManagement = ({ store }) => {
   const [name, setName] = useState(store?.name || "");
   const [location, setLocation] = useState(store?.location || "");
   const [content, setContent] = useState(store?.content || "");
+  const [phone, setPhoneNum] = useState("");
+  const [lat, setLat] = useState(0);
+  const [lng, setLng] = useState(0);
+
   var coord;
 
   const [image, setImage] = useState();
@@ -44,30 +49,36 @@ const SellerStoreManagement = ({ store }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: Implement the code to send updated data to the server
-    console.log({ name, location, content, image });
 
       var data = {
           "storeName": name,
+          "storeSeller": email,
           "storeAddress": location,
-          "storeContent" : content
+          "storePhone": phone,
+          "storeContent" : content,
+          "storeLocationX": lng,
+          "storeLocationY": lat
       };
-      var formData = new FormData();
-      formData.append('image', image); // 이미지
-      formData.append('data', new Blob([JSON.stringify(data)], { type: "application/json" }));
-      console.log(formData);
-      // formData에 이미지와 json을 합친
-      for (let value of formData.values()) {
-          if (value instanceof Blob) {
-              var reader = new FileReader();
-              reader.onload = function () {
-                  console.log(reader.result); // Blob 내부 데이터를 콘솔에 출력
-              };
-              reader.readAsText(value);
-          } else {
-              console.log(value);
-          }
-      }
-      fetch('https://port-0-creativefusion-jvpb2aln5qmjmz.sel5.cloudtype.app/store/create', {
+      var formData;
+      console.log(image);
+      if (image){
+        formData = new FormData();
+        formData.append('image', image); // 이미지
+        formData.append('json', new Blob([JSON.stringify(data)], { type: "application/json" }));
+        console.log(formData);
+        // formData에 이미지와 json을 합친
+        for (let value of formData.values()) {
+            if (value instanceof Blob) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    console.log(reader.result); // Blob 내부 데이터를 콘솔에 출력
+                };
+                reader.readAsText(value);
+            } else {
+                console.log(value);
+            }
+        }
+        fetch('https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/create', {
           method: 'POST',
           headers: {
               "Authorization": `${token}`
@@ -82,10 +93,38 @@ const SellerStoreManagement = ({ store }) => {
           })
           .then(data => {
               alert('성공!');
+              console.log(data.result);
           })
           .catch(error => {
               console.error(error);
           });
+      }
+      else{
+        formData = JSON.stringify(data);
+
+        fetch('https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/create', {
+          method: 'POST',
+          headers: {
+              "Content-Type": "application/json",
+              "Authorization": `${token}`
+          },
+          body: formData
+      })
+          .then(response => {
+              if (response.ok) {
+                  return response.json(); // JSON 형식의 응답을 파싱
+              }
+              throw new Error('네트워크 응답이 실패했습니다.');
+          })
+          .then(data => {
+              alert('성공!');
+              console.log(data.result);
+          })
+          .catch(error => {
+              console.error(error);
+          });
+      }
+
 
   };
 
@@ -107,7 +146,9 @@ function searchAddress() {
                     marker.setMap(null); // 마커를 지도에서 제거
                 }
                 coord = new kakao.maps.LatLng(result[0].y, result[0].x);
-        
+                setLat(result[0].y);
+                setLng(result[0].x);
+
                 // 결과값으로 받은 위치를 마커로 표시합니다
                 marker = new kakao.maps.Marker({
                     map: map,
@@ -122,10 +163,10 @@ function searchAddress() {
     <div className="seller-store-management" style={{ position: "relative" }}>
       <SellerHeader/>
       <div id="storeMap"style={{ width: '100%', height: '91vh', zIndex:'0' }}></div>
-      <form onSubmit={handleSubmit} style={{ position: "absolute", top: 40, left: -20,zIndex: "2",width:"20%" }}>
+      <form onSubmit={handleSubmit} style={{ position: "absolute", top: 40, left: 0,zIndex: "2",width:"20%", height:"80vh"}}>
         <div className="store-edit-info-container"style={{width:"90%", height:"82vh"}}>
           <div className="store-edit-image">
-            <img src={previewImageSrc} alt="프로필 사진" style={{height:"33vh", width:"100%"}}/>
+            <img src={previewImageSrc} alt="프로필 사진" style={{height:"20vh", width:"100%"}}/>
             <label className="store-edit-icon">
               <FontAwesomeIcon icon={faPlus} />
               <input
@@ -153,6 +194,16 @@ function searchAddress() {
               placeholder="가게 주소 입력"
               onChange={(e) => setLocation(e.target.value)}
               onBlur={searchAddress}
+            />
+          </div>
+
+          <label>가게 전화번호</label>
+          <div className="store-edit-phone">
+            <input
+              type="text"
+              value={phone}
+              placeholder="가게 전화번호 입력"
+              onChange={(e) => setPhoneNum(e.target.value)}
             />
           </div>
 
