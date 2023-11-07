@@ -83,12 +83,11 @@ public class ProductController {
         Long productId = productService.initProductInfo(result);
 
 
-//        if(transrationService.validCheckFromStore(dto.getStoreId(), productId).equals("fail"))
-//        {
-//            productService.removeSingleProduct(productId.get(0));
-//            return HttpStatus.NOT_ACCEPTABLE.toString();
-//        }
-
+        if(transrationService.validCheckFromStore(dto.getStoreId(), productId).equals("fail"))
+        {
+            productService.removeSingleProduct(productId.get(0));
+            return HttpStatus.NOT_ACCEPTABLE.toString();
+        }
 
         result.setProductId(productId);
 
