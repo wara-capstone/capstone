@@ -37,9 +37,13 @@ public class TranslationService {
 
 
 
-    public URI serviceUrl() throws URISyntaxException {
-        ServiceInstance userServer = discoveryClient.getInstances("PRODUCT-SERVICE").get(0);
-        return new URI(userServer.getUri() + "/single/read/update" );// 수정해야함
+    public URI serviceUrl(String serviceName, String endpoint) throws URISyntaxException {
+        //  InstanceInfo instance = eurekaClient.getNextServerFromEureka(serviceName, false);
+        //        return new URI(instance.getHomePageUrl() +  endpoint);
+        ServiceInstance userServer = discoveryClient.getInstances(serviceName).get(0);
+
+        return new URI(userServer.getUri() + endpoint );
+//        return new URI(userServer + endpoint);
     }
 
 
@@ -56,7 +60,7 @@ public class TranslationService {
 
         HttpEntity<?> requestEntity = new HttpEntity<>(bodyMap, headers);
 
-        URI uploadUri = serviceUrl();
+        URI uploadUri = serviceUrl("PRODUCT-SERVICE","/product/single/read");
 
         try {
             ResponseEntity response;
@@ -102,7 +106,7 @@ public class TranslationService {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(bodyMap, headers);
 
-        URI uploadUri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/upload");
+        URI uploadUri = serviceUrl("IMAGE-SERVICE","/image/upload");
 
 
         try {
