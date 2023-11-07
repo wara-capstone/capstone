@@ -50,21 +50,12 @@ public class TransrationService {
     /**
      * @return 유레카 서버로부터 가져온 서버 인스턴스의 URL
      */
-    public URI serviceUrl() throws URISyntaxException {
+    public URI serviceUrl(String serviceName, String endpoint) throws URISyntaxException {
         //  InstanceInfo instance = eurekaClient.getNextServerFromEureka(serviceName, false);
         //        return new URI(instance.getHomePageUrl() +  endpoint);
-        ServiceInstance userServer = discoveryClient.getInstances("STORE-SERVICE").get(0);
+        ServiceInstance userServer = discoveryClient.getInstances(serviceName).get(0);
 
-
-        System.out.println("getInstanceId "+userServer.getInstanceId());
-        System.out.println("getServiceId "+userServer.getServiceId());
-        System.out.println("getUri "+userServer.getUri());
-        System.out.println("userServer "+userServer);
-        System.out.println("getHost "+userServer.getHost());
-        System.out.println("getPort "+userServer.getPort());
-
-
-        return new URI(userServer.getUri() + "/store/update" );
+        return new URI(userServer.getUri() + endpoint );
 //        return new URI(userServer + endpoint);
     }
 
@@ -88,8 +79,10 @@ public class TransrationService {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(bodyMap, headers);
 
-        URI uploadUri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/upload");
 
+//        URI uploadUri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/upload");
+        URI uploadUri = serviceUrl("IMAGE-SERVICE","/image/service");
+        System.out.println(uploadUri);
         try {
             ResponseEntity response;
             response = restTemplate.exchange(
@@ -128,8 +121,8 @@ public class TransrationService {
 
         HttpEntity<?> requestEntity = new HttpEntity<>(bodyMap, headers);
 
-        URI uploadUri = new URI("https://port-0-capstone-12fhqa2llodwi7b3.sel5.cloudtype.app/store/update/id");
-
+//        URI uploadUri = new URI("https://port-0-capstone-12fhqa2llodwi7b3.sel5.cloudtype.app/store/update/id");
+        URI uploadUri = serviceUrl("STORE-SERVICE","/store/update/id");
         try {
             ResponseEntity response;
             response = restTemplate.exchange(
@@ -166,7 +159,8 @@ public class TransrationService {
 
         // 바코드 주소로 바꿔야함
 //        URI uploadUri = new URI("https://port-0-capstone-12fhqa2llodwi7b3.sel5.cloudtype.app/store/update/id");
-        URI uploadUri = new URI("http://localhost:15000/barcode/create");
+        URI uploadUri = serviceUrl("BARCODE-SERVICE","/barcode/create");
+
         try {
             ResponseEntity response;
             response = restTemplate.exchange(
