@@ -28,6 +28,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 //    implementation 'com.google.zxing:core:3.3.3'
+    testImplementation 'org.springframework:spring-test' // 사용 중인 Spring 버전에 맞게 수정해야 함
+    implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+
     implementation 'com.google.zxing:javase:3.4.0'
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
