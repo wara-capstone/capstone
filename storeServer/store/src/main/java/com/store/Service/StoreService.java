@@ -11,6 +11,7 @@ import java.util.Map;
 
 @Service
 public interface StoreService {
+    public SimpleResponseDTO createStore(StoreDTO storeDTO);
     public SimpleResponseDTO createStore(StoreDTO storeDTO, MultipartFile image);
     public ResponseDTO readStoreById(Long storeId);
     public ResponseDTO readStoreByName(String storeName);
@@ -21,7 +22,9 @@ public interface StoreService {
     public SimpleResponseDTO existStoreById(Long storeId);
     public SimpleResponseDTO existStoreBySeller(String storeSeller);
     public SimpleResponseDTO updateStoreByNameAndSeller(StoreDTO storeDTO);
+    public SimpleResponseDTO updateStoreByNameAndSeller(StoreDTO storeDTO, MultipartFile image);
     public SimpleResponseDTO updateStoreById(StoreDTO storeDTO);
+    public SimpleResponseDTO updateStoreById(StoreDTO storeDTO, MultipartFile image);
     public SimpleResponseDTO deleteStore(Long storeId);
     public StoreEntity toEntity(StoreDTO storeDTO);
     public ResponseDTO toResponseDTO(Map<String, Object> resultMap);
