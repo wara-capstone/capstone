@@ -103,7 +103,6 @@ export default function Chatting() {
 
       socket.send(JSON.stringify(messagePayload));
       setMessageInput("");
-      // chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
     }
   };
 
