@@ -57,6 +57,7 @@ public class ProductDAOImpl implements ProductDAO{
      */
     @Override
     public HttpStatus modifyProductInfo(ProductEntity entity) {
+        System.out.println(entity.toString());
         if(repository.existsByProductId(entity.getProductId())) {
             repository.save(entity);
             return HttpStatus.OK;

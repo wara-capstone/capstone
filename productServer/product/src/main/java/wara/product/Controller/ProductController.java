@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 
 @RestController
@@ -62,11 +62,11 @@ public class ProductController {
 
 
     @PostMapping("/modify")
-    public HttpStatus modifyProductInfo(@RequestPart DummyDTO dto, @RequestPart MultipartFile image){
+    public HttpStatus modifyProductInfo(@RequestPart DummyDTO dto, @RequestPart MultipartFile image) throws URISyntaxException, IOException {
         if(image.isEmpty()) return productService.modifyProductInfo(new ProductDTO());
-        else return HttpStatus.OK; //TODO: 이미지서버 업데이트기능이 생겨야함
-
-
+        else {
+            new ProductDTO(dto,transrationService.uploadImage(image));
+        }
 
     }
 
@@ -80,17 +80,26 @@ public class ProductController {
     @PutMapping("/registry")@Transactional
     public String initProductInfo(@RequestPart DummyDTO dto, @RequestPart MultipartFile image) throws URISyntaxException, IOException {
 
+        ProductDTO result = new ProductDTO(dto,"","");
+        Long productId = productService.initProductInfo(result);
+
+
+//        if(transrationService.validCheckFromStore(dto.getStoreId(), productId).equals("fail"))
+//        {
+//            productService.removeSingleProduct(productId.get(0));
+//            return HttpStatus.NOT_ACCEPTABLE.toString();
+//        }
+
+
+        result.setProductId(productId);
+
         //이미지서버에 이미지 등록 후 URL반환
-        String url = transrationService.uploadImage(image);
+        result.setProductUrl(transrationService.uploadImage(image));
+        System.out.println(result.toString());
+        //바코드서버에서 URL반환
+        result.setBarcodeUrl(transrationService.toBarcode(dto.getStoreId(), dto.getProductId()));
 
-        List<Long> productId = new ArrayList<>();
-        productId.add(productService.initProductInfo(new ProductDTO(dto,url)));
-
-        if(transrationService.validCheckFromStore(dto.getStoreId(), productId).equals("fail"))
-        {
-            productService.removeSingleProduct(productId.get(0));
-            return HttpStatus.NOT_ACCEPTABLE.toString();
-        }
+        productService.modifyProductInfo(result);
 
         return HttpStatus.CREATED.toString();
     }

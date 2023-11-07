@@ -1,9 +1,6 @@
 package wara.product.DTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.util.annotation.Nullable;
 import wara.product.productEntity.ProductEntity;
@@ -11,6 +8,7 @@ import wara.product.productEntity.ProductEntity;
 import java.util.List;
 
 
+@ToString
 @Setter @Getter
 @AllArgsConstructor@NoArgsConstructor
 public class ProductDTO {
@@ -24,7 +22,8 @@ public class ProductDTO {
     String productStock;
     String productCategory;
     @Nullable
-    String productUrls;
+    String productUrl;
+    String barcodeUrl;
 
 
     /**
@@ -41,7 +40,8 @@ public class ProductDTO {
                 this.productColor,
                 this.productStock,
                 this.productCategory,
-                this.productUrls
+                this.productUrl,
+                this.barcodeUrl
         );
     }
 
@@ -56,9 +56,23 @@ public class ProductDTO {
         this.productColor = dto.getProductColor();
         this.productStock = dto.getProductStock();
         this.productCategory = dto.getProductCategory();
-        this.productUrls = url;
+        this.productUrl = url;
     }
 
+
+    public ProductDTO(DummyDTO dto, @Nullable String imageUrl, @Nullable String barcodeUrl)
+    {
+        this.productId =dto.getProductId();
+        this.storeId = dto.getStoreId();
+        this.productName = dto.getProductName();
+        this.productPrice = dto.getProductPrice();
+        this.productSize = dto.getProductSize();
+        this.productColor = dto.getProductColor();
+        this.productStock = dto.getProductStock();
+        this.productCategory = dto.getProductCategory();
+        this.productUrl = imageUrl;
+        this.barcodeUrl = barcodeUrl;
+    }
 
 
 }

@@ -1,9 +1,6 @@
 package wara.product.productEntity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.util.annotation.Nullable;
 import wara.product.DTO.ProductDTO;
@@ -15,6 +12,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor @NoArgsConstructor
 @Getter
+@ToString
 public class ProductEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,9 +39,11 @@ public class ProductEntity {
     @Column
     String productCategory;
 
-    @Column
+    @Column@Nullable
     String productUrls;
 
+    @Column@Nullable
+    String barcodeUrl;
 
 
 
@@ -58,7 +58,8 @@ public class ProductEntity {
                 this.productColor,
                 this.productStock,
                 this.productCategory,
-                this.productUrls
+                this.productUrls,
+                this.barcodeUrl
         );
     }
 

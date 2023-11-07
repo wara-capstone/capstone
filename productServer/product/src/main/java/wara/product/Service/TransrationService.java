@@ -117,8 +117,6 @@ public class TransrationService {
 
 
 
-
-
     public String validCheckFromStore(Long storeId, List<Long> productId) throws URISyntaxException, IOException {
 
         HttpHeaders headers = new HttpHeaders();
@@ -144,6 +142,45 @@ public class TransrationService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 HashMap fromStore = (HashMap)response.getBody();
                 return (String) fromStore.get("result");
+            }
+
+        }catch (HttpClientErrorException e){
+            return HttpStatus.BAD_REQUEST.toString();
+        }
+
+        return HttpStatus.NO_CONTENT.toString();
+    }
+
+
+
+    public String toBarcode (Long storeId, Long productId) throws URISyntaxException, IOException {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String,Object> bodyMap = new HashMap<>();
+        bodyMap.put("storeId", storeId);
+        bodyMap.put("productId", productId);
+
+        HttpEntity<?> requestEntity = new HttpEntity<>(bodyMap, headers);
+
+        // 바코드 주소로 바꿔야함
+//        URI uploadUri = new URI("https://port-0-capstone-12fhqa2llodwi7b3.sel5.cloudtype.app/store/update/id");
+        URI uploadUri = new URI("http://localhost:15000/barcode/create");
+        try {
+            ResponseEntity response;
+            response = restTemplate.exchange(
+                    uploadUri,
+                    HttpMethod.POST,
+                    requestEntity,
+                    String.class
+            );
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+//                String fromStore = (String)response.getBody();
+//                return (String) fromStore.get("result"); // 바코드 서버에서 돌아오는 K,v로 변
+                logger.info(response.getBody().toString());
+                return (String)response.getBody();
             }
 
         }catch (HttpClientErrorException e){
