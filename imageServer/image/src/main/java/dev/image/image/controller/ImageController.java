@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("image")
+@RequestMapping("/image")
 public class ImageController {
 
     private static final Logger logger = LoggerFactory.getLogger(ImageController.class);
@@ -46,7 +46,7 @@ public class ImageController {
     @PutMapping("/{id}")
     public ResponseEntity<String> updateImage(
             @PathVariable("id") Long id,
-            @RequestPart(value = "image", required = false) MultipartFile image
+            @RequestPart("image") MultipartFile image
     ) throws IOException {
         return this.imageService.updateImage(id, image);
     }
