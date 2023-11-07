@@ -31,7 +31,7 @@ DEBUG = int(os.environ.get('DEBUG', 1))
 # else:
 #     ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['*']
-
+CSRF_TRUSTED_ORIGINS = ['http://3.34.227.3:14000','https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app']
 # Application definition
 
 INSTALLED_APPS = [
