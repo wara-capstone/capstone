@@ -17,8 +17,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.swing.text.StyledEditorKit;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -438,15 +436,16 @@ public class StoreServiceImpl implements StoreService {
             HttpEntity<?> http = new HttpEntity<>(headers);
 
             MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
-            bodyMap.add("image", body);
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-            http = new HttpEntity<>(bodyMap, headers);
             ResponseEntity response;
 
 //            URI uri = new URI(imageService.getUri() + "/image/upload");
             if (imageKey != null) {
+                bodyMap.add("image", body);
+                headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+                http = new HttpEntity<>(bodyMap, headers);
                 URI uri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/" + imageKey);
                 response = restTemplate.exchange(uri, HttpMethod.PUT, http, String.class);
+                logger.info("ImageServer PUT Method");
 
                 if (response.getStatusCode().is2xxSuccessful()) {
                     String imageUri = (String) response.getBody();
@@ -454,6 +453,9 @@ public class StoreServiceImpl implements StoreService {
                     return imageUri;
                 }
             } else {
+                bodyMap.add("images", body);
+                headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+                http = new HttpEntity<>(bodyMap, headers);
                 URI uri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/upload");
                 response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
                 logger.info("ImageServer POST method");
@@ -488,7 +490,7 @@ public class StoreServiceImpl implements StoreService {
             if (imageKey != null) {
                 URI uri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/" + imageKey);
                 response = restTemplate.exchange(uri, HttpMethod.DELETE, http, Boolean.class);
-                logger.info("ImageServer Delete method");
+                logger.info("ImageServer DELETE Method");
                 return (Boolean) response.getBody();
             } else {
                 return true;
