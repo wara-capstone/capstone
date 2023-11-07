@@ -1,6 +1,15 @@
 from django.db import models
 
+class Store(models.Model):
+    store_id=models.IntegerField(primary_key=True)
+
+    class Meta:
+        db_table = 'Store'
+    def __str__(self):
+        return self.id
+    
 class Cart(models.Model):
+    store=models.ForeignKey(Store, on_delete=models.CASCADE)
     user_email = models.EmailField(unique=True)
     date_added = models.DateField(auto_now_add=True)
 
@@ -30,10 +39,11 @@ class Color(models.Model):
         return self.color
 
 class Product(models.Model):  
+    product_id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=255)
     price = models.IntegerField()
     size = models.ManyToManyField(Size)  
-    color = models.ManyToManyField(Color)  
+    color = models.ManyToManyField(Color)
     class Meta:
         db_table = 'Product'
 
@@ -41,15 +51,15 @@ class Product(models.Model):
         return self.name
 
 class CartItem(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)  
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)   
+    quantity = models.IntegerField(default=0)
 
     class Meta:
         db_table = 'CartItem'
 
     def sub_total(self):
-        return self.product.price * self.quantity
+            return self.product.price * self.c_quantity
 
     def __str__(self):
         return f"{self.product.name} ({self.quantity})"
