@@ -65,9 +65,8 @@ public class ProductController {
     public HttpStatus modifyProductInfo(@RequestPart DummyDTO dto, @RequestPart MultipartFile image) throws URISyntaxException, IOException {
         if(image.isEmpty()) return productService.modifyProductInfo(new ProductDTO());
         else {
-            productService.modifyProductInfo(new ProductDTO(dto,transrationService.uploadImage(image)));
+            return productService.modifyProductInfo(new ProductDTO(dto,transrationService.uploadImage(image)));
         }
-
     }
 
 
