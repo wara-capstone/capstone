@@ -46,7 +46,7 @@ public class ImageController {
     @PutMapping("/{id}")
     public ResponseEntity<String> updateImage(
             @PathVariable("id") Long id,
-            @RequestPart("image") MultipartFile image
+            @RequestPart(value = "image", required = false) MultipartFile image
     ) throws IOException {
         return this.imageService.updateImage(id, image);
     }
