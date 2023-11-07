@@ -82,10 +82,12 @@ public class ProductController {
         ProductDTO result = new ProductDTO(dto,"","");
         Long productId = productService.initProductInfo(result);
 
+        List<Long> pid=  new ArrayList<>();
+        pid.add(productId);
 
-        if(transrationService.validCheckFromStore(dto.getStoreId(), productId).equals("fail"))
+        if(transrationService.validCheckFromStore(dto.getStoreId(), pid).equals("fail"))
         {
-            productService.removeSingleProduct(productId.get(0));
+            productService.removeSingleProduct(pid.get(0));
             return HttpStatus.NOT_ACCEPTABLE.toString();
         }
 
