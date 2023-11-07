@@ -1,2 +1,61 @@
 .DS_Store
 .DS_Store
+
+
+# 파이썬 관련
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+build/
+dist/
+*.egg
+*.egg-info/
+
+# 가상 환경
+.env
+.env.prod
+.env.prod.db
+*.local.env
+venv/
+*.venv
+env/
+ENV/
+*.virtualenv
+*.venv.bak
+env.bak/
+venv.bak/
+
+# Django 관련
+*.log
+*.pot
+*.pyc
+db.sqlite3
+db.sqlite3-journal
+local_settings.py
+
+# 데이터베이스
+*.db
+*.sqlite3
+
+# IDE 및 에디터 관련
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+*.bak
+
+# macOS 관련 파일
+.DS_Store
+*.thumbs_db
+ehthumbs.db
+
+# 키 및 비밀번호 파일
+*.pem
+*.key
+
+# 그 외의 임시 파일 및 문서화
+*.bak
+/site
+

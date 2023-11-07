@@ -2,7 +2,7 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
   datasource:
     url: jdbc:mariadb://svc.sel5.cloudtype.app:30261/capstoneAuth?createDatabaseIfNotExist=true
@@ -12,27 +12,24 @@ spring:
 
     # Spring boot 2.6버전 이후에 spring.mvc.pathmatch.matching-strategy 값이 ant_apth_matcher에서 path_pattern_parser로 변경되면서 몇몇 라이브러리에서 오류가 발생하고 있다!
     # https://goyunji.tistory.com/137
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-
+#  mvc:
+#    pathmatch:
+#      matching-strategy: ant_path_matcher
   application:
     name: User-Service
+server:
+  port: 11000
+eureka:
+  instance:
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.instance_id:${random.value}}
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: https://port-0-capstone-jvpb2mlodwuvxm.sel5.cloudtype.app/eureka
+
+
 springboot:
   jwt:
     secret: secretKey123
-
-
-
-
-  eureka:
-    instance:
-      instance-id: ${spring.cloud.client.ip-address}:${spring.application.instance_id:${random.value}}
-      prefer-ip-address: true
-    client:
-      register-with-eureka: true
-      fetch-registry: true
-      service-url:
-        defaultZone: http://eureka:8761/eureka
-server:
-  port: 0

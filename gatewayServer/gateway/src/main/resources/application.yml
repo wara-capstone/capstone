@@ -4,6 +4,23 @@ server:
 spring:
   application:
     name: API-GATEWAY
+    # Cors 허용
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: 'http://127.0.0.1:3000'
+            allow-credentials: true
+            allowedHeaders: '*'
+            allowedMethods:
+              - PUT
+              - GET
+              - POST
+              - DELETE
+              - OPTIONS
 
 eureka:
   client:
@@ -11,10 +28,13 @@ eureka:
     fetch-registry: true
     service-url:
       # eureka 주소
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: https://port-0-capstone-jvpb2mlodwuvxm.sel5.cloudtype.app/eureka
 springboot:
   jwt:
     secret: secretKey123
+
+
+
 #spring:
 #  cloud:
 #    gateway:

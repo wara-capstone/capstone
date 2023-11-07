@@ -20,6 +20,8 @@ export default function SellerChattingManagement() {
 
   useEffect(scrollToBottom, [chatMessages]); // 메시지가 추가될 때마다 스크롤 내리기
 
+  useEffect(scrollToBottom, [chatMessages]); // 메시지가 추가될 때마다 스크롤 내리기
+
   useEffect(() => {
     if (customerId) {
       openOrCreateRoom();

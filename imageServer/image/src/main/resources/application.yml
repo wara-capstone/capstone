@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://svc.sel5.cloudtype.app:30261/imageService?createDatabaseIfNotExist=true
+    username: root
+    password: 1234
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
+  application:
+    name: Image-Service
+server:
+  port: 13000
+
+eureka:
+  instance:
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.instance_id:${random.value}}
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: https://port-0-capstone-jvpb2mlodwuvxm.sel5.cloudtype.app/eureka
+
+

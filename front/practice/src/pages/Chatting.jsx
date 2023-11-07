@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import BottomNav from "../components/BottomNav";
 import Header from "../components/Header";
 
@@ -8,8 +9,13 @@ export default function Chatting() {
   const [messageInput, setMessageInput] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
 
+  const location = useLocation(); // 채팅방으로 넘어온 값
+
+  // location.state.seller를 통해 storeData.storeSeller 값 받아옴
+  const seller = location.state.seller;
+
   const userId = sessionStorage.getItem("email");
-  var sellerId = "seller@naver.com";
+  var sellerId = seller;
 
   useEffect(() => {
     openOrCreateRoom(userId);
@@ -61,6 +67,7 @@ export default function Chatting() {
   };
 
   const displayMessages = (messages) => {
+    console.log("h1");
     const messageElements = messages.map((message) => {
       if (message.sender_email && message.text) {
         const className = message.sender_email === userId ? "sent" : "received";
@@ -93,7 +100,7 @@ export default function Chatting() {
   };
 
   const sendMessage = () => {
-    if (messageInput) {
+    if (messageInput && socket && socket.readyState === WebSocket.OPEN) {
       const messagePayload = {
         sender_email: userId,
         message: messageInput,
