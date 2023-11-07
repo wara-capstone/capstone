@@ -330,8 +330,8 @@ export default function Chatting() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          shop_user_email: userId,
-          visitor_user_email: sellerId,
+          shop_user_email: sellerId,
+          visitor_user_email: userId,
         }),
       });
 
@@ -351,6 +351,7 @@ export default function Chatting() {
   };
 
   const displayMessages = (messages) => {
+    console.log("h1");
     const messageElements = messages.map((message) => {
       if (message.sender_email && message.text) {
         const className = message.sender_email === userId ? "sent" : "received";
@@ -387,8 +388,8 @@ export default function Chatting() {
       const messagePayload = {
         sender_email: userId,
         message: messageInput,
-        shop_user_email: userId,
-        visitor_user_email: sellerId,
+        shop_user_email: sellerId,
+        visitor_user_email: userId,
       };
 
       socket.send(JSON.stringify(messagePayload));

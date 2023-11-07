@@ -1,7 +1,7 @@
 import BottomNav from "../components/BottomNav";
 import Header from "../components/Header";
 
-export default function Chatting() {
+export default function ChattingList() {
   return (
     <div className="chatting-list">
       <Header />
