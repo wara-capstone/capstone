@@ -29,6 +29,7 @@ const SellerStoreManagement = ({ store }) => {
   const [phone, setPhoneNum] = useState("");
   const [lat, setLat] = useState(0);
   const [lng, setLng] = useState(0);
+  const [storeId, setStoreId] = useState(0);
 
   var coord;
 
@@ -52,9 +53,9 @@ const SellerStoreManagement = ({ store }) => {
   const fetchData = async (BodyJson, latlng, initMarkers) => {
     try {
       const response = await fetch(
-        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/read/map/coordinate",
+        `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/read/seller/${email}`,
         {
-          method: "POST",
+          method: "GET",
           headers: {
             "Content-type": "application/json",
           },
@@ -67,7 +68,7 @@ const SellerStoreManagement = ({ store }) => {
         markerList = data;
         console.log("데이터 전송 완료");
         console.log(markerList);
-        console.log(latlng);
+        // console.log(latlng);
         initMarkers();
       } else if (response.status === 400) {
         console.log("데이터 전송 실패");
@@ -77,14 +78,10 @@ const SellerStoreManagement = ({ store }) => {
     }
   };
 
-  for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(null);
-  }
+  // for (var i = 0; i < markers.length; i++) {
+  //   markers[i].setMap(null);
+  // }
 
-  //
-  //
-  //
-  //
   useEffect(() => {
     var mapDiv = document.querySelector("#storeMap"), // 지도를 표시할 div
       mapOption = {
@@ -110,18 +107,11 @@ const SellerStoreManagement = ({ store }) => {
     var centerAround = circle.getBounds();
     console.log(centerAround);
 
-    // centerAround의 남서쪽과 북동쪽 좌표를 가져옵니다
+    // // centerAround의 남서쪽과 북동쪽 좌표를 가져옵니다
     var swLatLng = centerAround.getSouthWest();
     var neLatLng = centerAround.getNorthEast();
 
-    var circleXY = {
-      minX: swLatLng.getLng(), // 남서쪽 경도
-      minY: swLatLng.getLat(), // 남서쪽 위도
-      maxX: neLatLng.getLng(), // 북동쪽 경도
-      maxY: neLatLng.getLat(), // 북동쪽 위도
-    };
-
-    fetchData(JSON.stringify(circleXY), mapOption.center, initMarkers);
+    fetchData(JSON.stringify(), mapOption.center, initMarkers);
     // 지도가 이동, 확대, 축소로 인해 중심좌표가 변경되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
     kakao.maps.event.addListener(map, "dragend", function () {
       // 지도의  레벨을 얻어옵니다
@@ -139,15 +129,6 @@ const SellerStoreManagement = ({ store }) => {
       swLatLng = centerAround.getSouthWest();
       neLatLng = centerAround.getNorthEast();
 
-      circleXY = {
-        minX: swLatLng.getLng(),
-        minY: swLatLng.getLat(),
-        maxX: neLatLng.getLng(),
-        maxY: neLatLng.getLat(),
-      };
-
-      console.log(circleXY);
-
       for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(null);
       }
@@ -155,7 +136,7 @@ const SellerStoreManagement = ({ store }) => {
       // markers 배열 초기화
       markers = [];
 
-      var BodyJson = JSON.stringify(circleXY);
+      var BodyJson = JSON.stringify();
       fetchData(BodyJson, latlng, initMarkers);
     });
 
@@ -166,17 +147,6 @@ const SellerStoreManagement = ({ store }) => {
       }
       markerList.forEach(function (markerInfo) {
         // 마커를 생성합니다
-
-        // if(markerInfo.Shopping){
-        // var marker = new kakao.maps.Marker({
-        //     position: new kakao.maps.LatLng( markerInfo.storeLocationY,markerInfo.storeLocationX),
-        //     map: map,
-        //     image: shopNormalImage, // 마커 이미지
-        // });
-        //     marker.normalImage = shopNormalImage;
-        //     marker.clickImage = shopClickImage;
-
-        // }else{
         var marker = new kakao.maps.Marker({
           position: new kakao.maps.LatLng(
             markerInfo.storeLocationY,
@@ -217,23 +187,38 @@ const SellerStoreManagement = ({ store }) => {
               markerInfo.storeLocationX
             )
           );
+
+          console.log(markerInfo);
+
+          setPhoneNum(markerInfo.storePhone);
+          setLocation(markerInfo.storeAddress);
+          setContent(markerInfo.storeContents);
+          setName(markerInfo.storeName);
+          setImage(markerInfo.storeImage);
+          setPreviewImageSrc(markerInfo.storeImage);
+          setStoreId(markerInfo.storeId);
+          setLat(markerInfo.storeLocationY);
+          setLng(markerInfo.storeLocationX);
         });
       });
     }
     initMarkers();
   }, []);
 
+  //
+  //
+  //
+  //
   // form submission handler
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: Implement the code to send updated data to the server
-
     var data = {
+      storeId: storeId,
       storeName: name,
       storeSeller: email,
       storeAddress: location,
       storePhone: phone,
-      storeContent: content,
+      storeContents: content,
       storeLocationX: lng,
       storeLocationY: lat,
     };
@@ -241,7 +226,7 @@ const SellerStoreManagement = ({ store }) => {
     console.log(image);
     if (image) {
       formData = new FormData();
-      formData.append("image", image); // 이미지
+      formData.append("image", image);
       formData.append(
         "json",
         new Blob([JSON.stringify(data)], { type: "application/json" })
@@ -252,17 +237,18 @@ const SellerStoreManagement = ({ store }) => {
         if (value instanceof Blob) {
           var reader = new FileReader();
           reader.onload = function () {
-            console.log(reader.result); // Blob 내부 데이터를 콘솔에 출력
+            console.log(reader.result);
           };
           reader.readAsText(value);
         } else {
           console.log(value);
         }
       }
+
       fetch(
-        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/create",
+        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/update/id",
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             Authorization: `${token}`,
           },
@@ -271,7 +257,7 @@ const SellerStoreManagement = ({ store }) => {
       )
         .then((response) => {
           if (response.ok) {
-            return response.json(); // JSON 형식의 응답을 파싱
+            return response.json();
           }
           throw new Error("네트워크 응답이 실패했습니다.");
         })
@@ -284,11 +270,10 @@ const SellerStoreManagement = ({ store }) => {
         });
     } else {
       formData = JSON.stringify(data);
-
       fetch(
-        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/create",
+        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/update/id",
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `${token}`,
@@ -371,7 +356,7 @@ const SellerStoreManagement = ({ store }) => {
                   <input
                     type="text"
                     value={name}
-                    placeholder="가게 이름 입력"
+                    placeholder={`${name}`}
                     onChange={(e) => setName(e.target.value)}
                   />
                 </div>
@@ -381,7 +366,7 @@ const SellerStoreManagement = ({ store }) => {
                   <input
                     type="text"
                     value={location}
-                    placeholder="가게 주소 입력"
+                    placeholder={`${location}`}
                     onChange={(e) => setLocation(e.target.value)}
                     onBlur={searchAddress}
                   />
@@ -392,7 +377,7 @@ const SellerStoreManagement = ({ store }) => {
                   <input
                     type="text"
                     value={phone}
-                    placeholder="가게 전화번호 입력"
+                    placeholder={`${phone}`}
                     onChange={(e) => setPhoneNum(e.target.value)}
                   />
                 </div>
@@ -402,7 +387,7 @@ const SellerStoreManagement = ({ store }) => {
                   <textarea
                     type="text"
                     value={content}
-                    placeholder="가게 정보 입력"
+                    placeholder={`${content}`}
                     onChange={(e) => setContent(e.target.value)}
                     style={{
                       width: "90%", // 원하는 폭을 지정하세요.

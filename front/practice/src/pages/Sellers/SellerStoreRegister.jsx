@@ -51,7 +51,7 @@ const SellerStoreRegister = ({ store }) => {
       storeSeller: email,
       storeAddress: location,
       storePhone: phone,
-      storeContent: content,
+      storeContents: content,
       storeLocationX: lng,
       storeLocationY: lat,
     };
@@ -96,6 +96,7 @@ const SellerStoreRegister = ({ store }) => {
         .then((data) => {
           alert("성공!");
           console.log(data.result);
+          console.log(formData);
         })
         .catch((error) => {
           console.error(error);
