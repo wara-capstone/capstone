@@ -12,6 +12,7 @@ public class DummyDTO {
 
     Long productId;
     Long storeId;
+    Long subId;
     String productName;
     String productPrice;
     String productSize;

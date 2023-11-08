@@ -31,16 +31,11 @@ import org.slf4j.LoggerFactory;
 public class TransrationService {
 
     private static final Logger logger = LoggerFactory.getLogger(TransrationService.class);
-
-
-
-    private final EurekaClient eurekaClient;
     private final DiscoveryClient discoveryClient;
     private final RestTemplate restTemplate;
 
     @Autowired
-    public TransrationService(EurekaClient eurekaClient, RestTemplate restTemplate, DiscoveryClient discoveryClient) {
-        this.eurekaClient = eurekaClient;
+    public TransrationService(RestTemplate restTemplate, DiscoveryClient discoveryClient) {
         this.restTemplate = restTemplate;
         this.discoveryClient = discoveryClient;
     }
@@ -51,21 +46,14 @@ public class TransrationService {
      * @return 유레카 서버로부터 가져온 서버 인스턴스의 URL
      */
     public URI serviceUrl(String serviceName, String endpoint) throws URISyntaxException {
-        //  InstanceInfo instance = eurekaClient.getNextServerFromEureka(serviceName, false);
-        //        return new URI(instance.getHomePageUrl() +  endpoint);
         ServiceInstance userServer = discoveryClient.getInstances(serviceName).get(0);
-
         return new URI(userServer.getUri() + endpoint );
-//        return new URI(userServer + endpoint);
     }
 
 
     public String uploadImage(MultipartFile image) throws URISyntaxException, IOException {
-
-
         ByteArrayResource imageResource = new ByteArrayResource(image.getBytes()) {
-            @Override
-            public String getFilename() {
+            @Override public String getFilename() {
                 return image.getOriginalFilename();
             }
         };
@@ -79,9 +67,7 @@ public class TransrationService {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(bodyMap, headers);
 
-
-//        URI uploadUri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/upload");
-        URI uploadUri = serviceUrl("IMAGE-SERVICE","/image/service");
+        URI uploadUri = serviceUrl("IMAGE-SERVICE","/image/upload");
         System.out.println(uploadUri);
         try {
             ResponseEntity response;
@@ -121,7 +107,7 @@ public class TransrationService {
 
         HttpEntity<?> requestEntity = new HttpEntity<>(bodyMap, headers);
 
-//        URI uploadUri = new URI("https://port-0-capstone-12fhqa2llodwi7b3.sel5.cloudtype.app/store/update/id");
+
         URI uploadUri = serviceUrl("STORE-SERVICE","/store/update/id");
         try {
             ResponseEntity response;
@@ -157,8 +143,7 @@ public class TransrationService {
 
         HttpEntity<?> requestEntity = new HttpEntity<>(bodyMap, headers);
 
-        // 바코드 주소로 바꿔야함
-//        URI uploadUri = new URI("https://port-0-capstone-12fhqa2llodwi7b3.sel5.cloudtype.app/store/update/id");
+
         URI uploadUri = serviceUrl("BARCODE-SERVICE","/barcode/create");
 
         try {
@@ -171,8 +156,6 @@ public class TransrationService {
             );
 
             if (response.getStatusCode().is2xxSuccessful()) {
-//                String fromStore = (String)response.getBody();
-//                return (String) fromStore.get("result"); // 바코드 서버에서 돌아오는 K,v로 변
                 logger.info(response.getBody().toString());
                 return (String)response.getBody();
             }

@@ -15,6 +15,8 @@ public class ProductDTO {
 
     Long productId;
     Long storeId;
+    @Nullable
+    Long subId;
     String productName;
     String productPrice;
     String productSize;
@@ -34,6 +36,7 @@ public class ProductDTO {
         return new ProductEntity(
                 this.productId,
                 this.storeId,
+                this.subId,
                 this.productName,
                 this.productPrice,
                 this.productSize,
@@ -64,6 +67,7 @@ public class ProductDTO {
     {
         this.productId =dto.getProductId();
         this.storeId = dto.getStoreId();
+        this.subId = dto.getSubId();
         this.productName = dto.getProductName();
         this.productPrice = dto.getProductPrice();
         this.productSize = dto.getProductSize();

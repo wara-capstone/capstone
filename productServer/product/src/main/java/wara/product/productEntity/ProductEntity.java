@@ -21,6 +21,9 @@ public class ProductEntity {
     @Column
     Long storeId;
 
+    @Column@Nullable
+    Long subId;
+
     @Column
     String productName;
 
@@ -52,6 +55,7 @@ public class ProductEntity {
         return new ProductDTO(
                 this.productId,
                 this.storeId,
+                this.subId,
                 this.productName,
                 this.productPrice,
                 this.productSize,

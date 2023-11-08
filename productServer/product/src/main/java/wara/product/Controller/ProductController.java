@@ -35,6 +35,7 @@ public class ProductController {
 
 
     /**
+     * @param productId
      * 단일 상품 정보 조회
      * */
     @GetMapping("/single/read")
@@ -44,29 +45,12 @@ public class ProductController {
 
 
     /**
+     * @param storeId
      * 한 상점의 모든 상품 정보 조회
      * */
     @GetMapping("/multi/read")
-    public ResponseDTO<List<ProductDTO>> multiProductInfo(Long storeId){
+    public ResponseDTO<List<ProductDTO>> multiProductInfo(@RequestParam Long storeId){
         return productService.multiProductInfo(storeId);
-    }
-
-
-    /**
-     * 상품정보 수정
-     * */
-    //TODO: 수정의 경우 URL, 사진을 어떻게 할것인가
-//    @PostMapping("/modify")
-//    public HttpStatus modifyProductInfo(@RequestBody ProductDTO dto){
-//        return productService.modifyProductInfo(dto);
-
-
-    @PostMapping("/modify")
-    public HttpStatus modifyProductInfo(@RequestPart DummyDTO dto, @RequestPart MultipartFile image) throws URISyntaxException, IOException {
-        if(image.isEmpty()) return productService.modifyProductInfo(new ProductDTO());
-        else {
-            return productService.modifyProductInfo(new ProductDTO(dto,transrationService.uploadImage(image)));
-        }
     }
 
 
@@ -103,6 +87,16 @@ public class ProductController {
 
         return HttpStatus.CREATED.toString();
     }
+
+    @PostMapping("/modify")
+    public HttpStatus modifyProductInfo(@RequestPart DummyDTO dto, @RequestPart MultipartFile image) throws URISyntaxException, IOException {
+        if(image.isEmpty()) return productService.modifyProductInfo(new ProductDTO());
+        else {
+            return productService.modifyProductInfo(new ProductDTO(dto,transrationService.uploadImage(image)));
+        }
+    }
+
+
 
 
     @DeleteMapping("/single/remove")

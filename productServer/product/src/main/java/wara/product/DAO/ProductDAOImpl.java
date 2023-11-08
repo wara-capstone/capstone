@@ -28,8 +28,9 @@ public class ProductDAOImpl implements ProductDAO{
         return repository.getByProductId(productId);
     }
 
+
     /**
-     * ID값 기준 다중 값 반환
+     * 상점 ID값 기준 다중 값 반환
      * */
     public List<ProductEntity> readMultiProductInfo(Long storeId) {
         return repository.getAllByStoreId(storeId);
@@ -38,6 +39,7 @@ public class ProductDAOImpl implements ProductDAO{
 
     /**
      * @param productId
+     * 단일 상품 삭제
      */
     @Override
     public void removeSingleProduct(Long productId) {
@@ -46,6 +48,7 @@ public class ProductDAOImpl implements ProductDAO{
 
     /**
      * @param storeId
+     * 한 상점의 상품 전체 삭제
      */
     @Override
     public void removeMultiProduct(Long storeId) {
