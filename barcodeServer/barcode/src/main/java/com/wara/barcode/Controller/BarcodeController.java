@@ -36,10 +36,8 @@ public class BarcodeController {
         return returnvalue;
     }
 
-    @PostMapping()
 
     //유저의 바코드 정보 조회 요청
-    //Todo: 이걸 꼭 여기서 해야하나?
     @GetMapping("/check")
     public HashMap barcodeInfo(@RequestParam Long productId) throws URISyntaxException, IOException {
         return translationService.toProduct(productId);

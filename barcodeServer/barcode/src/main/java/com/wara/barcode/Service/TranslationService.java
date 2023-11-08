@@ -38,12 +38,8 @@ public class TranslationService {
 
 
     public URI serviceUrl(String serviceName, String endpoint) throws URISyntaxException {
-        //  InstanceInfo instance = eurekaClient.getNextServerFromEureka(serviceName, false);
-        //        return new URI(instance.getHomePageUrl() +  endpoint);
         ServiceInstance userServer = discoveryClient.getInstances(serviceName).get(0);
-
         return new URI(userServer.getUri() + endpoint );
-//        return new URI(userServer + endpoint);
     }
 
 
@@ -94,8 +90,6 @@ public class TranslationService {
             }
         };
 
-//        ByteArrayResource imageResource = new ByteArrayResource(image);
-
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -121,7 +115,6 @@ public class TranslationService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 LinkedHashMap responseBody = (LinkedHashMap) response.getBody();
                 List<String> imageURLs = (List<String>) responseBody.get("images");
-
                 String uploadedImageUrl = imageURLs.get(0);
                 return uploadedImageUrl;
             }
@@ -129,7 +122,6 @@ public class TranslationService {
         }catch (HttpClientErrorException e){
             return HttpStatus.BAD_REQUEST.toString();
         }
-
         return HttpStatus.NO_CONTENT.toString();
     }
 
