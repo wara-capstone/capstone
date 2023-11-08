@@ -19,10 +19,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('add', views.add_to_cart, name='add-to-cart'),
-    path('view/<str:user_email>', views.view_cart, name='view-cart'),
-    path('remove', views.remove_from_cart, name='remove-from-cart'),
-    path('update', views.update_cart_item, name='update-cart-item'),
+    path('items/', views.CartItemAPIView.as_view(), name='cart-items'),
 
     # Swagger urls
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
