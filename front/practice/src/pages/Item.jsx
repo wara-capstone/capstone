@@ -1,13 +1,17 @@
-import React from "react";
+import React , { useEffect, useState }from "react";
 import { useNavigate, useParams } from "react-router-dom";
+
 import Data from "../DB/Data.json";
 import AddToCartButton from "../components/AddToCartButton";
 import BottomNav from "../components/BottomNav";
 import Header from "../components/Header";
 import ImageSlider from "../components/ImageSlider";
+import "../components/Button.css"
+import EventButton from "../components/EventButton";
 
 export default function Item() {
   const { id } = useParams();
+
   const selectedCard = Data.cardData.filter((card) => card.id === Number(id));
 
   const userId = sessionStorage.getItem("email");
@@ -15,7 +19,16 @@ export default function Item() {
   const storeId = sessionStorage.getItem("storeid");
   const token = sessionStorage.getItem("token");
 
-  let url;
+  function clickPurchase(e) {
+    if (userId === null) {
+      navigate("/login");
+    }
+    else{
+    console.log("구매");
+     navigate("/user/purchase");
+    }
+}
+
 
   const navigate = useNavigate();
 
@@ -25,6 +38,8 @@ export default function Item() {
       navigate("/login");
     }
   };
+
+
 
   return (
     <div className="item">
@@ -36,14 +51,20 @@ export default function Item() {
             <ImageSlider images={card.images}></ImageSlider>
           </div>
           <h1>{card.title}</h1>
-          <p>price: {card.subTitle}</p>
-          <p>item detail: {card.content}</p>
-          <p>count: {card.content2}</p>
+          <p>가격: {card.subTitle}</p>
+          <p>상세 정보: {card.content}</p>
+          <p>재고: {card.content2}</p>
         </div>
       ))}
+      <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around"}}>
       <div onClick={handleAddCart}>
         <AddToCartButton selectedCard={selectedCard} key={selectedCard.id} />
       </div>
+
+      <div>
+        <EventButton buttonText="구매하기" onClick={clickPurchase} />
+      </div>
+    </div>
       <BottomNav />
     </div>
   );

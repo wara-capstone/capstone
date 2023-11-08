@@ -1,0 +1,68 @@
+/* OrderProducts.css */
+
+.orderProductList {
+    /* display: flex; */
+    /* box-sizing: border-box; */
+    border: 1px solid #cccccc58;
+    border-radius: 20px;
+    background-color: white;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.098);
+    margin: 10px;
+    height: 18vh;
+}
+
+.orderProductList input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.imageWrapper {
+    display: flex;
+}
+
+.breadImage {
+    max-width: 100px;
+    height: auto;
+
+    border-radius: 16px;
+    object-fit: cover;
+}
+
+.optionWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.changeOption {
+    border-radius: 5px;
+    background-color: #f5f5f5;
+    cursor: pointer;
+    border: none;
+}
+
+.quantityWrapper {
+    display: flex;
+    align-items: center;
+    /* border: 1px solid black; */
+    height: 4vh;
+}
+
+.quantityButton {
+    margin: 0 10px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #f5f5f5;
+    border: none;
+    cursor: pointer;
+}
+
+.buttonWrapper {
+    display: flex;
+}
+
+.button {   
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    background-color: #f5f5f5;
+}

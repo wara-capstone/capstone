@@ -1,3 +1,22 @@
+#normal-button{
+  background-color: rgb(174, 174, 174);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.1s ease, transform 0.1s ease;
+  height: 8vh;
+}
+
+#normal-button:active {
+  /* 클릭 상태에서의 크기 (작은 크기) */
+  background-color: black;
+}
+
+
 .event-button {
   position: fixed;
   bottom: 20px;
