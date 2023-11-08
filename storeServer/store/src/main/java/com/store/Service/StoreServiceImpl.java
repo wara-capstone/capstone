@@ -1,27 +1,17 @@
 package com.store.Service;
 
-import com.store.Controller.StoreController;
 import com.store.DAO.StoreDAO;
 import com.store.DTO.*;
 import com.store.Entity.StoreEntity;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -30,13 +20,13 @@ import java.util.regex.Pattern;
 @Service
 public class StoreServiceImpl implements StoreService {
     private final StoreDAO storeDAO;
-    private final DiscoveryClient discoveryClient;
-    private final static Logger logger = LoggerFactory.getLogger(StoreController.class);
+    private final HttpCommunicationService httpCommunicationService;
+    private final static Logger logger = LoggerFactory.getLogger(StoreServiceImpl.class);
 
     public StoreServiceImpl(@Autowired StoreDAO storeDAO,
-                            @Autowired DiscoveryClient discoveryClient) {
+                            @Autowired HttpCommunicationService httpCommunicationService) {
         this.storeDAO = storeDAO;
-        this.discoveryClient = discoveryClient;
+        this.httpCommunicationService = httpCommunicationService;
     }
 
     @Override
@@ -53,7 +43,7 @@ public class StoreServiceImpl implements StoreService {
         StoreEntity storeEntity = toEntity(storeDTO);
 
         try {
-            String imageUri = imageUpload(image);
+            String imageUri = httpCommunicationService.imageUpload(image);
             storeEntity.setStoreImage(imageUri);
             Map<String, Object> resultMap = storeDAO.createStore(storeEntity);
             SimpleResponseDTO simpleResponseDTO = toSimpleResponseDTO(resultMap);
@@ -90,7 +80,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public ResponseDTO readStoreByCoordinate(CoordinateDTO coordinateDTO) {
+    public ResponseDTO readStoreByCoordinate(@NotNull CoordinateDTO coordinateDTO) {
         Map<String, Object> resultMap = storeDAO.readStoreByCoordinate(coordinateDTO.getMinX(), coordinateDTO.getMinY(), coordinateDTO.getMaxX(), coordinateDTO.getMaxY());
 
         ResponseDTO responseDTO = toResponseForMapDTO(resultMap);
@@ -151,25 +141,24 @@ public class StoreServiceImpl implements StoreService {
         Map<String, Object> existMap = storeDAO.existStoreByNameAndSeller(storeEntity.getStoreName(), storeEntity.getStoreSeller());
         SimpleResponseDTO simpleResponseDTO;
 
-        if (existMap.get("result").equals("success")) {
-            try {
-                String oldImage = storeDAO.readStoreImageByStoreNameAndStoreSeller(storeEntity.getStoreName(), storeEntity.getStoreSeller());
-                String imageKey = findImageKey(oldImage);
-                String imageUri = imageUpdate(image, imageKey);
-                storeEntity.setStoreImage(imageUri);
-                Map<String, Object> resultMap = storeDAO.updateStoreByNameAndSeller(storeEntity);
-                simpleResponseDTO = toSimpleResponseDTO(resultMap);
-                return simpleResponseDTO;
-            } catch (URISyntaxException | IOException e) {
-                e.printStackTrace();
-                SimpleResponseDTO errorResponse = new SimpleResponseDTO("Failed to update image");
-                return errorResponse;
-            }
-        } else {
+        if (!(existMap.get("result").equals("success"))) {
             simpleResponseDTO = toSimpleResponseDTO(existMap);
+            return simpleResponseDTO;
         }
 
-        return simpleResponseDTO;
+        try {
+            String oldImage = storeDAO.readStoreImageByStoreNameAndStoreSeller(storeEntity.getStoreName(), storeEntity.getStoreSeller());
+            String imageKey = findImageKey(oldImage);
+            String imageUri = httpCommunicationService.imageUpdate(image, imageKey);
+            storeEntity.setStoreImage(imageUri);
+            Map<String, Object> resultMap = storeDAO.updateStoreByNameAndSeller(storeEntity);
+            simpleResponseDTO = toSimpleResponseDTO(resultMap);
+            return simpleResponseDTO;
+        } catch (URISyntaxException | IOException e) {
+            e.printStackTrace();
+            SimpleResponseDTO errorResponse = new SimpleResponseDTO("Failed to update image");
+            return errorResponse;
+        }
     }
 
     @Override
@@ -194,25 +183,24 @@ public class StoreServiceImpl implements StoreService {
         Map<String, Object> existMap = storeDAO.existStoreById(storeEntity.getStoreId());
         SimpleResponseDTO simpleResponseDTO;
 
-        if (existMap.get("result").equals("success")) {
-            try {
-                String oldImage = storeDAO.readStoreImageByStoreId(storeEntity.getStoreId());
-                String imageKey = findImageKey(oldImage);
-                String imageUri = imageUpdate(image, imageKey);
-                storeEntity.setStoreImage(imageUri);
-                Map<String, Object> resultMap = storeDAO.updateStoreById(storeEntity);
-                simpleResponseDTO = toSimpleResponseDTO(resultMap);
-                return simpleResponseDTO;
-            } catch (URISyntaxException | IOException e) {
-                e.printStackTrace();
-                SimpleResponseDTO errorResponse = new SimpleResponseDTO("Failed to update image");
-                return errorResponse;
-            }
-        } else {
+        if (!(existMap.get("result").equals("success"))) {
             simpleResponseDTO = toSimpleResponseDTO(existMap);
+            return simpleResponseDTO;
         }
 
-        return simpleResponseDTO;
+        try {
+            String oldImage = storeDAO.readStoreImageByStoreId(storeEntity.getStoreId());
+            String imageKey = findImageKey(oldImage);
+            String imageUri = httpCommunicationService.imageUpdate(image, imageKey);
+            storeEntity.setStoreImage(imageUri);
+            Map<String, Object> resultMap = storeDAO.updateStoreById(storeEntity);
+            simpleResponseDTO = toSimpleResponseDTO(resultMap);
+            return simpleResponseDTO;
+        } catch (URISyntaxException | IOException e) {
+            e.printStackTrace();
+            SimpleResponseDTO errorResponse = new SimpleResponseDTO("Failed to update image");
+            return errorResponse;
+        }
     }
 
     @Override
@@ -220,8 +208,9 @@ public class StoreServiceImpl implements StoreService {
         try {
             String image = storeDAO.readStoreImageByStoreId(storeId);
             String imageKey = findImageKey(image);
+            Boolean deleteFlag = httpCommunicationService.imageDelete(imageKey);
 
-            if (imageDelete(imageKey)) {
+            if (deleteFlag) {
                 Map<String, Object> resultMap = storeDAO.deleteStore(storeId);
 
                 SimpleResponseDTO simpleResponseDTO = toSimpleResponseDTO(resultMap);
@@ -238,7 +227,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreEntity toEntity(StoreDTO storeDTO) {
+    public StoreEntity toEntity(@NotNull StoreDTO storeDTO) {
         StoreEntity storeEntity = StoreEntity.builder()
                 .storeId(storeDTO.getStoreId())
                 .storeName(storeDTO.getStoreName())
@@ -256,7 +245,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public ResponseDTO toResponseDTO(Map<String, Object> resultMap) {
+    public ResponseDTO toResponseDTO(@NotNull Map<String, Object> resultMap) {
         ResponseDTO responseDTO;
 
         if (resultMap.containsKey("data")) {
@@ -313,7 +302,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public ResponseDTO toResponseForMapDTO(Map<String, Object> resultMap) {
+    public ResponseDTO toResponseForMapDTO(@NotNull Map<String, Object> resultMap) {
         ResponseDTO responseDTO;
 
         if (resultMap.containsKey("data")) {
@@ -373,7 +362,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public SimpleResponseDTO toSimpleResponseDTO(Map<String, Object> resultMap) {
+    public SimpleResponseDTO toSimpleResponseDTO(@NotNull Map<String, Object> resultMap) {
         SimpleResponseDTO simpleResponseDTO;
 
         simpleResponseDTO = SimpleResponseDTO.builder()
@@ -383,134 +372,17 @@ public class StoreServiceImpl implements StoreService {
         return simpleResponseDTO;
     }
 
-    public String imageUpload(MultipartFile image) throws URISyntaxException, IOException {
-        ByteArrayResource body = new ByteArrayResource(image.getBytes()) {
-            @Override
-            public String getFilename() {
-                return image.getOriginalFilename();
-            }
-        };
-
-        try {
-            ServiceInstance imageService = discoveryClient.getInstances("IMAGE-SERVICE").get(0);
-            RestTemplate restTemplate = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            HttpEntity<?> http = new HttpEntity<>(headers);
-
-            MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
-            bodyMap.add("images", body);
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-            http = new HttpEntity<>(bodyMap, headers);
-
-//            URI uri = new URI(imageService.getUri() + "/image/upload");
-            URI uri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/upload");
-            ResponseEntity response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
-
-
-            if (response.getStatusCode().is2xxSuccessful()) {
-                LinkedHashMap responseBody = (LinkedHashMap) response.getBody();
-                List<String> images = (List) responseBody.get("images");
-                String imageUri = (String) images.get(0);
-
-                return imageUri;
-            }
-        } catch (HttpClientErrorException e) {
-            return "Failed to upload image";
-        }
-
-        return "Failed to upload image";
-    }
-
-    public String imageUpdate(MultipartFile image, String imageKey) throws URISyntaxException, IOException {
-        ByteArrayResource body = new ByteArrayResource(image.getBytes()) {
-            @Override
-            public String getFilename() {
-                return image.getOriginalFilename();
-            }
-        };
-
-        try {
-            ServiceInstance imageService = discoveryClient.getInstances("IMAGE-SERVICE").get(0);
-            RestTemplate restTemplate = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            HttpEntity<?> http = new HttpEntity<>(headers);
-
-            MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
-            ResponseEntity response;
-
-//            URI uri = new URI(imageService.getUri() + "/image/upload");
-            if (imageKey != null) {
-                bodyMap.add("image", body);
-                headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-                http = new HttpEntity<>(bodyMap, headers);
-                URI uri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/" + imageKey);
-                response = restTemplate.exchange(uri, HttpMethod.PUT, http, String.class);
-                logger.info("ImageServer PUT Method");
-
-                if (response.getStatusCode().is2xxSuccessful()) {
-                    String imageUri = (String) response.getBody();
-
-                    return imageUri;
-                }
-            } else {
-                bodyMap.add("images", body);
-                headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-                http = new HttpEntity<>(bodyMap, headers);
-                URI uri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/upload");
-                response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
-                logger.info("ImageServer POST method");
-
-                if (response.getStatusCode().is2xxSuccessful()) {
-                    LinkedHashMap responseBody = (LinkedHashMap) response.getBody();
-                    List<String> images = (List) responseBody.get("images");
-                    String imageUri = (String) images.get(0);
-
-                    return imageUri;
-                }
-            }
-
-        } catch (HttpClientErrorException e) {
-            return "Failed to upload image";
-        }
-
-        return "Failed to upload image";
-    }
-
-    public Boolean imageDelete(String imageKey) throws URISyntaxException, IOException {
-        try {
-            ServiceInstance imageService = discoveryClient.getInstances("IMAGE-SERVICE").get(0);
-            RestTemplate restTemplate = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            HttpEntity<?> http = new HttpEntity<>(headers);
-
-            http = new HttpEntity<>(headers);
-            ResponseEntity response;
-
-//            URI uri = new URI(imageService.getUri() + "/image/upload");
-            if (imageKey != null) {
-                URI uri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/" + imageKey);
-                response = restTemplate.exchange(uri, HttpMethod.DELETE, http, Boolean.class);
-                logger.info("ImageServer DELETE Method");
-                return (Boolean) response.getBody();
-            } else {
-                return true;
-            }
-        } catch (HttpClientErrorException e) {
-            return false;
-        }
-    }
-
     public String findImageKey(String url) {
-        // 정규 표현식 패턴을 정의합니다.
+        // 정규 표현식 패턴을 정의
         Pattern pattern = Pattern.compile("/image/download/(\\d+)");
 
-        // 패턴과 URL을 매칭시킵니다.
+        // 패턴과 URL을 매칭
         Matcher matcher = pattern.matcher(url);
 
         String imageKey;
-        // 매칭된 부분을 찾습니다.
+        // 매칭된 부분 찾기
         if (matcher.find()) {
-            // 숫자를 문자열로 추출합니다.
+            // 숫자를 문자열로 추출
             imageKey = matcher.group(1);
         } else {
             imageKey = null;
