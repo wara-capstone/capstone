@@ -44,6 +44,8 @@ public class RouteConfig {
                 // image
                 .route("image-download", r -> r.path("/image/download/**")
                         .uri("lb://IMAGE-SERVICE"))
+
+                // test
                 .route("test-service", r -> r.path("/test/**")
                         .filters(f -> f.filter(authFilter.apply(config -> {config.setRequiredRole("role_admin");})))
                         .uri("lb://TEST"))

@@ -33,3 +33,11 @@ eureka:
 springboot:
   jwt:
     secret: secretKey123
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  endpoint:
+    prometheus:
+      enabled: true
