@@ -10,7 +10,7 @@ function SellerHeader() {
       </Link>
 
       <div className="seller-header-container">
-        <Link to="/seller/store/management" className="seller-header-link">
+        <Link to="/seller/store/register" className="seller-header-link">
           <h2 className="seller-header-menu">가게관리</h2>
         </Link>
         <Link to="/seller/item/management" className="seller-header-link">

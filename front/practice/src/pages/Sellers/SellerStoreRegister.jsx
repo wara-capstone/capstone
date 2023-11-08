@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Seller.css";
 import SellerHeader from "./SellerHeader";
 import SellerSideNav from "./SellerSideNav";
@@ -12,7 +12,7 @@ var map;
 var geocoder;
 var marker;
 
-const SellerStoreManagement = ({ store }) => {
+const SellerStoreRegister = ({ store }) => {
   const [name, setName] = useState(store?.name || "");
   const [location, setLocation] = useState(store?.location || "");
   const [content, setContent] = useState(store?.content || "");
@@ -160,18 +160,17 @@ const SellerStoreManagement = ({ store }) => {
       }
     });
   }
-
   return (
-    <div className="seller-store-management">
+    <div className="seller-store-register">
       <SellerHeader />
-      <div className="store-management-container">
+      <div className="store-register-container">
         <SellerSideNav />
 
-        <div className="store-management-edit-container">
-          <div className="store-management-edit">
+        <div className="store-register-edit-container">
+          <div className="store-register-edit">
             <form onSubmit={handleSubmit}>
-              <div className="store-edit-info-container">
-                <div className="store-edit-image">
+              <div className="store-register-info-container">
+                <div className="store-register-image">
                   <img src={previewImageSrc} alt="프로필 사진" />
                 </div>
                 <label>가게 이미지</label>
@@ -225,14 +224,14 @@ const SellerStoreManagement = ({ store }) => {
                     }}
                   />
                 </div>
-                <button className="store-save-button">변경하기</button>
+                <button className="store-register-button">등록하기</button>
               </div>
             </form>
           </div>
         </div>
 
-        <div className="store-management-map-container">
-          <div className="store-management-map">
+        <div className="store-register-map-container">
+          <div className="store-register-map">
             <div
               id="storeMap"
               style={{ width: "100%", height: "91vh", zIndex: "0" }}
@@ -244,4 +243,4 @@ const SellerStoreManagement = ({ store }) => {
   );
 };
 
-export default SellerStoreManagement;
+export default SellerStoreRegister;

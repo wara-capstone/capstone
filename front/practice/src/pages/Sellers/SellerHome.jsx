@@ -2,10 +2,9 @@ import { Link } from "react-router-dom";
 import sellerAd from "../../adImages/sellerAd.png";
 import EventButton from "../../components/EventButton";
 
+import React from "react";
 import "./Seller.css";
 import SellerHeader from "./SellerHeader";
-import React, { useEffect, useState } from "react";
-
 
 export default function SellerHome() {
   const email = sessionStorage.getItem("email");
@@ -32,10 +31,6 @@ export default function SellerHome() {
   //   };
   //   fetchData();
   // }, []);
-
-
-
-
 
   return (
     <div className="seller-home">
