@@ -71,13 +71,13 @@ public class StoreDAOImpl implements StoreDAO {
     @Override
     public Map<String, Object> readStoreBySeller(String storeSeller) {
         Map<String, Object> result = new HashMap<>();
-        StoreEntity storeEntity = storeRepository.findByStoreSeller(storeSeller);
+        List<StoreEntity> storeEntities = storeRepository.findByStoreSeller(storeSeller);
 
-        if (storeEntity == null) {
+        if (storeEntities.isEmpty()) {
             result.put("result", "fail");
         } else {
             result.put("result", "success");
-            result.put("data", storeEntity);
+            result.put("dataList", storeEntities);
         }
 
         return result;

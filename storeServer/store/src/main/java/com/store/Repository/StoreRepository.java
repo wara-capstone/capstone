@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface StoreRepository extends JpaRepository<StoreEntity, String> {
     StoreEntity findByStoreId(Long storeId);
-    StoreEntity findByStoreSeller(String storeSeller);
+    List<StoreEntity> findByStoreSeller(String storeSeller);
     List<StoreEntity> findByStoreName(String storeName);
     List<StoreEntity> findByStoreLocationXBetweenAndStoreLocationYBetween(Double minX, Double maxX, Double minY, Double maxY);
     StoreEntity findByStoreNameAndStoreSeller(String storeName, String storeSeller);
