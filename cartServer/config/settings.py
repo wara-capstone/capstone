@@ -20,13 +20,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-bbdqd9)&b2u!53##c4j(1da1)h54cp&ffnpyf)mg((sx$sr)tv'
+SECRET_KEY = os.environ.get('django-insecure-bbdqd9)&b2u!53##c4j(1da1)h54cp&ffnpyf)mg((sx$sr)tv')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get('DEBUG', 1))
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['http://3.34.227.3:14000','https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app']
+CSRF_TRUSTED_ORIGINS = ['http://3.34.227.3:16000','https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app']
 
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
@@ -83,6 +83,28 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+EUREKA_SERVER_URL = "https://port-0-capstone-jvpb2mlodwuvxm.sel5.cloudtype.app/ "
+
+# Eureka 서비스 설정
+EUREKA_SERVICE = {
+    "instance": {
+        "hostName": os.environ.get('EUREKA_HOST', 'localhost'),
+        "app": "CART-SERVICE",
+        "ipAddr": os.environ.get('EUREKA_IP_ADDR', '3.34.227.3'),
+        "port": {
+            "$": int(os.environ.get('EUREKA_PORT', 16000)),
+            "@enabled": "true"
+        },
+        "vipAddress": "DJANGO_SERVICE",
+        "statusPageUrl": f"http://{os.environ.get('EUREKA_HOST', 'localhost')}:16000/",
+        "healthCheckUrl": f"http://{os.environ.get('EUREKA_HOST', 'localhost')}:16000/health",
+        "dataCenterInfo": {
+            "@class": "com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo",
+            "name": "MyOwn"
+        }
+    }
+}
+
 DATABASES = {
     'default': {
         'ENGINE': os.environ.get("SQL_ENGINE", 'django.db.backends.sqlite3'),
@@ -129,7 +151,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, '_static')
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
