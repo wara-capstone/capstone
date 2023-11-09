@@ -24,6 +24,15 @@ public class ProductDTO {
     @Nullable
     List<OptionDTO> options;
 
+    public ProductDTO(ProductEntity productEntity, OptionEntity optionEntity) {
+        this.productId = productEntity.getProductId();
+        this.storeId = productEntity.getStoreId();
+        this.productCategory = productEntity.getProductCategory();
+        this.productUrls = productEntity.getProductUrls().getUrls();
+        this.options = new ArrayList<>();
+        options.add(optionEntity.toDTO());
+    }
+
 
     public ProductEntity toEntity()
     {
@@ -59,7 +68,7 @@ public class ProductDTO {
             this.productId = productEntity.getProductId();
             this.storeId = productEntity.getStoreId();
             this.productCategory = productEntity.getProductCategory();
-            this.productUrls = productEntity.getProductUrls().urlsValue();
+            this.productUrls = productEntity.getProductUrls().getUrls();
             this.options = convert(optionEntityList);
 
     }

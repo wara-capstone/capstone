@@ -39,6 +39,11 @@ public class ProductDAOImpl implements ProductDAO{
         return optionRepository.findAllByProduct(productEntity);
     }
 
+    @Override
+    public OptionEntity readTargetoption(Long optionId)
+    {
+        return optionRepository.findByOptionId(optionId);
+    }
 
 
 

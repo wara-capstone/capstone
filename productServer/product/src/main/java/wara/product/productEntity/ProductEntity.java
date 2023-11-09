@@ -60,7 +60,7 @@ public class ProductEntity {
                     this.productId,
                     this.storeId,
                     this.productCategory,
-                    this.productUrls.urlsValue(),
+                    this.productUrls.getUrls(),
                     convert(this.options)
             );
         }catch (NullPointerException e){ // DB에 저장된 URL이 없는경우

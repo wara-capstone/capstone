@@ -15,7 +15,7 @@ public interface ProductDAO {
     String removeOneProduct(Long productId);
     String removeManyProduct(Long storeId);
     List<OptionEntity> readOptions(ProductEntity productEntity);
-
+    OptionEntity readTargetoption(Long optionId);
 
 
 

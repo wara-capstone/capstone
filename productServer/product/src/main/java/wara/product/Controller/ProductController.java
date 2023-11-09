@@ -31,12 +31,18 @@ public class ProductController {
     }
 
 
-    // 단일 상품 조회 상품id
+    // 단일 상품 + 모든 옵션
     @GetMapping("/read/one") // null값 처리
     public ProductDTO singleRead(@RequestParam Long productId)
     {
         return productService.readOne(productId);
     }
+    @GetMapping("/read/target/option")
+    public ProductDTO readTargetOption(@RequestParam Long productId, @RequestParam Long optionId)
+    {
+        return productService.readTarget(productId,optionId);
+    }
+
 
     // store id 기준 모든 상품 검색
     @GetMapping("/read/many")
@@ -44,19 +50,20 @@ public class ProductController {
         return productService.readMany(storeId);
     }
 
-//     카테고리 기준 검색오 만들자
-    @GetMapping("/filter")
-    public void categoryFilter(@RequestParam String category)
-    {
+////     카테고리 기준 검색
+//    @GetMapping("/filter")
+//    public void categoryFilter(@RequestParam String category)
+//    {
+//
+//    }
+//
+//    //상점&카테고리
+//    @GetMapping("/filter/in-store")
+//    public void storeCategoryFilter(@RequestParam Long storeId, @RequestParam String category)
+//    {
+//
+//    }
 
-    }
-
-    //상점&카테고리
-    @GetMapping("/filter/in-store")
-    public void storeCategoryFilter(@RequestParam Long storeId, @RequestParam String category)
-    {
-
-    }
 
 
     // 상품 등록

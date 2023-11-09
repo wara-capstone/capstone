@@ -34,6 +34,14 @@ public class ProductService {
         return new ProductDTO(productEntity, optionEntityList);
     }
 
+    public ProductDTO readTarget(Long productId, Long optionId)
+    {
+        ProductEntity productEntity =  dao.readOneProduct(productId);
+        OptionEntity optionEntity = dao.readTargetoption(optionId);
+        return new ProductDTO(productEntity,optionEntity);
+    }
+
+
     /**
      * 한 상점의 모든 상품 정보 조회
      *
