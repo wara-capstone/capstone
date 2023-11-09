@@ -47,7 +47,6 @@ public class ProductService {
      *
      * @return
      */
-    //TODO: 매개변수 수정 (카테고리, 상점아이디)
     public List<ProductDTO> readMany(Long storeId)
     {
 
@@ -75,12 +74,14 @@ public class ProductService {
         return dao.modifyProduct(productDTO.toEntity());
     }
 
+
+    @Transactional
     public String removeOneProduct(Long productId)
     {
         return dao.removeOneProduct(productId);
     }
 
-
+    @Transactional
     public String removeManyproduct(Long storeId)
     {
         return dao.removeManyProduct(storeId);

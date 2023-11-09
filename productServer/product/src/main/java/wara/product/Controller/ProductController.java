@@ -10,7 +10,7 @@ import wara.product.Service.TransrationService;
 import wara.product.Service.ProductService;
 
 
-
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
@@ -67,7 +67,7 @@ public class ProductController {
 
 
     // 상품 등록
-    @PostMapping("/registry")
+    @PostMapping("/registry") @Transactional
     public String productRegistry(@RequestPart ProductDTO productDTO, @RequestPart OptionDTO optionDTO) throws URISyntaxException, IOException {
 
         Long productId = productService.initProduct(productDTO);
