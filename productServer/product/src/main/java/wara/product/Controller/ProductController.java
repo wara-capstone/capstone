@@ -44,7 +44,7 @@ public class ProductController {
         return productService.readMany(storeId);
     }
 
-//     카테고리 기준 검색
+//     카테고리 기준 검색오 만들자
     @GetMapping("/filter")
     public void categoryFilter(@RequestParam String category)
     {
