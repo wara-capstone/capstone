@@ -38,21 +38,21 @@ public class ProductDTO {
     }
 
 
-//    public ProductDTO(ProductDTO productDTO, List<OptionDTO> optionDTO) {
-//        try {
-//            this.productId = productDTO.getProductId();
-//            this.storeId = productDTO.getStoreId();
-//            this.productCategory = productDTO.getProductCategory();
-//            this.productUrls = productDTO.getProductUrls();
-//            this.options = optionDTO;
-//        }catch (NullPointerException e){
-//            this.productId = productDTO.getProductId();
-//            this.storeId = productDTO.getStoreId();
-//            this.productCategory = productDTO.getProductCategory();
-//            this.productUrls = productDTO.getProductUrls();
-//            Collections.emptyList();
-//        }
-//    }
+    public ProductDTO(ProductDTO productDTO, List<OptionDTO> optionDTO) {
+        try {
+            this.productId = productDTO.getProductId();
+            this.storeId = productDTO.getStoreId();
+            this.productCategory = productDTO.getProductCategory();
+            this.productUrls = productDTO.getProductUrls();
+            this.options = optionDTO;
+        }catch (NullPointerException e){
+            this.productId = productDTO.getProductId();
+            this.storeId = productDTO.getStoreId();
+            this.productCategory = productDTO.getProductCategory();
+            this.productUrls = productDTO.getProductUrls();
+            Collections.emptyList();
+        }
+    }
 
     public ProductDTO(ProductEntity productEntity, List<OptionEntity> optionEntityList) {
 

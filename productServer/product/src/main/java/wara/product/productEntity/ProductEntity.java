@@ -32,26 +32,26 @@ public class ProductEntity {
     @OneToMany(cascade = CascadeType.ALL) @JoinColumn(name = "product_entity_product_id", referencedColumnName = "product_id")
     List<OptionEntity> options;
 
-//
-//    public ProductEntity(Long productId, Long storeId, String productCategory,
-//                         @Nullable List<String> productUrls, OptionEntity options) {
-//        this.productId = productId;
-//        this.storeId = storeId;
-//        this.productCategory = productCategory;
-//        this.productUrls = new Urls(productUrls);
-//        this.options.add(options);
-//    }
-//
-//
-//    public ProductEntity(ProductEntity r, OptionEntity o)
-//    {
-//        this.productId = r.getProductId();
-//        this.storeId = r.getStoreId();
-//        this.productCategory = r.getProductCategory();
-//        this.productUrls = r.getProductUrls();
-//        this.options = new ArrayList<>();
-//        this.options.add(o);
-//    }
+
+    public ProductEntity(Long productId, Long storeId, String productCategory,
+                         @Nullable List<String> productUrls, OptionEntity options) {
+        this.productId = productId;
+        this.storeId = storeId;
+        this.productCategory = productCategory;
+        this.productUrls = new Urls(productUrls);
+        this.options.add(options);
+    }
+
+
+    public ProductEntity(ProductEntity r, OptionEntity o)
+    {
+        this.productId = r.getProductId();
+        this.storeId = r.getStoreId();
+        this.productCategory = r.getProductCategory();
+        this.productUrls = r.getProductUrls();
+        this.options = new ArrayList<>();
+        this.options.add(o);
+    }
 
 
     public ProductDTO toDTO(){
