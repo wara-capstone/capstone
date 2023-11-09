@@ -20,15 +20,15 @@ export default function SellerSideNav() {
             가게등록
           </h2>
         </Link>
-        <Link to="/seller/store/management" className="seller-side-nav-link">
+        <Link to="/seller/store/edit" className="seller-side-nav-link">
           <h2
             className={
-              locationNow.pathname === "/seller/store/management"
+              locationNow.pathname === "/seller/store/edit"
                 ? "store-side-nav-menu active-store-side-nav-menu"
                 : "store-side-nav-menu"
             }
           >
-            가게관리
+            가게정보 수정
           </h2>
         </Link>
       </div>

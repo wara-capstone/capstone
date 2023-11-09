@@ -187,13 +187,29 @@
   padding: 10px 15px;
   font-size: 15px;
   color: #fff;
+  margin: auto;
+}
+
+.seller-store-management .store-delete-button {
+  font-size: 13px;
+  border-radius: 5px;
+  border: none;
+  /* display: none; */
+  position: absolute;
+  top: 338px;
+  left: 365px;
+  background-color: rgb(252, 125, 125);
+  color: #242424;
+  font-weight: bold;
 }
 
 .seller-store-management .store-save-button:active,
-.seller-store-register .store-register-button:active {
+.seller-store-register .store-register-button:active,
+.seller-store-management .store-delete-button:active {
   background-color: rgb(236, 83, 83);
   transform: scale(0.9);
 }
+
 /* seller store management, seller store register */
 
 /* seller item, seller item management */

@@ -20,7 +20,7 @@ import Signup from "./pages/Signup";
 import SellerChattingManagement from "./pages/Sellers/SellerChattingManagement";
 import SellerHome from "./pages/Sellers/SellerHome";
 import SellerItemManagement from "./pages/Sellers/SellerItemManagement";
-import SellerStoreManagement from "./pages/Sellers/SellerStoreManagement";
+import SellerStoreEdit from "./pages/Sellers/SellerStoreEdit";
 import SellerStoreRegister from "./pages/Sellers/SellerStoreRegister";
 
 import "./App.css";
@@ -57,10 +57,7 @@ export default function Customer() {
             path="/seller/item/management"
             element={<SellerItemManagement />}
           />
-          <Route
-            path="/seller/store/management"
-            element={<SellerStoreManagement />}
-          />
+          <Route path="/seller/store/edit" element={<SellerStoreEdit />} />
 
           {/* 로그인 페이지 */}
           <Route path="/login" element={<Login />} />

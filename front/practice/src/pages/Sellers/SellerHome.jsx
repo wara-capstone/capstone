@@ -38,7 +38,7 @@ export default function SellerHome() {
       <div className="ad-image-container">
         <img src={sellerAd} className="ad-image" alt="sellerAd" />
       </div>
-      <Link to="/seller/store/management">
+      <Link to="/seller/store/register">
         <EventButton buttonText={"가게 관리하기"} />
       </Link>
     </div>

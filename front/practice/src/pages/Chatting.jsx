@@ -56,11 +56,10 @@ export default function Chatting() {
       }
 
       const roomData = await response.json();
-      if (response.status === 200) {
-        setCurrentRoomId(roomData.id);
-        displayMessages(roomData.messages);
-        setupWebSocket(roomData.id);
-      }
+
+      setCurrentRoomId(roomData.id);
+      displayMessages(roomData.messages);
+      setupWebSocket(roomData.id);
     } catch (error) {
       console.error(error);
     }

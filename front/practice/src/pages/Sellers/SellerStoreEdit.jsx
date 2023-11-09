@@ -7,22 +7,22 @@ import "./Seller.css";
 import SellerHeader from "./SellerHeader";
 import SellerSideNav from "./SellerSideNav";
 
-const { kakao } = window;
+const SellerStoreEdit = ({ store }) => {
+  const { kakao } = window;
+  var map;
+  var geocoder;
+  var marker;
+  var markers = []; // 마커를 담을 배열
 
-const email = sessionStorage.getItem("email");
-const token = sessionStorage.getItem("token");
+  var markerList = [],
+    selectedMarker = null; // 클릭한 마커를 담을 변수
 
-var map;
-var geocoder;
-var marker;
-var markers = []; // 마커를 담을 배열
-var markerList = [],
-  selectedMarker = null; // 클릭한 마커를 담을 변수
+  var imageSize = new kakao.maps.Size(42, 56); // 마커의 크기 기존 33, 36
+  var choiceImageSize = new kakao.maps.Size(44, 58); // 선택한 마커의 크기 기존 38, 40
 
-var imageSize = new kakao.maps.Size(42, 56); // 마커의 크기 기존 33, 36
-var choiceImageSize = new kakao.maps.Size(44, 58); // 선택한 마커의 크기 기존 38, 40
+  const email = sessionStorage.getItem("email");
+  const token = sessionStorage.getItem("token");
 
-const SellerStoreManagement = ({ store }) => {
   const [name, setName] = useState(store?.name || "");
   const [location, setLocation] = useState(store?.location || "");
   const [content, setContent] = useState(store?.content || "");
@@ -38,6 +38,8 @@ const SellerStoreManagement = ({ store }) => {
     store?.profileImage || "https://via.placeholder.com/150x150"
   );
 
+  const [deleteButtonVisible, setDeleteButtonVisible] = useState(false);
+
   function createMarkerImage(markerScr, markerSize) {
     var markerImage = new kakao.maps.MarkerImage(markerScr, markerSize);
     return markerImage;
@@ -50,7 +52,8 @@ const SellerStoreManagement = ({ store }) => {
     normalImage = createMarkerImage(imageSrc4, imageSize);
 
   // fetch 통신 method
-  const fetchData = async (BodyJson, latlng, initMarkers) => {
+  const fetchData = async (initMarkers) => {
+    console.log(email);
     try {
       const response = await fetch(
         `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/read/seller/${email}`,
@@ -59,7 +62,6 @@ const SellerStoreManagement = ({ store }) => {
           headers: {
             "Content-type": "application/json",
           },
-          body: BodyJson,
         }
       );
       const { data } = await response.json();
@@ -83,7 +85,7 @@ const SellerStoreManagement = ({ store }) => {
   // }
 
   useEffect(() => {
-    var mapDiv = document.querySelector("#storeMap"), // 지도를 표시할 div
+    var mapDiv = document.querySelector("#storeMapEdit"), // 지도를 표시할 div
       mapOption = {
         center: new kakao.maps.LatLng(35.856047838165004, 128.49278206824263), // 지도의 중심좌표 (35.8678658, 128.5967954)
         level: 3, // 지도의 확대 레벨
@@ -95,50 +97,7 @@ const SellerStoreManagement = ({ store }) => {
 
     geocoder = new kakao.maps.services.Geocoder(); // 주소-좌표 변환 객체를 생성합니다
 
-    var circle = new kakao.maps.Circle({
-      center: mapOption.center,
-      radius: 10000,
-      strokeWeight: 5, // 선의 두께입니다
-      strokeColor: "#75B8FA", // 선의 색깔입니다
-      strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-      strokeStyle: "dashed", // 선의 스타일 입니다
-      fillOpacity: 0, // 채우기 불투명도 입니다
-    });
-    var centerAround = circle.getBounds();
-    console.log(centerAround);
-
-    // // centerAround의 남서쪽과 북동쪽 좌표를 가져옵니다
-    var swLatLng = centerAround.getSouthWest();
-    var neLatLng = centerAround.getNorthEast();
-
-    fetchData(JSON.stringify(), mapOption.center, initMarkers);
-    // 지도가 이동, 확대, 축소로 인해 중심좌표가 변경되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
-    kakao.maps.event.addListener(map, "dragend", function () {
-      // 지도의  레벨을 얻어옵니다
-      var level = map.getLevel();
-      // 지도의 중심좌표를 얻어옵니다
-      var latlng = map.getCenter();
-
-      circle.setPosition(latlng); // 지도의 중심좌표를 원의 중심으로 설정합니다
-      circle.setRadius(level * 1000); // 원의 반지름을 지도의 레벨 * 1000으로 설정합니다
-      circle.setMap(map); // 원을 지도에 표시합니다
-
-      var centerAround = circle.getBounds();
-      console.log(centerAround);
-
-      swLatLng = centerAround.getSouthWest();
-      neLatLng = centerAround.getNorthEast();
-
-      for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(null);
-      }
-
-      // markers 배열 초기화
-      markers = [];
-
-      var BodyJson = JSON.stringify();
-      fetchData(BodyJson, latlng, initMarkers);
-    });
+    fetchData(initMarkers);
 
     function initMarkers() {
       if (markerList === null) {
@@ -175,9 +134,14 @@ const SellerStoreManagement = ({ store }) => {
             marker.setImage(marker.clickImage);
             // 클릭된 마커를 현재 클릭된 마커 객체로 설정합니다
             selectedMarker = marker;
+            // 클릭된 마커일 때만 삭제 버튼을 보이게 하도록 설정
+            setDeleteButtonVisible(true);
           } else if (selectedMarker === marker) {
             selectedMarker.setImage(selectedMarker.normalImage);
             selectedMarker = null;
+
+            // 클릭된 마커가 해제되면 삭제 버튼을 감추도록 설정
+            setDeleteButtonVisible(false);
           }
 
           // 지도 중심을 클릭된 마커 위치로 이동
@@ -188,21 +152,20 @@ const SellerStoreManagement = ({ store }) => {
             )
           );
 
-          console.log(markerInfo);
+          console.log(markerInfo.storeImage);
 
           setPhoneNum(markerInfo.storePhone);
           setLocation(markerInfo.storeAddress);
           setContent(markerInfo.storeContents);
           setName(markerInfo.storeName);
-          setImage(markerInfo.storeImage);
           setPreviewImageSrc(markerInfo.storeImage);
+          // setImage(markerInfo.storeImage);
           setStoreId(markerInfo.storeId);
           setLat(markerInfo.storeLocationY);
           setLng(markerInfo.storeLocationX);
         });
       });
     }
-    initMarkers();
   }, []);
 
   //
@@ -223,7 +186,7 @@ const SellerStoreManagement = ({ store }) => {
       storeLocationY: lat,
     };
     var formData;
-    console.log(image);
+
     if (image) {
       formData = new FormData();
       formData.append("image", image);
@@ -264,6 +227,7 @@ const SellerStoreManagement = ({ store }) => {
         .then((data) => {
           alert("성공!");
           console.log(data.result);
+          window.location.reload();
         })
         .catch((error) => {
           console.error(error);
@@ -283,13 +247,14 @@ const SellerStoreManagement = ({ store }) => {
       )
         .then((response) => {
           if (response.ok) {
-            return response.json(); // JSON 형식의 응답을 파싱
+            return response.json();
           }
           throw new Error("네트워크 응답이 실패했습니다.");
         })
         .then((data) => {
           alert("성공!");
           console.log(data.result);
+          window.location.reload();
         })
         .catch((error) => {
           console.error(error);
@@ -331,6 +296,49 @@ const SellerStoreManagement = ({ store }) => {
       }
     });
   }
+
+  const handleDeleteStore = async (event) => {
+    // 삭제 처리 로직을 구현합니다.
+    event.preventDefault();
+
+    // 확인 창을 띄워 사용자의 응답을 받습니다.
+    const confirmed = window.confirm("정말로 삭제하시겠습니까?");
+
+    if (!confirmed) {
+      // 사용자가 취소한 경우
+      return;
+    }
+
+    console.log(storeId);
+
+    fetch(
+      `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app//store/delete/id/${storeId}`,
+      {
+        method: "DELETE",
+        // headers: {
+        //   Authorization: `${token}`,
+        // },
+        // body: JSON.stringify({
+        //   email: email,
+        //   password: password,
+        // }),
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("네트워크 응답이 실패했습니다.");
+      })
+      .then((data) => {
+        alert("성공!");
+        console.log(data.result);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   return (
     <div className="seller-store-management">
@@ -399,13 +407,21 @@ const SellerStoreManagement = ({ store }) => {
                 <button className="store-save-button">변경하기</button>
               </div>
             </form>
+            {deleteButtonVisible && (
+              <button
+                className="store-delete-button"
+                onClick={handleDeleteStore}
+              >
+                삭제하기
+              </button>
+            )}
           </div>
         </div>
 
         <div className="store-management-map-container">
           <div className="store-management-map">
             <div
-              id="storeMap"
+              id="storeMapEdit"
               style={{ width: "100%", height: "91vh", zIndex: "0" }}
             ></div>
           </div>
@@ -415,4 +431,4 @@ const SellerStoreManagement = ({ store }) => {
   );
 };
 
-export default SellerStoreManagement;
+export default SellerStoreEdit;
