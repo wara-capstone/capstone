@@ -44,19 +44,19 @@ public class ProductController {
         return productService.readMany(storeId);
     }
 
-    // 카테고리 기준 검색
-//    @GetMapping("/filter")
-//    public void categoryFilter(@RequestParam String category)
-//    {
-//
-//    }
-//
-//    //상점&카테고리
-//    @GetMapping("/filter/in-store")
-//    public void storeCategoryFilter(@RequestParam Long storeId, @RequestParam String category)
-//    {
-//
-//    }
+//     카테고리 기준 검색
+    @GetMapping("/filter")
+    public void categoryFilter(@RequestParam String category)
+    {
+
+    }
+
+    //상점&카테고리
+    @GetMapping("/filter/in-store")
+    public void storeCategoryFilter(@RequestParam Long storeId, @RequestParam String category)
+    {
+
+    }
 
 
     // 상품 등록
