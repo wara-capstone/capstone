@@ -4,17 +4,16 @@ package wara.product.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import wara.product.DTO.DummyDTO;
+import wara.product.DTO.OptionDTO;
 import wara.product.DTO.ProductDTO;
-import wara.product.DTO.ResponseDTO;
 import wara.product.Service.TransrationService;
 import wara.product.Service.ProductService;
 
-import javax.transaction.Transactional;
+
+
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -33,80 +32,98 @@ public class ProductController {
     }
 
 
-
-    /**
-     * @param productId
-     * 단일 상품 정보 조회
-     * */
-    @GetMapping("/single/read")
-    public ResponseDTO<ProductDTO> singleProductInfo(@RequestParam Long productId) {
-        return productService.singleProductInfo(productId);
+    // 단일 상품 조회 상품id
+    @GetMapping("/read/one") // null값 처리
+    public ProductDTO singleRead(@RequestParam Long productId)
+    {
+        return productService.readOne(productId);
     }
 
-
-    /**
-     * @param storeId
-     * 한 상점의 모든 상품 정보 조회
-     * */
-    @GetMapping("/multi/read")
-    public ResponseDTO<List<ProductDTO>> multiProductInfo(@RequestParam Long storeId){
-        return productService.multiProductInfo(storeId);
+    // store id 기준 모든 상품 검색
+    @GetMapping("/read/many")
+    public List<ProductDTO> multiRead(@RequestParam Long storeId){
+        return productService.readMany(storeId);
     }
 
+    // 카테고리 기준 검색
+//    @GetMapping("/filter")
+//    public void categoryFilter(@RequestParam String category)
+//    {
+//
+//    }
+//
+//    //상점&카테고리
+//    @GetMapping("/filter/in-store")
+//    public void storeCategoryFilter(@RequestParam Long storeId, @RequestParam String category)
+//    {
+//
+//    }
 
-    /**
-     * 상품정보 등록
-     * @param dto image data 미포함
-     * @param image image data 포함
-     * @return
-     */
-    @PutMapping("/registry")@Transactional
-    public String initProductInfo(@RequestPart DummyDTO dto, @RequestPart MultipartFile image) throws URISyntaxException, IOException {
 
-        ProductDTO result = new ProductDTO(dto,"","");
-        Long productId = productService.initProductInfo(result);
+    // 상품 등록
+    @PostMapping("/registry")
+    public String productRegistry(@RequestPart ProductDTO productDTO, @RequestPart OptionDTO optionDTO) throws URISyntaxException, IOException {
 
-        List<Long> pid=  new ArrayList<>();
-        pid.add(productId);
+        Long productId = productService.initProduct(productDTO);
 
-        if(transrationService.validCheckFromStore(dto.getStoreId(), pid).equals("fail"))
+        if(transrationService.validCheckFromStore(productDTO.getStoreId(),
+                Collections.singletonList(productId)).equals("fail"))
         {
-            productService.removeSingleProduct(pid.get(0));
+            productService.removeOneProduct(productId);
             return HttpStatus.NOT_ACCEPTABLE.toString();
         }
 
-        result.setProductId(productId);
-
-        //이미지서버에 이미지 등록 후 URL반환
-        result.setProductUrl(transrationService.uploadImage(image));
-        System.out.println(result.toString());
-        //바코드서버에서 URL반환
-        result.setBarcodeUrl(transrationService.toBarcode(dto.getStoreId(), dto.getProductId()));
-
-        productService.modifyProductInfo(result);
+        optionDTO.setBarcodeUrl(transrationService.toBarcode(productDTO.getStoreId(), productDTO.getProductId()));
+        productService.addOption(productId,optionDTO);
 
         return HttpStatus.CREATED.toString();
+
+
+
     }
 
-    @PostMapping("/modify")
-    public HttpStatus modifyProductInfo(@RequestPart DummyDTO dto, @RequestPart MultipartFile image) throws URISyntaxException, IOException {
-        if(image.isEmpty()) return productService.modifyProductInfo(new ProductDTO());
-        else {
-            return productService.modifyProductInfo(new ProductDTO(dto,transrationService.uploadImage(image)));
-        }
+    // 옵션 등록
+    @PutMapping("/option/add")
+    public String optionRegistry(@RequestParam Long productId, @RequestPart OptionDTO optionDTO)
+    {
+        productService.addOption(productId,optionDTO);
+        return HttpStatus.OK.toString();
+    }
+
+    // 상품 수정
+    @PutMapping("/modify")
+    public void productModify(@RequestPart ProductDTO productDTO)
+    {
+        productService.modifyProduct(productDTO);
+    }
+
+    //옵션수정
+    @PutMapping("/option/modify")
+    public void optionModify(@RequestParam Long productId, @RequestPart OptionDTO optionDTO){
+        productService.modifyOption(productId, optionDTO);
+    }
+
+    // 단일 상품 삭제
+    @DeleteMapping("/remove/one")
+    public void singleRemove(@RequestParam Long productId)
+    {
+        productService.removeOneProduct(productId);
+    }
+
+    //옵션삭제
+    @DeleteMapping("/option/remove")
+    public void optionRemove(@RequestParam Long optionId)
+    {
+        productService.removeoption(optionId);
     }
 
 
-
-
-    @DeleteMapping("/single/remove")
-    public HttpStatus removeSingleProduct(Long productId){
-        return productService.removeSingleProduct(productId);
+    // store id 기준 모든 상품 삭제
+    @DeleteMapping("/remove/all")
+    public void multiRemove(@RequestParam Long storeId){
+        productService.removeManyproduct(storeId);
     }
 
-    @DeleteMapping("/multi/remove")
-    public HttpStatus removeMultiProduct(Long storeId){
-        return productService.removeMultiProduct(storeId);
-    }
+
 
 }

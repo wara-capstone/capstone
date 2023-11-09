@@ -2,15 +2,15 @@ package wara.product.Service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import wara.product.DAO.ProductDAO;
+import wara.product.DTO.OptionDTO;
 import wara.product.DTO.ProductDTO;
-import wara.product.DTO.ResponseDTO;
+import wara.product.productEntity.OptionEntity;
 import wara.product.productEntity.ProductEntity;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 
@@ -27,67 +27,77 @@ public class ProductService {
     /**
      * 단일값 요청에 대한 비즈니스 로직
      */
-    public ResponseDTO<ProductDTO> singleProductInfo(Long productId){
-        try{
-            return ResponseDTO.of(HttpStatus.OK, dao.readSingleProductInfo(productId).ETOD()) ; }
-        catch (NullPointerException e) {
-            return ResponseDTO.of(HttpStatus.BAD_REQUEST, new ProductDTO()); }
+    public ProductDTO readOne(Long productId){
+        ProductEntity productEntity = dao.readOneProduct(productId);
+        List<OptionEntity> optionEntityList =  dao.readOptions(productEntity);
+
+        return new ProductDTO(productEntity, optionEntityList);
     }
 
     /**
      * 한 상점의 모든 상품 정보 조회
-     * */
-    public ResponseDTO<List<ProductDTO>> multiProductInfo(Long storeId)
+     *
+     * @return
+     */
+    //TODO: 매개변수 수정 (카테고리, 상점아이디)
+    public List<ProductDTO> readMany(Long storeId)
     {
-        try{
-            List<ProductEntity> EList = dao.readMultiProductInfo(storeId);
-            List<ProductDTO> DList = new ArrayList<>();
-            for(var item: EList) { DList.add(item.ETOD());}
-        }catch (NullPointerException e) {
-            return ResponseDTO.of(HttpStatus.BAD_REQUEST, new LinkedList<>());
-        }
-        return ResponseDTO.of(HttpStatus.BAD_REQUEST, new LinkedList<>());
+
+        List<ProductEntity> productEntities = dao.readManyProduct(storeId);
+        List<ProductDTO> productDTOS = new ArrayList<>();
+        for(var item: productEntities) { productDTOS.add(item.toDTO()); }
+
+        return productDTOS;
     }
 
 
     /**
-     * 상품 등록에 대한 비즈니스 로직
+     * 최초 상품 등록에 대한 비즈니스 로직
      * @param dto
      * @return productID
      */
-    public Long initProductInfo(ProductDTO dto)
+    public Long initProduct(ProductDTO dto)
     {
-        return dao.initProductInfo(dto.DTOE());
-    }
-
-    /**
-     * 상품정보 수정에 대한 비즈니스 로직
-     * */
-    public HttpStatus modifyProductInfo(ProductDTO dto)
-    {
-        return dao.modifyProductInfo(dto.DTOE());
+        return dao.initProduct(dto.toEntity());
     }
 
 
-    /**
-     * 단일 상품정보 삭제에 대한 비즈니스 로직
-     * */
-    public HttpStatus removeSingleProduct(Long productId)
+    public String modifyProduct(ProductDTO productDTO)
+    {// 상품이 존재하는지 확인 할 것
+        return dao.modifyProduct(productDTO.toEntity());
+    }
+
+    public String removeOneProduct(Long productId)
     {
-        dao.removeSingleProduct(productId);
-        return HttpStatus.OK;
+        return dao.removeOneProduct(productId);
     }
 
 
-    /**
-     * 다중 상품정보 삭제에 대한 비즈니스 로직
-     * */
-    public HttpStatus removeMultiProduct(Long storeId)
+    public String removeManyproduct(Long storeId)
     {
-        dao.removeMultiProduct(storeId);
-        return HttpStatus.OK;
+        return dao.removeManyProduct(storeId);
     }
 
+
+
+
+    public String addOption(Long productId, OptionDTO optionDTO)
+    {
+        return dao.addOption(productId,optionDTO.toEntity());
+    }
+
+
+    public String modifyOption(Long productId, OptionDTO optionDTO)
+    {
+        return dao.modifyOption(productId,optionDTO.toEntity());
+    }
+
+
+    @Transactional
+    public String removeoption(Long optionId)
+    {
+        return dao.removeOption(optionId);
+    }
 
 
 

@@ -1,6 +1,6 @@
 package wara.product.DAO;
 
-import org.springframework.http.HttpStatus;
+import wara.product.productEntity.OptionEntity;
 import wara.product.productEntity.ProductEntity;
 
 import java.util.List;
@@ -8,11 +8,22 @@ import java.util.List;
 
 public interface ProductDAO {
 
-    ProductEntity readSingleProductInfo(Long productId);
-    List<ProductEntity> readMultiProductInfo(Long productId);
+    ProductEntity readOneProduct(Long productId);
+    List<ProductEntity> readManyProduct(Long productId);
+    Long initProduct(ProductEntity productEntity);
+    String modifyProduct(ProductEntity productEntity);
+    String removeOneProduct(Long productId);
+    String removeManyProduct(Long storeId);
+    List<OptionEntity> readOptions(ProductEntity productEntity);
 
-    void removeSingleProduct(Long productId);
-    void removeMultiProduct(Long storeId);
-    HttpStatus modifyProductInfo(ProductEntity entity);
-    Long initProductInfo(ProductEntity entity);
+
+
+
+
+    String addOption(Long productId, OptionEntity optionEntity);
+    String modifyOption(Long productId, OptionEntity optionEntity);
+    String removeOption(Long optionId);
+
+
 }
+

@@ -1,70 +1,86 @@
 package wara.product.productEntity;
 
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 import reactor.util.annotation.Nullable;
+import wara.product.DTO.OptionDTO;
 import wara.product.DTO.ProductDTO;
 
 import javax.persistence.*;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-@Entity
+@Entity @Table(name = "products")
 @AllArgsConstructor @NoArgsConstructor
-@Getter
-@ToString
+@Getter @ToString
 public class ProductEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id")
     Long productId;
 
-    @Column
+    @Column(name = "store_id")
     Long storeId;
 
-    @Column@Nullable
-    Long subId;
-
-    @Column
-    String productName;
-
-    @Column
-    String productPrice;
-
-    @Column
-    String productSize;
-
-    @Column
-    String productColor;
-
-    @Column
-    String productStock;
-
-    @Column
+    @Column(name = "category")
     String productCategory;
 
-    @Column@Nullable
-    String productUrls;
+    @Embedded @Nullable
+    Urls productUrls;
 
-    @Column@Nullable
-    String barcodeUrl;
+    @OneToMany(cascade = CascadeType.ALL) @JoinColumn(name = "product_entity_product_id", referencedColumnName = "product_id")
+    List<OptionEntity> options;
+
+//
+//    public ProductEntity(Long productId, Long storeId, String productCategory,
+//                         @Nullable List<String> productUrls, OptionEntity options) {
+//        this.productId = productId;
+//        this.storeId = storeId;
+//        this.productCategory = productCategory;
+//        this.productUrls = new Urls(productUrls);
+//        this.options.add(options);
+//    }
+//
+//
+//    public ProductEntity(ProductEntity r, OptionEntity o)
+//    {
+//        this.productId = r.getProductId();
+//        this.storeId = r.getStoreId();
+//        this.productCategory = r.getProductCategory();
+//        this.productUrls = r.getProductUrls();
+//        this.options = new ArrayList<>();
+//        this.options.add(o);
+//    }
 
 
+    public ProductDTO toDTO(){
+        try {
+            return new ProductDTO(
+                    this.productId,
+                    this.storeId,
+                    this.productCategory,
+                    this.productUrls.urlsValue(),
+                    convert(this.options)
+            );
+        }catch (NullPointerException e){ // DB에 저장된 URL이 없는경우
+            return new ProductDTO(
+                    this.productId,
+                    this.storeId,
+                    this.productCategory,
+                    Collections.emptyList(),
+                    Collections.emptyList());
+        }
+    }
 
-    public ProductDTO ETOD()
+    public List<OptionDTO> convert(List<OptionEntity> options)
     {
-        return new ProductDTO(
-                this.productId,
-                this.storeId,
-                this.subId,
-                this.productName,
-                this.productPrice,
-                this.productSize,
-                this.productColor,
-                this.productStock,
-                this.productCategory,
-                this.productUrls,
-                this.barcodeUrl
-        );
+        List<OptionDTO> list = new ArrayList<>();
+
+        for(var item:options){
+            list.add(item.toDTO());
+        }
+        return list;
     }
 
 }
