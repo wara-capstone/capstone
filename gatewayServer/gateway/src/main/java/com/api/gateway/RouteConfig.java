@@ -15,6 +15,11 @@ public class RouteConfig {
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder,
                                       AuthorizationHeaderFilter authFilter) {
         return builder.routes()
+
+                // shoppingCart
+                .route("cart-service", r->r.path("/cart/**")
+                        .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
+                        .uri("lb://CART-SERVICE"))
                 // chat
                 .route("chat-service", r->r.path("/ws/**")
                         .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
