@@ -47,52 +47,7 @@ public class ProductController {
     }
 
 
-    /**
-     * @param productId 상품 아이디 기준 검색
-     * @return 단일 상품의 정보와 해당 상품의 모든 옵션
-     */
-    @GetMapping("/user/{id}")
-    public ProductDTO singleRead(@PathVariable("id") Long productId)
-    {
-        return productService.readOne(productId);
-    }
-    @GetMapping("/user/{id}/option/{optionId}")
-    public ProductDTO readTargetOption(@PathVariable("id") Long productId, @PathVariable("optionId") Long optionId)
-    {
-        return productService.readTarget(productId,optionId);
-    }
 
-
-    /**
-     * @param storeId 상점아이디 기준 모든 상품 검색
-     * @return 한 상점의 모든 상품과 옵션
-     */
-    @GetMapping("/user/store/{id}")
-    public List<ProductDTO> multiRead(@PathVariable("id") Long storeId){
-        return productService.readMany(storeId);
-    }
-
-
-    /**
-     * @param category 카테고리 기준 모든 상품 검색
-     * @return 카테고리와 동잍한 모든 상품 + 옵션
-     */
-    @GetMapping("/user/category")
-    public List<ProductDTO> categoryFilter(@RequestParam String category)
-    {
-       return productService.categoryFilter(category);
-    }
-
-    /**
-     * @param storeId
-     * @param category
-     * @return 상품아이디&카테고리에 해당하는 모든 상품+ 옵션
-     */
-    @GetMapping("/user/store/{id}/category")
-    public List<ProductDTO> storeCategoryFilter(@PathVariable("id") Long storeId, @RequestParam String category)
-    {
-        return productService.storeCategoryFilter(storeId,category);
-    }
 
 
     /**
@@ -102,7 +57,6 @@ public class ProductController {
      * @throws URISyntaxException
      * @throws IOException
      */
-    // 상품 등록
     @PostMapping("/seller") @Transactional
     public String productRegistry(@RequestPart ProductDTO productDTO, @RequestPart OptionDTO optionDTO) throws URISyntaxException, IOException {
         //productDTO의 값으로 일단 저장 -> 해당 상품의 ID값 반환
@@ -135,6 +89,8 @@ public class ProductController {
         return HttpStatus.CREATED.toString();
     }
 
+
+
     // 옵션 등록
     @PutMapping("/seller/option/add") //TODO:바코드 삭제 로직 필요함
     public String optionRegistry(@RequestParam Long productId, @RequestPart OptionDTO optionDTO) throws URISyntaxException, IOException {
@@ -153,30 +109,99 @@ public class ProductController {
     }
 
     //옵션수정
-    @PutMapping("/seller/option/{id}")
-    public String optionModify(@PathVariable("id") Long productId, @RequestPart OptionDTO optionDTO){
+    @PutMapping("/seller/option/{productId}")
+    public String optionModify(@PathVariable("productId") Long productId, @RequestPart OptionDTO optionDTO){
         return productService.modifyOption(productId, optionDTO);
     }
 
+
+
+
+
     // 단일 상품 삭제
-    @DeleteMapping("/seller/{id}")
+    @DeleteMapping("/seller/{productId}")
     public String singleRemove(@PathVariable("id") Long productId)
     {
         return productService.removeOneProduct(productId);
     }
 
     //옵션삭제
-    @DeleteMapping("/seller/option/{id}")
-    public String optionRemove(@PathVariable("id") Long optionId)
+    @DeleteMapping("/seller/option/{optionId}")
+    public String optionRemove(@PathVariable("optionId") Long optionId)
     {
         return productService.removeOption(optionId);
     }
 
 
     // store id 기준 모든 상품 삭제
-    @DeleteMapping("/seller/store/{id}")
-    public String multiRemove(@PathVariable("id") Long storeId){
-       return productService.removeManyproduct(storeId);
+    @DeleteMapping("/seller/store/{storeId}")
+    public String multiRemove(@PathVariable("storeId") Long storeId){
+        return productService.removeManyproduct(storeId);
     }
+
+
+
+
+
+
+
+    /**
+     * @param productId 상품 아이디 기준 검색
+     * @return 단일 상품의 정보와 해당 상품의 모든 옵션
+     */
+    @GetMapping("/user/{id}")
+    public ProductDTO singleRead(@PathVariable("id") Long productId)
+    {
+        return productService.readOne(productId);
+    }
+
+
+    /**
+     * @param productId
+     * @param optionId
+     * @return 단일 상품, 단일 옵션
+     */
+    @GetMapping("/user/{storeId}/option/{optionId}")
+    public ProductDTO readTargetOption(@PathVariable("storeId") Long productId, @PathVariable("optionId") Long optionId)
+    {
+        return productService.readTarget(productId,optionId);
+    }
+
+
+    /**
+     * @param storeId 상점아이디 기준 모든 상품 검색
+     * @return 한 상점의 모든 상품과 옵션
+     */
+    @GetMapping("/user/store/{storeId}")
+    public List<ProductDTO> multiRead(@PathVariable("storeId") Long storeId){
+        return productService.readMany(storeId);
+    }
+
+
+    /**
+     * @param category 카테고리 기준 모든 상품 검색
+     * @return 카테고리와 동잍한 모든 상품 + 옵션
+     */
+    @GetMapping("/user/category")
+    public List<ProductDTO> categoryFilter(@RequestParam String category)
+    {
+       return productService.categoryFilter(category);
+    }
+
+    /**
+     * @param storeId
+     * @param category
+     * @return 상품아이디&카테고리에 해당하는 모든 상품+ 옵션
+     */
+    @GetMapping("/user/store/{storeId}/category")
+    public List<ProductDTO> storeCategoryFilter(@PathVariable("storeId") Long storeId, @RequestParam String category)
+    {
+        return productService.storeCategoryFilter(storeId,category);
+    }
+
+
+
+
+
 
 }
