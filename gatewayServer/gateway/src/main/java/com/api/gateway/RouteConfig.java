@@ -27,6 +27,13 @@ public class RouteConfig {
                 .route("chat-service", r->r.path("/chat/**")
                         .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
                         .uri("lb://CHATTING-SERVICE"))
+                // product
+                .route("product-service", r->r.path("/product/user/**")
+                        .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
+                        .uri("lb://PRODUCT-SERVICE"))
+                .route("product-service", r->r.path("/product/seller/**")
+                        .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_seller");})))
+                        .uri("lb://PRODUCT-SERVICE"))
                 // store
                 .route("store-service", r->r.path("/store/delete")
                         .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_seller");})))
