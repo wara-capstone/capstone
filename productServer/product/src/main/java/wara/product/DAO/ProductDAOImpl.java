@@ -116,7 +116,15 @@ public class ProductDAOImpl implements ProductDAO{
         return HttpStatus.OK.toString();
     }
 
+    @Override
+    public List<ProductEntity> categoryFilter(String category) {
+        return productRepository.getAllByProductCategory(category);
+    }
 
+    @Override
+    public List<ProductEntity> storeCategoryFilter(Long storeId, String category) {
+        return productRepository.getAllByProductCategoryAndStoreId(storeId, category);
+    }
 
 
 }

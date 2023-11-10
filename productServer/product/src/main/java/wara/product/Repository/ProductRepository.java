@@ -1,6 +1,7 @@
 package wara.product.Repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import wara.product.DTO.ProductDTO;
 import wara.product.productEntity.ProductEntity;
 
 import java.util.List;
@@ -14,7 +15,8 @@ public interface ProductRepository extends JpaRepository<ProductEntity,String> {
     Boolean existsByProductId(Long productId);
     void deleteByProductId(Long id);
     void deleteAllByStoreId(Long id);
-
+    List<ProductEntity> getAllByProductCategory(String category);
+    List<ProductEntity> getAllByProductCategoryAndStoreId(Long storeId,String category);
 
 }
 

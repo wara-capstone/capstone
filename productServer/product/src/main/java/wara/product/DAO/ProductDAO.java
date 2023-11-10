@@ -25,5 +25,8 @@ public interface ProductDAO {
     String removeOption(Long optionId);
 
 
+    List<ProductEntity> categoryFilter(String category);
+    List<ProductEntity> storeCategoryFilter(Long storeId, String category);
+
 }
 

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 
 @RestController
@@ -28,6 +29,12 @@ public class ProductController {
                              @Autowired TransrationService transrationService) {
         this.productService = productService;
         this.transrationService = transrationService;
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public Object nullPointerExceptionControl(Exception e)
+    {
+        return "NullPointerException 발생";
     }
 
 
@@ -50,19 +57,19 @@ public class ProductController {
         return productService.readMany(storeId);
     }
 
-////     카테고리 기준 검색
-//    @GetMapping("/filter")
-//    public void categoryFilter(@RequestParam String category)
-//    {
-//
-//    }
-//
-//    //상점&카테고리
-//    @GetMapping("/filter/in-store")
-//    public void storeCategoryFilter(@RequestParam Long storeId, @RequestParam String category)
-//    {
-//
-//    }
+//     카테고리 기준 검색
+    @GetMapping("/filter")
+    public List<ProductDTO> categoryFilter(@RequestParam String category)
+    {
+       return productService.categoryFilter(category);
+    }
+
+    //상점&카테고리
+    @GetMapping("/filter/in-store")
+    public List<ProductDTO> storeCategoryFilter(@RequestParam Long storeId, @RequestParam String category)
+    {
+        return productService.storeCategoryFilter(storeId,category);
+    }
 
 
 
@@ -79,55 +86,60 @@ public class ProductController {
             return HttpStatus.NOT_ACCEPTABLE.toString();
         }
 
+
+        if(Objects.isNull(optionDTO))
+        {
+            return HttpStatus.CREATED.toString();
+        }
+
         optionDTO.setBarcodeUrl(transrationService.toBarcode(productDTO.getStoreId(), productDTO.getProductId()));
         productService.addOption(productId,optionDTO);
 
         return HttpStatus.CREATED.toString();
-
-
-
     }
 
     // 옵션 등록
-    @PutMapping("/option/add")
-    public String optionRegistry(@RequestParam Long productId, @RequestPart OptionDTO optionDTO)
-    {
-        productService.addOption(productId,optionDTO);
-        return HttpStatus.OK.toString();
+    @PutMapping("/option/add") //TODO:바코드 삭제 로직 필요함
+    public String optionRegistry(@RequestParam Long productId, @RequestPart OptionDTO optionDTO) throws URISyntaxException, IOException {
+        ProductDTO productDTO = productService.readOne(productId);
+
+        optionDTO.setBarcodeUrl(transrationService.toBarcode(productDTO.getStoreId(), productId));
+        return productService.addOption(productId,optionDTO);
     }
 
     // 상품 수정
     @PutMapping("/modify")
-    public void productModify(@RequestPart ProductDTO productDTO)
+    public String productModify(@RequestPart ProductDTO productDTO)
     {
-        productService.modifyProduct(productDTO);
+        return productService.modifyProduct(productDTO);
+
     }
 
     //옵션수정
     @PutMapping("/option/modify")
-    public void optionModify(@RequestParam Long productId, @RequestPart OptionDTO optionDTO){
-        productService.modifyOption(productId, optionDTO);
+    public String optionModify(@RequestParam Long productId, @RequestPart OptionDTO optionDTO){
+        return productService.modifyOption(productId, optionDTO);
     }
 
     // 단일 상품 삭제
     @DeleteMapping("/remove/one")
-    public void singleRemove(@RequestParam Long productId)
+    public String singleRemove(@RequestParam Long productId)
     {
-        productService.removeOneProduct(productId);
+        return productService.removeOneProduct(productId);
     }
 
     //옵션삭제
     @DeleteMapping("/option/remove")
-    public void optionRemove(@RequestParam Long optionId)
+    public String optionRemove(@RequestParam Long optionId)
     {
-        productService.removeoption(optionId);
+        return productService.removeoption(optionId);
     }
 
 
     // store id 기준 모든 상품 삭제
     @DeleteMapping("/remove/all")
-    public void multiRemove(@RequestParam Long storeId){
-        productService.removeManyproduct(storeId);
+    public String multiRemove(@RequestParam Long storeId){
+       return productService.removeManyproduct(storeId);
     }
 
 

@@ -2,6 +2,7 @@ package wara.product.Service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import wara.product.DAO.ProductDAO;
 import wara.product.DTO.OptionDTO;
@@ -17,10 +18,10 @@ import java.util.List;
 @Service
 public class ProductService {
 
-    private final ProductDAO dao;
+    private final ProductDAO productDAO;
 
-    public ProductService(@Autowired ProductDAO dao) {
-        this.dao = dao;
+    public ProductService(@Autowired ProductDAO productDAO) {
+        this.productDAO = productDAO;
     }
 
 
@@ -28,16 +29,16 @@ public class ProductService {
      * 단일값 요청에 대한 비즈니스 로직
      */
     public ProductDTO readOne(Long productId){
-        ProductEntity productEntity = dao.readOneProduct(productId);
-        List<OptionEntity> optionEntityList =  dao.readOptions(productEntity);
+        ProductEntity productEntity = productDAO.readOneProduct(productId);
+        List<OptionEntity> optionEntityList =  productDAO.readOptions(productEntity);
 
         return new ProductDTO(productEntity, optionEntityList);
     }
 
     public ProductDTO readTarget(Long productId, Long optionId)
     {
-        ProductEntity productEntity =  dao.readOneProduct(productId);
-        OptionEntity optionEntity = dao.readTargetoption(optionId);
+        ProductEntity productEntity =  productDAO.readOneProduct(productId);
+        OptionEntity optionEntity = productDAO.readTargetoption(optionId);
         return new ProductDTO(productEntity,optionEntity);
     }
 
@@ -50,7 +51,7 @@ public class ProductService {
     public List<ProductDTO> readMany(Long storeId)
     {
 
-        List<ProductEntity> productEntities = dao.readManyProduct(storeId);
+        List<ProductEntity> productEntities = productDAO.readManyProduct(storeId);
         List<ProductDTO> productDTOS = new ArrayList<>();
         for(var item: productEntities) { productDTOS.add(item.toDTO()); }
 
@@ -65,26 +66,26 @@ public class ProductService {
      */
     public Long initProduct(ProductDTO dto)
     {
-        return dao.initProduct(dto.toEntity());
+        return productDAO.initProduct(dto.toEntity());
     }
 
 
     public String modifyProduct(ProductDTO productDTO)
     {// 상품이 존재하는지 확인 할 것
-        return dao.modifyProduct(productDTO.toEntity());
+        return productDAO.modifyProduct(productDTO.toEntity());
     }
 
 
     @Transactional
     public String removeOneProduct(Long productId)
     {
-        return dao.removeOneProduct(productId);
+        return productDAO.removeOneProduct(productId);
     }
 
     @Transactional
     public String removeManyproduct(Long storeId)
     {
-        return dao.removeManyProduct(storeId);
+        return productDAO.removeManyProduct(storeId);
     }
 
 
@@ -92,20 +93,40 @@ public class ProductService {
 
     public String addOption(Long productId, OptionDTO optionDTO)
     {
-        return dao.addOption(productId,optionDTO.toEntity());
+        return productDAO.addOption(productId,optionDTO.toEntity());
     }
 
 
     public String modifyOption(Long productId, OptionDTO optionDTO)
     {
-        return dao.modifyOption(productId,optionDTO.toEntity());
+        return productDAO.modifyOption(productId,optionDTO.toEntity());
     }
 
 
     @Transactional
     public String removeoption(Long optionId)
     {
-        return dao.removeOption(optionId);
+        productDAO.removeOption(optionId);
+        return HttpStatus.OK.toString();
+    }
+
+
+
+    public List<ProductDTO> categoryFilter(String category)
+    {
+        List<ProductEntity> productEntities =  productDAO.categoryFilter(category);
+        List<ProductDTO> productDTOS = new ArrayList<>();
+        for(var item: productEntities) { productDTOS.add(item.toDTO()); }
+        return productDTOS;
+    }
+
+
+    public List<ProductDTO> storeCategoryFilter(Long storeId, String category)
+    {
+        List<ProductEntity> productEntities =  productDAO.storeCategoryFilter(storeId, category);
+        List<ProductDTO> productDTOS = new ArrayList<>();
+        for(var item: productEntities) { productDTOS.add(item.toDTO()); }
+        return productDTOS;
     }
 
 
