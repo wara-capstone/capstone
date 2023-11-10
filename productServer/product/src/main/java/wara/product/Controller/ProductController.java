@@ -64,8 +64,8 @@ public class ProductController {
 
 
         // STORE서버에 해당 상점이 존재하는지 검사
-        String storeValid = transrationService.validCheckFromStore(productDTO.getStoreId(),
-                Collections.singletonList(productId));
+//        String storeValid = transrationService.validCheckFromStore(productDTO.getStoreId(),
+//                Collections.singletonList(productId));
 
 //        if(storeValid.equals("fali"))
 //        {// 존재하지 않는 상점이라면
