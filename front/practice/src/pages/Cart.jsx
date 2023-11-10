@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import BottomNav from "../components/BottomNav";
 import EventButton from "../components/EventButton";
 import Header from "../components/Header";
@@ -8,8 +7,6 @@ import OrderInformation from '../components/OrderInformation';
 import OrderProducts from '../components/OrderProducts';
 import "../components/CartComponents.css";
 import Modal from 'react-modal';
-import { faL } from "@fortawesome/free-solid-svg-icons";
-
 
 export default function Cart() {
   const email = sessionStorage.getItem('email');
@@ -63,8 +60,12 @@ const changeAllBox = checked => {
      if (response.status === 200) {
        console.log("성공");
        setSelectedBread(result);
-       setNumberOfBread(result.length);  
+       setNumberOfBread(result.length);    
        
+       const allCheckBox = [];
+       selectedBread.forEach(el => allCheckBox.push(el.cart_item_id));
+       setCheckList(allCheckBox);
+
        console.log(result);
      } else {
       console.log(response);
@@ -74,16 +75,16 @@ const changeAllBox = checked => {
    fetchData();
 
     // Event Listener 등록
-  const handleOptionChange = () => setReload(Date.now());
-  window.addEventListener('optionChanged', handleOptionChange);
-
-  // Component가 unmount될 때 Event Listener 해제
-  return () => window.removeEventListener('optionChanged', handleOptionChange);
+    const handleOptionChange = () => setReload(Date.now());
+    window.addEventListener('optionChanged', handleOptionChange);
+  
+    // Component가 unmount될 때 Event Listener 해제
+    return () => window.removeEventListener('optionChanged', handleOptionChange);
 
 
  }, [reload]);
-
-
+ 
+ 
  useEffect(() => {
   const allCheckBox = [];
   selectedBread.forEach(el => allCheckBox.push(el.cart_item_id));
@@ -98,9 +99,37 @@ useEffect(() => {
 
 
   function deleteFunc(){  //삭제 버튼 기능
-    setModalIsOpen(false);
-  }
 
+    var deleteString ='';
+    checkList.forEach(id => {
+      deleteString += `&cart_item_id=${id}`;
+    });
+
+    console.log(deleteString);
+      const fetchData = async () => {
+       const response = await fetch(
+         'http://3.34.227.3:16000/cart/items/?user_email='+email+deleteString,
+         {
+           method: "DELETE",
+           headers: {
+             "Content-Type": "application/json",
+             "Authorization": `${token}`
+           },
+         }
+       );
+       if (response.status === 204) {
+         console.log("성공");
+         setModalIsOpen(false);
+         window.dispatchEvent(new CustomEvent('optionChanged'));
+       }
+        else {
+        console.log(response);
+         console.log("실패");
+         console.log(response.status);
+       }
+     };
+     fetchData();
+  }
   
   return (
     <div className="cart-page">
@@ -127,8 +156,8 @@ useEffect(() => {
         현재 선택된 상품을
         삭제하시겠습니까?
         <div style={{display:"flex"}}>
-        <button className="changeOption" onClick={deleteFunc}>취소</button> 
-        <button className="changeOption" style={{backgroundColor:"blue", color:"white"}}>삭제</button>
+        <button className="changeOption" onClick={()=>setModalIsOpen(false)}>취소</button> 
+        <button className="changeOption" style={{backgroundColor:"blue", color:"white"}} onClick={deleteFunc}>삭제</button>
         </div>
       </Modal>
     {selectedBread.map(data =>
@@ -143,7 +172,6 @@ useEffect(() => {
         ))}
         </div>
         </div>
-
         )}
       <EventButton buttonText={"구매하기"} onClick={purchaseFunc}/>
       <BottomNav />

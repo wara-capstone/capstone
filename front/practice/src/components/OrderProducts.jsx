@@ -123,7 +123,7 @@ async function optionEdit(){  //옵션 변경
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
-            //   "Authorization": `${token}`
+              "Authorization": `${token}`
             },
             body: JSON.stringify(payload),
           }
@@ -166,7 +166,7 @@ return (
         checked={checkList.includes(data.cart_item_id) ? true : false}
         onChange={(e) => changeSingleBox(e.target.checked, data.cart_item_id)}
     />
-    <label>{data.product.p_id}</label>
+    <label>{data.product.p_name}</label>
     </div>
 
     <div style={{display:'flex',justifyContent:'space-around'}}>

@@ -19,7 +19,8 @@ export default function Item() {
   const [targetColor, setTargetColor] = useState(); //선택한 색상
   const [targetSize, setTargetSize] = useState(); //선택한 사이즈
   const [quantity, setQuantity] = useState(1); // 수량
-  const perPrice = 0; // 제품 당 가격
+  const [price, setPrice] = useState(0); // 제품 하나의 가격
+  const perPrice = parseInt (price) * quantity; ; // 제품 당 가격
 
   const [colorArray, setColorArray] = useState([]); //색상 배열 [
   const [sizeArrayForColor, setSizeArrayForColor] = useState([]); //선택한 색상에 따른 사이즈 배열
@@ -42,21 +43,22 @@ async function clickAddCart(e) {
     store_id: result.storeId,
     product:{
         p_id: result.productId,
+        p_name: result.options[0].productName,
         size: targetSize,
         color: targetColor,
         quantity:quantity,
-        price: (3000* quantity),
+        price: perPrice,
     }
   };
 
   try {
     const response = await fetch(
-      " http://3.34.227.3:16000/cart/items/",
+      "http://3.34.227.3:16000/cart/items/",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-        //   "Authorization": `${token}`
+          "Authorization": `${token}`
         },
         body: JSON.stringify(payload),
       }
@@ -108,20 +110,12 @@ const newSizeArray = result.options.reduce((acc, current) => {
   }, []);
   setSizeArrayForColor(newSizeArray);
   setTargetSize(newSizeArray[0]);
+  setPrice(result.options[0].productPrice);
 }
 }, [result, targetColor]);
 
-useEffect(() => {
-  if(targetSize){
-  console.log(targetSize);
-  }
-}, [targetSize]);
 
-useEffect(() => {
-  if(targetColor){
-  console.log(targetColor);
-  }
-}, [targetSize]);
+
 
 
 const handleColorChange = (e) => { // 선택한 색상 변경
@@ -165,6 +159,7 @@ useEffect(() => {
       }, []);
       setColorArray(newColorArray);
       setTargetColor(newColorArray[0]); // 초기 색상 설정
+      setPrice(resultData.options[0].productPrice); // 초기 가격 설정
 
       console.log("색깔"+colorArray);
  
