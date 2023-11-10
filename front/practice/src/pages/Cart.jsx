@@ -7,92 +7,101 @@ import { useNavigate } from "react-router-dom";
 import OrderInformation from '../components/OrderInformation';
 import OrderProducts from '../components/OrderProducts';
 import "../components/CartComponents.css";
-import Popup from "../components/Popup";
+import Modal from 'react-modal';
+import { faL } from "@fortawesome/free-solid-svg-icons";
 
 
-export default function Cart({ cartItems }) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function Cart() {
+  const email = sessionStorage.getItem('email');
+  const token = sessionStorage.getItem('token');
+  const [modalIsOpen, setModalIsOpen] = useState(false); //팝업창
 
   let navigate = useNavigate();
 
-  
-
-  const togglePopup = () => { //팝업창
-    setIsOpen(!isOpen);
-  };
-
-
-  function asd(e) {
+  function purchaseFunc(e) {  //구매하기 기능
       console.log("구매");
        navigate("/user/purchase", { state: { selectedBread: selectedBread, checkList: checkList } } );
   }
-  
 
-    useEffect(() => {
-    }
-    , []);
+const [selectedBread, setSelectedBread] = useState ([]); 
+const [checkList, setCheckList] = useState();
+const [numberOfBread, setNumberOfBread] = useState(0);
+const [reload, setReload] = useState(false); // 장바구니 페이지 새로고침
 
-    var a =  [  {
-      "option": "빨강",//옵션
-      "size": "M",//사이즈
-      "id": 1,  //아이디
-      "number": 1,  //수량
-      "order_price" : 10000, //가격
-      "order_type": "상의",
-      "title": "줄무늬 티셔츠",
-      "content": "Item Detail 5",
-      "content2": 1,
-      "subTitle": "10,000₩",
-    },
-    {
-      "option": "빨강",
-      "size": "L",
-      "id": 2,
-      "number": 1,
-      "order_price" : 20000,
-      "order_type": "하의",
-      "title": "빵꾸난 청바지",
-      "content": "Item Detail 5",
-      "content2": 1,
-      "subTitle": "20,000₩"
-    },
-
-  ];
-
-
-  const [selectedBread, setSelectedBread] = useState (a);
-  const [checkList, setCheckList] = useState(selectedBread.map(bread => bread.id));
-  const [numberOfBread, setNumberOfBread] = useState(selectedBread.length);
-  const changeSingleBox = (checked, id) => {
-  if (checked) {
-      setCheckList([...checkList, id]);
-  } else {
-      setCheckList(checkList.filter(el => el !== id));
-  }
+const changeSingleBox = (checked, id) => {
+if (checked) {
+    setCheckList([...checkList, id]);
+} else {
+    setCheckList(checkList.filter(el => el !== id));
+}
 };
 
-  const changeAllBox = checked => {
-      if (checked) {
-          const allCheckBox = [];
-          selectedBread.forEach(el => allCheckBox.push(el.id));
-          setCheckList(allCheckBox);
-      } else {
-          setCheckList([]);
-      }
-  };
+const changeAllBox = checked => {
+    if (checked) {
+        const allCheckBox = [];
+        selectedBread.forEach(el => allCheckBox.push(el.cart_item_id));
+        setCheckList(allCheckBox);
+    } else {
+        setCheckList([]);
+    }
+};
+
+  useEffect(() => {
+    const fetchData = async () => {
+     const response = await fetch(
+       'http://3.34.227.3:16000/cart/items/?user_email='+email,
+       {
+         method: "GET",
+         headers: {
+           "Content-Type": "application/json",
+           "Authorization": `${token}`
+         },
+       }
+     );
+    const result = await response.json();
+
+     if (response.status === 200) {
+       console.log("성공");
+       setSelectedBread(result);
+       setNumberOfBread(result.length);  
+       
+       console.log(result);
+     } else {
+      console.log(response);
+       console.log("실패");
+     }
+   };
+   fetchData();
+
+    // Event Listener 등록
+  const handleOptionChange = () => setReload(Date.now());
+  window.addEventListener('optionChanged', handleOptionChange);
+
+  // Component가 unmount될 때 Event Listener 해제
+  return () => window.removeEventListener('optionChanged', handleOptionChange);
 
 
-  // useEffect(() => {
-  //     fetch('/data/breadCart.json')
-  //     .then(res => res.json ())
-  //     .then(json => {
-  //     setSelectedBread(json);
-  //     setNumberOfBread(json. length);
-  // });
-  // }, []);
+ }, [reload]);
+
+
+ useEffect(() => {
+  const allCheckBox = [];
+  selectedBread.forEach(el => allCheckBox.push(el.cart_item_id));
+  setCheckList(allCheckBox);
+}, [selectedBread]);
+
+useEffect(() => {
+  console.log("체크 박스 개수: "+ numberOfBread);
+  console.log("체크리스트 :"+checkList);
+}, [selectedBread, checkList]);
 
 
 
+  function deleteFunc(){  //삭제 버튼 기능
+    setModalIsOpen(false);
+  }
+
+  
   return (
     <div className="cart-page">
       <Header />
@@ -100,22 +109,35 @@ export default function Cart({ cartItems }) {
         <div className="shoppingBag">
         <div className="orderContainer">
           <div style={{display:"flex", justifyContent:"space-between"}}>
-            <div>
-            <label>전체선택</label>
+        <div style={{display:"flex"}}>
         <OrderInformation
             changeAllBox={changeAllBox} 
             checkList={checkList} 
             numberOfBread={numberOfBread}
         />
+        <div style={{width:"80px"}}>
+          <label>전체선택</label>
         </div>
-        <button id="normal-button">삭제</button>
         </div>
-    {selectedBread.map(selectedBread =>(
+
+        <button id="normal-button" onClick={()=>setModalIsOpen(true)}>삭제</button>
+        </div>
+
+        <Modal className='Modal' isOpen={modalIsOpen} onRequestClose={()=> setModalIsOpen(false)}>
+        현재 선택된 상품을
+        삭제하시겠습니까?
+        <div style={{display:"flex"}}>
+        <button className="changeOption" onClick={deleteFunc}>취소</button> 
+        <button className="changeOption" style={{backgroundColor:"blue", color:"white"}}>삭제</button>
+        </div>
+      </Modal>
+    {selectedBread.map(data =>
+    (
         <OrderProducts
             selectedBread={selectedBread}
-            key={selectedBread.id}
+            key={data.cart_item_id}
             changeSingleBox={changeSingleBox}
-            data={selectedBread}
+            data={data}
             checkList={checkList}
         />
         ))}
@@ -123,9 +145,7 @@ export default function Cart({ cartItems }) {
         </div>
 
         )}
-
-
-      <EventButton buttonText={"구매하기"} onClick={asd}/>
+      <EventButton buttonText={"구매하기"} onClick={purchaseFunc}/>
       <BottomNav />
     </div>
   );
