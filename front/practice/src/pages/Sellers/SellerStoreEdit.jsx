@@ -312,16 +312,9 @@ const SellerStoreEdit = ({ store }) => {
     console.log(storeId);
 
     fetch(
-      `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app//store/delete/id/${storeId}`,
+      `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/delete/id/${storeId}`,
       {
         method: "DELETE",
-        // headers: {
-        //   Authorization: `${token}`,
-        // },
-        // body: JSON.stringify({
-        //   email: email,
-        //   password: password,
-        // }),
       }
     )
       .then((response) => {

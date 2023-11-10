@@ -180,7 +180,8 @@
 }
 
 .seller-store-management .store-save-button,
-.seller-store-register .store-register-button {
+.seller-store-register .store-register-button,
+.connect-store-register-button {
   background-color: rgb(233, 116, 116);
   border: none;
   border-radius: 10px;
@@ -188,6 +189,13 @@
   font-size: 15px;
   color: #fff;
   margin: auto;
+}
+
+.connect-store-register-button {
+  position: fixed;
+  bottom: 250px;
+  left: 440px;
+  font-size: 18px;
 }
 
 .seller-store-management .store-delete-button {
@@ -205,7 +213,8 @@
 
 .seller-store-management .store-save-button:active,
 .seller-store-register .store-register-button:active,
-.seller-store-management .store-delete-button:active {
+.seller-store-management .store-delete-button:active,
+.connect-store-register-button:active {
   background-color: rgb(236, 83, 83);
   transform: scale(0.9);
 }

@@ -2,10 +2,10 @@ import adImage1 from "../adImages/ad1.png";
 import adImage2 from "../adImages/ad2.png";
 import adImage3 from "../adImages/ad3.png";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import AdComponent from "../components/AdComponent";
 import BottomNav from "../components/BottomNav";
-import CardList from "../components/CardList";
+import Category from "../components/Category";
 import Header from "../components/Header";
 
 export default function Home() {
@@ -41,15 +41,14 @@ export default function Home() {
   //   fetchData();
   // }, []);
 
-
-
   return (
     <div className="home">
       <Header />
       <div className="ad-image-container">
         <AdComponent images={adImages} />
       </div>
-      <CardList />
+      <Category />
+      {/* <CardList /> */}
       <BottomNav />
     </div>
   );

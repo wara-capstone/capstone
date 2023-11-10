@@ -1,11 +1,10 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Data from "../DB/Data.json";
 import BottomNav from "../components/BottomNav";
 import Card from "../components/Card"; // Card 컴포넌트 임포트
 import EventButton from "../components/EventButton";
 import Header from "../components/Header";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
   const CardInCart = Data.cardData.filter(
@@ -14,18 +13,12 @@ export default function Cart() {
 
   let navigate = useNavigate();
 
-
   function asd(e) {
-      console.log("구매");
-       navigate("/user/purchase");
+    console.log("구매");
+    navigate("/user/purchase");
   }
 
-    useEffect(() => {
-    }
-    , []);
-
-
-
+  useEffect(() => {}, []);
 
   return (
     <div className="cart-page">
@@ -43,7 +36,7 @@ export default function Cart() {
         </Link>
       ))}
 
-      <EventButton buttonText={"구매하기"} onClick={asd}/>
+      <EventButton buttonText={"구매하기"} onClick={asd} />
       <BottomNav />
     </div>
   );

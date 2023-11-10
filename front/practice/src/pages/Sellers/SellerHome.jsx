@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import sellerAd from "../../adImages/sellerAd.png";
-import EventButton from "../../components/EventButton";
 
 import React from "react";
 import "./Seller.css";
@@ -39,7 +38,8 @@ export default function SellerHome() {
         <img src={sellerAd} className="ad-image" alt="sellerAd" />
       </div>
       <Link to="/seller/store/register">
-        <EventButton buttonText={"가게 관리하기"} />
+        {/* <EventButton buttonText={"가게 관리하기"} /> */}
+        <button className="connect-store-register-button">가게 관리하기</button>
       </Link>
     </div>
   );
