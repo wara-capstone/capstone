@@ -58,6 +58,8 @@ const Category = () => {
         </div>
       </div>
 
+      {/* 선택된 카테고리가 없을 때 보여줄 추천 상품 */}
+      {!selectedCategory && <CardList category={selectedCategory} />}
       {/* 선택된 카테고리에 따라 다른 CardList를 보여줍니다. */}
       {selectedCategory && <CardList category={selectedCategory} />}
     </div>
