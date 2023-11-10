@@ -67,16 +67,16 @@ public class ProductController {
         String storeValid = transrationService.validCheckFromStore(productDTO.getStoreId(),
                 Collections.singletonList(productId));
 
-        if(storeValid.equals("fali"))
-        {// 존재하지 않는 상점이라면
-            //저장한 데이터 삭제
-            productService.removeOneProduct(productId);
-            return HttpStatus.NOT_ACCEPTABLE.toString();
-        } else if (!storeValid.equals("success")) {
-            //RestTamplate 오류라면 HttpStatus 반환
-            productService.removeOneProduct(productId);
-            return  storeValid;
-        }
+//        if(storeValid.equals("fali"))
+//        {// 존재하지 않는 상점이라면
+//            //저장한 데이터 삭제
+//            productService.removeOneProduct(productId);
+//            return HttpStatus.NOT_ACCEPTABLE.toString();
+//        } else if (!storeValid.equals("success")) {
+//            //RestTamplate 오류라면 HttpStatus 반환
+//            productService.removeOneProduct(productId);
+//            return  storeValid;
+//        }
 
 
         if(Objects.isNull(optionDTO)) {// 옵션은 저장하지 않은 경우
