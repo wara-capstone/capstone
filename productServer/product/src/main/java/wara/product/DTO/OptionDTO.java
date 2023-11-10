@@ -7,6 +7,8 @@ import lombok.Setter;
 import wara.product.productEntity.OptionEntity;
 import wara.product.productEntity.ProductEntity;
 
+import javax.validation.constraints.Null;
+
 @Getter@Setter
 @AllArgsConstructor@NoArgsConstructor
 public class OptionDTO {

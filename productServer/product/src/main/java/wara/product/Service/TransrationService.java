@@ -124,7 +124,7 @@ public class TransrationService {
             }
 
         }catch (HttpClientErrorException e){
-            return "fail";
+            return e.getStatusCode().toString();
         }
 
         return HttpStatus.NO_CONTENT.toString();

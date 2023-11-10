@@ -26,7 +26,8 @@ public class ProductService {
 
 
     /**
-     * 단일값 요청에 대한 비즈니스 로직
+     * @param productId
+     * @return 단일상품과 해당 상품의 모든 옵션
      */
     public ProductDTO readOne(Long productId){
         ProductEntity productEntity = productDAO.readOneProduct(productId);
@@ -104,7 +105,7 @@ public class ProductService {
 
 
     @Transactional
-    public String removeoption(Long optionId)
+    public String removeOption(Long optionId)
     {
         productDAO.removeOption(optionId);
         return HttpStatus.OK.toString();
