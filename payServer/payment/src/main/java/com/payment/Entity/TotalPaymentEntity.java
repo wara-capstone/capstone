@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -12,18 +13,15 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Entity
-public class PaymentEntity {
+public class TotalPaymentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long paymentId;
-    Long storeId;
-    Long productId;
-    Long optionId;
-    Long price;
-    Long quantity;
+    @Column(name = "totalPaymentId")
+    Long totalPaymentId;
+    String purchaser;
+    Long totalPrice;
     LocalDateTime dateTime;
 
-    @ManyToOne
-    @JoinColumn(name = "total_payment_id")
-    TotalPaymentEntity totalPaymentEntity;
+    @OneToMany(mappedBy = "totalPaymentEntity", cascade = CascadeType.ALL)
+    List<PaymentEntity> payments;
 }

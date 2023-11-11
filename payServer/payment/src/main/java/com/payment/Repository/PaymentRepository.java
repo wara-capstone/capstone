@@ -2,12 +2,13 @@ package com.payment.Repository;
 
 import com.payment.Entity.PaymentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface PaymentRepository extends JpaRepository<PaymentEntity, String> {
-    public Boolean exitsByPaymentId(Long paymentId);
     public List<PaymentEntity> findByStoreId(Long storeId);
-    public List<PaymentEntity> findByPurchaser(String purchaser);
-    public Boolean deleteByPaymentId(Long paymentId);
+    public PaymentEntity findByPaymentId(Long paymentId);
+    public Boolean existsByPaymentId(Long paymentId);
 }

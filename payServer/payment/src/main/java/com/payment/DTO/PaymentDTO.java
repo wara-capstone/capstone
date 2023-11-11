@@ -2,6 +2,8 @@ package com.payment.DTO;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Builder
 @Getter
 @Setter
@@ -12,6 +14,8 @@ public class PaymentDTO {
     Long paymentId;
     Long storeId;
     Long productId;
-    String purchaser;
+    Long optionId;
     Long price;
+    Long quantity;
+    String dateTime;
 }

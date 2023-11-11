@@ -1,8 +1,8 @@
 package com.payment.DTO;
 
 import lombok.*;
-
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @Getter
@@ -10,11 +10,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class PaymentResponseDTO {
-    Long paymentId;
-    Long storeId;
-    Long productId;
+public class TotalPaymentDTO {
+    Long totalPaymentId;
     String purchaser;
-    Long price;
-    LocalDateTime dateTime;
+    Long totalPrice;
+    String dateTime;
+    List<PaymentDTO> paymentDTOS;
 }
