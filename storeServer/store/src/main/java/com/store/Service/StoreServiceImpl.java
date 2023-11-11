@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -208,9 +209,10 @@ public class StoreServiceImpl implements StoreService {
         try {
             String image = storeDAO.readStoreImageByStoreId(storeId);
             String imageKey = findImageKey(image);
-            Boolean deleteFlag = httpCommunicationService.imageDelete(imageKey);
+            Boolean imageDeleteFlag = httpCommunicationService.imageDelete(imageKey);
+            Boolean productDeleteFlag = httpCommunicationService.productDelete(storeId);
 
-            if (deleteFlag) {
+            if (imageDeleteFlag && productDeleteFlag) {
                 Map<String, Object> resultMap = storeDAO.deleteStore(storeId);
 
                 SimpleResponseDTO simpleResponseDTO = toSimpleResponseDTO(resultMap);

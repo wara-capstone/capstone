@@ -30,6 +30,31 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
     }
 
     @Override
+    public Boolean productDelete(Long storeId) throws URISyntaxException {
+        try {
+            ServiceInstance productService = discoveryClient.getInstances("PRODUCT-SERVICE").get(0);
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            HttpEntity<?> http = new HttpEntity<>(headers);
+
+//            URI uri = new URI(productService.getUri() + "/product/seller/store/" + storeId);
+            URI uri = new URI("https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app" + "/product/seller/store/" + storeId);
+
+            ResponseEntity response = restTemplate.exchange(uri, HttpMethod.DELETE, http, String.class);
+
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return true;
+            }
+
+        } catch (HttpClientErrorException e) {
+            return false;
+        }
+
+        return false;
+    }
+
+    @Override
     public String imageUpload(@NotNull MultipartFile image) throws URISyntaxException, IOException {
         ByteArrayResource body = new ByteArrayResource(image.getBytes()) {
             @Override
