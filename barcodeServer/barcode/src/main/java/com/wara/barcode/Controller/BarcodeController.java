@@ -29,7 +29,7 @@ public class BarcodeController {
     }
 
     // 점주 pos에서 바코드 생성 요청
-    @PostMapping(value = "/create")
+    @PostMapping()
     public String getBarcode(@RequestBody BarcodeDTO dto) throws IOException, WriterException, URISyntaxException {
         String returnvalue = translationService.uploadImage(barcodeService.createBarcode(dto));
         logger.info(returnvalue);
