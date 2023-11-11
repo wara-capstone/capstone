@@ -20,4 +20,5 @@ public interface StoreDAO {
     public Map<String, Object> updateStoreByNameAndSeller(StoreEntity storeEntity);
     public Map<String, Object> updateStoreById(StoreEntity storeEntity);
     public Map<String, Object> deleteStore(Long storeId);
+    public Boolean deleteProductId(Long storeId, Long productId);
 }

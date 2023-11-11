@@ -229,6 +229,17 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
+    public SimpleResponseDTO deleteProduct(Long storeId, Long productId) {
+        Boolean flag = storeDAO.deleteProductId(storeId, productId);
+
+        if(flag){
+            return new SimpleResponseDTO("success");
+        }
+
+        return new SimpleResponseDTO("fail");
+    }
+
+    @Override
     public StoreEntity toEntity(@NotNull StoreDTO storeDTO) {
         StoreEntity storeEntity = StoreEntity.builder()
                 .storeId(storeDTO.getStoreId())

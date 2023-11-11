@@ -156,4 +156,14 @@ public class StoreController {
         logger.info("[Response] : " + response.toString());
         return ResponseEntity.status(200).body(response);
     }
+
+    @DeleteMapping(value = "/delete/{storeId}/{productId}")
+    public ResponseEntity<SimpleResponseDTO> deleteProduct(@PathVariable Long storeId,
+                                                           @PathVariable Long productId){
+        logger.info("[Request] : DeleteProductId");
+        logger.info("[Data]: " + storeId + " " + productId);
+        SimpleResponseDTO response = storeService.deleteProduct(storeId, productId);
+        logger.info("[Response] : " + response.toString());
+        return ResponseEntity.status(200).body(response);
+    }
 }

@@ -26,6 +26,7 @@ public interface StoreService {
     public SimpleResponseDTO updateStoreById(StoreDTO storeDTO);
     public SimpleResponseDTO updateStoreById(StoreDTO storeDTO, MultipartFile image);
     public SimpleResponseDTO deleteStore(Long storeId);
+    public SimpleResponseDTO deleteProduct(Long storeId, Long productId);
     public StoreEntity toEntity(StoreDTO storeDTO);
     public ResponseDTO toResponseDTO(Map<String, Object> resultMap);
     public ResponseDTO toResponseForMapDTO(Map<String, Object> resultMap);

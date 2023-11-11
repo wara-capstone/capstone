@@ -223,4 +223,27 @@ public class StoreDAOImpl implements StoreDAO {
 
         return result;
     }
+
+    @Override
+    public Boolean deleteProductId(Long storeId, Long productId) {
+        StoreEntity storeEntity = storeRepository.findByStoreId(storeId);
+
+        if (storeEntity != null) {
+            List<Long> productIds = storeEntity.getProductIds();
+
+            for(Long oldProductId : productIds){
+                if(productId.equals(oldProductId)) {
+                    productIds.remove(productId);
+                    break;
+                }
+            }
+
+            storeEntity.setProductIds(productIds);
+
+            storeRepository.save(storeEntity);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
