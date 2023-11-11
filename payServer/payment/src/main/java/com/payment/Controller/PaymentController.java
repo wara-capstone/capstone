@@ -53,7 +53,7 @@ public class PaymentController {
 
     @DeleteMapping("/delete/{paymentId}")
     public ResponseEntity<SimpleResponseDTO> deletePayment(@PathVariable Long paymentId){
-        logger.info("[Request] : ReadPaymentByPurchaser");
+        logger.info("[Request] : DeletePayment");
         logger.info("[Data]: " + paymentId);
         SimpleResponseDTO response = paymentService.deletePayment(paymentId);
         logger.info("[Response] : " + response.toString());

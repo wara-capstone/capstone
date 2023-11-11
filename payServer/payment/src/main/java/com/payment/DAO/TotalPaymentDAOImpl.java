@@ -91,7 +91,7 @@ public class TotalPaymentDAOImpl implements TotalPaymentDAO {
 
         if(totalPaymentEntity == null){
             result.put("result", "fail");
-            result.put("message", "해당하는 Payment가 DB에 존재하지 않습니다.");
+            result.put("message", "해당하는 TotalPayment가 DB에 존재하지 않습니다.");
             return result;
         }
 
@@ -99,7 +99,7 @@ public class TotalPaymentDAOImpl implements TotalPaymentDAO {
 
         if(totalPaymentRepository.existsByTotalPaymentId(paymentId)){
             result.put("result", "fail");
-            result.put("message", "Payment가 정상적으로 삭제되지 않았습니다.");
+            result.put("message", "TotalPayment가 정상적으로 삭제되지 않았습니다.");
         } else{
             result.put("result", "success");
         }
