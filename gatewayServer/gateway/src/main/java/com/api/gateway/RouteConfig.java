@@ -15,7 +15,10 @@ public class RouteConfig {
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder,
                                       AuthorizationHeaderFilter authFilter) {
         return builder.routes()
-
+                //pay
+                .route("payment-service", r->r.path("/payment/**")
+                        .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
+                        .uri("lb://PAYMENT-SERVICE"))
                 // shoppingCart
                 .route("cart-service", r->r.path("/cart/**")
                         .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
