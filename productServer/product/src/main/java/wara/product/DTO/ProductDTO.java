@@ -19,6 +19,7 @@ public class ProductDTO {
 
     Long productId;
     Long storeId;
+    String productName;
     String productCategory;
     List<String> productUrls;
     @Nullable
@@ -27,6 +28,7 @@ public class ProductDTO {
     public ProductDTO(ProductEntity productEntity, OptionEntity optionEntity) {
         this.productId = productEntity.getProductId();
         this.storeId = productEntity.getStoreId();
+        this.productName = productEntity.getProductName();
         this.productCategory = productEntity.getProductCategory();
         this.productUrls = productEntity.getProductUrls().getUrls();
         this.options = new ArrayList<>();
@@ -39,6 +41,7 @@ public class ProductDTO {
         return new ProductEntity(
                 this.productId,
                 this.storeId,
+                this.productName,
                 this.productCategory,
                 new Urls(productUrls),
                 Collections.emptyList()
@@ -51,12 +54,14 @@ public class ProductDTO {
         try {
             this.productId = productDTO.getProductId();
             this.storeId = productDTO.getStoreId();
+            this.productName = productDTO.getProductName();
             this.productCategory = productDTO.getProductCategory();
             this.productUrls = productDTO.getProductUrls();
             this.options = optionDTO;
         }catch (NullPointerException e){
             this.productId = productDTO.getProductId();
             this.storeId = productDTO.getStoreId();
+            this.productName = productDTO.getProductName();
             this.productCategory = productDTO.getProductCategory();
             this.productUrls = productDTO.getProductUrls();
             Collections.emptyList();
@@ -67,6 +72,7 @@ public class ProductDTO {
 
             this.productId = productEntity.getProductId();
             this.storeId = productEntity.getStoreId();
+            this.productName = productEntity.getProductName();
             this.productCategory = productEntity.getProductCategory();
             this.productUrls = productEntity.getProductUrls().getUrls();
             this.options = convert(optionEntityList);

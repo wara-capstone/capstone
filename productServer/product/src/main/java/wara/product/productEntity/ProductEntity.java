@@ -23,6 +23,9 @@ public class ProductEntity {
     @Column(name = "store_id")
     Long storeId;
 
+    @Column(name= "name")
+    String productName;
+
     @Column(name = "category")
     String productCategory;
 
@@ -33,10 +36,11 @@ public class ProductEntity {
     List<OptionEntity> options;
 
 
-    public ProductEntity(Long productId, Long storeId, String productCategory,
+    public ProductEntity(Long productId, Long storeId,String productname, String productCategory,
                          @Nullable List<String> productUrls, OptionEntity options) {
         this.productId = productId;
         this.storeId = storeId;
+        this.productName = productname;
         this.productCategory = productCategory;
         this.productUrls = new Urls(productUrls);
         this.options.add(options);
@@ -47,6 +51,7 @@ public class ProductEntity {
     {
         this.productId = r.getProductId();
         this.storeId = r.getStoreId();
+        this.productName = r.getProductName();
         this.productCategory = r.getProductCategory();
         this.productUrls = r.getProductUrls();
         this.options = new ArrayList<>();
@@ -59,6 +64,7 @@ public class ProductEntity {
             return new ProductDTO(
                     this.productId,
                     this.storeId,
+                    this.productName,
                     this.productCategory,
                     this.productUrls.getUrls(),
                     convert(this.options)
@@ -67,6 +73,7 @@ public class ProductEntity {
             return new ProductDTO(
                     this.productId,
                     this.storeId,
+                    this.productName,
                     this.productCategory,
                     Collections.emptyList(),
                     Collections.emptyList());

@@ -79,12 +79,9 @@ public class ProductController {
 //        }
 
 
-        if(Objects.isNull(optionDTO)) {// 옵션은 저장하지 않은 경우
-            return HttpStatus.CREATED.toString();
+        if(Objects.nonNull(optionDTO)){
+            return productService.addOption(productId,optionDTO);
         }
-        //바코드 URL 반환 후 저장
-        optionDTO.setBarcodeUrl(transrationService.toBarcode(productDTO.getStoreId(), productDTO.getProductId()));
-        productService.addOption(productId,optionDTO);
 
         return HttpStatus.CREATED.toString();
     }
@@ -94,9 +91,7 @@ public class ProductController {
     // 옵션 등록
     @PutMapping("/seller/option/add") //TODO:바코드 삭제 로직 필요함
     public String optionRegistry(@RequestParam Long productId, @RequestPart OptionDTO optionDTO) throws URISyntaxException, IOException {
-        ProductDTO productDTO = productService.readOne(productId);
-
-        optionDTO.setBarcodeUrl(transrationService.toBarcode(productDTO.getStoreId(), productId));
+        productService.readOne(productId); //TODO: 상품이 존쟈하지 않는경우 처리
         return productService.addOption(productId,optionDTO);
     }
 

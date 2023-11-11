@@ -19,7 +19,7 @@ public interface ProductDAO {
 
 
 
-
+    OptionEntity getOptionIdAfterSave(Long productId, OptionEntity optionEntity);
     String addOption(Long productId, OptionEntity optionEntity);
     String modifyOption(Long productId, OptionEntity optionEntity);
     String removeOption(Long optionId);

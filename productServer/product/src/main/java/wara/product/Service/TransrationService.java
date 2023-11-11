@@ -132,19 +132,19 @@ public class TransrationService {
 
 
 
-    public String toBarcode (Long storeId, Long productId) throws URISyntaxException, IOException {
+    public String toBarcode (Long productId, Long optionId) throws URISyntaxException, IOException {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         Map<String,Object> bodyMap = new HashMap<>();
-        bodyMap.put("storeId", storeId);
-        bodyMap.put("productId", productId);
+        bodyMap.put("storeId", productId);
+        bodyMap.put("productId", optionId);
 
         HttpEntity<?> requestEntity = new HttpEntity<>(bodyMap, headers);
 
 
-        URI uploadUri = serviceUrl("BARCODE-SERVICE","/barcode/create");
+        URI uploadUri = serviceUrl("BARCODE-SERVICE","/barcode");
 
         try {
             ResponseEntity response;

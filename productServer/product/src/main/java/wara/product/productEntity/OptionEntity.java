@@ -26,9 +26,6 @@ public class OptionEntity {
     @JoinColumn(name = "product_entity_product_id")
     private ProductEntity product;
 
-    @Column(name = "name")
-    private String productName;
-
     @Column(name = "price")
     private String productPrice;
 
@@ -56,12 +53,21 @@ public class OptionEntity {
     {
         return new OptionDTO(
                 this.optionId,
-                this.productName,
                 this.productPrice,
                 this.productSize,
                 this.productColor,
                 this.productStock,
                 this.barcodeUrl
         );
+    }
+
+    public OptionEntity(OptionEntity optionEntity, String url)
+    {
+        this.optionId = optionEntity.getOptionId();
+        this.productPrice = optionEntity.getProductPrice();
+        this.productSize = optionEntity.getProductSize();
+        this.productColor = optionEntity.getProductColor();
+        this.productStock = optionEntity.getProductStock();
+        this.barcodeUrl = url;
     }
 }

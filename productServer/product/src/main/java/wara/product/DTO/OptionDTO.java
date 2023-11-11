@@ -15,7 +15,6 @@ public class OptionDTO {
 
 
     Long optionId;
-    String productName;
     String productPrice;
     String productSize;
     String productColor;
@@ -28,7 +27,6 @@ public class OptionDTO {
 
                   this.optionId ,
                 new ProductEntity(),
-                  this.productName,
                   this.productPrice,
                   this.productSize,
                   this.productColor,

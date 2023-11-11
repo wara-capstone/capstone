@@ -23,6 +23,7 @@ public class ProductDAOImpl implements ProductDAO{
         this.optionRepository = optionRepository;
     }
 
+    //TODO: getBy, findBy 구분해서 사용
 
 
     /**
@@ -102,6 +103,13 @@ public class ProductDAOImpl implements ProductDAO{
         optionRepository.save(optionEntity);
         return HttpStatus.CREATED.toString();
     }
+
+    @Override
+    public OptionEntity getOptionIdAfterSave(Long productId, OptionEntity optionEntity) {
+        optionEntity.setProduct(productRepository.getByProductId(productId));
+        return optionRepository.save(optionEntity);
+    }
+
 
     @Override
     public String modifyOption(Long productId, OptionEntity optionEntity) {

@@ -11,6 +11,8 @@ import wara.product.productEntity.OptionEntity;
 import wara.product.productEntity.ProductEntity;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +21,12 @@ import java.util.List;
 public class ProductService {
 
     private final ProductDAO productDAO;
+    private final TransrationService transrationService;
 
-    public ProductService(@Autowired ProductDAO productDAO) {
+    public ProductService(@Autowired ProductDAO productDAO,
+                          @Autowired TransrationService transrationService) {
         this.productDAO = productDAO;
+        this.transrationService = transrationService;
     }
 
 
@@ -92,9 +97,12 @@ public class ProductService {
 
 
 
-    public String addOption(Long productId, OptionDTO optionDTO)
-    {
-        return productDAO.addOption(productId,optionDTO.toEntity());
+    @Transactional
+    public String addOption(Long productId, OptionDTO optionDTO) throws URISyntaxException, IOException {
+        OptionEntity urlUpdate = productDAO.getOptionIdAfterSave(productId,optionDTO.toEntity());
+        String barcodeUrl = transrationService.toBarcode(productId, urlUpdate.getOptionId());
+
+        return productDAO.addOption(productId,new OptionEntity(urlUpdate,barcodeUrl));
     }
 
 
