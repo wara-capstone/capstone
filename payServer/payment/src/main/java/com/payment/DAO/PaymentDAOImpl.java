@@ -5,6 +5,7 @@ import com.payment.Repository.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -62,14 +63,8 @@ public class PaymentDAOImpl implements PaymentDAO{
     public Map<String, Object> deletePayment(PaymentEntity paymentEntity) {
         Map<String, Object> result = new HashMap<>();
         Long paymentId = paymentEntity.getPaymentId();
-
-        if(paymentEntity == null){
-            result.put("result", "fail");
-            result.put("message", "해당하는 Payment가 DB에 존재하지 않습니다.");
-            return result;
-        }
-
         paymentRepository.delete(paymentEntity);
+        paymentRepository.flush(); // 데이터베이스 동기화
 
         if(paymentRepository.existsByPaymentId(paymentId)){
             result.put("result", "fail");

@@ -22,6 +22,17 @@ public class TotalPaymentEntity {
     Long totalPrice;
     LocalDateTime dateTime;
 
-    @OneToMany(mappedBy = "totalPaymentEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "totalPaymentEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     List<PaymentEntity> payments;
+
+    @Override
+    public String toString() {
+        return "TotalPaymentEntity{" +
+                "totalPaymentId=" + totalPaymentId +
+                ", purchaser='" + purchaser + '\'' +
+                ", totalPrice=" + totalPrice +
+                ", dateTime=" + dateTime +
+                ", payments=" + (payments != null ? payments.size() : "null") +
+                '}';
+    }
 }

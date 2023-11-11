@@ -26,4 +26,18 @@ public class PaymentEntity {
     @ManyToOne
     @JoinColumn(name = "total_payment_id")
     TotalPaymentEntity totalPaymentEntity;
+
+    @Override
+    public String toString() {
+        return "PaymentEntity{" +
+                "paymentId=" + paymentId +
+                ", storeId=" + storeId +
+                ", productId=" + productId +
+                ", optionId=" + optionId +
+                ", price=" + price +
+                ", quantity=" + quantity +
+                ", dateTime=" + dateTime +
+                ", totalPaymentEntity=" + (totalPaymentEntity != null ? totalPaymentEntity.getTotalPaymentId() : "null") +
+                '}';
+    }
 }

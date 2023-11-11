@@ -11,4 +11,5 @@ public interface PaymentRepository extends JpaRepository<PaymentEntity, String> 
     public List<PaymentEntity> findByStoreId(Long storeId);
     public PaymentEntity findByPaymentId(Long paymentId);
     public Boolean existsByPaymentId(Long paymentId);
+    public Boolean removeByPaymentId(Long paymentId);
 }

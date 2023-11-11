@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,16 +75,6 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public SimpleResponseDTO deletePayment(Long totalPaymentId) {
-        List<PaymentEntity> paymentEntities = totalPaymentDAO.readPaymentById(totalPaymentId);
-
-        for(PaymentEntity paymentEntity : paymentEntities){
-            Map<String, Object> paymentResult = paymentDAO.deletePayment(paymentEntity);
-
-            if(paymentResult.get("result").equals("fail")){
-                return toSimpleResponseDTO(paymentResult);
-            }
-        }
-
         Map<String, Object> resultMap = totalPaymentDAO.deleteTotalPayment(totalPaymentId);
 
         SimpleResponseDTO simpleResponseDTO = toSimpleResponseDTO(resultMap);
