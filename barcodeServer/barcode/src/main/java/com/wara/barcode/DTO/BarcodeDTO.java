@@ -12,6 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BarcodeDTO {
-    Long storeId;
     Long productId;
+    Long optionId;
 }
