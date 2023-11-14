@@ -4,6 +4,7 @@ package wara.product.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import wara.product.DTO.OptionDTO;
 import wara.product.DTO.ProductDTO;
 import wara.product.Service.TransrationService;
@@ -11,7 +12,6 @@ import wara.product.Service.ProductService;
 
 
 import javax.transaction.Transactional;
-import javax.ws.rs.Path;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
@@ -58,26 +58,15 @@ public class ProductController {
      * @throws IOException
      */
     @PostMapping("/seller") @Transactional
-    public String productRegistry(@RequestPart ProductDTO productDTO, @RequestPart OptionDTO optionDTO) throws URISyntaxException, IOException {
+    public String productRegistry(@RequestPart ProductDTO productDTO, @RequestPart OptionDTO optionDTO, @RequestPart List<MultipartFile> images) throws URISyntaxException, IOException {
+
+        productDTO.setProductUrls(transrationService.uploadImage(images));
         //productDTO의 값으로 일단 저장 -> 해당 상품의 ID값 반환
         Long productId = productService.initProduct(productDTO);
 
-
         // STORE서버에 해당 상점이 존재하는지 검사
-//        String storeValid = transrationService.validCheckFromStore(productDTO.getStoreId(),
-//                Collections.singletonList(productId));
-
-//        if(storeValid.equals("fali"))
-//        {// 존재하지 않는 상점이라면
-//            //저장한 데이터 삭제
-//            productService.removeOneProduct(productId);
-//            return HttpStatus.NOT_ACCEPTABLE.toString();
-//        } else if (!storeValid.equals("success")) {
-//            //RestTamplate 오류라면 HttpStatus 반환
-//            productService.removeOneProduct(productId);
-//            return  storeValid;
-//        }
-
+        String storeValid = transrationService.initToStore(productDTO.getStoreId(),
+                Collections.singletonList(productId));
 
         if(Objects.nonNull(optionDTO)){
             return productService.addOption(productId,optionDTO);
@@ -114,9 +103,9 @@ public class ProductController {
 
 
     // 단일 상품 삭제
-    @DeleteMapping("/seller/{productId}")
-    public String singleRemove(@PathVariable("id") Long productId)
-    {
+    @DeleteMapping("/seller/{storeId}/{productId}") @Transactional
+    public String singleRemove(@PathVariable("storeId")Long storeId, @PathVariable("productId") Long productId) throws URISyntaxException, IOException {
+        transrationService.removeToStore(storeId, productId);
         return productService.removeOneProduct(productId);
     }
 
