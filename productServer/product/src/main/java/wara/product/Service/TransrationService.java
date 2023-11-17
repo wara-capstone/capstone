@@ -180,7 +180,7 @@ public class TransrationService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         Map<String, Object> bodyMap = new HashMap<>();
-        bodyMap.put("storeId", productId);
+        bodyMap.put("productId", productId);
         bodyMap.put("optionId", optionId);
 
         HttpEntity<?> requestEntity = new HttpEntity<>(bodyMap, headers);
