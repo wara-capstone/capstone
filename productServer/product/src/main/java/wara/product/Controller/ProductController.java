@@ -85,6 +85,7 @@ public class ProductController {
     }
 
     // 상품 수정
+    //TODO: 사진 있는경우, 없는경우 분리
     @PutMapping("/seller")
     public String productModify(@RequestPart ProductDTO productDTO)
     {
@@ -145,8 +146,8 @@ public class ProductController {
      * @param optionId
      * @return 단일 상품, 단일 옵션
      */
-    @GetMapping("/user/{storeId}/option/{optionId}")
-    public ProductDTO readTargetOption(@PathVariable("storeId") Long productId, @PathVariable("optionId") Long optionId)
+    @GetMapping("/user/{productId}/option/{optionId}")
+    public ProductDTO readTargetOption(@PathVariable("productId") Long productId, @PathVariable("optionId") Long optionId)
     {
         return productService.readTarget(productId,optionId);
     }
