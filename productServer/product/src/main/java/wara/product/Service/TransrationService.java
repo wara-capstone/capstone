@@ -181,7 +181,7 @@ public class TransrationService {
 
         Map<String, Object> bodyMap = new HashMap<>();
         bodyMap.put("storeId", productId);
-        bodyMap.put("productId", optionId);
+        bodyMap.put("optionId", optionId);
 
         HttpEntity<?> requestEntity = new HttpEntity<>(bodyMap, headers);
 
