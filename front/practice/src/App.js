@@ -24,6 +24,7 @@ import SellerStoreEdit from "./pages/Sellers/SellerStoreEdit";
 import SellerStoreRegister from "./pages/Sellers/SellerStoreRegister";
 
 import "./App.css";
+import SellerStoreSales from "./pages/Sellers/SellerStoreSales";
 
 export default function Customer() {
   return (
@@ -58,6 +59,8 @@ export default function Customer() {
             element={<SellerItemManagement />}
           />
           <Route path="/seller/store/edit" element={<SellerStoreEdit />} />
+
+          <Route path="/seller/store/sales" element={<SellerStoreSales />} />
 
           {/* 로그인 페이지 */}
           <Route path="/login" element={<Login />} />

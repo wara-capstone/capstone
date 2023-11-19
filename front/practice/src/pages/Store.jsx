@@ -23,7 +23,9 @@ export default function Store() {
     if (userId === null) {
       navigate("/login");
     } else if (userId !== null) {
-      navigate(`/chatting/${id}`, { state: { seller: storeData.storeSeller } });
+      navigate(`/chatting/${storeData.storeSeller}`, {
+        state: { seller: storeData.storeSeller },
+      });
     }
   };
 

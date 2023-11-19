@@ -31,6 +31,17 @@ export default function SellerSideNav() {
             가게정보 수정
           </h2>
         </Link>
+        <Link to="/seller/store/sales" className="seller-side-nav-link">
+          <h2
+            className={
+              locationNow.pathname === "/seller/store/sales"
+                ? "store-side-nav-menu active-store-side-nav-menu"
+                : "store-side-nav-menu"
+            }
+          >
+            가게매출 관리
+          </h2>
+        </Link>
       </div>
     </div>
   );

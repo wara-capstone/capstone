@@ -101,7 +101,8 @@
 
 /* seller store management, seller store register */
 .seller-store-management .store-management-container,
-.seller-store-register .store-register-container {
+.seller-store-register .store-register-container,
+.seller-store-sales .store-sales-container {
   display: flex;
   flex-direction: row;
   flex: 1;
@@ -119,7 +120,7 @@
 .store-management-map-container,
 .store-register-map-container {
   height: 92vh;
-  background-color: #666;
+  background-color: #666666;
   width: calc(100% - 450px);
 }
 
