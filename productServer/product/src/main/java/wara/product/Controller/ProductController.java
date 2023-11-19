@@ -167,8 +167,8 @@ public class ProductController {
      * @param category 카테고리 기준 모든 상품 검색
      * @return 카테고리와 동잍한 모든 상품 + 옵션
      */
-    @GetMapping("/user/category")
-    public List<ProductDTO> categoryFilter(@RequestParam String category)
+    @GetMapping("/user/category/{category}")
+    public List<ProductDTO> categoryFilter(@PathVariable("category") String category)
     {
        return productService.categoryFilter(category);
     }
@@ -176,7 +176,7 @@ public class ProductController {
     /**
      * @param storeId
      * @param category
-     * @return 상품아이디&카테고리에 해당하는 모든 상품+ 옵션
+     * @return 상점아이디&카테고리에 해당하는 모든 상품+ 옵션
      */
     @GetMapping("/user/store/{storeId}/category")
     public List<ProductDTO> storeCategoryFilter(@PathVariable("storeId") Long storeId, @RequestParam String category)
