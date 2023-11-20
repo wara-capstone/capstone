@@ -15,14 +15,17 @@ public class RouteConfig {
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder,
                                       AuthorizationHeaderFilter authFilter) {
         return builder.routes()
-                //pay
+                //payment
                 .route("payment-service", r->r.path("/payment/**")
                         .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
                         .uri("lb://PAYMENT-SERVICE"))
+
+
                 // shoppingCart
                 .route("cart-service", r->r.path("/cart/**")
                         .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
                         .uri("lb://CART-SERVICE"))
+
                 // chat
                 .route("chat-service", r->r.path("/ws/**")
                         .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
@@ -30,13 +33,17 @@ public class RouteConfig {
                 .route("chat-service", r->r.path("/chat/**")
                         .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
                         .uri("lb://CHATTING-SERVICE"))
+
                 // product
+                .route("product-service", r->r.path("/product/all/**")
+                        .uri("lb://PRODUCT-SERVICE"))
                 .route("product-service", r->r.path("/product/user/**")
                         .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
                         .uri("lb://PRODUCT-SERVICE"))
                 .route("product-service", r->r.path("/product/seller/**")
                         .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_seller");})))
                         .uri("lb://PRODUCT-SERVICE"))
+
                 // store
                 .route("store-service", r->r.path("/store/delete")
                         .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_seller");})))
@@ -49,6 +56,7 @@ public class RouteConfig {
                         .uri("lb://STORE-SERVICE"))
                 .route("store-service", r->r.path("/store/**")
                         .uri("lb://STORE-SERVICE"))
+
                 // auth, user
                 .route("auth-service", r -> r.path("/auth/**")
                         //.filters() filters를 제작하여 인증처리 
