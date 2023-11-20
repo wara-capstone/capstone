@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import Card from "./Card"; // Card 컴포넌트 임포트
 import "./Card.css";
 
-function CardList({ category }) {
+function CardList({ category, url }) {
   const { id } = useParams();
 
   const userId = sessionStorage.getItem("email");
@@ -16,22 +16,28 @@ function CardList({ category }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(
-        `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/user/category/${category}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-        }
-      );
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      });
       if (response.status === 200) {
         const data = await response.json(); // response.json()이 완료될 때까지 기다림
 
         setCategoryData(data); // 상태 업데이트
 
-        console.log(data[0].productId);
+        if (data && data[0] && data[0].productId) {
+          console.log(data[0].productId);
+        } else {
+          console.log("등록된 상품이 없음.");
+        }
+
+        if (data && data[0]) {
+          console.log(data[0].productId);
+        }
+
         console.log(data);
         console.log("성공");
       } else {

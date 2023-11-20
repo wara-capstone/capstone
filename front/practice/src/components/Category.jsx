@@ -6,7 +6,7 @@ import { PiPantsFill } from "react-icons/pi";
 import CardList from "./CardList";
 import "./Category.css";
 
-const Category = () => {
+const Category = ({ allUrl, categoryUrl }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const handleCategoryClick = (category) => {
@@ -59,9 +59,16 @@ const Category = () => {
       </div>
 
       {/* 선택된 카테고리가 없을 때 보여줄 추천 상품 */}
-      {false && <CardList category={null} />}
+      {!selectedCategory && (
+        <CardList category={selectedCategory} url={`${allUrl}`} />
+      )}
       {/* 선택된 카테고리에 따라 다른 CardList를 보여줍니다. */}
-      {selectedCategory && <CardList category={selectedCategory} />}
+      {selectedCategory && (
+        <CardList
+          category={selectedCategory}
+          url={`${categoryUrl}${selectedCategory}`}
+        />
+      )}
     </div>
   );
 };

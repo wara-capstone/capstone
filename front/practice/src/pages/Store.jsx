@@ -45,9 +45,10 @@ export default function Store() {
       result = await response.json();
       if (response.status === 200) {
         setStoreData(result.data); // 상태 업데이트
-        console.log(result.storeId);
-        console.log("성공");
-        console.log(result.storeName);
+        //console.log(result.storeId);
+        //console.log(result);
+        //console.log(result.storeName);
+        console.log("상점정보 가져오기 성공");
       } else {
         console.log("실패");
       }
@@ -76,7 +77,10 @@ export default function Store() {
         </div>
       )}
 
-      <Category />
+      <Category
+        allUrl={`https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/store/${id}`}
+        categoryUrl={`https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/store/${id}?category=`}
+      />
 
       <BottomNav />
     </div>

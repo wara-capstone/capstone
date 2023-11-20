@@ -47,7 +47,7 @@ export default function Home() {
       <div className="ad-image-container">
         <AdComponent images={adImages} />
       </div>
-      <Category />
+      <Category categoryUrl="https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/category/" />
       {/* <CardList /> */}
       <BottomNav />
     </div>
