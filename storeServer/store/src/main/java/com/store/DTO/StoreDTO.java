@@ -15,8 +15,8 @@ public class StoreDTO {
     String storeSeller;
     String storeAddress;
     String storePhone;
-    double storeLocationX;
-    double storeLocationY;
+    Double storeLocationX;
+    Double storeLocationY;
     String storeImage;
     List<Long> productId;
     String storeContents;

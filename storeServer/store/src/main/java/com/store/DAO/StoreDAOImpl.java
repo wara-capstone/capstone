@@ -191,14 +191,14 @@ public class StoreDAOImpl implements StoreDAO {
         if (oldStoreEntity != null) {
             storeEntity.setStoreId(Optional.ofNullable(storeEntity.getStoreId()).orElse(oldStoreEntity.getStoreId()));
             storeEntity.setStoreName(Optional.ofNullable(storeEntity.getStoreName()).orElse(oldStoreEntity.getStoreName()));
-            storeEntity.setStoreAddress(Optional.ofNullable(storeEntity.getStoreAddress()).orElse(storeEntity.getStoreAddress()));
-            storeEntity.setStorePhone(Optional.ofNullable(storeEntity.getStorePhone()).orElse(storeEntity.getStorePhone()));
-            storeEntity.setStoreSeller(Optional.ofNullable(storeEntity.getStoreSeller()).orElse(storeEntity.getStoreSeller()));
-            storeEntity.setStoreLocationX(Optional.ofNullable(storeEntity.getStoreLocationX()).orElse(storeEntity.getStoreLocationX()));
-            storeEntity.setStoreLocationY(Optional.ofNullable(storeEntity.getStoreLocationY()).orElse(storeEntity.getStoreLocationY()));
-            storeEntity.setStoreImage(Optional.ofNullable(storeEntity.getStoreImage()).orElse(storeEntity.getStoreImage()));
-            storeEntity.setStoreContents(Optional.ofNullable(storeEntity.getStoreContents()).orElse(storeEntity.getStoreContents()));
-            storeEntity.setProductIds(Optional.ofNullable(storeEntity.getProductIds()).orElse(storeEntity.getProductIds()));
+            storeEntity.setStoreAddress(Optional.ofNullable(storeEntity.getStoreAddress()).orElse(oldStoreEntity.getStoreAddress()));
+            storeEntity.setStorePhone(Optional.ofNullable(storeEntity.getStorePhone()).orElse(oldStoreEntity.getStorePhone()));
+            storeEntity.setStoreSeller(Optional.ofNullable(storeEntity.getStoreSeller()).orElse(oldStoreEntity.getStoreSeller()));
+            storeEntity.setStoreLocationX(Optional.ofNullable(storeEntity.getStoreLocationX()).orElse(oldStoreEntity.getStoreLocationX()));
+            storeEntity.setStoreLocationY(Optional.ofNullable(storeEntity.getStoreLocationY()).orElse(oldStoreEntity.getStoreLocationY()));
+            storeEntity.setStoreImage(Optional.ofNullable(storeEntity.getStoreImage()).orElse(oldStoreEntity.getStoreImage()));
+            storeEntity.setStoreContents(Optional.ofNullable(storeEntity.getStoreContents()).orElse(oldStoreEntity.getStoreContents()));
+            storeEntity.setProductIds(Optional.ofNullable(storeEntity.getProductIds()).orElse(oldStoreEntity.getProductIds()));
 
             storeRepository.save(storeEntity);
             result.put("result", "success");
