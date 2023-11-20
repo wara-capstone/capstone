@@ -223,4 +223,149 @@
   background-color: rgb(236, 83, 83);
   transform: scale(0.9);
 }
+
+.seller-item-management .App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+
+}
+
+.seller-item-management .App-link {
+  color: #61dafb;
+}
+.seller-item-management{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.grid-wrapper {
+  /* flex: 1 1 0px; */
+  /* height:500px; */
+  height:80%;
+}
+
+.ag-theme-alpine {
+  height: 500px;
+  width: 100%;
+}
+
+#myGrid {
+  height: 100%;
+  width: 100%;
+}
 /* seller item, seller item management */
+
+.seller-product-registration .outer-div {
+  max-width: 700px;
+  margin: 2rem auto;
+  
+}
+
+.seller-product-registration .inner-div {
+  /* text-align: center; */
+  margin-bottom: 2rem;
+
+}
+
+.seller-product-registration .abc{
+  background-color: white;
+  padding: 5px 20px; 
+  margin: 2em auto; 
+  border-radius: 10px;
+  box-shadow: 1px 1px 1px gray;
+}
+
+.seller-product-registration .category{
+  background-color: white;
+  padding: 10px 15px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 1px gray;
+ 
+}
+
+.seller-product-registration .productInfo{
+  background-color: white;
+  padding: 10px 15px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 1px gray;
+
+}
+
+.HashWrap{
+  margin-top: 24px;
+  color: rgb(52, 58, 64);
+  font-size: 1.125rem;
+  display: flex;
+  flex-wrap: wrap;
+  letter-spacing: -0.6px;
+  color: #444241;
+  border-bottom: 1.6px solid #cccccc;
+  padding: 2px 2px 8px 2px;
+}
+
+.HashWrapOuter {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.HashWrapInner {
+  margin-top: 5px;
+  background: #ffeee7;
+  border-radius: 56px;
+  padding: 8px 12px;
+  color: #ff6e35;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.4rem;
+  line-height: 20px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.HashInput {
+  width: auto;
+  margin: 10px;
+  display: inline-flex;
+  outline: none;
+  cursor: text;
+  line-height: 2rem;
+  margin-bottom: 0.75rem;
+  min-width: 8rem;
+  border: none;
+}
+
+.seller-product-registration .price{
+  background-color: white;
+  padding: 10px 15px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 1px gray;
+}
+
+.seller-product-registration .option{
+  background-color: white;
+  padding: 10px 15px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 1px gray;
+}
+#option-table{
+  border: 0.1px solid #e2e2e2;
+  border-radius: 10px;
+}
+
+.seller-product-registration .option-small-box{
+  border: 0.1px solid #e2e2e2;
+  padding: 10px;
+  
+  border-radius: 10px;
+}
+
+/* seller product registration */

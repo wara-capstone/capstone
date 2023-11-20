@@ -21,7 +21,7 @@ import SellerChattingManagement from "./pages/Sellers/SellerChattingManagement";
 import SellerHome from "./pages/Sellers/SellerHome";
 import SellerItemManagement from "./pages/Sellers/SellerItemManagement";
 import SellerStoreManagement from "./pages/Sellers/SellerStoreManagement";
-
+import SellerProductRegistration from "./pages/Sellers/SellerProductRegistration";
 
 import "./App.css";
 
@@ -54,10 +54,13 @@ export default function Customer() {
             element={<SellerItemManagement />}
           />
           <Route
+            path="/seller/item/management/productRegistration"
+            element={<SellerProductRegistration />}
+          />
+        <Route
             path="/seller/store/management"
             element={<SellerStoreManagement />}
           />
-
           {/* 로그인 페이지 */}
           <Route path="/login" element={<Login />} />
 
