@@ -27,6 +27,7 @@ public interface ProductDAO {
 
     List<ProductEntity> categoryFilter(String category);
     List<ProductEntity> storeCategoryFilter(Long storeId, String category);
+    String stockModify(Long optionId, String stockModify);
 
 }
 

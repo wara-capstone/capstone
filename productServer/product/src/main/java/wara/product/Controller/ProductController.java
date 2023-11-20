@@ -99,6 +99,13 @@ public class ProductController {
         return productService.modifyOption(productId, optionDTO);
     }
 
+    @PutMapping("/user/product/{productId}/{optionId}/{stockModify}")
+    public String stockModify(@PathVariable("productId") Long productId, @PathVariable("optionId") Long optionId, @PathVariable("stockModify") String stockModify)
+    {
+        return productService.stockModify(productId,optionId,stockModify);
+    }
+
+
 
 
 

@@ -135,4 +135,13 @@ public class ProductDAOImpl implements ProductDAO{
     }
 
 
+    @Override
+    public String stockModify(Long optionId, String stockModify)
+    {
+        OptionEntity oldEntity =  optionRepository.findByOptionId(optionId);
+        oldEntity.stockModify(stockModify);
+        optionRepository.save(oldEntity);
+        return HttpStatus.OK.toString();
+    }
+
 }

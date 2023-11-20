@@ -2,6 +2,7 @@ package wara.product.Service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.support.JpaEvaluationContextExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import wara.product.DAO.ProductDAO;
@@ -138,6 +139,11 @@ public class ProductService {
         return productDTOS;
     }
 
+
+    public String stockModify(Long productId, Long optionId, String stockModify)
+    {
+        return productDAO.stockModify(optionId,stockModify);
+    }
 
 
 

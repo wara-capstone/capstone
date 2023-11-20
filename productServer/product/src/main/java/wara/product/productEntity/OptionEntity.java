@@ -70,4 +70,16 @@ public class OptionEntity {
         this.productStock = optionEntity.getProductStock();
         this.barcodeUrl = url;
     }
+
+
+    public void stockModify(String stockModify)
+    {
+        int a = Integer.parseInt(this.productStock);
+        int b = Integer.parseInt(stockModify);
+        this.productStock = String.valueOf(a + b);
+    }
+
+
+
+
 }
