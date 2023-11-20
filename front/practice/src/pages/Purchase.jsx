@@ -10,60 +10,70 @@ import PurchaseProduct from "../components/PurchaseProduct";
 import "../components/CartComponents.css";
 
 export default function Purchase() {
+
+    const email = sessionStorage.getItem("email");
+    const token = sessionStorage.getItem("token");
+
   const location = useLocation();
-    // const { selectedBread, checkList } = location.state;
+    const { checkList, selectedItems } = location.state;
+
+    // 총 금액
+  const totalPrice = selectedItems.reduce((acc, item) => acc + (item.product.price), 0);
 
 
-    var a =  [  {
-      "option": "빨강",
-      "id": 1,
-      "number": 1,
-      "order_price" : 10000,
-      "order_type": "빵",
-      "title": "Item 5",
-      "content": "Item Detail 5",
-      "content2": 1,
-      "subTitle": "10,000₩",
-      "isCartItems": true
-    },
-    {
-      "id": 2,
-      "number": 2,
-      "order_price" : 20000,
-      "order_type": "떡",
-      "title": "Item 5",
-      "content": "Item Detail 5",
-      "content2": 1,
-      "subTitle": "20,000₩",
-      "isCartItems": true
-    },
-  
-  ];
-
-  const [selectedBread, setSelectedBread] = useState (a);
-  const [checkList, setCheckList] = useState(selectedBread.map(bread => bread.id));
-  const CardInCart = Data.cardData.filter(
-    (card) => card.isCartItems === Boolean(true)
-  );
+async function clickPurchase(e) {
+    // Create payload
+    const totoalPayment = {
+      purchase: email,
+      totalPrice: totalPrice
+      }
 
 
+      const payment = selectedItems.map(item => {
+        return {
+          storeId: item.store_id,
+          productId: item.product.p_id,
+          // optionId: item.targetSize,
+          price: item.product.price / item.product.quantity,
+          quantity: item.product.quantity,
+        };
+      });
 
-const changeSingleBox = (checked, id) => {
-if (checked) {
-    setCheckList([...checkList, id]);
-} else {
-    setCheckList(checkList.filter(el => el !== id));
+
+    var formData;
+      formData = new FormData();
+      formData.append('json', new Blob([JSON.stringify(totoalPayment)], { type: "application/json" }));
+      formData.append('json', new Blob([JSON.stringify(payment)], { type: "application/json" }));
+
+
+    try {
+      const response = await fetch(
+        " http://3.34.227.3:16000/cart/items/",
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `${token}`
+          },
+          body: formData
+        }
+      );
+      if (response.status === 200) {
+        console.log("성공!");
+      } else if (response.status !== 200) {
+          const errorData = await response.json();
+          console.log(errorData);
+      }
+      
+      else if (response.status === 400) {
+        // Handle error
+        alert(`실패`);
+      }
+    } catch (error) {
+      console.error("오류 발생:", error);
+    }
+
+
 }
-};
-    //
-    // useEffect(() => {
-    //     fetch('/data/breadCart.json')
-    //     .then(res => res.json ())
-    //     .then(json => {
-    //     setSelectedBread(json);
-    //     setNumberOfBread(json. length);
-    // });
-    // }, []);
 
 
 
@@ -71,13 +81,13 @@ if (checked) {
     <div className="cart-page">
       <Header />
       <div>
-        {selectedBread. length && ( 
+        {selectedItems. length && ( 
             <div className="Cart">
-    {selectedBread.map(selectedBread =>(
+    {selectedItems.map(selectedBread =>(
         <PurchaseProduct
             selectedBread={selectedBread}
-            key={selectedBread.id}
-            changeSingleBox={changeSingleBox}
+            key={selectedBread.cart_item_id}
+            // changeSingleBox={changeSingleBox}
             data={selectedBread}
             checkList={checkList}
         />
@@ -85,8 +95,19 @@ if (checked) {
         </div>
         )}
         </div>
-       <div>총 가격: 100</div>
-      <EventButton buttonText={"결제"} />
+
+        <div style={{display: 'flex', justifyContent: 'space-between', padding: '20px'}}>
+        <div>
+          <label>구매 상품 개수: </label>
+          <span>{selectedItems.length}</span>
+        </div>
+        <div>
+          <label>결제 총 금액: </label>
+          <span>{totalPrice.toLocaleString()}원</span> 
+        </div>
+      </div>
+
+      <EventButton buttonText={"결제"} onClick={clickPurchase} />
       <BottomNav />
     </div>
   );

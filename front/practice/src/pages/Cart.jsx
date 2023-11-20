@@ -9,6 +9,7 @@ import "../components/CartComponents.css";
 import Modal from 'react-modal';
 
 export default function Cart() {
+
   const email = sessionStorage.getItem('email');
   const token = sessionStorage.getItem('token');
   const [modalIsOpen, setModalIsOpen] = useState(false); //팝업창
@@ -16,12 +17,13 @@ export default function Cart() {
   let navigate = useNavigate();
 
   function purchaseFunc(e) {  //구매하기 기능
-      console.log("구매");
-       navigate("/user/purchase", { state: { selectedBread: selectedBread, checkList: checkList } } );
+      console.log("구매");  
+      const selectedItems = selectedBread.filter(bread => checkList.includes(bread.cart_item_id)); // 선택된 아이템만 필터링
+       navigate("/user/purchase", { state: {selectedItems: selectedItems, checkList: checkList } } );
   }
 
 const [selectedBread, setSelectedBread] = useState ([]); 
-const [checkList, setCheckList] = useState();
+const [checkList, setCheckList] = useState(); // 체크박스 리스트
 const [numberOfBread, setNumberOfBread] = useState(0);
 const [reload, setReload] = useState(false); // 장바구니 페이지 새로고침
 

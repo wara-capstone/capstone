@@ -57,7 +57,7 @@ function quantityMinus () { //수량 감소
 
 async function optionGet() { //옵션 가져오기
     const response = await fetch(
-        'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/user/'+data.product.p_id,
+        'http://3.34.227.3:16000/product/user/'+data.product.p_id,
         {
           method: "GET",
           headers: {    
