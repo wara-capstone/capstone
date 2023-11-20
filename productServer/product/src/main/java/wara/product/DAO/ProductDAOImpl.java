@@ -131,7 +131,7 @@ public class ProductDAOImpl implements ProductDAO{
 
     @Override
     public List<ProductEntity> storeCategoryFilter(Long storeId, String category) {
-        return productRepository.getAllByProductCategoryAndStoreId(storeId, category);
+        return productRepository.getAllByStoreIdAndProductCategory(storeId, category);
     }
 
 
