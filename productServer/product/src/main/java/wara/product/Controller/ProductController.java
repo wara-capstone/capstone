@@ -141,7 +141,7 @@ public class ProductController {
      * @param productId 상품 아이디 기준 검색
      * @return 단일 상품의 정보와 해당 상품의 모든 옵션
      */
-    @GetMapping("/user/{id}")
+    @GetMapping("/all/{id}")
     public ProductDTO singleRead(@PathVariable("id") Long productId)
     {
         return productService.readOne(productId);
@@ -153,7 +153,7 @@ public class ProductController {
      * @param optionId
      * @return 단일 상품, 단일 옵션
      */
-    @GetMapping("/user/{productId}/option/{optionId}")
+    @GetMapping("/all/{productId}/option/{optionId}")
     public ProductDTO readTargetOption(@PathVariable("productId") Long productId, @PathVariable("optionId") Long optionId)
     {
         return productService.readTarget(productId,optionId);
@@ -164,7 +164,7 @@ public class ProductController {
      * @param storeId 상점아이디 기준 모든 상품 검색
      * @return 한 상점의 모든 상품과 옵션
      */
-    @GetMapping("/user/store/{storeId}")
+    @GetMapping("/all/store/{storeId}")
     public List<ProductDTO> multiRead(@PathVariable("storeId") Long storeId){
         return productService.readMany(storeId);
     }
@@ -174,7 +174,7 @@ public class ProductController {
      * @param category 카테고리 기준 모든 상품 검색
      * @return 카테고리와 동잍한 모든 상품 + 옵션
      */
-    @GetMapping("/user/category/{category}")
+    @GetMapping("/all/category/{category}")
     public List<ProductDTO> categoryFilter(@PathVariable("category") String category)
     {
        return productService.categoryFilter(category);
@@ -183,17 +183,13 @@ public class ProductController {
     /**
      * @param storeId
      * @param category
-     * @return 상점아이디&카테고리에 해당하는 모든 상품+ 옵션
+     * @return 상점아이디&카테고리에 해당하는 모든 상품 + 옵션
      */
-    @GetMapping("/user/store/{storeId}/category")
+    @GetMapping("/all/store/{storeId}/category")
     public List<ProductDTO> storeCategoryFilter(@PathVariable("storeId") Long storeId, @RequestParam String category)
     {
         return productService.storeCategoryFilter(storeId,category);
     }
-
-
-
-
 
 
 }
