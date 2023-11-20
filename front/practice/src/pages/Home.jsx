@@ -47,7 +47,11 @@ export default function Home() {
       <div className="ad-image-container">
         <AdComponent images={adImages} />
       </div>
-      <Category categoryUrl="https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/category/" />
+      <Category
+        //현재 메인화면에서 카테고리 선택을 하지 않을 시, store1의 상품을 보여주도록 설정함. 추후 수정 필요.
+        allUrl={`https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/store/1`}
+        categoryUrl="https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/category/"
+      />
       {/* <CardList /> */}
       <BottomNav />
     </div>
