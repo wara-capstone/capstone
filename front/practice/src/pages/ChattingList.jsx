@@ -32,18 +32,24 @@ export default function ChattingList() {
         }
 
         const data = await response.json();
-        const userRoomInfo = data.map((room) => ({
-          email: room.shop_user_email,
-          latestMessage: room.latest_message,
-        }));
+
+        const userRoomInfoPromises = data.map(async (room) => {
+          const image = await fetchImage(room.shop_user_email);
+          return {
+            email: room.shop_user_email,
+            latestMessage: room.latest_message,
+            image: image,
+          };
+        });
+
+        const userRoomInfo = await Promise.all(userRoomInfoPromises);
         setVisitorUserEmails(userRoomInfo);
-        fetchImage(userRoomInfo[1].email);
       } catch (error) {
         console.error("Error getting visitor_user_emails:", error);
       }
     }
     fetchChattingList();
-  }, [userId]);
+  }, []);
 
   const fetchImage = async (email) => {
     const response = await fetch(
@@ -61,6 +67,8 @@ export default function ChattingList() {
       setRoundImage(result.profileImage); // 상태 업데이트
       console.log("성공");
       console.log(result.email);
+      console.log(result.profileImage);
+      return result.profileImage;
     } else {
       console.log("실패");
     }
@@ -91,7 +99,7 @@ export default function ChattingList() {
                 onClick={() => handleConnectChatting(user)}
               >
                 <div className="list-item-content">
-                  <img src={roundImage} alt="User" className="round-image" />
+                  <img src={user.image} alt="User" className="round-image" />
                   <div className="user-details">
                     <h2>{user.email}</h2>
                     <p>최근 메세지: {user.latestMessage}</p>

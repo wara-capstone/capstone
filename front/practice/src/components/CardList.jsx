@@ -39,7 +39,7 @@ function CardList({ category }) {
       }
     };
     fetchData();
-  }, []);
+  }, [category]);
 
   return (
     <div className="card-list">
