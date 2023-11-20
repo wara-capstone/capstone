@@ -9,8 +9,11 @@ export default function SellerChattingManagement() {
   const [customerId, setCustomerId] = useState(null);
 
   const userId = sessionStorage.getItem("email");
-  const roundImage = "https://via.placeholder.com/150x150";
+  const token = sessionStorage.getItem("token"); // 실제 token 값으로 대체
 
+  const [roundImage, setRoundImage] = useState(
+    "https://via.placeholder.com/150x150"
+  );
   const chatMessagesRef = useRef(null); // Ref를 생성
 
   const scrollToBottom = () => {
@@ -135,18 +138,47 @@ export default function SellerChattingManagement() {
         }
 
         const data = await response.json();
-        const userRoomInfo = data.map((room) => ({
-          email: room.visitor_user_email,
-          latestMessage: room.latest_message,
-        }));
+
+        const userRoomInfoPromises = data.map(async (room) => {
+          const image = await fetchImage(room.visitor_user_email);
+          return {
+            email: room.visitor_user_email,
+            latestMessage: room.latest_message,
+            image: image,
+          };
+        });
+
+        const userRoomInfo = await Promise.all(userRoomInfoPromises);
         setVisitorUserEmails(userRoomInfo);
       } catch (error) {
         console.error("Error getting visitor_user_emails:", error);
       }
     }
-
     fetchChattingList();
   }, [userId]);
+
+  const fetchImage = async (email) => {
+    const response = await fetch(
+      `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user?email=${email}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      }
+    );
+    const result = await response.json();
+    if (response.status === 200) {
+      setRoundImage(result.profileImage); // 상태 업데이트
+      console.log("성공");
+      console.log(result.email);
+      console.log(result.profileImage);
+      return result.profileImage;
+    } else {
+      console.log("실패");
+    }
+  };
 
   return (
     <div className="seller-chatting-management">
@@ -161,7 +193,7 @@ export default function SellerChattingManagement() {
                 onClick={() => handleCustomerIdChange(user.email)}
               >
                 <div className="list-item-content">
-                  <img src={roundImage} alt="User" className="round-image" />
+                  <img src={user.image} alt="User" className="round-image" />
                   <div className="user-details">
                     <h2>{user.email}</h2>
                     <p>최근 메세지: {user.latestMessage}</p>

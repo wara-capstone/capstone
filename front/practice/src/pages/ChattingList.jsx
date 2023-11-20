@@ -49,7 +49,7 @@ export default function ChattingList() {
       }
     }
     fetchChattingList();
-  }, []);
+  }, [userId]);
 
   const fetchImage = async (email) => {
     const response = await fetch(
