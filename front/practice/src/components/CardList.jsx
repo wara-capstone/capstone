@@ -38,6 +38,7 @@ function CardList({ category, url }) {
           console.log(data[0].productId);
         }
 
+        console.log(url);
         console.log(data);
         console.log("성공");
       } else {
