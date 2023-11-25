@@ -1,13 +1,14 @@
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Seller.css";
 import SellerHeader from "./SellerHeader.jsx";
-//import SellerItem from "./SellerItem";
+
 import { AgGridReact } from "ag-grid-react"; // the AG Grid React Component
 import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
 import "ag-grid-community/styles/ag-theme-alpine.css"; // Optional theme CSS
-import { getData } from "./data.js";
+import { useParams } from 'react-router-dom';
+import ImageCellRenderer from '../../components/ImageCellRenderer';
+
 import CellRenderer from "./CellRenderer.jsx";
+
 import React, {
   useState,
   useRef,
@@ -15,13 +16,47 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
+import axios from 'axios';
 
 
+// SellerItemManagement 컴포넌트 정의
 export default function SellerItemManagement() {
+  const { storeId } = useParams();
   const gridRef = useRef();
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
   const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
   const [savedRowData, setSavedRowData] = useState([]);
+  const token = sessionStorage.getItem("token");
+  const [productInfo, setProductInfo] = useState({ result: "", data: [] });
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/store/22',
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `${token}`
+            }
+          }
+        );
+        setRowData(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.log("실패");
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, [token]);
+
+
+
+
+
+
   const [columnDefs, setColumnDefs] = useState([
     {
       headerName: "상품사진",
@@ -30,7 +65,7 @@ export default function SellerItemManagement() {
       headerCheckboxSelection: true,
       headerCheckboxSelectionFilteredOnly: true,
       checkboxSelection: true,
-      cellRenderer: 'imageCellRenderer',
+      cellRendererFramework: ImageCellRenderer,
     },
     {
       headerName: "상품명",
@@ -39,25 +74,24 @@ export default function SellerItemManagement() {
       
     },
     { headerName: "상품코드", field: "productId", filter: true },
-    { headerName: "사이즈", field: "options.productSize", filter: true },
+    { headerName: "사이즈", field: "options[0].productSize", filter: true,
+      valueGetter: params => params.data.options[0].productSize },
     {
-      headerName: "입고 수량",
-      field: "incomingQuantity",
+      headerName: "색상",
+      field: "options[0].productColor",
       minWidth: 150,
       filter: true,
+      valueGetter: params => params.data.options[0].productColor 
     },
-    { headerName: "출고 수량", field: "outgoingQuantity", filter: true },
-    { headerName: "입고액(원)", field: "incomingAmount", filter: true },
-    { headerName: "출고액(원)", field: "outgoingAmount", filter: true },
-    { headerName: "메모", field: "note", filter: true },
+    { headerName: "재고 수량", field: "options[0].productStock", filter: true,
+      valueGetter: params => params.data.options[0].productStock },
+    
     {
       headerName: '관리',
-      minWidth: 175, cellRenderer: CellRenderer
+      minWidth: 150, cellRenderer: CellRenderer,
+     
     }
   ]);
-
-  const token = sessionStorage.getItem("token");
-
 
   const [rowData, setRowData] = useState();
 
@@ -74,17 +108,6 @@ export default function SellerItemManagement() {
     };
   }, []);
 
-  const onRowEditingStarted = useCallback((event) => {
-    console.log("never called - not doing row editing");
-  }, []);
-
-  const onRowEditingStopped = useCallback((event) => {
-    console.log("never called - not doing row editing");
-  }, []);
-
-  const onCellEditingStarted = useCallback((event) => {
-    console.log("cellEditingStarted");
-  }, []);
 
   const onCellEditingStopped = useCallback((event) => {
     console.log("cellEditingStopped");
@@ -110,29 +133,6 @@ export default function SellerItemManagement() {
 
 
 
-  const onBtStopEditing = useCallback(() => {
-    gridRef.current.api.stopEditing();
-  }, []);
-
-  const onBtStartEditing = useCallback((key, pinned) => {
-    gridRef.current.api.setFocusedCell(0, "firstName", pinned);
-    gridRef.current.api.startEditingCell({
-      rowIndex: 0,
-      colKey: "firstName",
-      // set to 'top', 'bottom' or undefined
-      rowPinned: pinned,
-      key: key,
-    });
-  }, []);
-
-  const onBtNextCell = useCallback(() => {
-    gridRef.current.api.tabToNextCell();
-  }, []);
-
-  const onBtPreviousCell = useCallback(() => {
-    gridRef.current.api.tabToPreviousCell();
-  }, []);
-
   const onBtSave = useCallback(() => {
   const allRowNodes = gridRef.current.api.getModel().rowsToDisplay;
   const allRowData = allRowNodes.map(node => node.data);
@@ -140,29 +140,7 @@ export default function SellerItemManagement() {
   console.log(allRowData); // 콘솔에 모든 행의 데이터를 출력
   }, []);
 
-  useEffect( () => {
-    const fetchData = async () => {
-    const response = await fetch(
-      'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/store/22',
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `${token}`
-        },
-      }
-    );
-    const result = await response.json();
-    if (response.status === 200) {
-      setRowData(result);
-      console.log(result);
-
-    } else {
-      console.log("실패");
-    }
-  };
-  fetchData();
-  }, []);
+  
 
 
   return (
@@ -191,19 +169,9 @@ export default function SellerItemManagement() {
               삭제
             </button>
             <button onClick={() => setRowData([...rowData, {}])}>추가</button>
-            {/* <button onClick={() => onBtStartEditing("T")}>edit (0, 'T')</button>
-            <button onClick={() => onBtStartEditing(undefined, "top")}>
-              edit (0, Top)
-            </button>
-            <button onClick={() => onBtStartEditing(undefined, "bottom")}>
-              edit (0, Bottom)
-            </button> */}
+            
           </div>
-          <div>
-            {/* <button onClick={onBtStopEditing}>stop ()</button>
-            <button onClick={onBtNextCell}>next ()</button>
-            <button onClick={onBtPreviousCell}>previous ()</button> */}
-          </div>
+          
           <div>
             <button onClick={onBtSave}>저장</button>
           </div>
@@ -218,16 +186,14 @@ export default function SellerItemManagement() {
               defaultColDef={defaultColDef}
               suppressRowClickSelection={true}
               rowSelection={"multiple"}
-              // onRowEditingStarted={onRowEditingStarted}
-              // onRowEditingStopped={onRowEditingStopped}
-              // onCellEditingStarted={onCellEditingStarted}
-              // onCellEditingStopped={onCellEditingStopped}
-              frameworkComponents={{ cellRenderer: CellRenderer }}
+             
+              frameworkComponents={{ 
+                imageCellRenderer: ImageCellRenderer, // 컴포넌트 등록
+                cellRenderer: CellRenderer }}
             />
           </div>
         </div>
-        {/* <div className="item-add-icon"> */}
-          {/* <FontAwesomeIcon icon={faPlus} /> */}
+
         </div>
       </div>
     

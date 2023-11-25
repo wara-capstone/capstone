@@ -18,30 +18,20 @@ const { message, productInfo } = props;
   // 모달 컴포넌트 렌더링
   return (
     // 모달 컨테이너
-    // <div
-    //   style={{
-    //     display: "flex",
-    //     justifyContent: "center",
-    //     alignItems: "center",
-    //     position: "fixed",
-    //     bottom: 130,
-    //     left: 0,
-    //     width: "100%",
-    //     height: 150,
-    //   }}
-    // >
+    <div
+  style={{
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "fixed",
+    bottom: "10%", // 뷰포트의 하단으로부터 10% 떨어진 위치에 모달을 위치시킵니다.
+    left: 0,
+    width: "100%",
+    height: 150,
+  }}
+>
      
-      // <div
-      //   style={{
-      //     width: "100%",
-      //     height: "300%",
-      //     textAlign: "center",
-      //     borderRadius: 20,
-      //     background: "black",
-      //     fontSize: 20,
-      //     color: "white",
-      //   }}
-      // >
+ 
 <div>
 
          <p>{message}</p>
@@ -51,25 +41,23 @@ const { message, productInfo } = props;
         {
   // 필터링된 카드에 대해 링크와 카드 컴포넌트 렌더링
   // CardInBarcodeModal.map((card) => (
-    <Link to={`/item/${productInfo.productId}`} key={productInfo.productId} className="card-link">
+    <div className="card-link" style={{zIndex:100}}>
+    <Link to={`/item/${productInfo.productId}`} key={productInfo.productId} >
       <Card
         key={productInfo.productId}
         title={productInfo.productName}
         subTitle={productInfo.productCategory}
-        content={productInfo.productPrice}
-        content2={productInfo.productStock}
+        content={productInfo.options.productPrice}
+        content2={productInfo.options.productStock}
         mainImage={productInfo.productUrls[0]}
-      />
-   </Link>
-  // ))
-}
-
+        />
+        </Link>
+      </div>
+      // ))
+    }
+  </div>
 </div>
-
-// </div>
-     
-//     </div>
-  );
+);
 }
 
 export default BarcodeModal; // BarcodeModal 컴포넌트 내보내기

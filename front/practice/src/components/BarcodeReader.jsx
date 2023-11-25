@@ -155,6 +155,8 @@ useEffect(() => {
           )}
         </select>
       )}
+
+
       <div
         style={{
           // 비디오 요소 스타일
@@ -163,7 +165,7 @@ useEffect(() => {
           paddingBottom: "100%",
           position: "relative",
           overflow: "hidden",
-          border: "1px solid gray",
+          //border: "1px solid gray",
         }}
       >
         <video // 비디오 요소
@@ -178,6 +180,9 @@ useEffect(() => {
           }}
         ></video>
       </div>
+
+
+      
       <div>
         {isBarcodeDetected && products.length > 0 && (
           <BarcodeModal productInfo={productInfo}></BarcodeModal>
