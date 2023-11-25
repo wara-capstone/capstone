@@ -111,17 +111,27 @@
 }
 
 .store-management-edit-container,
-.store-register-edit-container {
+.store-register-edit-container,
+.store-sales-info-container {
   height: 92vh;
   background-color: #ffffff;
   width: 300px;
 }
 
+.store-sales-info-container {
+  width: 400px;
+}
+
 .store-management-map-container,
-.store-register-map-container {
+.store-register-map-container,
+.store-sales-map-container {
   height: 92vh;
   background-color: #666666;
   width: calc(100% - 450px);
+}
+
+.store-sales-map-container {
+  width: calc(100% - 550px);
 }
 
 .seller-store-management .store-edit-info-container,
