@@ -1,0 +1,6 @@
+version: '3'
+services:
+  web:
+    build: . # 현재 디렉토리에서 Dockerfile을 찾습니다.
+    ports:
+      - "80:80"
