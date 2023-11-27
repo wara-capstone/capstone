@@ -1,10 +1,12 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import { Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import "@toast-ui/editor/dist/i18n/ko-kr";
 import { Editor } from "@toast-ui/react-editor";
 import axios from "axios";
+
+import { UploadOutlined } from '@ant-design/icons';
 
 import "@toast-ui/editor/dist/toastui-editor.css";
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
@@ -12,7 +14,7 @@ import "tui-color-picker/dist/tui-color-picker.css";
 import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { Component } from "react";
+
 import ToastuiEditor, {
   EditorOptions,
   ViewerOptions,
@@ -147,17 +149,14 @@ export default function SellerProductRegistration(props) {
 
   const [itemOptions, setItemOption] = useState();
   const token = sessionStorage.getItem("token");
+  const [productInfo, setProductInfo] = useState({});
+  //  const { productId } = props.location?.state || {};
 
   useEffect(() => {
-    console.log(itemOptions);
-  }, [itemOptions]);
-
-  const [storeInfo, setStoreInfo] = useState({ result: "", data: [] });
-//  const { productId } = props.location?.state || {};
-  useEffect(() => {
-   
     const fetchData = async () => {
-      try { // 단일 상품 조회
+      try {
+        // 단일 상품 조회
+        setLoading(true);
         const response = await axios.get(
           `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/${productId}`,
           {
@@ -168,18 +167,21 @@ export default function SellerProductRegistration(props) {
           }
         );
         console.log("받아온 값!!:" + JSON.stringify(response.data)); // 서버로부터 받아온 데이터를 JSON 문자열로 변환하여 출력
-        if (response.data && Array.isArray(response.data.data)) {
-          setStoreInfo(response.data);
+        console.log(response.status);
+        if (response.status == 200) {
+          setProductInfo(response.data);
         } else {
-          setStoreInfo({ data: [] });
+          setProductInfo({ data: [] });
         }
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
-  
+
     fetchData();
-  }, [productId]);
+  }, []);
 
   const onKeyUp = useCallback(
     (e) => {
@@ -209,7 +211,7 @@ export default function SellerProductRegistration(props) {
     [hashtag, hashArr]
   );
 
-    // 서버로 보낼 변수들 이름 지정
+  // 서버로 보낼 변수들 이름 지정
   const [productName, setProductName] = useState("");
   const [productCategory, setProductCategory] = useState("");
   const [productPrice, setProducPrice] = useState("");
@@ -240,31 +242,31 @@ export default function SellerProductRegistration(props) {
 
   const discountedSalePrice = salePrice - discountPrice;
 
-
-
-  
   const handleSubmitButtonClick = () => {
     // 서버로 데이터 전송하는 로직 작성
     axios // 상품 등록
-      .post(`https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/seller`, {
-        headers: {
-          //"Content-Type" : "multipart/form-data",
-          Authorization: token,
-        },
-        productDTO: {
-          //productId: productId,
-          //storeId: storeId,
-          productName: productName,
-          productCategory: productCategory,
-          //sellerProductCode: sellerProductCode,
-        },
-        optionDTO: {
-          productPrice: productPrice,
-          productSize: productSize,
-          productColor: productColor,
-          productStock: productStock,
-        },
-  })
+      .post(
+        `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/seller`,
+        {
+          headers: {
+            //"Content-Type" : "multipart/form-data",
+            Authorization: token,
+          },
+          productDTO: {
+            //productId: productId,
+            //storeId: storeId,
+            productName: productName,
+            productCategory: productCategory,
+            //sellerProductCode: sellerProductCode,
+          },
+          optionDTO: {
+            productPrice: productPrice,
+            productSize: productSize,
+            productColor: productColor,
+            productStock: productStock,
+          },
+        }
+      )
       .then((response) => {
         console.log(response.data); // 서버 응답 출력
       })
@@ -276,7 +278,7 @@ export default function SellerProductRegistration(props) {
   };
 
   const addOption = () => {
-    setOptions(options.concat([{ items: ["사이즈 (예시: s)"] }]));
+    setOptions(options.concat([]));
   };
 
   const removeOption = (indexToRemove) => {
@@ -290,7 +292,7 @@ export default function SellerProductRegistration(props) {
         <Input style={{ color: "gray" }} />
       </td>
       <td>
-        <Button onClick={() => addFunc(index + 1)}>
+        <Button onClick={() => addFunc(index)}>
           <PlusCircleOutlined />
         </Button>
         <Button type="primary" danger onClick={() => removeFunc(index)}>
@@ -314,7 +316,7 @@ export default function SellerProductRegistration(props) {
       render: (text, { key }) =>
         key === editingKey ? (
           <Input
-            value={productName}
+            defaultValue={productName}
             onChange={(e) => setProductName(e.target.value)}
           />
         ) : (
@@ -387,13 +389,34 @@ export default function SellerProductRegistration(props) {
     "background",
   ];
 
+  let plusOption = ()=>{
+    return <div>
+        <Input
+          placeholder="가격"
+            style={{ color: "gray" }}
+          />
+          <Input
+          placeholder="사이즈"
+            style={{ color: "gray" }}
+          />
+          <Input
+          placeholder="색상"
+            style={{ color: "gray" }}
+          />
+          <Input
+          placeholder="수량"
+            style={{ color: "gray" }}
+          />
+    </div>
+  }
+
   const [quillValue, setQuillValue] = useState("");
 
   const handleQuillChange = (content, delta, source, editor) => {
     setQuillValue(editor.getContents());
   };
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [imageUrl, setImageUrl] = useState();
 
   const handleChange = (info) => {
@@ -416,48 +439,25 @@ export default function SellerProductRegistration(props) {
     </div>
   );
 
-  const [productInfo, setProductInfo] = useState({ result: "", data: [] });
-
   const [price, setPrice] = useState({ buy: "", sell: "", discount: "" });
-  useEffect(() => {
-    const fetchData = async (productId, optionId) => {
-      const result = await axios(
-        `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app//product/seller`, // 이 부분은 실제 서버 주소와 API 경로로 변경해야 합니다.
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-        }
-      );
-      console.log("받아온 값:" + JSON.stringify(result.data)); // 서버로부터 받아온 데이터를 JSON 문자열로 변환하여 출력
-      if (result.data && Array.isArray(result.data.data)) {
-        setProductInfo(result.data);
-      } else {
-        setProductInfo({ data: [] });
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  return (
-    <div className="seller-product-registration">
-      <SellerHeader />
-      <h1>상품 등록</h1>
-      <div className="outer-div">
-        <div className="inner-div"></div>
-
-        <Form>
-          {/* DropZone */}
-          <br />
-          <br />
-          <div className="abc">
-            <Typography.Title level={4}>표시여부</Typography.Title>
-            <hr />
-            <div>
-              {/* <table>
+  if (loading) {
+    return <h1>로딩중</h1>;
+  } else {
+    return (
+      <div className="seller-product-registration">
+        <SellerHeader />
+        <h1>상품 등록</h1>
+        <div className="outer-div">
+          <div className="inner-div"></div>
+          <Form>
+            {/* DropZone */}
+            <br />
+            <br />
+            <div className="abc">
+              <Typography.Title level={4}>표시여부</Typography.Title>
+              <hr />
+              <div>
+                {/* <table>
                 <tr>
                   <td>진열상태<br/>
                       품질처리<br/>
@@ -465,346 +465,259 @@ export default function SellerProductRegistration(props) {
                     </td>
                 </tr>
               </table> */}
-              <label>진열상태&nbsp;</label>
-              <Radio>진열</Radio>
-              <Radio>미진열</Radio>
+                <label>진열상태&nbsp;</label>
+                <Radio>진열</Radio>
+                <Radio>미진열</Radio>
+                <br />
+                <label>품절처리&nbsp;</label>
+                <Checkbox>품절</Checkbox>
+                <dd>
+                  강제 품질을 체크하면 해당 상품은 고객에게 [품절]로 노출되며,
+                  구매가 불가능해집니다.
+                </dd>
+              </div>
               <br />
-              <label>품절처리&nbsp;</label>
-              <Checkbox>품절</Checkbox>
-              <dd>
-                강제 품질을 체크하면 해당 상품은 고객에게 [품절]로 노출되며,
-                구매가 불가능해집니다.
-              </dd>
             </div>
             <br />
-          </div>
-          {/* <div className="category">
-            <Typography.Title level={5}>
-              카테고리(한 개만 지정 가능)
-            </Typography.Title>{" "}
-            <hr />
-            <label>선택&nbsp;</label>
-            <Space wrap>
-              <Select
-                defaultValue={mainCategory}
-                style={{ width: 120 }}
-                onChange={handleMainCategoryChange}
-                options={Object.keys(smallCategory).map((category) => ({
-                  label: category,
-                  value: category,
-                }))}
-              />
-              <Select
-                style={{ width: 120 }}
-                value={secondCategory}
-                onChange={onSecondCategoryChange}
-                options={smallCategory[mainCategory].map((category) => ({
-                  label: category,
-                  value: category,
-                }))}
-              />
-            </Space>
-            <br /> <br />
-          </div>
-              <br />*/}
-          <br /> 
-          <div className="productInfo">
-            <Typography.Title level={4}>기본정보</Typography.Title>
-            <hr />
-            <table>
-              <tr>
-                <td>상품명&nbsp;</td>
-                <Input
-                  count={{
-                    show: true,
-                    max: 100,
-                  }}
-                />
-              </tr>
-              <br />
-              <tr>
-                <td>상품번호&nbsp;</td>
-                <td>자동입력됩니다.</td>
-              </tr>
-              <br />
-              <tr>
-              <td>선택&nbsp;</td>
-            <Space wrap>
-              <Select
-                defaultValue={mainCategory}
-                style={{ width: 120 }}
-                onChange={handleMainCategoryChange}
-                options={Object.keys(smallCategory).map((category) => ({
-                  label: category,
-                  value: category,
-                }))}
-              />
-              <Select
-                style={{ width: 120 }}
-                value={secondCategory}
-                onChange={onSecondCategoryChange}
-                options={smallCategory[mainCategory].map((category) => ({
-                  label: category,
-                  value: category,
-                }))}
-              />
-            </Space>
-            </tr>
-            <br />
-              <tr>
-                <td>수량</td>
-                <td>
+            <div className="productInfo">
+              <Typography.Title level={4}>기본정보</Typography.Title>
+              <hr />
+              <table>
+                <tr>
+                  <td>상품명&nbsp;</td>
                   <Input
+                    value={productInfo.productName}
                     count={{
                       show: true,
+                      max: 100,
                     }}
                   />
-                </td>
-              </tr>
-              
-              <tr>
-                <td>해시태그</td>
-                <td>
-                  <div className="HashWrap">
-                    <div className="HashWrapOuter">
-                      {hashArr.map((hashtag, index) => (
-                        <div key={index} className="HashWrapInner">
-                          #{hashtag}
-                        </div>
-                      ))}
-                    </div>
-                    <input
-                      className="HashInput"
-                      type="text"
-                      value={hashtag}
-                      //onChange={onChangeHashtag}
-                      onKeyUp={onKeyUp}
-                      placeholder="해시태그 입력"
+                </tr>
+                <br />
+                <tr>
+                  <td>상품번호&nbsp;</td>
+                  <td>자동입력됩니다.</td>
+                </tr>
+                <br />
+                <tr>
+                  <td>카테고리&nbsp;</td>
+                  <Space wrap>
+                    <Select
+                      defaultValue={mainCategory}
+                      style={{ width: 120 }}
+                      onChange={handleMainCategoryChange}
+                      options={Object.keys(smallCategory).map((category) => ({
+                        label: category,
+                        value: category,
+                      }))}
                     />
-                  </div>
-                </td>
-              </tr>
-
-              <br />
-            </table>
-          </div>
-          <br />
-          <br />
-          <div className="price">
-            <Typography.Title level={4}>가격설정</Typography.Title>
-            <hr />
-            <table>
-              <tr>
-                <td>매입가</td>
-                <td>
-                  <Space.Compact style={{ width: "200px" }}>
-                    <Input defaultValue="" />
-                    <Button
-                      type="primary"
-                      style={{ backgroundColor: "#cccccc", color: "black" }}
-                    >
-                      원
-                    </Button>
-                  </Space.Compact>
-                </td>
-              </tr>
-              <br />
-              <tr>
-                <td>판매가</td>
-                <td>
-                  <Space style={{ width: "200px" }}>
-                    <Input defaultValue="" onChange={handleSalePriceChange} />
-                    <Button
-                      style={{ backgroundColor: "#cccccc", color: "black" }}
-                    >
-                      원
-                    </Button>
+                    <Select
+                      style={{ width: 120 }}
+                      value={secondCategory}
+                      onChange={onSecondCategoryChange}
+                      options={smallCategory[mainCategory].map((category) => ({
+                        label: category,
+                        value: category,
+                      }))}
+                    />
                   </Space>
-                </td>
-              </tr>
-              <br />
-              <tr>
-                <td>할인</td>
-                <td>
-                  <Radio.Group onChange={handleDiscountChange} value={discount}>
-                    <Radio value="discount">설정</Radio>
-                    <Radio value="noDiscount">설정안함</Radio>
-                  </Radio.Group>
+                </tr>
+                <br />
+                <tr>
+                  <td>수량</td>
+                  <td>
+                    <Input
+                      value={productInfo.options[0].productStock}
+                      count={{
+                        show: true,
+                      }}
+                    />
+                  </td>
+                </tr>
 
-                  {discount === "discount" && (
-                    <div>
-                      <Space.Compact style={{ width: "200px" }}>
-                        <Input
-                          defaultValue=""
-                          onChange={handleDiscountPriceChange}
-                        />
-                        <Button
-                          style={{ backgroundColor: "#cccccc", color: "black" }}
-                        >
-                          원
-                        </Button>
-                      </Space.Compact>
-                    </div>
-                  )}
-                </td>
-              </tr>
-              <br />
-              <tr>
-                <td>할인 판매가</td>
-                <td>{discountedSalePrice} 원</td>
-              </tr>
-              <br />
-            </table>
-          </div>
-          <br />
-          <br />
-          <div className="option">
-            <Typography.Title level={4}>옵션 설정</Typography.Title>
-            <hr />
-
-            <div id="option-table">
-              <table>
-                {options.map((option, index) => (
-                  <React.Fragment key={index}>
-                    <tr>
-                      <div className="option-small-box">
-                        <table>
-                          <td rowSpan={4}>옵션{index + 1}</td>
-                          <Input
-                            style={{ color: "gray" }}
-                            defaultValue="색상명"
-                          />
-                          {option.items.map((item, itemIndex) => (
-                            <tr key={itemIndex}>
-                              <td>
-                                <Input
-                                  style={{ color: "gray" }}
-                                  defaultValue={item}
-                                />
-                                <td>
-                                <Input
-                                  style={{ color: "gray" }}
-                                  defaultValue="수량"
-                                />
-                              </td>
-                              </td>  
-                            </tr>
-                            
-                          ))}
-                          <Button onClick={addOption}>
-                            <PlusCircleOutlined />
-                          </Button>
-                          <Button
-                            type="primary"
-                            danger
-                            onClick={() => removeOption(index)}
-                          >
-                            <DeleteOutlined />
-                          </Button>
-                        </table>
+                <tr>
+                  <td>해시태그</td>
+                  <td>
+                    <div className="HashWrap">
+                      <div className="HashWrapOuter">
+                        {hashArr.map((hashtag, index) => (
+                          <div key={index} className="HashWrapInner">
+                            #{hashtag}
+                          </div>
+                        ))}
                       </div>
-                    </tr>
-                  </React.Fragment>
-                ))}
+                      <input
+                        className="HashInput"
+                        type="text"
+                        defaultValue={hashtag}
+                        //onChange={onChangeHashtag}
+                        onKeyUp={onKeyUp}
+                        placeholder="해시태그 입력"
+                      />
+                    </div>
+                  </td>
+                </tr>
+
+                <br />
               </table>
             </div>
-          </div>
-
-          <div className="abc">
-            <Typography.Title level={4}>옵션 목록</Typography.Title>
-            <hr />
-            <Table columns={columns} rowSelection={{}} dataSource={tableData} />
-
             <br />
-          </div>
+            <br />
+            <div className="price">
+              <Typography.Title level={4}>옵션 설정</Typography.Title>
+              <hr />
+              <div id="option-table">
+                <table>
+                  {options.map((option, index) => (
+                    <React.Fragment key={index}>
+                      <tr>
+                        <div className="option-small-box">
+                          <table>
+                            {productInfo.options.map(option => (
+                              <div>
+                                <td rowSpan={4}>옵션{++index}</td>
+                                <Input
+                            placeholder="가격"
+                              style={{ color: "gray" }}
+                              defaultValue={option.productPrice}
+                            />
+                            <Input
+                            placeholder="사이즈"
+                              style={{ color: "gray" }}
+                              defaultValue={option.productSize}
+                            />
+                            <Input
+                            placeholder="색상"
+                              style={{ color: "gray" }}
+                              defaultValue={option.productColor}
+                            />
+                            <Input
+                            placeholder="수량"
+                              style={{ color: "gray" }}
+                              defaultValue={option.productStock}
+                            />
+                              </div>
+                            ))}
+                            <Button onClick={plusOption}>
+                              <PlusCircleOutlined />
+                            </Button>
+                            <Button
+                              type="primary"
+                              danger
+                              onClick={() => removeOption(index)}
+                            >
+                              <DeleteOutlined />
+                            </Button>
+                          </table>
+                        </div>
+                      </tr>
+                    </React.Fragment>
+                  ))}
+                </table>
+              </div>
+            </div>
 
-          <div className="abc">
-            <Typography.Title level={4}>상품 이미지</Typography.Title>
-            <hr />
+            <div className="abc">
+              <Typography.Title level={4}>옵션 목록</Typography.Title>
+              <hr />
+              <Table
+                columns={columns}
+                rowSelection={{}}
+                dataSource={tableData}
+              />
 
-            <>
+              <br />
+            </div>
+
+            <div className="abc">
+              <Typography.Title level={4}>상품 이미지</Typography.Title>
+              <hr />
+
               <Upload
-                name="avatar" //서버로 보낼 필드 이름
-                listType="picture-card"
-                className="avatar-uploader"
-                showUploadList={false}
-                action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188" //이미지를 처리할 수 있는 서버 url
-                beforeUpload={beforeUpload}
-                onChange={handleChange}
-                multiple={true}
+                action=""
+                listType="picture"
+                defaultFileList={[[]]}
               >
-                {imageUrl ? (
-                  <img src={imageUrl} alt="avatar" style={{ width: "100%" }} />
-                ) : (
-                  uploadButton
-                )}
+                 <Button icon={<UploadOutlined />}>Upload</Button>
               </Upload>
-            </>
-            <br />
-          </div>
+              { /*
+              <br />
+              <br />
+              <Upload
+                action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+                listType="picture"
+                defaultFileList={[]}
+                className="upload-list-inline"
+              >
+                <Button icon={<UploadOutlined />}>Upload</Button>
+              </Upload> */}
 
-          <div className="abc">
-            <Typography.Title level={4}>에디터</Typography.Title>
-            <hr />
-            <Editor
-              //initialValue="hello react editor world!"
-              previewStyle="vertical"
-              height="600px"
-              initialEditType="wysiwyg"
-              useCommandShortcut={false}
-              hideModeSwitch={true}
-              plugins={[colorSyntax]}
-              language="ko-KR"
-              // hooks={{
-              //   addImageBlobHook: async (blob, callback) => {
-              //     try {
-              //       const imageData = new FormData();
+              <br />
+            </div>
 
-              //       // OptionDTO 추가
-              //       imageData.append("OptionDTO", optionValue); // optionValue는 실제 OptionDTO의 값입니다.
+            <div className="abc">
+              <Typography.Title level={4}>에디터</Typography.Title>
+              <hr />
+              <Editor
+                //initialValue="hello react editor world!"
+                previewStyle="vertical"
+                height="600px"
+                initialEditType="wysiwyg"
+                useCommandShortcut={false}
+                hideModeSwitch={true}
+                plugins={[colorSyntax]}
+                language="ko-KR"
+                // hooks={{
+                //   addImageBlobHook: async (blob, callback) => {
+                //     try {
+                //       const imageData = new FormData();
 
-              //       // ProductDTO 추가
-              //       imageData.append("ProductDTO", productValue); // productValue는 실제 ProductDTO의 값입니다.
+                //       // OptionDTO 추가
+                //       imageData.append("OptionDTO", optionValue); // optionValue는 실제 OptionDTO의 값입니다.
 
-              //       // 이미지 추가 (Images 키로 여러 이미지 추가)
-              //       for (let i = 0; i < blobs.length; i++) {
-              //         const blob = blobs[i]; // blobs는 실제 이미지 blob들의 배열입니다.
-              //         const file = new File([blob], encodeURI(blob.name), {
-              //           type: blob.type,
-              //         });
-              //         imageData.append("Images", file);
-              //       }
+                //       // ProductDTO 추가
+                //       imageData.append("ProductDTO", productValue); // productValue는 실제 ProductDTO의 값입니다.
 
-              //       // 서버에 전송
-              //       const imageURI = await axios({
-              //         method: "POST",
-              //         headers: {
-              //           "Content-Type": "multipart/form-data",
-              //         },
-              //         url: `${"https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app"}/product/seller`,
-              //         data: imageData,
-              //         withCredentials: true,
-              //       });
-              //     } catch (error) {
-              //       console.log(error);
-              //     }
-              //   },
-              // }}
-            />
+                //       // 이미지 추가 (Images 키로 여러 이미지 추가)
+                //       for (let i = 0; i < blobs.length; i++) {
+                //         const blob = blobs[i]; // blobs는 실제 이미지 blob들의 배열입니다.
+                //         const file = new File([blob], encodeURI(blob.name), {
+                //           type: blob.type,
+                //         });
+                //         imageData.append("Images", file);
+                //       }
 
-            <br />
-          </div>
+                //       // 서버에 전송
+                //       const imageURI = await axios({
+                //         method: "POST",
+                //         headers: {
+                //           "Content-Type": "multipart/form-data",
+                //         },
+                //         url: `${"https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app"}/product/seller`,
+                //         data: imageData,
+                //         withCredentials: true,
+                //       });
+                //     } catch (error) {
+                //       console.log(error);
+                //     }
+                //   },
+                // }}
+              />
 
-          <div className="abc">
-            <Typography.Title level={4}>상품 정보 제공 공시</Typography.Title>
-            <hr />
+              <br />
+            </div>
 
-            <br />
-          </div>
+            <div className="abc">
+              <Typography.Title level={4}>상품 정보 제공 공시</Typography.Title>
+              <hr />
 
-          <Button onClick={handleSubmitButtonClick}>확인</Button>
-        </Form>
+              <br />
+            </div>
+
+            <Button onClick={handleSubmitButtonClick}>확인</Button>
+          </Form>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
