@@ -119,7 +119,7 @@
 }
 
 .store-sales-info-container {
-  width: 400px;
+  width: 550px;
 }
 
 .store-management-map-container,
@@ -131,7 +131,7 @@
 }
 
 .store-sales-map-container {
-  width: calc(100% - 550px);
+  width: calc(100% - 700px);
 }
 
 .seller-store-management .store-edit-info-container,

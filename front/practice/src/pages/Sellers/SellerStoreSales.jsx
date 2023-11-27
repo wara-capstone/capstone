@@ -157,8 +157,10 @@ export default function SellerStoreSales({ store }) {
         }
 
         const data = await response.json();
-        alert("성공!");
-        console.log(data.result);
+        if (data.message != null && storeId != 0) {
+          alert(data.message);
+        }
+        console.log(data);
 
         if (data.data !== null) {
           console.log(storeId);
@@ -179,15 +181,69 @@ export default function SellerStoreSales({ store }) {
       <div className="store-sales-container">
         <SellerSideNav />
         <div className="store-sales-info-container">
-          <table>
+          <table style={{ borderCollapse: "collapse", width: "100%" }}>
             <thead>
               <tr>
-                <th>결제ID</th>
-                <th>상품ID</th>
-                <th>OptionID</th>
-                <th>가격</th>
-                <th>수량</th>
-                <th>결제시간</th>
+                <th
+                  style={{
+                    padding: "8px",
+                    textAlign: "left",
+                    borderBottom: "1px solid #ddd",
+                    fontSize: "1.2rem",
+                  }}
+                >
+                  결제ID
+                </th>
+                <th
+                  style={{
+                    padding: "8px",
+                    textAlign: "left",
+                    borderBottom: "1px solid #ddd",
+                    fontSize: "1.2rem",
+                  }}
+                >
+                  상품ID
+                </th>
+                <th
+                  style={{
+                    padding: "8px",
+                    textAlign: "left",
+                    borderBottom: "1px solid #ddd",
+                    fontSize: "1.2rem",
+                  }}
+                >
+                  옵션ID
+                </th>
+                <th
+                  style={{
+                    padding: "8px",
+                    textAlign: "left",
+                    borderBottom: "1px solid #ddd",
+                    fontSize: "1.2rem",
+                  }}
+                >
+                  가격
+                </th>
+                <th
+                  style={{
+                    padding: "8px",
+                    textAlign: "left",
+                    borderBottom: "1px solid #ddd",
+                    fontSize: "1.2rem",
+                  }}
+                >
+                  수량
+                </th>
+                <th
+                  style={{
+                    padding: "8px",
+                    textAlign: "left",
+                    borderBottom: "1px solid #ddd",
+                    fontSize: "1.2rem",
+                  }}
+                >
+                  결제시간
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -195,12 +251,60 @@ export default function SellerStoreSales({ store }) {
                 if (payment === null) return null;
                 return (
                   <tr key={payment.paymentId}>
-                    <td>{payment.paymentId}</td>
-                    <td>{payment.productId}</td>
-                    <td>{payment.optionId}</td>
-                    <td>{payment.price}</td>
-                    <td>{payment.quantity}</td>
-                    <td>{payment.dateTime}</td>
+                    <td
+                      style={{
+                        padding: "8px",
+                        textAlign: "left",
+                        borderBottom: "1px solid #ddd",
+                      }}
+                    >
+                      {payment.paymentId}
+                    </td>
+                    <td
+                      style={{
+                        padding: "8px",
+                        textAlign: "left",
+                        borderBottom: "1px solid #ddd",
+                      }}
+                    >
+                      {payment.productId}
+                    </td>
+                    <td
+                      style={{
+                        padding: "8px",
+                        textAlign: "left",
+                        borderBottom: "1px solid #ddd",
+                      }}
+                    >
+                      {payment.optionId}
+                    </td>
+                    <td
+                      style={{
+                        padding: "8px",
+                        textAlign: "left",
+                        borderBottom: "1px solid #ddd",
+                      }}
+                    >
+                      {payment.price}
+                    </td>
+                    <td
+                      style={{
+                        padding: "8px",
+                        textAlign: "left",
+                        borderBottom: "1px solid #ddd",
+                      }}
+                    >
+                      {payment.quantity}
+                    </td>
+                    <td
+                      style={{
+                        padding: "8px",
+                        textAlign: "left",
+                        borderBottom: "1px solid #ddd",
+                      }}
+                    >
+                      {payment.dateTime}
+                    </td>
                   </tr>
                 );
               })}
