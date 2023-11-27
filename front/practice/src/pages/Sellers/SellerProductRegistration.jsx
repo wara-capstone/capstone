@@ -563,6 +563,7 @@ export default function SellerProductRegistration(props) {
             </div>
             <br />
             <br />
+
             <div className="price">
               <Typography.Title level={4}>옵션 설정</Typography.Title>
               <hr />
@@ -596,8 +597,6 @@ export default function SellerProductRegistration(props) {
                               style={{ color: "gray" }}
                               defaultValue={option.productStock}
                             />
-                              </div>
-                            ))}
                             <Button onClick={plusOption}>
                               <PlusCircleOutlined />
                             </Button>
@@ -608,6 +607,9 @@ export default function SellerProductRegistration(props) {
                             >
                               <DeleteOutlined />
                             </Button>
+                              </div>
+                            ))}
+                            
                           </table>
                         </div>
                       </tr>
