@@ -1,6 +1,9 @@
+# docker-compose.yml
 version: '3'
 services:
   web:
-    build: . # 현재 디렉토리에서 Dockerfile을 찾습니다.
+    build:
+      context: .
     ports:
       - "80:80"
+    restart: always
