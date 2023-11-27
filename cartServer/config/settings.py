@@ -30,7 +30,7 @@ CSRF_TRUSTED_ORIGINS = ['http://3.34.227.3:16000','https://port-0-gateway-12fhqa
 
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3000",
+    "http://127.0.0.1:3000", "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app"
 ]
 # Application definition
 

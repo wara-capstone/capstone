@@ -83,7 +83,7 @@ ASGI_APPLICATION = 'config.asgi.application'
 
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5501","http://127.0.0.1:3000",
+    "http://127.0.0.1:5501","http://127.0.0.1:3000", "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app"
 ]
 
 EUREKA_SERVER_URL = "https://port-0-capstone-jvpb2mlodwuvxm.sel5.cloudtype.app/ "
