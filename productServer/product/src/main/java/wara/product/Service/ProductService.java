@@ -145,8 +145,9 @@ public class ProductService {
         return productDAO.stockModify(optionId,stockModify);
     }
 
-
-
-
+    public Long optionSpcify(Long productId,String color, String size)
+    {
+        return productDAO.optionSpecify(productId,color,size);
+    }
 
 }

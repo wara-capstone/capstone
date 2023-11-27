@@ -131,7 +131,8 @@ public class ProductDAOImpl implements ProductDAO{
 
     @Override
     public List<ProductEntity> storeCategoryFilter(Long storeId, String category) {
-        return productRepository.getAllByStoreIdAndProductCategory(storeId, category);
+//        return productRepository.getAllByStoreIdAndProductCategory(storeId, category);
+        return productRepository.findByStoreIdAndAndProductCategory(storeId, category);
     }
 
 
@@ -143,5 +144,13 @@ public class ProductDAOImpl implements ProductDAO{
         optionRepository.save(oldEntity);
         return HttpStatus.OK.toString();
     }
+
+    @Override
+    public Long optionSpecify(Long productId, String color, String size) {
+        ProductEntity product = productRepository.getByProductId(productId);
+        OptionEntity option = optionRepository.getByProductAndProductColorAndProductSize(product,color,size);
+        return option.getOptionId();
+    }
+
 
 }

@@ -186,9 +186,21 @@ public class ProductController {
      * @return 상점아이디&카테고리에 해당하는 모든 상품 + 옵션
      */
     @GetMapping("/all/store/{storeId}/category")
-    public List<ProductDTO> storeCategoryFilter(@PathVariable("storeId") Long storeId, @RequestParam String category)
+    public List<ProductDTO> storeCategoryFilter(
+            @PathVariable("storeId") Long storeId,
+            @RequestParam String category)
     {
         return productService.storeCategoryFilter(storeId,category);
+    }
+
+
+
+    @GetMapping("/all/product/{productId}/{color}/{size}")
+    public Long targetOptionSpecify(@PathVariable Long productId,
+                                    @PathVariable String color,
+                                    @PathVariable String size)
+    {
+        return productService.optionSpcify(productId, color,size);
     }
 
 
