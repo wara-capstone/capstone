@@ -22,6 +22,7 @@ import axios from 'axios';
 // SellerItemManagement 컴포넌트 정의
 export default function SellerItemManagement() {
   const { storeId } = useParams();
+  
   const gridRef = useRef();
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
   const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
@@ -65,7 +66,7 @@ export default function SellerItemManagement() {
       headerCheckboxSelection: true,
       headerCheckboxSelectionFilteredOnly: true,
       checkboxSelection: true,
-      cellRendererFramework: ImageCellRenderer,
+      cellRenderer: ImageCellRenderer,
     },
     {
       headerName: "상품명",
@@ -88,8 +89,14 @@ export default function SellerItemManagement() {
     
     {
       headerName: '관리',
-      minWidth: 150, cellRenderer: CellRenderer,
-     
+      minWidth: 150, cellRenderer: 
+      
+      (params) => {
+        //const { storeId } = this.props; // storeId를 적절한 방법으로 가져옴
+          const productId = params.data.productId; // productId를 params에서 추출
+
+        return <CellRenderer storeId={storeId} productId={productId} {...params} />;
+      },
     }
   ]);
 

@@ -1,8 +1,31 @@
 import React, { useState, useCallback, useEffect } from "react";
+import { useParams } from 'react-router-dom';
 import { Table } from "antd";
 import { ColumnsType } from "antd/es/table";
+import "@toast-ui/editor/dist/i18n/ko-kr";
+import { Editor } from "@toast-ui/react-editor";
+import axios from "axios";
 
-import { PlusCircleOutlined,DeleteOutlined, PlusOutlined, LoadingOutlined} from "@ant-design/icons";
+import "@toast-ui/editor/dist/toastui-editor.css";
+import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
+import "tui-color-picker/dist/tui-color-picker.css";
+import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import { Component } from "react";
+import ToastuiEditor, {
+  EditorOptions,
+  ViewerOptions,
+  EventMap,
+} from "@toast-ui/editor";
+import ToastuiEditorViewer from "@toast-ui/editor/dist/toastui-editor-viewer";
+
+import {
+  PlusCircleOutlined,
+  DeleteOutlined,
+  PlusOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
 import SellerHeader from "./SellerHeader";
 import {
   Typography,
@@ -14,7 +37,7 @@ import {
   Select,
   Space,
   message,
-  Upload
+  Upload,
 } from "antd";
 import "./Seller.css";
 const { TextArea } = Input;
@@ -86,24 +109,24 @@ const initialData = [
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result));
+  reader.addEventListener("load", () => callback(reader.result));
   reader.readAsDataURL(img);
 };
 
 const beforeUpload = (file) => {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
   if (!isJpgOrPng) {
-    message.error('You can only upload JPG/PNG file!');
+    message.error("You can only upload JPG/PNG file!");
   }
   const isLt2M = file.size / 1024 / 1024 < 2;
   if (!isLt2M) {
-    message.error('Image must smaller than 2MB!');
+    message.error("Image must smaller than 2MB!");
   }
   return isJpgOrPng && isLt2M;
 };
 
-
-export default function SellerProductRegistration() {
+export default function SellerProductRegistration(props) {
+  const { storeId, productId } = useParams();
   const [tableData, setTableData] = useState(initialData);
   const [mainCategory, setMainCategory] = React.useState("상의");
   const [secondCategory, setSecondCategory] =
@@ -129,28 +152,34 @@ export default function SellerProductRegistration() {
     console.log(itemOptions);
   }, [itemOptions]);
 
+  const [storeInfo, setStoreInfo] = useState({ result: "", data: [] });
+//  const { productId } = props.location?.state || {};
   useEffect(() => {
+   
     const fetchData = async () => {
-      const response = await fetch(
-        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/19",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
+      try { // 단일 상품 조회
+        const response = await axios.get(
+          `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/${productId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
+          }
+        );
+        console.log("받아온 값!!:" + JSON.stringify(response.data)); // 서버로부터 받아온 데이터를 JSON 문자열로 변환하여 출력
+        if (response.data && Array.isArray(response.data.data)) {
+          setStoreInfo(response.data);
+        } else {
+          setStoreInfo({ data: [] });
         }
-      );
-      const result = await response.json();
-      if (response.status === 200) {
-        console.log(result);
-        setItemOption(result);
-      } else {
-        console.log("실패");
+      } catch (error) {
+        console.error(error);
       }
     };
+  
     fetchData();
-  }, []);
+  }, [productId]);
 
   const onKeyUp = useCallback(
     (e) => {
@@ -180,6 +209,14 @@ export default function SellerProductRegistration() {
     [hashtag, hashArr]
   );
 
+    // 서버로 보낼 변수들 이름 지정
+  const [productName, setProductName] = useState("");
+  const [productCategory, setProductCategory] = useState("");
+  const [productPrice, setProducPrice] = useState("");
+  const [productSize, setProductSize] = useState("");
+  const [productStock, setProductStock] = useState("");
+  const [productColor, setProducColor] = useState("");
+
   const [salePrice, setSalePrice] = useState(0);
   const [discountPrice, setDiscountPrice] = useState(0);
   const [discount, setDiscount] = useState("noDiscount");
@@ -187,11 +224,8 @@ export default function SellerProductRegistration() {
   const [rows2, setRows2] = useState([]); // 옵션2에 대한 상태
 
   const [editingKey, setEditingKey] = useState(null);
-  const [nameInput, setNameInput] = useState("");
 
-  const [options, setOptions] = useState([
-    { items: ["옵션 항목 (예시: s)"] },
-  ]);
+  const [options, setOptions] = useState([{ items: ["사이즈 (예시: s)"] }]);
   const handleSalePriceChange = (e) => {
     setSalePrice(e.target.value);
   };
@@ -206,49 +240,54 @@ export default function SellerProductRegistration() {
 
   const discountedSalePrice = salePrice - discountPrice;
 
-  const handleButtonClick = () => {
+
+
+  
+  const handleSubmitButtonClick = () => {
+    // 서버로 데이터 전송하는 로직 작성
+    axios // 상품 등록
+      .post(`https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/seller`, {
+        headers: {
+          //"Content-Type" : "multipart/form-data",
+          Authorization: token,
+        },
+        productDTO: {
+          //productId: productId,
+          //storeId: storeId,
+          productName: productName,
+          productCategory: productCategory,
+          //sellerProductCode: sellerProductCode,
+        },
+        optionDTO: {
+          productPrice: productPrice,
+          productSize: productSize,
+          productColor: productColor,
+          productStock: productStock,
+        },
+  })
+      .then((response) => {
+        console.log(response.data); // 서버 응답 출력
+      })
+      .catch((error) => {
+        console.error(error); // 오류 처리
+      });
+
     message.success("저장되었습니다");
   };
 
   const addOption = () => {
-    setOptions(options.concat([{ items: ["옵션 항목 (예시: s)"] }]));
+    setOptions(options.concat([{ items: ["사이즈 (예시: s)"] }]));
   };
 
   const removeOption = (indexToRemove) => {
     setOptions(options.filter((_, index) => index !== indexToRemove));
   };
 
-  // 옵션1에 대한 행 추가
-  const addRow = (index) => {
-    const newRow = createRow(index, addRow, removeRow);
-    setRows((prevRows) => insertRow(prevRows, index, newRow));
-  };
-
-  // 옵션2에 대한 행 추가
-  const addRow2 = (index) => {
-    const newRow = createRow(index, addRow2, removeRow2);
-    setRows2((prevRows) => insertRow(prevRows, index, newRow));
-  };
-
-  // 옵션1에 대한 행 삭제
-  const removeRow = (index) => {
-    setRows((prevRows) =>
-      prevRows.filter((row, rowIndex) => rowIndex !== index)
-    );
-  };
-
-  // 옵션2에 대한 행 삭제
-  const removeRow2 = (index) => {
-    setRows2((prevRows) =>
-      prevRows.filter((row, rowIndex) => rowIndex !== index)
-    );
-  };
-
   // 행을 생성하는 함수
   const createRow = (index, addFunc, removeFunc) => (
     <tr key={index}>
       <td>
-        <Input style={{ color: "gray" }}  />
+        <Input style={{ color: "gray" }} />
       </td>
       <td>
         <Button onClick={() => addFunc(index + 1)}>
@@ -275,22 +314,23 @@ export default function SellerProductRegistration() {
       render: (text, { key }) =>
         key === editingKey ? (
           <Input
-            value={nameInput}
-            onChange={(e) => setNameInput(e.target.value)}
+            value={productName}
+            onChange={(e) => setProductName(e.target.value)}
           />
         ) : (
           <Button
             onClick={() => {
               setEditingKey(key);
-              setNameInput(text);
+              setProductName(text);
             }}
           >
             {text}
           </Button>
         ),
     },
-    { title: "가격", dataIndex: "age" },
-    { title: "사이즈", dataIndex: "address" },
+    { title: "가격", dataIndex: productPrice },
+    { title: "색상", dataIndex: productColor },
+    { title: "사이즈", dataIndex: productSize },
     {
       title: "수량",
       render: (_, { key }) =>
@@ -299,7 +339,7 @@ export default function SellerProductRegistration() {
             onClick={() => {
               setTableData((prevData) =>
                 prevData.map((item) =>
-                  item.key === key ? { ...item, name: nameInput } : item
+                  item.key === key ? { ...item, name: productName } : item
                 )
               );
               setEditingKey(null);
@@ -318,7 +358,12 @@ export default function SellerProductRegistration() {
     toolbar: [
       [{ header: [1, 2, 3, false] }],
       ["bold", "italic", "underline", "strike"],
-      [{ list: "ordered" }, { list: "bullet" }, { indent: "-1" }, { indent: "+1" }],
+      [
+        { list: "ordered" },
+        { list: "bullet" },
+        { indent: "-1" },
+        { indent: "+1" },
+      ],
       ["link", "image"],
       [{ align: [] }, { color: [] }, { background: [] }],
       ["clean"],
@@ -342,17 +387,21 @@ export default function SellerProductRegistration() {
     "background",
   ];
 
+  const [quillValue, setQuillValue] = useState("");
 
-  
+  const handleQuillChange = (content, delta, source, editor) => {
+    setQuillValue(editor.getContents());
+  };
+
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
 
   const handleChange = (info) => {
-    if (info.file.status === 'uploading') {
+    if (info.file.status === "uploading") {
       setLoading(true);
       return;
     }
-    if (info.file.status === 'done') {
+    if (info.file.status === "done") {
       getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
         setImageUrl(url);
@@ -367,15 +416,38 @@ export default function SellerProductRegistration() {
     </div>
   );
 
-  
+  const [productInfo, setProductInfo] = useState({ result: "", data: [] });
+
+  const [price, setPrice] = useState({ buy: "", sell: "", discount: "" });
+  useEffect(() => {
+    const fetchData = async (productId, optionId) => {
+      const result = await axios(
+        `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app//product/seller`, // 이 부분은 실제 서버 주소와 API 경로로 변경해야 합니다.
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        }
+      );
+      console.log("받아온 값:" + JSON.stringify(result.data)); // 서버로부터 받아온 데이터를 JSON 문자열로 변환하여 출력
+      if (result.data && Array.isArray(result.data.data)) {
+        setProductInfo(result.data);
+      } else {
+        setProductInfo({ data: [] });
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="seller-product-registration">
       <SellerHeader />
       <h1>상품 등록</h1>
       <div className="outer-div">
-        <div className="inner-div">
-          <h2 level={2}>상품 업로드</h2>
-        </div>
+        <div className="inner-div"></div>
 
         <Form>
           {/* DropZone */}
@@ -406,7 +478,7 @@ export default function SellerProductRegistration() {
             </div>
             <br />
           </div>
-          <div className="category">
+          {/* <div className="category">
             <Typography.Title level={5}>
               카테고리(한 개만 지정 가능)
             </Typography.Title>{" "}
@@ -434,8 +506,8 @@ export default function SellerProductRegistration() {
             </Space>
             <br /> <br />
           </div>
-          <br />
-          <br />
+              <br />*/}
+          <br /> 
           <div className="productInfo">
             <Typography.Title level={4}>기본정보</Typography.Title>
             <hr />
@@ -456,7 +528,31 @@ export default function SellerProductRegistration() {
               </tr>
               <br />
               <tr>
-                <td>판매자상품코드</td>
+              <td>선택&nbsp;</td>
+            <Space wrap>
+              <Select
+                defaultValue={mainCategory}
+                style={{ width: 120 }}
+                onChange={handleMainCategoryChange}
+                options={Object.keys(smallCategory).map((category) => ({
+                  label: category,
+                  value: category,
+                }))}
+              />
+              <Select
+                style={{ width: 120 }}
+                value={secondCategory}
+                onChange={onSecondCategoryChange}
+                options={smallCategory[mainCategory].map((category) => ({
+                  label: category,
+                  value: category,
+                }))}
+              />
+            </Space>
+            </tr>
+            <br />
+              <tr>
+                <td>수량</td>
                 <td>
                   <Input
                     count={{
@@ -465,6 +561,7 @@ export default function SellerProductRegistration() {
                   />
                 </td>
               </tr>
+              
               <tr>
                 <td>해시태그</td>
                 <td>
@@ -487,7 +584,7 @@ export default function SellerProductRegistration() {
                   </div>
                 </td>
               </tr>
-         
+
               <br />
             </table>
           </div>
@@ -584,8 +681,15 @@ export default function SellerProductRegistration() {
                                   style={{ color: "gray" }}
                                   defaultValue={item}
                                 />
+                                <td>
+                                <Input
+                                  style={{ color: "gray" }}
+                                  defaultValue="수량"
+                                />
                               </td>
+                              </td>  
                             </tr>
+                            
                           ))}
                           <Button onClick={addOption}>
                             <PlusCircleOutlined />
@@ -610,7 +714,7 @@ export default function SellerProductRegistration() {
             <Typography.Title level={4}>옵션 목록</Typography.Title>
             <hr />
             <Table columns={columns} rowSelection={{}} dataSource={tableData} />
-            
+
             <br />
           </div>
 
@@ -619,27 +723,75 @@ export default function SellerProductRegistration() {
             <hr />
 
             <>
-      <Upload
-        name="avatar" //서버로 보낼 필드 이름
-        listType="picture-card"
-        className="avatar-uploader"
-        showUploadList={false}
-        action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188" //이미지를 처리할 수 있는 서버 url
-        beforeUpload={beforeUpload}
-        onChange={handleChange}
-        multiple={true}
-      >
-        {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-      </Upload>
-     
-    </>
+              <Upload
+                name="avatar" //서버로 보낼 필드 이름
+                listType="picture-card"
+                className="avatar-uploader"
+                showUploadList={false}
+                action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188" //이미지를 처리할 수 있는 서버 url
+                beforeUpload={beforeUpload}
+                onChange={handleChange}
+                multiple={true}
+              >
+                {imageUrl ? (
+                  <img src={imageUrl} alt="avatar" style={{ width: "100%" }} />
+                ) : (
+                  uploadButton
+                )}
+              </Upload>
+            </>
             <br />
           </div>
 
           <div className="abc">
             <Typography.Title level={4}>에디터</Typography.Title>
             <hr />
-            
+            <Editor
+              //initialValue="hello react editor world!"
+              previewStyle="vertical"
+              height="600px"
+              initialEditType="wysiwyg"
+              useCommandShortcut={false}
+              hideModeSwitch={true}
+              plugins={[colorSyntax]}
+              language="ko-KR"
+              // hooks={{
+              //   addImageBlobHook: async (blob, callback) => {
+              //     try {
+              //       const imageData = new FormData();
+
+              //       // OptionDTO 추가
+              //       imageData.append("OptionDTO", optionValue); // optionValue는 실제 OptionDTO의 값입니다.
+
+              //       // ProductDTO 추가
+              //       imageData.append("ProductDTO", productValue); // productValue는 실제 ProductDTO의 값입니다.
+
+              //       // 이미지 추가 (Images 키로 여러 이미지 추가)
+              //       for (let i = 0; i < blobs.length; i++) {
+              //         const blob = blobs[i]; // blobs는 실제 이미지 blob들의 배열입니다.
+              //         const file = new File([blob], encodeURI(blob.name), {
+              //           type: blob.type,
+              //         });
+              //         imageData.append("Images", file);
+              //       }
+
+              //       // 서버에 전송
+              //       const imageURI = await axios({
+              //         method: "POST",
+              //         headers: {
+              //           "Content-Type": "multipart/form-data",
+              //         },
+              //         url: `${"https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app"}/product/seller`,
+              //         data: imageData,
+              //         withCredentials: true,
+              //       });
+              //     } catch (error) {
+              //       console.log(error);
+              //     }
+              //   },
+              // }}
+            />
+
             <br />
           </div>
 
@@ -650,7 +802,7 @@ export default function SellerProductRegistration() {
             <br />
           </div>
 
-          <Button onClick={handleButtonClick}>확인</Button>
+          <Button onClick={handleSubmitButtonClick}>확인</Button>
         </Form>
       </div>
     </div>
