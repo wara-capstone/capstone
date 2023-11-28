@@ -28,7 +28,7 @@ eureka:
     fetch-registry: true
     service-url:
       # eureka 주소
-      defaultZone: https://port-0-capstone-jvpb2mlodwuvxm.sel5.cloudtype.app/eureka
+      defaultZone: http://52.79.186.117:8761/eureka
 springboot:
   jwt:
     secret: secretKey123
