@@ -1,6 +1,7 @@
 import "./Seller.css";
 import SellerHeader from "./SellerHeader.jsx";
 
+
 import { AgGridReact } from "ag-grid-react"; // the AG Grid React Component
 import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
 import "ag-grid-community/styles/ag-theme-alpine.css"; // Optional theme CSS
@@ -153,8 +154,6 @@ export default function SellerItemManagement() {
   setSavedRowData(allRowData); 
   console.log(allRowData); // 콘솔에 모든 행의 데이터를 출력
   }, []);
-
-  
 
 
   return (
