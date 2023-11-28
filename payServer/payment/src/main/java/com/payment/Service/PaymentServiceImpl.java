@@ -30,9 +30,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public SimpleResponseDTO createPayment(TotalPaymentDTO totalPaymentDTO, List<PaymentDTO> paymentDTOS) {
-        List<PaymentEntity> paymentEntities = new ArrayList<>();
-
-        TotalPaymentEntity totalPaymentEntity = toTotalPaymentEntity(totalPaymentDTO, paymentEntities);
+        TotalPaymentEntity totalPaymentEntity = toTotalPaymentEntity(totalPaymentDTO);
         Map<String, Object> resultMap = totalPaymentDAO.createTotalPayment(totalPaymentEntity);
 
         for(PaymentDTO paymentDTO : paymentDTOS){
@@ -43,12 +41,7 @@ public class PaymentServiceImpl implements PaymentService {
             if(paymentResult.get("result").equals("fail")){
                 return toSimpleResponseDTO(paymentResult);
             }
-
-            paymentEntities.add((PaymentEntity) paymentResult.get("data"));
         }
-
-        totalPaymentEntity.setPayments(paymentEntities);
-        resultMap = totalPaymentDAO.updateTotalPayment(totalPaymentEntity);
 
         SimpleResponseDTO simpleResponseDTO = toSimpleResponseDTO(resultMap);
         return simpleResponseDTO;
@@ -81,12 +74,11 @@ public class PaymentServiceImpl implements PaymentService {
         return simpleResponseDTO;
     }
 
-    public TotalPaymentEntity toTotalPaymentEntity(TotalPaymentDTO totalPaymentDTO, List<PaymentEntity> paymentEntities) {
+    public TotalPaymentEntity toTotalPaymentEntity(TotalPaymentDTO totalPaymentDTO) {
         TotalPaymentEntity totalPaymentEntity = TotalPaymentEntity.builder()
                 .totalPaymentId(totalPaymentDTO.getTotalPaymentId())
                 .purchaser(totalPaymentDTO.getPurchaser())
                 .totalPrice(totalPaymentDTO.getTotalPrice())
-                .payments(paymentEntities)
                 .build();
 
         return totalPaymentEntity;

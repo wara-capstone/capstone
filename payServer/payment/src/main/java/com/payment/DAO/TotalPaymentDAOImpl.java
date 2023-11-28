@@ -68,13 +68,23 @@ public class TotalPaymentDAOImpl implements TotalPaymentDAO {
         TotalPaymentEntity oldTotalPaymentEntity = totalPaymentRepository.findByTotalPaymentId(totalPaymentEntity.getTotalPaymentId());
 
         if (oldTotalPaymentEntity != null) {
-            totalPaymentEntity.setTotalPaymentId(Optional.ofNullable(totalPaymentEntity.getTotalPaymentId()).orElse(oldTotalPaymentEntity.getTotalPaymentId()));
-            totalPaymentEntity.setPurchaser(Optional.ofNullable(totalPaymentEntity.getPurchaser()).orElse(oldTotalPaymentEntity.getPurchaser()));
-            totalPaymentEntity.setTotalPrice(Optional.ofNullable(totalPaymentEntity.getTotalPrice()).orElse(oldTotalPaymentEntity.getTotalPrice()));
-            totalPaymentEntity.setDateTime(Optional.ofNullable(totalPaymentEntity.getDateTime()).orElse(oldTotalPaymentEntity.getDateTime()));
-            totalPaymentEntity.setPayments(Optional.ofNullable(totalPaymentEntity.getPayments()).orElse(oldTotalPaymentEntity.getPayments()));
+            oldTotalPaymentEntity.setTotalPaymentId(totalPaymentEntity.getTotalPaymentId());
+            oldTotalPaymentEntity.setPurchaser(totalPaymentEntity.getPurchaser());
+            oldTotalPaymentEntity.setTotalPrice(totalPaymentEntity.getTotalPrice());
+            oldTotalPaymentEntity.setDateTime(totalPaymentEntity.getDateTime());
 
-            totalPaymentRepository.save(totalPaymentEntity);
+            // 더 효과적인 방법으로 컬렉션 업데이트
+            if (totalPaymentEntity.getPayments() != null) {
+                oldTotalPaymentEntity.getPayments().clear();
+                totalPaymentRepository.save(oldTotalPaymentEntity);
+
+                oldTotalPaymentEntity.getPayments().addAll(totalPaymentEntity.getPayments());
+                for (PaymentEntity payment : totalPaymentEntity.getPayments()) {
+                    payment.setTotalPaymentEntity(oldTotalPaymentEntity);
+                }
+            }
+
+            totalPaymentRepository.save(oldTotalPaymentEntity);
             result.put("result", "success");
         } else {
             result.put("result", "fail");

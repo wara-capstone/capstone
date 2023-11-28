@@ -22,7 +22,7 @@ public class TotalPaymentEntity {
     Long totalPrice;
     LocalDateTime dateTime;
 
-    @OneToMany(mappedBy = "totalPaymentEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "totalPaymentEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     List<PaymentEntity> payments;
 
     @Override
