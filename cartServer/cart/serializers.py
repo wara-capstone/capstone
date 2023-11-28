@@ -1,23 +1,39 @@
 from rest_framework import serializers
-from .models import Cart, CartItem
+from .models import Cart, CartItem, Product
 
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = ['user_email']
 
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['p_id', 'p_name','size', 'color', 'quantity', 'price']
+
 class CartItemSerializer(serializers.ModelSerializer):
-    cart = serializers.PrimaryKeyRelatedField(read_only=True)
+    product = ProductSerializer()
+    cart_item_id = serializers.IntegerField(source='id', read_only=True)
 
     class Meta:
         model = CartItem
-        fields = ['cart', 'product_id', 'store_id', 'size', 'color', 'quantity', 'price']
-        # 'cart' 필드를 여기에 명시하지만, read_only=True로 설정하여 유효성 검사에서 제외됩니다.
+        fields = ['cart', 'cart_item_id', 'store_id', 'product']
+
+
 
     def create(self, validated_data):
-        # CartItem 생성 시, user_email을 사용하여 Cart 인스턴스를 찾거나 만듭니다.
-        user_email = self.context['request'].data.get('user_email')
-        cart, created = Cart.objects.get_or_create(user_email=user_email)
-        validated_data['cart'] = cart
-        return super().create(validated_data)
+        product_data = validated_data.pop('product')
+        product_serializer = ProductSerializer(data=product_data)
+        if product_serializer.is_valid(raise_exception=True):
+            validated_data['product'] = product_serializer.save()
+        cart_item = CartItem.objects.create(**validated_data)
+        return cart_item
 
+
+    def update(self, instance, validated_data):
+        product_data = validated_data.pop('product')
+        product_serializer = ProductSerializer(instance.product, data=product_data)
+        if product_serializer.is_valid():
+            product_serializer.save()
+
+        return super(CartItemSerializer, self).update(instance, validated_data)
