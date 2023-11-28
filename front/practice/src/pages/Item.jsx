@@ -148,7 +148,7 @@ const handleSizeChange = (e) => { // 선택한 사이즈 변경
 useEffect(() => {
   async function optionGet() { //옵션 가져오기
     const response = await fetch(
-        'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/'+45,
+        'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/'+47,
         {
           method: "GET",
           headers: {    
