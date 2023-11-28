@@ -31,7 +31,7 @@ DEBUG = int(os.environ.get('DEBUG', 1))
 # else:
 #     ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['http://3.34.227.3:14000','https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app']
+CSRF_TRUSTED_ORIGINS = ['http://3.34.227.3:14000','http://52.79.186.117:8761']
 # Application definition
 
 INSTALLED_APPS = [
@@ -83,10 +83,10 @@ ASGI_APPLICATION = 'config.asgi.application'
 
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5501","http://127.0.0.1:3000", "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app"
+    "http://127.0.0.1:5501","http://127.0.0.1:3000", "http://52.79.186.117:8761"
 ]
 
-EUREKA_SERVER_URL = "https://port-0-capstone-jvpb2mlodwuvxm.sel5.cloudtype.app/ "
+EUREKA_SERVER_URL = "http://52.79.186.117:8761"
 
 # Eureka 서비스 설정
 EUREKA_SERVICE = {

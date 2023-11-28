@@ -22,7 +22,8 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('chat/', include('chat.urls')),  # chat 앱의 urls 포함
+    path('api-auth/', include('rest_framework.urls')),  # chat 앱의 urls 포함
+    path('api/chat/', include('chat.urls')),  # chat 앱의 urls 포함
     path('health/', health, name='health'),
 ]
 

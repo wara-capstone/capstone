@@ -27,6 +27,7 @@ def register_service():
                     app_name=settings.EUREKA_SERVICE['instance']['app'],
                     instance_port=instance_port,
                     instance_host=settings.EUREKA_SERVICE['instance']['ipAddr'])
+    
 
 # Eureka 서버에서 현재 서비스의 등록을 해제하는 함수입니다.
 def deregister_service_from_eureka():
