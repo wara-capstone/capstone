@@ -32,7 +32,22 @@ export default function Item() {
     }
     else{
     console.log("구매");
-     navigate("/user/purchase");
+    const payload =[ {
+      user_email: email,
+      store_id: result.storeId,
+      product:{
+          p_id: result.productId,
+          p_name: result.productName,
+          size: targetSize,
+          color: targetColor,
+          quantity:quantity,
+          price: perPrice,
+      }
+    }];
+
+    navigate("/user/purchase", 
+    { state: {selectedItems: payload} } 
+    );
     }
 }
 
@@ -133,7 +148,7 @@ const handleSizeChange = (e) => { // 선택한 사이즈 변경
 useEffect(() => {
   async function optionGet() { //옵션 가져오기
     const response = await fetch(
-        'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/user/'+1,
+        'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/'+45,
         {
           method: "GET",
           headers: {    
@@ -196,9 +211,9 @@ optionGet();
           {result && (
             <div>
               <h1>{result.productName}</h1>
-              <p>가격: {card.subTitle}</p>
+              <p>가격: {price}</p>
               <p>상세 정보: {card.content}</p>
-              <p>재고: {card.content2}</p>
+              <p>재고: {result.options[0].productStock}</p>
               </div>)}
           <div className="quantityWrapper" style={{justifyContent:"center"}}>
         개수

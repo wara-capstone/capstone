@@ -12,7 +12,6 @@ function myFunction(event) {
 
 
 
-  
   console.log(searchText);
 }
 

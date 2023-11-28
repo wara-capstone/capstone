@@ -131,7 +131,7 @@ useEffect(() => {
        }
      };
      fetchData();
-  }
+  } 
   
   return (
     <div className="cart-page">

@@ -28,7 +28,6 @@ import Header from "../components/Header";
       }
     };
 
-  
 
     useEffect(() => {
         const fetchData = async () => {

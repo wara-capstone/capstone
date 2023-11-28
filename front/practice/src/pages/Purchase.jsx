@@ -1,16 +1,16 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Data from "../DB/Data.json";
 import BottomNav from "../components/BottomNav";
 import Card from "../components/Card"; // Card 컴포넌트 임포트
 import EventButton from "../components/EventButton";
 import Header from "../components/Header";
-import { useEffect, useState } from "react";
+import { useEffect, useState} from "react";
 import { useLocation } from "react-router-dom";
 import PurchaseProduct from "../components/PurchaseProduct";
 import "../components/CartComponents.css";
 
 export default function Purchase() {
-
+  const navigate = useNavigate();
     const email = sessionStorage.getItem("email");
     const token = sessionStorage.getItem("token");
 
@@ -21,19 +21,52 @@ export default function Purchase() {
   const totalPrice = selectedItems.reduce((acc, item) => acc + (item.product.price), 0);
 
 
+
+  useEffect(() => { // ProductId, pColor, pSize로 optionId 가져오기
+    selectedItems.forEach(item => {
+      const productId = item.product.p_id;
+      const pColor = item.product.color;
+      const pSize = item.product.size;
+
+      const fetchData = async () => {
+        const response = await fetch(
+          `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/product/${productId}/${pColor}/${pSize}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `${token}`
+            },
+          }
+        );
+       const result = await response.json();
+        if (response.status === 200) {
+          console.log("성공");
+          console.log(result);
+          item.product.optionId = result;
+
+        } else {
+          console.log("실패");
+        }
+      };
+      fetchData();
+    });
+  }, []);
+
+
+
 async function clickPurchase(e) {
     // Create payload
     const totoalPayment = {
-      purchase: email,
+      purchaser: email,
       totalPrice: totalPrice
       }
-
 
       const payment = selectedItems.map(item => {
         return {
           storeId: item.store_id,
           productId: item.product.p_id,
-          // optionId: item.targetSize,
+          optionId: item.product.optionId,
           price: item.product.price / item.product.quantity,
           quantity: item.product.quantity,
         };
@@ -42,13 +75,12 @@ async function clickPurchase(e) {
 
     var formData;
       formData = new FormData();
-      formData.append('json', new Blob([JSON.stringify(totoalPayment)], { type: "application/json" }));
-      formData.append('json', new Blob([JSON.stringify(payment)], { type: "application/json" }));
-
+      formData.append('totalPayment', new Blob([JSON.stringify(totoalPayment)], { type: "application/json" }));
+      formData.append('payment', new Blob([JSON.stringify(payment)], { type: "application/json" }));
 
     try {
       const response = await fetch(
-        " http://3.34.227.3:16000/cart/items/",
+        " https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/payment/create",
         {
           method: "POST",
           headers: {
@@ -57,9 +89,41 @@ async function clickPurchase(e) {
           body: formData
         }
       );
-      if (response.status === 200) {
-        console.log("성공!");
-      } else if (response.status !== 200) {
+      if (response.status === 201) {
+        console.log("결제 성공!!");
+
+        // 구매후 장바구니 삭제
+        var deleteString ='';
+        checkList.forEach(id => {
+          deleteString += `&cart_item_id=${id}`;
+        });
+    
+        console.log(deleteString);
+          const fetchData = async () => {
+           const response = await fetch(
+             'http://3.34.227.3:16000/cart/items/?user_email='+email+deleteString,
+             {
+               method: "DELETE",
+               headers: {
+                 "Content-Type": "application/json",
+                 "Authorization": `${token}`
+               },
+             }
+           );
+           if (response.status === 204) {
+             console.log("성공");
+           }
+            else {
+            console.log(response);
+             console.log("실패");
+             console.log(response.status);
+           }
+         };
+         fetchData();
+
+         alert("구매완료!");
+         navigate("/");
+      } else if (response.status !== 201) {
           const errorData = await response.json();
           console.log(errorData);
       }
@@ -71,10 +135,7 @@ async function clickPurchase(e) {
     } catch (error) {
       console.error("오류 발생:", error);
     }
-
-
 }
-
 
 
   return (
@@ -89,7 +150,7 @@ async function clickPurchase(e) {
             key={selectedBread.cart_item_id}
             // changeSingleBox={changeSingleBox}
             data={selectedBread}
-            checkList={checkList}
+            // checkList={checkList}
         />
         ))}
         </div>

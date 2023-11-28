@@ -57,7 +57,7 @@ function quantityMinus () { //수량 감소
 
 async function optionGet() { //옵션 가져오기
     const response = await fetch(
-        'http://3.34.227.3:16000/product/user/'+data.product.p_id,
+        'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/'+data.product.p_id,
         {
           method: "GET",
           headers: {    
@@ -72,8 +72,6 @@ async function optionGet() { //옵션 가져오기
         console.log("성공");
         console.log(resultData);
         setResult(resultData);  // 상태 업데이트
-
-
             // 색상 배열 추출
     const newColorArray = resultData.options.reduce((acc, current) => {
         if (!acc.includes(current.productColor)) {
