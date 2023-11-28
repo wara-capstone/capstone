@@ -1,0 +1,99 @@
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 30px;
+}
+
+.profile-image img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-info h2 {
+  margin: 0;
+  text-align: left;
+  font-size: 1.3em;
+}
+
+.user-info p {
+  margin: 5px;
+  text-align: left;
+  font-size: 0.8em;
+  color: gray;
+}
+
+.profile-btn-container {
+  margin: 20px;
+  padding: 15px;
+  background-color: #e8e8e8;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* 컨테이너에 그림자 효과를 추가합니다 */
+}
+
+.edit-profile-btn,
+.chattingList-btn {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 10px;
+  font-size: 1em; /* 텍스트 크기를 약간 증가시킵니다 */
+  text-align: left;
+  border: none;
+  background-color: #f2f2f2;
+  border-radius: 15px;
+  color: #333; /* 텍스트 색상을 약간 어두운 회색으로 변경합니다 */
+}
+
+.move-seller-page-btn-container,
+.user-logout-btn-container {
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  bottom: 70px;
+  left: 0;
+  width: 100%;
+  padding-bottom: 20px;
+}
+
+.user-logout-btn,
+.move-seller-page-btn {
+  background-color: #ff7070; /* 배경색을 붉은색으로 변경합니다 */
+  color: white; /* 텍스트 색상을 흰색으로 변경합니다 */
+  border: none;
+  border-radius: 15px;
+  padding: 10px 20px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.1s ease;
+  font-size: 1em; /* 텍스트 크기를 약간 증가시킵니다 */
+}
+
+.move-seller-page-btn-container {
+  bottom: 140px;
+}
+
+.user-logout-btn:active,
+.move-seller-page-btn:active {
+  background-color: #fa5050; /* 배경색을 붉은색으로 변경합니다 */
+}
+
+.edit-profile-btn.active,
+.chattingList-btn.active {
+  background-color: #333; /* 배경색을 어두운 회색으로 변경합니다 */
+  color: black;
+  transform: scale(1.1);
+}
+
+.move-page-icon {
+  float: right;
+  margin-top: 3px;
+  font-size: 0.8em;
+}
+
+.user-link {
+  text-decoration: none;
+  color: inherit;
+}
