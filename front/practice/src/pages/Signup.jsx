@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -8,16 +8,63 @@ const Signup = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState("customer");
+  const [role, setRole] = useState("");
 
-  const handleSignup = () => {
+  const navigate = useNavigate();
+
+  const handleSignup = async (event) => {
+    event.preventDefault();
+
     // 회원가입 처리 로직을 구현합니다.
+
+    // Check if passwords match
+    if (password !== confirmPassword) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    // Create payload
+    const payload = {
+      email: email,
+      password: password,
+      nickname: userNickname,
+      name: username,
+      phone: phoneNumber,
+      role: role,
+    };
+
+    try {
+      const response = await fetch(
+        " https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/auth/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.status === 201) {
+        // Redirect to login.html
+        console.log("성공! 이메일주소: " + data.email);
+        navigate("/login"); // 로그인 성공시 홈으로 이동합니다.
+      } else if (response.status === 400) {
+        // Handle error
+        alert(`회원가입 실패: ${data.email}`);
+      }
+    } catch (error) {
+      console.error("오류 발생:", error);
+    }
   };
 
   return (
     <div className="signup-container">
-      <h2>회원가입 페이지</h2>
-      <form className="signup-form">
+      <form className="signup-form" onSubmit={handleSignup}>
+        <h1>On&Off</h1>
+
         <label htmlFor="email">이메일</label>
         <input
           type="email"
@@ -67,14 +114,14 @@ const Signup = () => {
         />
 
         <div className="role-selection">
-          <label>회원 유형:</label>
+          <label>회원 유형</label>
           <div>
             <input
               type="radio"
               id="customer"
-              value="customer"
-              checked={role === "customer"}
-              onChange={() => setRole("customer")}
+              value="user"
+              checked={role === "user"}
+              onChange={() => setRole("user")}
             />
             <label htmlFor="customer">고객</label>
           </div>
@@ -90,7 +137,9 @@ const Signup = () => {
           </div>
         </div>
 
-        <button onClick={handleSignup}>회원가입</button>
+        <button id="signup-button" onClick={handleSignup}>
+          회원가입
+        </button>
 
         <p className="login-link">
           이미 회원이신가요? <Link to="/login">로그인</Link>

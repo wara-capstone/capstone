@@ -1,7 +1,7 @@
 /* seller-header */
-
 .seller-header {
   position: sticky;
+  height: 8vh;
   top: 0;
   left: 0;
   right: 0;
@@ -51,7 +51,7 @@
 
 .seller-home .ad-image-container {
   width: 100%;
-  height: 777px;
+  height: 92vh;
 }
 
 .seller-home .ad-image {
@@ -64,7 +64,7 @@
   align-items: left;
 }
 
-.seller-home .button {
+.seller-home .event-button {
   background-color: rgb(233, 116, 116);
   transform: translateX(-250%);
   bottom: 250px;
@@ -75,8 +75,82 @@
   background-color: rgb(236, 83, 83);
 }
 
-/* seller store management */
-.seller-store-management .store-edit-image {
+/* seller side nav */
+.store-side-nav-container {
+  height: 92vh;
+  background-color: #333;
+  width: 150px;
+}
+
+.store-side-nav-menu {
+}
+
+.active-store-side-nav-menu {
+  color: tomato;
+}
+
+.seller-side-nav-link {
+  display: block;
+  color: white;
+  font-weight: bold;
+  margin: 20px;
+  text-decoration: none;
+  font-size: 10px;
+}
+/* seller side nav */
+
+/* seller store management, seller store register */
+.seller-store-management .store-management-container,
+.seller-store-register .store-register-container,
+.seller-store-sales .store-sales-container {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  margin: auto;
+  width: 100%;
+}
+
+.store-management-edit-container,
+.store-register-edit-container,
+.store-sales-info-container {
+  height: 92vh;
+  background-color: #ffffff;
+  width: 300px;
+}
+
+.store-sales-info-container {
+  width: 550px;
+}
+
+.store-management-map-container,
+.store-register-map-container,
+.store-sales-map-container {
+  height: 92vh;
+  background-color: #666666;
+  width: calc(100% - 450px);
+}
+
+.store-sales-map-container {
+  width: calc(100% - 700px);
+}
+
+.seller-store-management .store-edit-info-container,
+.seller-store-register .store-register-info-container {
+  width: 100%;
+  height: 92vh;
+  /* margin: 20px; */
+  /* padding: 20px; */
+  background-color: #ffffff;
+  /* border-radius: 20px; */
+  /* box-shadow: 0px 4px 8px 0 rgba(0, 0, 0, 0.2); */
+  text-align: center;
+  font-size: 0.8em; /* 텍스트 크기를 약간 증가시킵니다 */
+  font-weight: bold;
+  color: #333;
+}
+
+.seller-store-management .store-edit-image,
+.seller-store-register .store-register-image {
   width: 100%;
   position: relative;
   display: flex;
@@ -84,69 +158,79 @@
   align-items: center;
 }
 
-.seller-store-management .store-edit-image img {
-  margin: 20px;
-  width: 300px;
-  height: 300px;
+.seller-store-management .store-edit-image img,
+.seller-store-register .store-register-image img {
+  margin: 10px;
+  width: 280px;
+  height: 250px;
 }
 
-.seller-store-management .store-edit-icon {
-  position: absolute;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  /* position: relative; */
-  /* top: 140px;
-  right: 30px; */
-  cursor: pointer;
-  width: 35px;
-  height: 35px;
-  font-size: 20px;
-  border-radius: 50%;
-  background-color: #ff7070;
-  color: #333;
-}
-
-.seller-store-management .store-edit-info-container {
-  width: 20%;
-  margin: 20px;
-  padding: 20px;
-  background-color: #e8e8e8;
-  border-radius: 20px;
-  box-shadow: 0px 4px 8px 0 rgba(0, 0, 0, 0.2);
-  text-align: left;
-  font-size: 0.8em; /* 텍스트 크기를 약간 증가시킵니다 */
-  font-weight: bold;
-  color: #333;
-}
-
-.seller-store-management .store-edit-info-container input {
+.seller-store-management .store-edit-info-container input,
+.seller-store-register .store-register-info-container input {
   display: block;
-  width: 100%;
+  width: 90%;
+  height: 30px;
+  border: none;
+  outline: none;
+  border-radius: 3px;
+  margin: 10px;
+  background-color: #dcdcdc;
+}
+
+.seller-store-management .store-edit-info-container textarea,
+.seller-store-register .store-register-info-container textarea {
+  display: block;
+  width: 90%;
   height: 40px;
   border: none;
   outline: none;
-  border-radius: 10px;
-  margin-bottom: 25px;
-  margin-top: 5px;
-  margin-right: 10px;
-  background-color: #f2f2f2;
+  border-radius: 5px;
+  margin: 10px;
+  background-color: #dcdcdc;
+  font-weight: bold;
 }
 
-.seller-store-management .store-save-button {
+.seller-store-management .store-save-button,
+.seller-store-register .store-register-button,
+.connect-store-register-button {
   background-color: rgb(233, 116, 116);
   border: none;
   border-radius: 10px;
   padding: 10px 15px;
   font-size: 15px;
   color: #fff;
+  margin: auto;
 }
 
-.seller-store-management .store-save-button:active {
+.connect-store-register-button {
+  position: fixed;
+  bottom: 250px;
+  left: 440px;
+  font-size: 18px;
+}
+
+.seller-store-management .store-delete-button {
+  font-size: 13px;
+  border-radius: 5px;
+  border: none;
+  /* display: none; */
+  position: absolute;
+  top: 338px;
+  left: 365px;
+  background-color: rgb(252, 125, 125);
+  color: #242424;
+  font-weight: bold;
+}
+
+.seller-store-management .store-save-button:active,
+.seller-store-register .store-register-button:active,
+.seller-store-management .store-delete-button:active,
+.connect-store-register-button:active {
   background-color: rgb(236, 83, 83);
   transform: scale(0.9);
 }
-/* seller store management */
+
+/* seller store management, seller store register */
 
 /* seller item, seller item management */
 .seller-item .item-edit-image {
@@ -223,3 +307,25 @@
   transform: scale(0.9);
 }
 /* seller item, seller item management */
+
+/* SellerChattingManagement.css */
+.seller-chatting-management-container {
+  display: flex; /* 가로로 정렬을 위해 Flexbox 사용 */
+  flex-direction: row; /* 가로로 정렬 */
+  flex: 1; /* 남는 공간을 채우도록 확장 */
+  margin: auto;
+  width: 90%;
+}
+
+.seller-chatting-management .chatting-list-container {
+  flex: 1; /* 남는 공간을 채우도록 확장 */
+  width: 800px;
+}
+
+.seller-chatting-management .seller-chat-container {
+  width: 900px; /* 채팅 컨테이너를 가로로 50% 차지하도록 설정 */
+}
+
+.seller-chatting-management .chatting-lists {
+  width: 80%; /* 채팅 목록 컨테이너를 가로로 50% 차지하도록 설정 */
+}

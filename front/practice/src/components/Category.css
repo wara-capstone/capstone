@@ -1,0 +1,30 @@
+/* Category.css */
+/* .category-container-exclusive-items {
+  display: flex;
+  flex-direction: column;
+} */
+
+.category-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 0px 2px rgba(0, 0, 0, 0.2);
+  background-color: white;
+}
+
+.category-row {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.category-item {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  color: rgb(44, 44, 44);
+}
+
+.category-item:active {
+  color: rgb(188, 188, 188);
+}
