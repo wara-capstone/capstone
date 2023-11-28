@@ -439,9 +439,47 @@ export default function SellerProductRegistration(props) {
     </div>
   );
 
+
+const LoadingScreen = () => {
+  return (
+    <div style={styles.container}>
+      <div style={styles.spinner}></div>
+      <p style={styles.message}>로딩 중...</p>
+    </div>
+  );
+};
+
+const styles = {
+  container: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100vh',
+    margin: 0,
+  },
+  spinner: {
+    border: '4px solid rgba(0, 0, 0, 0.1)',
+    borderLeft: '4px solid #3498db',
+    borderRadius: '50%',
+    width: '40px',
+    height: '40px',
+    animation: 'spin 1s linear infinite',
+  },
+  message: {
+    marginLeft: '10px',
+    fontSize: '16px',
+  },
+  '@keyframes spin': {
+    '0%': { transform: 'rotate(0deg)' },
+    '100%': { transform: 'rotate(360deg)' },
+  },
+};
+
+
+
   const [price, setPrice] = useState({ buy: "", sell: "", discount: "" });
   if (loading) {
-    return <h1>로딩중</h1>;
+    return <LoadingScreen></LoadingScreen>;
   } else {
     return (
       <div className="seller-product-registration">
