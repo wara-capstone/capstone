@@ -26,11 +26,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY','django-insecure-bbdqd9)&b2u!53##c4j(1d
 DEBUG = int(os.environ.get('DEBUG', 1))
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['http://3.34.227.3:16000','https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app']
+CSRF_TRUSTED_ORIGINS = ['http://3.34.227.3:16000',"http://52.79.186.117:8761"]
 
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3000",
+    "http://127.0.0.1:3000", "http://52.79.186.117:8761"
 ]
 # Application definition
 
@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-EUREKA_SERVER_URL = "https://port-0-capstone-jvpb2mlodwuvxm.sel5.cloudtype.app/ "
+EUREKA_SERVER_URL = "http://52.79.186.117:8761"
 
 # Eureka 서비스 설정
 EUREKA_SERVICE = {

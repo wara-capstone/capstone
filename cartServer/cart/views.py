@@ -1,8 +1,9 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Cart, CartItem
-from .serializers import CartItemSerializer
+from .models import Cart, CartItem, Product
+from .serializers import CartItemSerializer, ProductSerializer
 from django.core.exceptions import ValidationError
 from py_eureka_client import eureka_client
 from django.http import JsonResponse
@@ -30,70 +31,81 @@ def deregister_service_from_eureka():
     # eureka_client의 stop 메서드를 호출하여 현재 애플리케이션 인스턴스의 등록을 해제합니다.
     eureka_client.stop()
 
+
 class CartItemAPIView(APIView):
     def post(self, request):
-        # 장바구니 담기
-        try:
-            serializer = CartItemSerializer(data=request.data, context={'request': request})
-            if serializer.is_valid(raise_exception=True):
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except ValidationError as e:
-            # 유효성 검사 실패
-            return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            # 기타 예외
-            return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    def put(self, request):
-        # 장바구니 물품 옵션 수정
         try:
             user_email = request.data.get('user_email')
-            product_id = request.data.get('product_id')
-            cart = Cart.objects.get(user_email=user_email)
-            cart_item = CartItem.objects.get(cart=cart, product_id=product_id)
-            serializer = CartItemSerializer(cart_item, data=request.data)
-            if serializer.is_valid(raise_exception=True):
-                serializer.save()
-                return Response(serializer.data)
-        except Cart.DoesNotExist:
-            return Response({"message": "Cart not found"}, status=status.HTTP_404_NOT_FOUND)
-        except CartItem.DoesNotExist:
-            return Response({"message": "Cart item not found"}, status=status.HTTP_404_NOT_FOUND)
-        except ValidationError as e:
-            return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            cart, created = Cart.objects.get_or_create(user_email=user_email)
+
+            product_data = request.data.get('product')
+            product_serializer = ProductSerializer(data=product_data)
+            product_serializer.is_valid(raise_exception=True)
+            product = product_serializer.save()
+
+            serialized_product = ProductSerializer(product).data
+            cart_item_data = {
+                'cart': cart.id,
+                'product': serialized_product,
+                'store_id': request.data.get('store_id'),
+            }
+
+            cart_item_serializer = CartItemSerializer(data=cart_item_data)
+            cart_item_serializer.is_valid(raise_exception=True)
+            cart_item = cart_item_serializer.save()
+            return Response(cart_item_serializer.data, status=status.HTTP_201_CREATED)
+        except ValidationError as ve:  # 입력 데이터 검증 오류
+            return Response({'error': str(ve)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:  # 그 외 서버 내부 오류
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def put(self, request):
+        try:
+            user_email = request.data.get('user_email')
+            cart_item_id = request.data.get('cart_item_id')
+            
+            cart = get_object_or_404(Cart, user_email=user_email)
+            cart_item = get_object_or_404(CartItem, id=cart_item_id, cart=cart)
+
+            product_serializer = ProductSerializer(cart_item.product, data=request.data.get('product'))
+            product_serializer.is_valid(raise_exception=True)
+            product_serializer.save()
+
+            cart_item_serializer = CartItemSerializer(cart_item, data=request.data)
+            cart_item_serializer.is_valid(raise_exception=True)
+            cart_item_serializer.save()
+            return Response(cart_item_serializer.data, status=status.HTTP_200_OK)
+        except ValidationError as ve:  # 입력 데이터 검증 오류
+            return Response({'error': str(ve)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:  # 그 외 서버 내부 오류
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def delete(self, request):
-        # 장바구니 물품 삭제
         try:
             user_email = request.query_params.get('user_email')
-            product_id = request.query_params.get('product_id')
-            cart = Cart.objects.get(user_email=user_email)
-            cart_item = CartItem.objects.get(cart=cart, product_id=product_id)
-            cart_item.delete()
+            cart_item_ids = request.query_params.getlist('cart_item_id')  # 여러 cart_item_id 받기
+
+            cart = get_object_or_404(Cart, user_email=user_email)
+
+            for cart_item_id in cart_item_ids:
+                cart_item = get_object_or_404(CartItem, id=cart_item_id, cart=cart)
+                cart_item.delete()
+
             return Response(status=status.HTTP_204_NO_CONTENT)
-        except Cart.DoesNotExist:
-            return Response({"message": "Cart not found"}, status=status.HTTP_404_NOT_FOUND)
-        except CartItem.DoesNotExist:
-            return Response({"message": "Cart item not found"}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except ValidationError as ve:  # 입력 데이터 검증 오류
+            return Response({'error': str(ve)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:  # 그 외 서버 내부 오류
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def get(self, request):
-        # 장바구니 조회
         try:
             user_email = request.query_params.get('user_email')
-            if not user_email:
-                raise ValidationError("User email is required")
-            cart = Cart.objects.get(user_email=user_email)
-            cart_items = CartItem.objects.filter(cart=cart)
-            serializer = CartItemSerializer(cart_items, many=True)
-            return Response(serializer.data)
-        except Cart.DoesNotExist:
-            return Response({"message": "Cart not found"}, status=status.HTTP_404_NOT_FOUND)
-        except ValidationError as e:
-            return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            cart = get_object_or_404(Cart, user_email=user_email)
+            cart_items = CartItem.objects.filter(cart=cart).select_related('product')
+            
+            cart_item_serializer = CartItemSerializer(cart_items, many=True)
+            return Response(cart_item_serializer.data, status=status.HTTP_200_OK)
+        except ValidationError as ve:  # 입력 데이터 검증 오류
+            return Response({'error': str(ve)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:  # 그 외 서버 내부 오류
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
