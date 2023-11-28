@@ -377,14 +377,14 @@ export default function SellerProductRegistration(props) {
   };
 
 
-  
+
   const [productOptions, setproductOptions] = useState([{
     productPrice: '',
     productSize: '',
     productColor: '',
     productStock: '',
   }]);
-  
+
 
 
   const plusOption = () => {
@@ -395,8 +395,18 @@ export default function SellerProductRegistration(props) {
       productStock: '',
     };
   
-    setproductOptions(prevOptions => [...prevOptions, newOption]);
+    // 새로운 옵션을 추가한 새로운 배열을 생성
+    const newOptions = [...productInfo.options, newOption];
+  
+    // 상태 업데이트 함수를 호출하여 새로운 배열로 상태를 업데이트
+    setProductInfo(prevProductInfo => ({
+      ...prevProductInfo,
+      options: newOptions,
+    }));
   };
+  
+  
+
 
 
   const [quillValue, setQuillValue] = useState("");
@@ -421,55 +431,55 @@ export default function SellerProductRegistration(props) {
     }
   };
 
-  
- 
 
 
-const LoadingScreen = () => {
-  return (
-    <div style={styles.container}>
-      <div style={styles.spinner}></div>
-      <p style={styles.message}>로딩 중...</p>
-    </div>
-  );
-};
 
-const styles = {
-  container: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100vh',
-    margin: 0,
-  },
-  spinner: {
-    border: '4px solid rgba(0, 0, 0, 0.1)',
-    borderLeft: '4px solid #3498db',
-    borderRadius: '50%',
-    width: '40px',
-    height: '40px',
-    animation: 'spin 1s linear infinite',
-  },
-  message: {
-    marginLeft: '10px',
-    fontSize: '16px',
-  },
-  '@keyframes spin': {
-    '0%': { transform: 'rotate(0deg)' },
-    '100%': { transform: 'rotate(360deg)' },
-  },
-};
+
+  const LoadingScreen = () => {
+    return (
+      <div style={styles.container}>
+        <div style={styles.spinner}></div>
+        <p style={styles.message}>로딩 중...</p>
+      </div>
+    );
+  };
+
+  const styles = {
+    container: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100vh',
+      margin: 0,
+    },
+    spinner: {
+      border: '4px solid rgba(0, 0, 0, 0.1)',
+      borderLeft: '4px solid #3498db',
+      borderRadius: '50%',
+      width: '40px',
+      height: '40px',
+      animation: 'spin 1s linear infinite',
+    },
+    message: {
+      marginLeft: '10px',
+      fontSize: '16px',
+    },
+    '@keyframes spin': {
+      '0%': { transform: 'rotate(0deg)' },
+      '100%': { transform: 'rotate(360deg)' },
+    },
+  };
 
 
 
   const [price, setPrice] = useState({ buy: "", sell: "", discount: "" });
   if (loading) {
-    return <LoadingScreen></LoadingScreen>;
+    return <LoadingScreen></LoadingScreen>
   } else {
-    return (
-      
+  return (
+
       <div className="seller-product-registration">
-        
+
         <SellerHeader />
         <h1>상품 등록</h1>
         <div className="outer-div">
@@ -590,57 +600,58 @@ const styles = {
             <br />
 
             <div className="price">
-      <Typography.Title level={4}>옵션 설정</Typography.Title>
-      <hr />
-      <div id="option-table">
-        <table>
-          {productOptions.options.map((option, index) => (
-            
-            <React.Fragment key={index}>
-              <tr>
-                <div className="option-small-box">
-                  <table>
-                    <div>
-                      <td rowSpan={4}>옵션{++index}</td>
-                      <Input
-                        placeholder="가격"
-                        style={{ color: 'gray' }}
-                        defaultValue={option.productPrice}
-                      />
-                      <Input
-                        placeholder="사이즈"
-                        style={{ color: 'gray' }}
-                        defaultValue={option.productSize}
-                      />
-                      <Input
-                        placeholder="색상"
-                        style={{ color: 'gray' }}
-                        defaultValue={option.productColor}
-                      />
-                      <Input
-                        placeholder="수량"
-                        style={{ color: 'gray' }}
-                        defaultValue={option.productStock}
-                      />
-                      <Button onClick={plusOption}>
-                        <PlusCircleOutlined />
-                      </Button>
-                      <Button
-                        type="primary"
-                        danger
-                        onClick={() => removeOption(index)}
-                      >
-                        <DeleteOutlined />
-                      </Button>
-                    </div>
-                  </table>
-                </div>
-              </tr>
-            </React.Fragment>
-          ))}
-        </table>
-      </div>
-    </div>
+              <Typography.Title level={4}>옵션 설정</Typography.Title>
+              <hr />
+              <div id="option-table">
+                <table>
+                  {productOptions.options.map((option, index) => (
+
+                    <React.Fragment key={index}>
+                      <tr>
+                        <div className="option-small-box">
+                          <table>
+                            <div>
+                              <td rowSpan={4}>옵션{++index}</td>
+                              <Input
+                                placeholder="가격"
+                                style={{ color: 'gray' }}
+                                defaultValue={option.productPrice}
+                              />
+                              <Input
+                                placeholder="사이즈"
+                                style={{ color: 'gray' }}
+                                defaultValue={option.productSize}
+                              />
+                              <Input
+                                placeholder="색상"
+                                style={{ color: 'gray' }}
+                                defaultValue={option.productColor}
+                              />
+                              <Input
+                                placeholder="수량"
+                                style={{ color: 'gray' }}
+                                defaultValue={option.productStock}
+                              />
+                              <Button onClick={plusOption}></Button>
+                              <Button onClick={plusOption}>
+                                <PlusCircleOutlined />
+                              </Button>
+                              <Button
+                                type="primary"
+                                danger
+                                onClick={() => removeOption(index)}
+                              >
+                                <DeleteOutlined />
+                              </Button>
+                            </div>
+                          </table>
+                        </div>
+                      </tr>
+                    </React.Fragment>
+                  ))}
+                </table>
+              </div>
+            </div>
 
             <div className="abc">
               <Typography.Title level={4}>옵션 목록</Typography.Title>
@@ -663,7 +674,7 @@ const styles = {
                 listType="picture"
                 defaultFileList={[[]]}
               >
-                 <Button icon={<UploadOutlined />}>Upload</Button>
+                <Button icon={<UploadOutlined />}>Upload</Button>
               </Upload>
               { /*
               <br />
@@ -692,41 +703,41 @@ const styles = {
                 hideModeSwitch={true}
                 plugins={[colorSyntax]}
                 language="ko-KR"
-                // hooks={{
-                //   addImageBlobHook: async (blob, callback) => {
-                //     try {
-                //       const imageData = new FormData();
+              // hooks={{
+              //   addImageBlobHook: async (blob, callback) => {
+              //     try {
+              //       const imageData = new FormData();
 
-                //       // OptionDTO 추가
-                //       imageData.append("OptionDTO", optionValue); // optionValue는 실제 OptionDTO의 값입니다.
+              //       // OptionDTO 추가
+              //       imageData.append("OptionDTO", optionValue); // optionValue는 실제 OptionDTO의 값입니다.
 
-                //       // ProductDTO 추가
-                //       imageData.append("ProductDTO", productValue); // productValue는 실제 ProductDTO의 값입니다.
+              //       // ProductDTO 추가
+              //       imageData.append("ProductDTO", productValue); // productValue는 실제 ProductDTO의 값입니다.
 
-                //       // 이미지 추가 (Images 키로 여러 이미지 추가)
-                //       for (let i = 0; i < blobs.length; i++) {
-                //         const blob = blobs[i]; // blobs는 실제 이미지 blob들의 배열입니다.
-                //         const file = new File([blob], encodeURI(blob.name), {
-                //           type: blob.type,
-                //         });
-                //         imageData.append("Images", file);
-                //       }
+              //       // 이미지 추가 (Images 키로 여러 이미지 추가)
+              //       for (let i = 0; i < blobs.length; i++) {
+              //         const blob = blobs[i]; // blobs는 실제 이미지 blob들의 배열입니다.
+              //         const file = new File([blob], encodeURI(blob.name), {
+              //           type: blob.type,
+              //         });
+              //         imageData.append("Images", file);
+              //       }
 
-                //       // 서버에 전송
-                //       const imageURI = await axios({
-                //         method: "POST",
-                //         headers: {
-                //           "Content-Type": "multipart/form-data",
-                //         },
-                //         url: `${"https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app"}/product/seller`,
-                //         data: imageData,
-                //         withCredentials: true,
-                //       });
-                //     } catch (error) {
-                //       console.log(error);
-                //     }
-                //   },
-                // }}
+              //       // 서버에 전송
+              //       const imageURI = await axios({
+              //         method: "POST",
+              //         headers: {
+              //           "Content-Type": "multipart/form-data",
+              //         },
+              //         url: `${"https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app"}/product/seller`,
+              //         data: imageData,
+              //         withCredentials: true,
+              //       });
+              //     } catch (error) {
+              //       console.log(error);
+              //     }
+              //   },
+              // }}
               />
 
               <br />
