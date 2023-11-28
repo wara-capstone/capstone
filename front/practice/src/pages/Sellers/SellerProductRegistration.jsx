@@ -170,6 +170,7 @@ export default function SellerProductRegistration(props) {
         console.log(response.status);
         if (response.status == 200) {
           setProductInfo(response.data);
+          setproductOptions(response.data);
         } else {
           setProductInfo({ data: [] });
         }
@@ -282,7 +283,9 @@ export default function SellerProductRegistration(props) {
   };
 
   const removeOption = (indexToRemove) => {
-    setOptions(options.filter((_, index) => index !== indexToRemove));
+    setproductOptions((prevOptions) =>
+      prevOptions.filter((_, index) => index !== indexToRemove)
+    );
   };
 
   // 행을 생성하는 함수
@@ -373,42 +376,28 @@ export default function SellerProductRegistration(props) {
     ImageResize: { modules: ["Resize"] },
   };
 
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "list",
-    "bullet",
-    "indent",
-    "link",
-    "image",
-    "align",
-    "color",
-    "background",
-  ];
 
-  let plusOption = ()=>{
-    return <div>
-        <Input
-          placeholder="가격"
-            style={{ color: "gray" }}
-          />
-          <Input
-          placeholder="사이즈"
-            style={{ color: "gray" }}
-          />
-          <Input
-          placeholder="색상"
-            style={{ color: "gray" }}
-          />
-          <Input
-          placeholder="수량"
-            style={{ color: "gray" }}
-          />
-    </div>
-  }
+  
+  const [productOptions, setproductOptions] = useState([{
+    productPrice: '',
+    productSize: '',
+    productColor: '',
+    productStock: '',
+  }]);
+  
+
+
+  const plusOption = () => {
+    const newOption = {
+      productPrice: '',
+      productSize: '',
+      productColor: '',
+      productStock: '',
+    };
+  
+    setproductOptions(prevOptions => [...prevOptions, newOption]);
+  };
+
 
   const [quillValue, setQuillValue] = useState("");
 
@@ -432,19 +421,17 @@ export default function SellerProductRegistration(props) {
     }
   };
 
-  const uploadButton = (
-    <div>
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
+  
+ 
 
   const [price, setPrice] = useState({ buy: "", sell: "", discount: "" });
   if (loading) {
     return <h1>로딩중</h1>;
   } else {
     return (
+      
       <div className="seller-product-registration">
+        
         <SellerHeader />
         <h1>상품 등록</h1>
         <div className="outer-div">
@@ -565,59 +552,57 @@ export default function SellerProductRegistration(props) {
             <br />
 
             <div className="price">
-              <Typography.Title level={4}>옵션 설정</Typography.Title>
-              <hr />
-              <div id="option-table">
-                <table>
-                  {options.map((option, index) => (
-                    <React.Fragment key={index}>
-                      <tr>
-                        <div className="option-small-box">
-                          <table>
-                            {productInfo.options.map(option => (
-                              <div>
-                                <td rowSpan={4}>옵션{++index}</td>
-                                <Input
-                            placeholder="가격"
-                              style={{ color: "gray" }}
-                              defaultValue={option.productPrice}
-                            />
-                            <Input
-                            placeholder="사이즈"
-                              style={{ color: "gray" }}
-                              defaultValue={option.productSize}
-                            />
-                            <Input
-                            placeholder="색상"
-                              style={{ color: "gray" }}
-                              defaultValue={option.productColor}
-                            />
-                            <Input
-                            placeholder="수량"
-                              style={{ color: "gray" }}
-                              defaultValue={option.productStock}
-                            />
-                            <Button onClick={plusOption}>
-                              <PlusCircleOutlined />
-                            </Button>
-                            <Button
-                              type="primary"
-                              danger
-                              onClick={() => removeOption(index)}
-                            >
-                              <DeleteOutlined />
-                            </Button>
-                              </div>
-                            ))}
-                            
-                          </table>
-                        </div>
-                      </tr>
-                    </React.Fragment>
-                  ))}
-                </table>
-              </div>
-            </div>
+      <Typography.Title level={4}>옵션 설정</Typography.Title>
+      <hr />
+      <div id="option-table">
+        <table>
+          {productOptions.options.map((option, index) => (
+            
+            <React.Fragment key={index}>
+              <tr>
+                <div className="option-small-box">
+                  <table>
+                    <div>
+                      <td rowSpan={4}>옵션{++index}</td>
+                      <Input
+                        placeholder="가격"
+                        style={{ color: 'gray' }}
+                        defaultValue={option.productPrice}
+                      />
+                      <Input
+                        placeholder="사이즈"
+                        style={{ color: 'gray' }}
+                        defaultValue={option.productSize}
+                      />
+                      <Input
+                        placeholder="색상"
+                        style={{ color: 'gray' }}
+                        defaultValue={option.productColor}
+                      />
+                      <Input
+                        placeholder="수량"
+                        style={{ color: 'gray' }}
+                        defaultValue={option.productStock}
+                      />
+                      <Button onClick={plusOption}>
+                        <PlusCircleOutlined />
+                      </Button>
+                      <Button
+                        type="primary"
+                        danger
+                        onClick={() => removeOption(index)}
+                      >
+                        <DeleteOutlined />
+                      </Button>
+                    </div>
+                  </table>
+                </div>
+              </tr>
+            </React.Fragment>
+          ))}
+        </table>
+      </div>
+    </div>
 
             <div className="abc">
               <Typography.Title level={4}>옵션 목록</Typography.Title>
