@@ -64,9 +64,10 @@ const UserEdit = ({ user }) => {
 
     // Create payload
     const payload = {
-      "health" : "근력",
-      "tool" : "사용",
-      "place"  : "헬스장"
+      email: email,
+      nickname: nickname,
+      phone: phoneNumber,
+      password: password,
     };
 
     try {

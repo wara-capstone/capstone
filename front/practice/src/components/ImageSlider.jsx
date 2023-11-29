@@ -29,9 +29,9 @@ const ImageSlider = ({ images }) => {
     <div className="slider">
       <div className="slider-image-container">
         <img
-          key={images[index].id}
+          key={index}
           className="slider-image"
-          src={images[index].image}
+          src={images[index]}
           alt="슬라이드 이미지"
         />
         {images.length > 1 && (

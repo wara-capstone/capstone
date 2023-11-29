@@ -11,7 +11,7 @@ import EventButton from "../components/EventButton";
 
 export default function Item() {
   const { id } = useParams();
-  const selectedCard = Data.cardData.filter((card) => card.id === Number(id));
+  // const selectedCard = Data.cardData.filter((card) => card.id === Number(id));
 
   const email = sessionStorage.getItem("email");
   const token = sessionStorage.getItem("token");
@@ -202,31 +202,24 @@ optionGet();
   return (
     <div className="item">
       <Header />
-      {selectedCard.map((card) => (
-        <div key={card.id}>
-          <div className="item-image-container">
-            {/* <img src={card.image1} alt={card.title} className="item-image" /> */}
-            <ImageSlider images={card.images}></ImageSlider>
-          </div>
+        <div key={result && result.productId}>
+          {/* <div className="item-image-container">
+            <img src={card.image1} alt={card.title} className="item-image" />         
+          </div> */}
           {result && (
             <div>
-              <h1>{result.productName}</h1>
+              <div>
+              <ImageSlider images={result.productUrls}></ImageSlider>
+              </div>
+              <h3>{result.productName}</h3>
               <p>가격: {price}</p>
-              <p>상세 정보: {card.content}</p>
+              {/* <p>상세 정보: {"없음"}</p> */}
               <p>재고: {result.options[0].productStock}</p>
-              </div>)}
-          <div className="quantityWrapper" style={{justifyContent:"center"}}>
-        개수
-        <button className="quantityButton" onClick={quantityMinus}> - </button> 
-             <h5>{quantity}</h5>
-        <button className="quantityButton" onClick={quantityPlus}> + </button> 
-        </div>
         <div>색상
         <select value={targetColor} onChange={handleColorChange} >
             {colorArray.map((color, index) => 
                 <option value={color} key={index}>{color}</option>
         )}</select>
-
         </div>
         <div>사이즈
         <select value={targetSize} onChange={handleSizeChange}>
@@ -235,9 +228,14 @@ optionGet();
                 <option value={size} key={index}>{size}</option>
         )}</select>
         </div>
+        <div className="quantityWrapper" style={{justifyContent:"center"}}>
+        개수
+        <button className="quantityButton" onClick={quantityMinus}> - </button> 
+             <h5>{quantity}</h5>
+        <button className="quantityButton" onClick={quantityPlus}> + </button> 
         </div>
-      ))} 
-
+              </div>)}
+        </div>
       <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around"}}>
       <div onClick={handleAddCart}>
       <EventButton buttonText="장바구니 담기" onClick={clickAddCart} />

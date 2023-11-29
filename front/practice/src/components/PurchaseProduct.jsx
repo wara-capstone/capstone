@@ -11,7 +11,6 @@ return (
     <div style={{display: 'flex', height:'3vh'}}>
     <label>{selectedBread.product.p_name}</label>
     </div>
-
     <div style={{display:'flex',justifyContent:'space-around'}}>
      <div className="imageWrapper">
      <img src={"https://via.placeholder.com/150x150"} alt="bread" className="breadImage" />

@@ -21,7 +21,6 @@ export default function Purchase() {
   const totalPrice = selectedItems.reduce((acc, item) => acc + (item.product.price), 0);
 
 
-
   useEffect(() => { // ProductId, pColor, pSize로 optionId 가져오기
     selectedItems.forEach(item => {
       const productId = item.product.p_id;
@@ -92,6 +91,7 @@ async function clickPurchase(e) {
       if (response.status === 201) {
         console.log("결제 성공!!");
 
+        if (checkList !== null) {
         // 구매후 장바구니 삭제
         var deleteString ='';
         checkList.forEach(id => {
@@ -120,6 +120,7 @@ async function clickPurchase(e) {
            }
          };
          fetchData();
+        }
 
          alert("구매완료!");
          navigate("/");
@@ -142,7 +143,7 @@ async function clickPurchase(e) {
     <div className="cart-page">
       <Header />
       <div>
-        {selectedItems. length && ( 
+        {selectedItems.length && ( 
             <div className="Cart">
     {selectedItems.map(selectedBread =>(
         <PurchaseProduct

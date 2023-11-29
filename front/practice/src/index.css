@@ -27,7 +27,8 @@ code {
 .store {
   max-width: 400px;
   /* top: 6vh; */
-  /* height: 100vh; */
+  min-height: 120vh; /* 뷰포트 높이를 최소 높이로 설정 */
+  height: 100%;      /* 높이를 100%로 설정 */
   margin-left: auto;
   margin-right: auto;
   background-color: #f2f2f2;

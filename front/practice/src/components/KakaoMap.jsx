@@ -33,11 +33,9 @@ const token = sessionStorage.getItem("token");
 let [popupInfo, setPopupInfo] = useState(null); // 현재 열려있는 팝업 정보를 저장하는 변수, boolean
 let [searchText, setSearchText] = useState(""); // 검색창 값
 
-
 let prevInfo = null;
 let userMarker; // 사용자 위치 마커
 let uniqueStoreIds = []; // 중복 제거된 "store_id" 값들을 저장할 배열
-
 
 //Popup창 켜고 끄는 method
 function showPopup(info) {
@@ -186,7 +184,6 @@ const fetchData = async (BodyJson ,latlng, initMarkers) => {
         markerList = data;
         console.log("데이터 전송 완료");
         console.log(markerList);
-        console.log(latlng);
         initMarkers();
     }else if (response.status === 400) {
         console.log("데이터 전송 실패");
