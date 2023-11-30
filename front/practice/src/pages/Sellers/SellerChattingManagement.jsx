@@ -99,12 +99,11 @@ export default function SellerChattingManagement() {
     //   `wss://www.onoff.zone/api/ws/room/${roomId}/messages`
     // );
 
-    const newSocket = io("wss://www.onoff.zone", {
-      path: `/api/ws/room/${roomId}/messages`,
+    const tokenParam = encodeURIComponent(token); // 토큰을 URL에 포함하기 위해 인코딩합니다.
+    const url = `wss://www.onoff.zone/api/ws/room/${roomId}/messages?token=${tokenParam}`;
+
+    const newSocket = io(url, {
       transports: ["websocket"],
-      auth: {
-        token: token,
-      },
     });
 
     newSocket.on("connect", () => {
