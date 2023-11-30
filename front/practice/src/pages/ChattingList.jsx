@@ -18,7 +18,7 @@ export default function ChattingList() {
     async function fetchChattingList() {
       try {
         const response = await fetch(
-          `http://3.34.227.3:14000/chat/rooms/?email=${userId}`,
+          `/api/chat/rooms/?email=${userId}`,
           {
             method: "GET",
             headers: {
@@ -53,7 +53,7 @@ export default function ChattingList() {
 
   const fetchImage = async (email) => {
     const response = await fetch(
-      `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user?email=${email}`,
+      `/api/user?email=${email}`,
       {
         method: "GET",
         headers: {

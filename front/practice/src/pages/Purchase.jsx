@@ -29,7 +29,7 @@ export default function Purchase() {
 
       const fetchData = async () => {
         const response = await fetch(
-          `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/product/${productId}/${pColor}/${pSize}`,
+          `/api/product/all/product/${productId}/${pColor}/${pSize}`,
           {
             method: "GET",
             headers: {
@@ -79,7 +79,7 @@ async function clickPurchase(e) {
 
     try {
       const response = await fetch(
-        " https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/payment/create",
+        "/api/payment/create",
         {
           method: "POST",
           headers: {
@@ -101,7 +101,7 @@ async function clickPurchase(e) {
         console.log(deleteString);
           const fetchData = async () => {
            const response = await fetch(
-             'http://3.34.227.3:16000/api/cart/items/?user_email='+email+deleteString,
+             '/api/cart/items/?user_email='+email+deleteString,
              {
                method: "DELETE",
                headers: {

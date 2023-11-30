@@ -40,7 +40,7 @@ export default function Chatting() {
     }
 
     try {
-      const response = await fetch("http://3.34.227.3:14000/chat/rooms/", {
+      const response = await fetch("/api/chat/rooms/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,7 +83,7 @@ export default function Chatting() {
 
   const setupWebSocket = (roomId) => {
     const newSocket = new WebSocket(
-      `ws://3.34.227.3:14000/ws/room/${roomId}/messages`
+      `/api/ws/room/${roomId}/messages`
     );
     newSocket.onmessage = (event) => {
       const data = JSON.parse(event.data);

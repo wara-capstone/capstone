@@ -56,11 +56,12 @@ const SellerStoreEdit = ({ store }) => {
     console.log(email);
     try {
       const response = await fetch(
-        `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/read/seller/${email}`,
+        `/api/store/read/seller/${email}`,
         {
           method: "GET",
           headers: {
             "Content-type": "application/json",
+            "Authorization": `${token}`
           },
         }
       );
@@ -209,11 +210,11 @@ const SellerStoreEdit = ({ store }) => {
       }
 
       fetch(
-        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/update/id",
+        "/api/store/update/id",
         {
           method: "PUT",
           headers: {
-            Authorization: `${token}`,
+            "Authorization": `${token}`
           },
           body: formData,
         }
@@ -235,12 +236,12 @@ const SellerStoreEdit = ({ store }) => {
     } else {
       formData = JSON.stringify(data);
       fetch(
-        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/update/id",
+        "/api/store/update/id",
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `${token}`,
+            "Authorization": `${token}`
           },
           body: formData,
         }
@@ -312,7 +313,7 @@ const SellerStoreEdit = ({ store }) => {
     console.log(storeId);
 
     fetch(
-      `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/delete/id/${storeId}`,
+      `/api/store/delete/id/${storeId}`,
       {
         method: "DELETE",
       }

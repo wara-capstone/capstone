@@ -78,11 +78,11 @@ const SellerStoreRegister = ({ store }) => {
         }
       }
       fetch(
-        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/create",
+        "/api/store/create",
         {
           method: "POST",
           headers: {
-            Authorization: `${token}`,
+            "Authorization": `${token}`
           },
           body: formData,
         }
@@ -105,7 +105,7 @@ const SellerStoreRegister = ({ store }) => {
       formData = JSON.stringify(data);
 
       fetch(
-        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/create",
+        "/api/store/create",
         {
           method: "POST",
           headers: {

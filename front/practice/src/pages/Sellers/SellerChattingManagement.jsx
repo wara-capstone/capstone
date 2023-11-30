@@ -45,10 +45,11 @@ export default function SellerChattingManagement() {
     }
 
     try {
-      const response = await fetch("http://3.34.227.3:14000/chat/rooms/", {
+      const response = await fetch("/api/chat/rooms/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `${token}`
         },
         body: JSON.stringify({
           shop_user_email: userId,
@@ -88,7 +89,7 @@ export default function SellerChattingManagement() {
 
   const setupWebSocket = (roomId) => {
     const newSocket = new WebSocket(
-      `ws://3.34.227.3:14000/ws/room/${roomId}/messages`
+      `/api/ws/room/${roomId}/messages`
     );
     newSocket.onmessage = (event) => {
       const data = JSON.parse(event.data);
@@ -124,11 +125,12 @@ export default function SellerChattingManagement() {
     async function fetchChattingList() {
       try {
         const response = await fetch(
-          `http://3.34.227.3:14000/chat/rooms/?email=${userId}`,
+          `/api/chat/rooms/?email=${userId}`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
+              "Authorization": `${token}`
             },
           }
         );
@@ -159,12 +161,12 @@ export default function SellerChattingManagement() {
 
   const fetchImage = async (email) => {
     const response = await fetch(
-      `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user?email=${email}`,
+      `/api/user?email=${email}`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${token}`,
+          "Authorization": `${token}`
         },
       }
     );
