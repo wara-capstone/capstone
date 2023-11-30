@@ -101,7 +101,7 @@ async function clickPurchase(e) {
         console.log(deleteString);
           const fetchData = async () => {
            const response = await fetch(
-             'http://3.34.227.3:16000/cart/items/?user_email='+email+deleteString,
+             'http://3.34.227.3:16000/api/cart/items/?user_email='+email+deleteString,
              {
                method: "DELETE",
                headers: {

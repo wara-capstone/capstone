@@ -36,6 +36,7 @@ export default function Item() {
       user_email: email,
       store_id: result.storeId,
       product:{
+          p_image: result.productUrls[0],
           p_id: result.productId,
           p_name: result.productName,
           size: targetSize,
@@ -57,6 +58,7 @@ async function clickAddCart(e) {
     user_email: email,
     store_id: result.storeId,
     product:{
+        p_image : result.productUrls[0],
         p_id: result.productId,
         p_name: result.productName,
         size: targetSize,
@@ -68,7 +70,7 @@ async function clickAddCart(e) {
 
   try {
     const response = await fetch(
-      "http://3.34.227.3:16000/cart/items/",
+      "http://3.34.227.3:16000/api/cart/items/",
       {
         method: "POST",
         headers: {

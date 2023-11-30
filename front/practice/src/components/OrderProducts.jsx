@@ -169,7 +169,7 @@ return (
 
     <div style={{display:'flex',justifyContent:'space-around'}}>
      <div className="imageWrapper">
-     <img src={"https://via.placeholder.com/150x150"} alt="bread" className="breadImage" />
+     <img src={data.product.p_image} alt="bread" className="breadImage" />
     </div>
     <div className="optionWrapper">
         <span className="dayOption">{data.product.color + ", " + data.product.size}</span> 

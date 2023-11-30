@@ -13,7 +13,7 @@ return (
     </div>
     <div style={{display:'flex',justifyContent:'space-around'}}>
      <div className="imageWrapper">
-     <img src={"https://via.placeholder.com/150x150"} alt="bread" className="breadImage" />
+     <img src={selectedBread.product.p_image} alt="bread" className="breadImage" />
     </div>
         <span className="dayOption">{selectedBread.product.color + ", " + selectedBread.product.size}</span> 
         <label>{quantity} 개</label>

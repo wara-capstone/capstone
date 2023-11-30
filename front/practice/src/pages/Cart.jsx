@@ -48,7 +48,7 @@ const changeAllBox = checked => {
   useEffect(() => {
     const fetchData = async () => {
      const response = await fetch(
-       'http://3.34.227.3:16000/cart/items/?user_email='+email,
+       'http://3.34.227.3:16000/api/cart/items/?user_email='+email,
        {
          method: "GET",
          headers: {
@@ -110,7 +110,7 @@ useEffect(() => {
     console.log(deleteString);
       const fetchData = async () => {
        const response = await fetch(
-         'http://3.34.227.3:16000/cart/items/?user_email='+email+deleteString,
+         'http://3.34.227.3:16000/api/cart/items/?user_email='+email+deleteString,
          {
            method: "DELETE",
            headers: {

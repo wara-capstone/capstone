@@ -41,8 +41,6 @@ export default function Home() {
   //   fetchData();
   // }, []);
 
-
-
   return (
     <div className="home">
       <Header />
