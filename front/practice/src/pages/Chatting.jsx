@@ -14,7 +14,8 @@ export default function Chatting() {
   // location.state.seller를 통해 storeData.storeSeller 값 받아옴
   const seller = location.state.seller;
 
-  const userId = sessionStorage.getItem("email");
+  const userId = sessionStorage.getItem("email"); // 실제 userId 값으로 대체
+  const token = sessionStorage.getItem("token"); // 실제 token 값으로 대체
   var sellerId = seller;
 
   useEffect(() => {
@@ -44,6 +45,7 @@ export default function Chatting() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `${token}`,
         },
         body: JSON.stringify({
           shop_user_email: sellerId,
@@ -82,9 +84,7 @@ export default function Chatting() {
   };
 
   const setupWebSocket = (roomId) => {
-    const newSocket = new WebSocket(
-      `/api/ws/room/${roomId}/messages`
-    );
+    const newSocket = new WebSocket(`/api/ws/room/${roomId}/messages`);
     newSocket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       const className = data.sender_email === userId ? "sent" : "received";
