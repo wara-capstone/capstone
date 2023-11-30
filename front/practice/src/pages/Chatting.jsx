@@ -21,6 +21,12 @@ export default function Chatting() {
 
   useEffect(() => {
     openOrCreateRoom(userId);
+
+    return () => {
+      if (socket) {
+        socket.close();
+      }
+    };
   }, []);
 
   const chatMessagesRef = useRef(null); // Ref를 생성
@@ -91,8 +97,9 @@ export default function Chatting() {
 
     const newSocket = io("wss://www.onoff.zone", {
       path: `/api/ws/room/${roomId}/messages`,
-      extraHeaders: {
-        Authorization: `${token}`,
+      transports: ["websocket"],
+      auth: {
+        token: token,
       },
     });
 
