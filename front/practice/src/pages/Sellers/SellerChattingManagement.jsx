@@ -49,7 +49,7 @@ export default function SellerChattingManagement() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `${token}`
+          Authorization: `${token}`,
         },
         body: JSON.stringify({
           shop_user_email: userId,
@@ -88,9 +88,7 @@ export default function SellerChattingManagement() {
   };
 
   const setupWebSocket = (roomId) => {
-    const newSocket = new WebSocket(
-      `/api/ws/room/${roomId}/messages`
-    );
+    const newSocket = new WebSocket(`/api/ws/room/${roomId}/messages`);
     newSocket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       const className = data.sender_email === userId ? "sent" : "received";
@@ -124,16 +122,13 @@ export default function SellerChattingManagement() {
   useEffect(() => {
     async function fetchChattingList() {
       try {
-        const response = await fetch(
-          `/api/chat/rooms/?email=${userId}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `${token}`
-            },
-          }
-        );
+        const response = await fetch(`/api/chat/rooms/?email=${userId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        });
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -160,16 +155,12 @@ export default function SellerChattingManagement() {
   }, [userId]);
 
   const fetchImage = async (email) => {
-    const response = await fetch(
-      `/api/user?email=${email}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `${token}`
-        },
-      }
-    );
+    const response = await fetch(`/api/user?email=${email}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     const result = await response.json();
     if (response.status === 200) {
       setRoundImage(result.profileImage); // 상태 업데이트

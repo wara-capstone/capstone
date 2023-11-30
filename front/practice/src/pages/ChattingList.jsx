@@ -17,15 +17,13 @@ export default function ChattingList() {
   useEffect(() => {
     async function fetchChattingList() {
       try {
-        const response = await fetch(
-          `/api/chat/rooms/?email=${userId}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`/api/chat/rooms/?email=${userId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        });
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -52,16 +50,12 @@ export default function ChattingList() {
   }, [userId]);
 
   const fetchImage = async (email) => {
-    const response = await fetch(
-      `/api/user?email=${email}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${token}`,
-        },
-      }
-    );
+    const response = await fetch(`/api/user?email=${email}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     const result = await response.json();
     if (response.status === 200) {
       setRoundImage(result.profileImage); // 상태 업데이트
