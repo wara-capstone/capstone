@@ -65,7 +65,7 @@ export default function SellerChattingManagement() {
       if (response.status === 200) {
         setCurrentRoomId(roomData.id);
         displayMessages(roomData.messages);
-        setupWebSocket(roomData.id);
+        setupWebSocket(roomData.id, token);
       }
     } catch (error) {
       console.error(error);
@@ -87,17 +87,13 @@ export default function SellerChattingManagement() {
     setChatMessages(messageElements);
   };
 
-  const setupWebSocket = (roomId) => {
-    // const newSocket = new WebSocket(
-    //   `wss://www.onoff.zone/api/ws/room/${roomId}/messages`
-    // );
+  const setupWebSocket = (roomId, authToken) => {
+    // 인증 토큰을 URL의 쿼리 파라미터로 추가
+    const newSocket = new WebSocket(
+      `wss://www.onoff.zone/api/ws/room/${roomId}/messages?token=${authToken}`
+    );
 
-    const tokenParam = encodeURIComponent(token); // 토큰을 URL에 포함하기 위해 인코딩합니다.
-    const url = `wss://www.onoff.zone/api/ws/room/${roomId}/messages?token=${tokenParam}`;
-
-    const newSocket = new WebSocket(url);
-
-    newSocket.headers = { Authorization: `${token}` }; // 헤더에 토큰 추가
+    console.log(newSocket.url);
 
     newSocket.onmessage = (event) => {
       const data = JSON.parse(event.data);
