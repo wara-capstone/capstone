@@ -10,8 +10,7 @@ import "../components/Button.css"
 import EventButton from "../components/EventButton";
 
 export default function Item() {
-  const { id } = useParams();
-  // const selectedCard = Data.cardData.filter((card) => card.id === Number(id));
+  const { id } = useParams(); 
 
   const email = sessionStorage.getItem("email");
   const token = sessionStorage.getItem("token");
@@ -149,8 +148,9 @@ const handleSizeChange = (e) => { // 선택한 사이즈 변경
 
 useEffect(() => {
   async function optionGet() { //옵션 가져오기
+    console.log("가져온 상품아이디",id);
     const response = await fetch(
-        'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/'+47,
+        `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/`+id,
         {
           method: "GET",
           headers: {    

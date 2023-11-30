@@ -56,7 +56,6 @@ export default function Store() {
     fetchData();
   }, []);
 
-<<<<<<< HEAD
   return (
     <div className="store">
       <Header />
@@ -68,50 +67,6 @@ export default function Store() {
               alt={storeData.storeName}
               className="item-image"
             />
-=======
-
-    useEffect(() => {
-        const fetchData = async () => {
-        const response = await fetch(
-          'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/read/id/'+id,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `${token}`
-            },
-          }
-        );
-        result = await response.json();
-        if (response.status === 200) {
-          setStoreData(result.data); // 상태 업데이트
-          console.log(result.storeId);
-          console.log("성공");
-          console.log(result.storeName);
-        } else {
-          console.log("실패");
-        }
-      };
-      fetchData();
-    }, []);
-
-
-    return (
-      <div className="store">
-        <Header />
-        {storeData && ( // storeData가 null이 아닐 때만 렌더링
-          <div key={storeData.storeId}>
-            <div className="item-image-container">
-              <img
-                src={storeData.storeImage}
-                alt={storeData.storeName}
-                className="item-image"
-              />
-            </div>
-            <h1>{storeData.storeName}</h1>
-            <p>store location: {storeData.storeAddress}</p>
-            <p>store detail: {storeData.storeContents}</p>
->>>>>>> feat/CartFront
           </div>
           <h1>{storeData.storeName}</h1>
           <div className="button-link" onClick={handleConnectChatting}>
