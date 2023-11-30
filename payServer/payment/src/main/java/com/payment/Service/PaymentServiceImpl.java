@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.net.URISyntaxException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +20,16 @@ import java.util.Map;
 @Service
 public class PaymentServiceImpl implements PaymentService {
     private final TotalPaymentDAO totalPaymentDAO;
+    private final HttpCommunicationService httpCommunicationService;
     private final static Logger logger = LoggerFactory.getLogger(PaymentServiceImpl.class);
     private final PaymentDAO paymentDAO;
 
     public PaymentServiceImpl(@Autowired TotalPaymentDAO totalPaymentDAO,
-                              @Autowired PaymentDAO paymentDAO) {
+                              @Autowired PaymentDAO paymentDAO,
+                              @Autowired HttpCommunicationService httpCommunicationService) {
         this.totalPaymentDAO = totalPaymentDAO;
         this.paymentDAO = paymentDAO;
+        this.httpCommunicationService = httpCommunicationService;
     }
 
     @Override
@@ -37,6 +41,12 @@ public class PaymentServiceImpl implements PaymentService {
             PaymentEntity paymentEntity = toPaymentEntity(paymentDTO);
             paymentEntity.setTotalPaymentEntity(totalPaymentEntity);
             Map<String, Object> paymentResult = paymentDAO.createPayment(paymentEntity);
+
+            try {
+                httpCommunicationService.stockUpdate(paymentEntity.getProductId(), paymentEntity.getOptionId(), -paymentEntity.getQuantity());
+            } catch(URISyntaxException e){
+                e.getMessage();
+            }
 
             if(paymentResult.get("result").equals("fail")){
                 return toSimpleResponseDTO(paymentResult);
