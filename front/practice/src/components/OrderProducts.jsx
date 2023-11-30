@@ -106,6 +106,7 @@ async function optionEdit(){  //옵션 변경
         cart: data.cart,
         store_id: data.store_id,
         product:{
+            p_name: data.product.p_name,
             p_id: data.product.p_id,
             size: targetSize,
             color: targetColor,
