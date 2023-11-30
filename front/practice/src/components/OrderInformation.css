@@ -1,0 +1,12 @@
+/* OrderInformation.css */
+
+.orderInformation {
+    /* display: flex; */
+    align-items: center;
+    padding: 5px;
+    box-sizing: border-box;
+    border: 1px solid #e33d3d;
+    border-radius: 10px;
+    width: 50%; /* 원하는 크기로 조정하세요 */
+    height: 70%; /* 원하는 크기로 조정하세요 */
+}

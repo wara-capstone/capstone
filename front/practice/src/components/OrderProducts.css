@@ -1,0 +1,90 @@
+/* OrderProducts.css */
+
+.orderProductList {
+    /* display: flex; */
+    /* box-sizing: border-box; */
+    border: 1px solid #cccccc58;
+    border-radius: 20px;
+    background-color: white;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.098);
+    margin: 10px;
+    height: 18vh;
+}
+
+.orderProductList input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.imageWrapper {
+    display: flex;
+}
+
+.breadImage {
+    max-width: 100px;
+    height: auto;
+
+    border-radius: 16px;
+    object-fit: cover;
+}
+
+.optionWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 수평 중앙 정렬 */
+    justify-content: center; /* 수직 중앙 정렬 */
+}
+
+.changeOption {
+    border-radius: 5px;
+    background-color: #f5f5f5;
+    cursor: pointer;
+    border: none;
+}
+
+.quantityWrapper {
+    display: flex;
+    align-items: center;
+    /* border: 1px solid black; */
+    height: 4vh;
+}
+
+.quantityButton {
+    width: 7%;
+    margin: 0 10px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
+}
+
+.buttonWrapper {
+    display: flex;
+}
+
+.button {   
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    background-color: #f5f5f5;
+}
+
+.Modal{
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    top: 50%; /* 상단에서 50% 위치에 배치합니다 */
+    left: 50%; /* 좌측에서 50% 위치에 배치합니다 */
+    transform: translate(-50%, -50%); /* 위치를 조정하여 정확히 중앙에 배치합니다 */
+    border: 1px solid #cccccc58;
+    border-radius: 20px;
+    padding: 20px;
+    margin: 10px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.098);
+    overflow: hidden;
+    background-color: white;
+    gap: 10px; 
+}
