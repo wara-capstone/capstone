@@ -88,10 +88,15 @@ export default function Chatting() {
     // const newSocket = new WebSocket(
     //   `wss://www.onoff.zone/api/ws/room/${roomId}/messages`
     // );
+
     const newSocket = io("wss://www.onoff.zone", {
       path: `/api/ws/room/${roomId}/messages`,
       query: {
         token: token,
+      },
+      transports: ["websocket"],
+      extraHeaders: {
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -109,18 +114,20 @@ export default function Chatting() {
       setChatMessages((prevMessages) => [...prevMessages, messageElem]);
     });
 
-    // newSocket.onmessage = (event) => {
-    //   const data = JSON.parse(event.data);
-    //   const className = data.sender_email === userId ? "sent" : "received";
-    //   const messageElem = (
-    //     <div className={`message-bubble ${className}`}>
-    //       {`${data.sender_email}: ${data.message}`}
-    //     </div>
-    //   );
-    //   setChatMessages((prevMessages) => [...prevMessages, messageElem]);
-    // };
-
     setSocket(newSocket);
+
+    //   newSocket.onmessage = (event) => {
+    //     const data = JSON.parse(event.data);
+    //     const className = data.sender_email === userId ? "sent" : "received";
+    //     const messageElem = (
+    //       <div className={`message-bubble ${className}`}>
+    //         {`${data.sender_email}: ${data.message}`}
+    //       </div>
+    //     );
+    //     setChatMessages((prevMessages) => [...prevMessages, messageElem]);
+    //   };
+
+    //   setSocket(newSocket);
   };
 
   const sendMessage = () => {
