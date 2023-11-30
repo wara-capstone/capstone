@@ -94,7 +94,6 @@ export default function Chatting() {
       extraHeaders: {
         Authorization: `${token}`,
       },
-      transports: ["websocket"],
     });
 
     newSocket.on("connect", () => {
