@@ -62,7 +62,7 @@ public class AuthServiceImpl implements AuthService {
                     .nickname(userDTO.getNickname())
                     .name(userDTO.getName())
                     .phone(userDTO.getPhone())
-                    .profileImage("https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/image/download/1")
+                    .profileImage("https://www.noff.zone/api/image/download/1")
                     .roles(Collections.singletonList("ROLE_ADMIN"))
                     .build();
         }
@@ -73,7 +73,7 @@ public class AuthServiceImpl implements AuthService {
                     .nickname(userDTO.getNickname())
                     .name(userDTO.getName())
                     .phone(userDTO.getPhone())
-                    .profileImage("https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/image/download/1")
+                    .profileImage("https://www.noff.zone/api/image/download/1")
                     .roles(Collections.singletonList("ROLE_SELLER"))
                     .build();
         }
@@ -84,7 +84,7 @@ public class AuthServiceImpl implements AuthService {
                     .nickname(userDTO.getNickname())
                     .name(userDTO.getName())
                     .phone(userDTO.getPhone())
-                    .profileImage("https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/image/download/1")
+                    .profileImage("https://www.noff.zone/api/image/download/1")
                     .roles(Collections.singletonList("ROLE_USER"))
                     .build();
         }

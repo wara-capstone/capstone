@@ -14,6 +14,7 @@ spring:
           '[/**]':
             #allowedOrigins: 'https://www.onoff.zone'
             allowed-origins:
+              - 'https://www.onoff.zone'
               - 'http://127.0.0.1:3000'
             allow-credentials: true
             allowedHeaders: '*'

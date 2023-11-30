@@ -60,9 +60,9 @@ public class UserServiceImpl implements UserService {
             HttpHeaders headers = new HttpHeaders();
             HttpEntity<?> http = new HttpEntity<>(headers);
 
-            String index = user.get().getProfileImage().replace("https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/image/download/", "");
+            String index = user.get().getProfileImage().replace("https://www.onoff.zone/api/image/download/", "");
             if (!index.equals("1")) {
-                URI deleteUri = new URI(imageService.getUri() + "/image/" + index);
+                URI deleteUri = new URI(imageService.getUri() + "/api/image/" + index);
                 logger.info(deleteUri.toString());
                 restTemplate.exchange(deleteUri, HttpMethod.DELETE, http, Boolean.class);
             }
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
             http = new HttpEntity<>(bodyMap, headers);
 
-            URI uri = new URI(imageService.getUri() + "/image/upload");
+            URI uri = new URI(imageService.getUri() + "/api/image/upload");
             ResponseEntity response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
             logger.info(uri.toString());
             if (response.getStatusCode().is2xxSuccessful()) {

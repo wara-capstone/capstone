@@ -47,13 +47,24 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             String requiredRole = config.getRequiredRole();
             ServerHttpRequest request = exchange.getRequest();
             logger.info("요청한 uri : "+request.getURI());
-
+            String a = "";
+            String authorizationHeader = "";
+            String jwt = "";
+            try {
+                a = String.valueOf(request.getQueryParams().get("token"));
+            } catch (Exception e){
+            }
             // Authorization 헤더 없다면 에러
-            if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
+            if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION) && a == "null") return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
             //헤더값
-            String authorizationHeader = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+            else if(a != "null"){
+                jwt = a.replace("Bearer ", "").replace("[", "").replace("]", "");
+            }
+            else {
+                authorizationHeader = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+                jwt = authorizationHeader.replace("Bearer ", "");
+            }
             // jwt
-            String jwt = authorizationHeader.replace("Bearer ", "");
             logger.info(jwt);
             if (!isJwtValid(jwt)) return onError(exchange, "JWT token is not valid", HttpStatus.UNAUTHORIZED);
             logger.info("JWT VALID");
