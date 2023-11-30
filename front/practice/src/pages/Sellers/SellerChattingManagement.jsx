@@ -88,9 +88,14 @@ export default function SellerChattingManagement() {
   };
 
   const setupWebSocket = (roomId) => {
-    const newSocket = new WebSocket(
-      `wss://www.onoff.zone/api/ws/room/${roomId}/messages`
-    );
+    // const newSocket = new WebSocket(
+    //   `wss://www.onoff.zone/api/ws/room/${roomId}/messages`
+    // );
+
+    const tokenParam = encodeURIComponent(token); // 토큰을 URL에 포함하기 위해 인코딩합니다.
+    const url = `wss://www.onoff.zone/api/ws/room/${roomId}/messages?token=${tokenParam}`;
+
+    const newSocket = new WebSocket(url);
 
     newSocket.headers = { Authorization: `${token}` }; // 헤더에 토큰 추가
 
