@@ -87,6 +87,7 @@ export default function Chatting() {
     const newSocket = new WebSocket(
       `wss://www.onoff.zone/api/ws/room/${roomId}/messages`
     );
+    newSocket.headers = { Authorization: `${token}` };
     newSocket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       const className = data.sender_email === userId ? "sent" : "received";
