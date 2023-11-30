@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { io } from "socket.io-client";
 import SellerHeader from "./SellerHeader";
 
 export default function SellerChattingManagement() {
@@ -88,9 +89,21 @@ export default function SellerChattingManagement() {
   };
 
   const setupWebSocket = (roomId) => {
-    const newSocket = new WebSocket(`/api/ws/room/${roomId}/messages`);
-    newSocket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
+    // const newSocket = new WebSocket(
+    //   `wss://www.onoff.zone/api/ws/room/${roomId}/messages`
+    // );
+    const newSocket = io("wss://www.onoff.zone", {
+      path: `/api/ws/room/${roomId}/messages`,
+      query: {
+        token: token,
+      },
+    });
+
+    newSocket.on("connect", () => {
+      console.log("Socket connected");
+    });
+
+    newSocket.on("message", (data) => {
       const className = data.sender_email === userId ? "sent" : "received";
       const messageElem = (
         <div className={`message-bubble ${className}`}>
@@ -98,7 +111,19 @@ export default function SellerChattingManagement() {
         </div>
       );
       setChatMessages((prevMessages) => [...prevMessages, messageElem]);
-    };
+    });
+
+    // newSocket.onmessage = (event) => {
+    //   const data = JSON.parse(event.data);
+    //   const className = data.sender_email === userId ? "sent" : "received";
+    //   const messageElem = (
+    //     <div className={`message-bubble ${className}`}>
+    //       {`${data.sender_email}: ${data.message}`}
+    //     </div>
+    //   );
+    //   setChatMessages((prevMessages) => [...prevMessages, messageElem]);
+    // };
+
     setSocket(newSocket);
   };
 
