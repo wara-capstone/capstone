@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/store")
+@RequestMapping("/api/store")
 public class StoreController {
     private final StoreService storeService;
     private final static Logger logger = LoggerFactory.getLogger(StoreController.class);
