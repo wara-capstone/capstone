@@ -129,6 +129,13 @@ export default function Chatting() {
           <div ref={chatMessagesRef} />
         </div>
         {/* <!-- 메시지 입력 및 전송 --> */}
+
+        <form
+          onSubmit={(e) => {
+          e.preventDefault();
+          sendMessage();
+        }}
+        >
         <input
           id="message-input"
           type="text"
@@ -139,6 +146,7 @@ export default function Chatting() {
         <button id="send-btn" onClick={sendMessage}>
           보내기
         </button>
+        </form>
       </div>
       <BottomNav />
     </div>

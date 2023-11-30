@@ -214,6 +214,13 @@ export default function SellerChattingManagement() {
           </div>
 
           {/* <!-- 메시지 입력 및 전송 --> */}
+
+          <form
+          onSubmit={(e) => {
+          e.preventDefault();
+            sendMessage();
+         }}
+          >
           <input
             type="text"
             value={messageInput}
@@ -224,6 +231,7 @@ export default function SellerChattingManagement() {
           <button id="send-btn" onClick={sendMessage}>
             보내기
           </button>
+          </form>
         </div>
       </div>
     </div>
