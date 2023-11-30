@@ -221,7 +221,7 @@ public class StoreServiceImpl implements StoreService {
                 SimpleResponseDTO errorResponse = new SimpleResponseDTO("Failed to Delete image");
                 return errorResponse;
             }
-        } catch (URISyntaxException | IOException e) {
+        } catch (URISyntaxException e) {
             e.printStackTrace();
             SimpleResponseDTO errorResponse = new SimpleResponseDTO("Failed to Delete image");
             return errorResponse;
