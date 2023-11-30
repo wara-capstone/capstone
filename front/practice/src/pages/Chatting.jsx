@@ -61,7 +61,7 @@ export default function Chatting() {
 
       setCurrentRoomId(roomData.id);
       displayMessages(roomData.messages);
-      setupWebSocket(roomData.id);
+      setupWebSocket(roomData.id, token);
     } catch (error) {
       console.error(error);
     }
@@ -83,8 +83,14 @@ export default function Chatting() {
     setChatMessages(messageElements);
   };
 
-  const setupWebSocket = (roomId) => {
-    const newSocket = new WebSocket(`/api/ws/room/${roomId}/messages`);
+  const setupWebSocket = (roomId, authToken) => {
+    // 인증 토큰을 URL의 쿼리 파라미터로 추가
+    const newSocket = new WebSocket(
+      `wss://www.onoff.zone/api/ws/room/${roomId}/messages?token=${authToken}`
+    );
+
+    console.log(newSocket.url);
+
     newSocket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       const className = data.sender_email === userId ? "sent" : "received";
@@ -95,6 +101,7 @@ export default function Chatting() {
       );
       setChatMessages((prevMessages) => [...prevMessages, messageElem]);
     };
+
     setSocket(newSocket);
   };
 
@@ -122,6 +129,13 @@ export default function Chatting() {
           <div ref={chatMessagesRef} />
         </div>
         {/* <!-- 메시지 입력 및 전송 --> */}
+
+        <form
+          onSubmit={(e) => {
+          e.preventDefault();
+          sendMessage();
+        }}
+        >
         <input
           id="message-input"
           type="text"
@@ -132,6 +146,7 @@ export default function Chatting() {
         <button id="send-btn" onClick={sendMessage}>
           보내기
         </button>
+        </form>
       </div>
       <BottomNav />
     </div>

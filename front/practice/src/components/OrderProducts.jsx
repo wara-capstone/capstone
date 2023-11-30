@@ -106,6 +106,7 @@ async function optionEdit(){  //옵션 변경
         cart: data.cart,
         store_id: data.store_id,
         product:{
+            p_name: data.product.p_name,
             p_id: data.product.p_id,
             size: targetSize,
             color: targetColor,
@@ -212,7 +213,7 @@ return (
          </div>
       </Modal>
     <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}} >
-        <label>{perPrice * quantity}원</label> 
+        <label>{perPrice}원</label> 
         {/* <div className='buttonWrapper'>
             <button className="button">결제</button>
             <button className="button">삭제</button> 
