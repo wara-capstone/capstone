@@ -91,13 +91,10 @@ export default function Chatting() {
 
     const newSocket = io("wss://www.onoff.zone", {
       path: `/api/ws/room/${roomId}/messages`,
-      query: {
+      auth: {
         token: token,
       },
       transports: ["websocket"],
-      extraHeaders: {
-        Authorization: `Bearer ${token}`,
-      },
     });
 
     newSocket.on("connect", () => {
