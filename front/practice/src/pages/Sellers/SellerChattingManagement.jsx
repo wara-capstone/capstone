@@ -166,6 +166,7 @@ export default function SellerChattingManagement() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `${token}`,
       },
     });
     const result = await response.json();
