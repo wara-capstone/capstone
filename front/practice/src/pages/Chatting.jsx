@@ -91,8 +91,8 @@ export default function Chatting() {
 
     const newSocket = io("wss://www.onoff.zone", {
       path: `/api/ws/room/${roomId}/messages`,
-      auth: {
-        token: token,
+      extraHeaders: {
+        Authorization: `${token}`,
       },
       transports: ["websocket"],
     });
