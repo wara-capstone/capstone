@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { io } from "socket.io-client";
 import SellerHeader from "./SellerHeader";
 
 export default function SellerChattingManagement() {
@@ -30,12 +29,6 @@ export default function SellerChattingManagement() {
     if (customerId) {
       openOrCreateRoom();
     }
-
-    return () => {
-      if (socket) {
-        socket.close();
-      }
-    };
   }, [customerId]);
 
   const handleInputChange = (event) => {
@@ -95,22 +88,14 @@ export default function SellerChattingManagement() {
   };
 
   const setupWebSocket = (roomId) => {
-    // const newSocket = new WebSocket(
-    //   `wss://www.onoff.zone/api/ws/room/${roomId}/messages`
-    // );
+    const newSocket = new WebSocket(
+      `wss://www.onoff.zone/api/ws/room/${roomId}/messages`
+    );
 
-    const tokenParam = encodeURIComponent(token); // 토큰을 URL에 포함하기 위해 인코딩합니다.
-    const url = `wss://www.onoff.zone/api/ws/room/${roomId}/messages?token=${tokenParam}`;
+    newSocket.headers = { Authorization: `${token}` }; // 헤더에 토큰 추가
 
-    const newSocket = io(url, {
-      transports: ["websocket"],
-    });
-
-    newSocket.on("connect", () => {
-      console.log("Socket connected");
-    });
-
-    newSocket.on("message", (data) => {
+    newSocket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
       const className = data.sender_email === userId ? "sent" : "received";
       const messageElem = (
         <div className={`message-bubble ${className}`}>
@@ -118,22 +103,9 @@ export default function SellerChattingManagement() {
         </div>
       );
       setChatMessages((prevMessages) => [...prevMessages, messageElem]);
-    });
+    };
 
     setSocket(newSocket);
-
-    //   newSocket.onmessage = (event) => {
-    //     const data = JSON.parse(event.data);
-    //     const className = data.sender_email === userId ? "sent" : "received";
-    //     const messageElem = (
-    //       <div className={`message-bubble ${className}`}>
-    //         {`${data.sender_email}: ${data.message}`}
-    //       </div>
-    //     );
-    //     setChatMessages((prevMessages) => [...prevMessages, messageElem]);
-    //   };
-
-    //   setSocket(newSocket);
   };
 
   const sendMessage = () => {
