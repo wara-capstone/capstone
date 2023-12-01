@@ -502,7 +502,9 @@ export default function SellerProductRegistration(props) {
     return <h1>로딩중</h1>;
   } else {
     return (
+      
       <div className="seller-product-registration">
+        
         <SellerHeader />
         <h1>상품 등록</h1>
         <div className="outer-div">
