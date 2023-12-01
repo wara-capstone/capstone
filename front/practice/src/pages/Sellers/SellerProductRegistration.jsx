@@ -24,6 +24,7 @@ import ToastuiEditorViewer from "@toast-ui/editor/dist/toastui-editor-viewer";
 
 import {
   PlusCircleOutlined,
+  EditOutlined,
   DeleteOutlined,
   PlusOutlined,
   LoadingOutlined,
@@ -146,11 +147,12 @@ export default function SellerProductRegistration(props) {
   const onSecondCategoryChange = (value) => {
     setSecondCategory(value);
   };
-
+  
   const [itemOptions, setItemOption] = useState();
   const token = sessionStorage.getItem("token");
   const [productInfo, setProductInfo] = useState({});
   //  const { productId } = props.location?.state || {};
+  const [isTrue, setIsTrue] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -170,8 +172,10 @@ export default function SellerProductRegistration(props) {
         console.log(response.status);
         if (response.status == 200) {
           setProductInfo(response.data);
+          setIsTrue(true);
         } else {
           setProductInfo({ data: [] });
+          setIsTrue(false);
         }
       } catch (error) {
         console.error(error);
@@ -228,29 +232,19 @@ export default function SellerProductRegistration(props) {
   const [editingKey, setEditingKey] = useState(null);
 
   const [options, setOptions] = useState([{ items: ["사이즈 (예시: s)"] }]);
-  const handleSalePriceChange = (e) => {
-    setSalePrice(e.target.value);
-  };
 
-  const handleDiscountPriceChange = (e) => {
-    setDiscountPrice(e.target.value);
-  };
-
-  const handleDiscountChange = (e) => {
-    setDiscount(e.target.value);
-  };
-
-  const discountedSalePrice = salePrice - discountPrice;
 
   const handleSubmitButtonClick = () => {
     // 서버로 데이터 전송하는 로직 작성
-    axios // 상품 등록
-      .post(
-        `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/seller`,
+    if(isTrue){ // 확인 버튼을 눌렀을 때 상품 수정을 서버로 보냄 
+   //   console.log("트루");
+      axios // 상품 등록
+      .put(
+        `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/modify`,
         {
           headers: {
-            //"Content-Type" : "multipart/form-data",
-            Authorization: token,
+            "Content-Type" : "multipart/form-data",
+            Authorization: `${token}`,
           },
           productDTO: {
             //productId: productId,
@@ -273,34 +267,53 @@ export default function SellerProductRegistration(props) {
       .catch((error) => {
         console.error(error); // 오류 처리
       });
+    }
+    
+    else{
+    axios // 상품 등록
+      .post(
+        `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/seller`,
+        {
+          headers: {
+            //"Content-Type" : "multipart/form-data",
+            Authorization: `${token}`,
+          },
+          productDTO: {
+            //productId: productId,
+            //storeId: storeId,
+            productName: productName,
+            productCategory: productCategory,
+            //sellerProductCode: sellerProductCode,
+          },
+          optionDTO: {
+            productPrice: productPrice,
+            productSize: productSize,
+            productColor: productColor,
+            productStock: productStock,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data); // 서버 응답 출력
+      })
+      .catch((error) => {
+        console.error(error); // 오류 처리
+      });
+   // console.log("false");
+    };
 
     message.success("저장되었습니다");
   };
+  
 
-  const addOption = () => {
-    setOptions(options.concat([]));
-  };
+ 
 
   const removeOption = (indexToRemove) => {
     setOptions(options.filter((_, index) => index !== indexToRemove));
   };
 
-  // 행을 생성하는 함수
-  const createRow = (index, addFunc, removeFunc) => (
-    <tr key={index}>
-      <td>
-        <Input style={{ color: "gray" }} />
-      </td>
-      <td>
-        <Button onClick={() => addFunc(index)}>
-          <PlusCircleOutlined />
-        </Button>
-        <Button type="primary" danger onClick={() => removeFunc(index)}>
-          <DeleteOutlined />
-        </Button>
-      </td>
-    </tr>
-  );
+
+
 
   // 배열 내에 원소를 삽입하는 함수
   const insertRow = (prevRows, index, newRow) => {
@@ -390,25 +403,29 @@ export default function SellerProductRegistration(props) {
   ];
 
   let plusOption = ()=>{
-    return <div>
-        <Input
-          placeholder="가격"
-            style={{ color: "gray" }}
-          />
-          <Input
-          placeholder="사이즈"
-            style={{ color: "gray" }}
-          />
-          <Input
-          placeholder="색상"
-            style={{ color: "gray" }}
-          />
-          <Input
-          placeholder="수량"
-            style={{ color: "gray" }}
-          />
-    </div>
+    const newOption = {
+      productPrice: '',
+      productSize: '',
+      productColor: '',
+      productStock: '',
+    };
+
+    setProductInfo(prevProductInfo => {
+      return {
+        ...prevProductInfo,
+        options: [...prevProductInfo.options, newOption]
+      };
+    });
   }
+
+  const handleInputChange = (index, field, value) => {  // 옵션 input필드에 입력한 값대로 option에 저장
+    setProductInfo(prevProductInfo => {
+      const newOptions = prevProductInfo.options.map((option, i) => 
+        i === index ? {...option, [field]: value} : option
+      );
+      return {...prevProductInfo, options: newOptions};
+    });
+  };
 
   const [quillValue, setQuillValue] = useState("");
 
@@ -438,6 +455,47 @@ export default function SellerProductRegistration(props) {
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   );
+
+
+  const addProductOption = (index)=>{
+    // 서버로 데이터 전송하는 로직 작성
+    
+    index-=1;
+   
+    //var formData = new FormData();
+    //formData.append('optionDTO', new Blob([JSON.stringify(optionDTO)], { type: "application/json" }));
+    console.log("문자열:" + productInfo.productId);
+    console.log(index);
+    console.log("담긴 옵션 정보"+ productInfo.options[index].productPrice);
+    axios // 상품 등록
+    .put(
+     `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/seller/option/add?productId=`+ productInfo.productId,
+    // `https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app/product/seller/option/add?productId=19`,
+      { 
+   
+        "productPrice" :  productInfo.options[index].productPrice,
+        "productSize" : productInfo.options[index].productSize,
+        "productColor" : productInfo.options[index].productColor,
+        "productStock" :  productInfo.options[index].productStock,
+    
+      },
+      {
+      headers: {
+        "Content-Type" : "application/json",
+        Authorization: `${token}`,
+      },
+    },
+    )
+    .then((response) => {
+      console.log(response.data); // 서버 응답 출력
+    })
+    .catch((error) => {
+      console.error(error); // 오류 처리
+    });
+
+  message.success("저장되었습니다");
+};
+  
 
   const [price, setPrice] = useState({ buy: "", sell: "", discount: "" });
   if (loading) {
@@ -561,7 +619,7 @@ export default function SellerProductRegistration(props) {
                 <br />
               </table>
             </div>
-            <br />
+    
             <br />
 
             <div className="price">
@@ -569,36 +627,39 @@ export default function SellerProductRegistration(props) {
               <hr />
               <div id="option-table">
                 <table>
-                  {options.map((option, index) => (
+                  {productInfo.options.map((option, index) => (
                     <React.Fragment key={index}>
                       <tr>
                         <div className="option-small-box">
                           <table>
-                            {productInfo.options.map(option => (
                               <div>
                                 <td rowSpan={4}>옵션{++index}</td>
                                 <Input
                             placeholder="가격"
                               style={{ color: "gray" }}
                               defaultValue={option.productPrice}
+                              onChange={(e) => handleInputChange(index-1, "productPrice", e.target.value)}
                             />
                             <Input
                             placeholder="사이즈"
                               style={{ color: "gray" }}
                               defaultValue={option.productSize}
+                              onChange={(e) => handleInputChange(index-1, "productSize", e.target.value)}
                             />
                             <Input
                             placeholder="색상"
                               style={{ color: "gray" }}
                               defaultValue={option.productColor}
+                              onChange={(e) => handleInputChange(index-1, "productColor", e.target.value)}
                             />
                             <Input
                             placeholder="수량"
                               style={{ color: "gray" }}
                               defaultValue={option.productStock}
+                              onChange={(e) => handleInputChange(index-1, "productStock", e.target.value)}
                             />
-                            <Button onClick={plusOption}>
-                              <PlusCircleOutlined />
+                            <Button onClick={()=>addProductOption(index)}>
+                              <EditOutlined />
                             </Button>
                             <Button
                               type="primary"
@@ -608,13 +669,17 @@ export default function SellerProductRegistration(props) {
                               <DeleteOutlined />
                             </Button>
                               </div>
-                            ))}
                             
                           </table>
                         </div>
                       </tr>
                     </React.Fragment>
                   ))}
+                      <div>
+                          <Button style={{backgroundColor:"blue", color:"white"}} onClick={plusOption}>
+                          <PlusCircleOutlined />
+                            </Button>
+                    </div>
                 </table>
               </div>
             </div>
