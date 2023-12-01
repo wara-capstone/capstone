@@ -223,12 +223,6 @@ export default function SellerProductRegistration(props) {
   const [productStock, setProductStock] = useState("");
   const [productColor, setProducColor] = useState("");
 
-  const [salePrice, setSalePrice] = useState(0);
-  const [discountPrice, setDiscountPrice] = useState(0);
-  const [discount, setDiscount] = useState("noDiscount");
-  const [rows, setRows] = useState([]);
-  const [rows2, setRows2] = useState([]); // 옵션2에 대한 상태
-
   const [editingKey, setEditingKey] = useState(null);
 
   const [options, setOptions] = useState([{ items: ["사이즈 (예시: s)"] }]);
@@ -238,12 +232,12 @@ export default function SellerProductRegistration(props) {
     // 서버로 데이터 전송하는 로직 작성
     if(isTrue){ // 확인 버튼을 눌렀을 때 상품 수정을 서버로 보냄 
    //   console.log("트루");
-      axios // 상품 등록
+      axios // 상품 수정
       .put(
         `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/modify`,
         {
           headers: {
-            "Content-Type" : "multipart/form-data",
+            "Content-Type" : "application/json",
             Authorization: `${token}`,
           },
           productDTO: {
@@ -253,12 +247,12 @@ export default function SellerProductRegistration(props) {
             productCategory: productCategory,
             //sellerProductCode: sellerProductCode,
           },
-          optionDTO: {
-            productPrice: productPrice,
-            productSize: productSize,
-            productColor: productColor,
-            productStock: productStock,
-          },
+          // optionDTO: {
+          //   productPrice: productPrice,
+          //   productSize: productSize,
+          //   productColor: productColor,
+          //   productStock: productStock,
+          // },
         }
       )
       .then((response) => {
@@ -302,25 +296,44 @@ export default function SellerProductRegistration(props) {
    // console.log("false");
     };
 
-    message.success("저장되었습니다");
+    message.success("등록되었습니다");
   };
   
 
  
 
-  const removeOption = (indexToRemove) => {
-    setOptions(options.filter((_, index) => index !== indexToRemove));
+
+  const removeOption = async (index) => {
+    try {
+      // 1. 서버에 삭제 요청 보내기
+      const response = await axios.delete(`https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/seller/option/${index}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        }});
+        if (response.status === 200) {
+          console.log('Option deleted successfully');
+        } else {
+          console.log('Failed to delete option:', response.status);
+        }
+  
+      // 2. 상태 업데이트하기
+      setProductInfo(prevProductInfo => {
+        const newOptions = [...prevProductInfo.options];
+        newOptions.splice(index-1, 1);
+  
+        return {
+          ...prevProductInfo,
+          options: newOptions
+        };
+      });
+    } catch (error) {
+      // 서버에서 오류 응답을 받았을 때 처리
+      console.error('Failed to delete option:', error);
+    }
   };
-
-
-
-
-  // 배열 내에 원소를 삽입하는 함수
-  const insertRow = (prevRows, index, newRow) => {
-    const newRows = [...prevRows];
-    newRows.splice(index, 0, newRow);
-    return newRows;
-  };
+  
 
   const columns = [
     {
@@ -449,14 +462,8 @@ export default function SellerProductRegistration(props) {
     }
   };
 
-  const uploadButton = (
-    <div>
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
 
-
+// 상품의 옵션 추가
   const addProductOption = (index)=>{
     // 서버로 데이터 전송하는 로직 작성
     
@@ -469,7 +476,7 @@ export default function SellerProductRegistration(props) {
     console.log("담긴 옵션 정보"+ productInfo.options[index].productPrice);
     axios // 상품 등록
     .put(
-     `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/seller/option/add?productId=`+ productInfo.productId,
+     `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/seller/option/add/product/${productInfo.productId}`,
     // `https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app/product/seller/option/add?productId=19`,
       { 
    
