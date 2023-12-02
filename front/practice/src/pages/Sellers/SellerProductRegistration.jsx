@@ -149,7 +149,7 @@ export default function SellerProductRegistration(props) {
   };
   
   const [itemOptions, setItemOption] = useState();
-  const token = sessionStorage.getItem("token");
+  const token = localStorage.getItem("token");
   const [productInfo, setProductInfo] = useState({});
   //  const { productId } = props.location?.state || {};
   const [isTrue, setIsTrue] = useState();

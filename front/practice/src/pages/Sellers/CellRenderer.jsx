@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 const CellRenderer = (props) => {
-  const token = sessionStorage.getItem("token");
+  const token = localStorage.getItem("token");
   const [storeInfo, setStoreInfo] = useState({ result: "", data: [] });
   const { storeId } = props; // storeId를 props로부터 전달받음
   const { productId } = props;

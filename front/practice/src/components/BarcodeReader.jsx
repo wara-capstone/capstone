@@ -22,7 +22,7 @@ function BarcodeReader() {
   const formats = [BarcodeFormat.CODE_128];
 hints.set(DecodeHintType.POSSIBLE_FORMATS, formats);
   var fetchedProductInfo;
-  const token = sessionStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
 
 
@@ -66,7 +66,7 @@ useEffect(() => {
     setIsBarcodeDetected(false); // 바코드 인식 상태 리셋
   };
 
-  const userId = sessionStorage.getItem("email"); // 세션 스토리지에서 이메일(사용자 ID) 가져오기
+  const userId = localStorage.getItem("email"); // 세션 스토리지에서 이메일(사용자 ID) 가져오기
   const navigate = useNavigate(); // navigate 함수 사용
   const handleAddCart = () => {
     // 장바구니 추가 핸들러
@@ -85,7 +85,7 @@ useEffect(() => {
     //Get
     try {
       const response = await axios.get(
-        `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/22/option/13`,
+        `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/${productId}/option/${optionId}`,
         {
           headers: {
             Authorization: `${token}`,
@@ -116,6 +116,7 @@ useEffect(() => {
           const barcodeData = JSON.parse(result.text); // 바코드 데이터를 JSON 객체로 변환
           console.log(barcodeData);
           const optionId = "10"; // 실제 매장 ID로 변경해야 합니다.
+          
           fetchedProductInfo = await fetchProductInfo(
             barcodeData.productId,
             barcodeData.optionId
