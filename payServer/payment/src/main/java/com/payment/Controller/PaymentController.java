@@ -29,7 +29,12 @@ public class PaymentController {
         logger.info("[Data]: " + totalPaymentDTO.toString());
         SimpleResponseDTO response = paymentService.createPayment(totalPaymentDTO, paymentDTOS);
         logger.info("[Response] : " + response.toString());
-        return ResponseEntity.status(201).body(response);
+
+        if(response.getResult().equals("success")){
+            return ResponseEntity.status(201).body(response);
+        }
+
+        return ResponseEntity.status(400).body(null);
     }
 
     @GetMapping("/read/store/{storeId}")
@@ -38,7 +43,12 @@ public class PaymentController {
         logger.info("[Data]: " + storeId);
         ResponseDTO response = paymentService.readPaymentByStoreId(storeId);
         logger.info("[Response] : " + response.toString());
-        return ResponseEntity.status(200).body(response);
+
+        if(response.getResult().equals("success")){
+            return ResponseEntity.status(200).body(response);
+        }
+
+        return ResponseEntity.status(400).body(null);
     }
 
     @GetMapping("/read/user/{purchaser}")
@@ -47,7 +57,12 @@ public class PaymentController {
         logger.info("[Data]: " + purchaser);
         ResponseDTO response = paymentService.readPaymentByPurchaser(purchaser);
         logger.info("[Response] : " + response.toString());
-        return ResponseEntity.status(200).body(response);
+
+        if(response.getResult().equals("success")){
+            return ResponseEntity.status(200).body(response);
+        }
+
+        return ResponseEntity.status(400).body(null);
     }
 
     @DeleteMapping("/delete/{paymentId}")
@@ -56,6 +71,11 @@ public class PaymentController {
         logger.info("[Data]: " + paymentId);
         SimpleResponseDTO response = paymentService.deletePayment(paymentId);
         logger.info("[Response] : " + response.toString());
-        return ResponseEntity.status(200).body(response);
+
+        if(response.getResult().equals("success")){
+            return ResponseEntity.status(200).body(response);
+        }
+
+        return ResponseEntity.status(400).body(null);
     }
 }
