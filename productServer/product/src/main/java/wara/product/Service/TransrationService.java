@@ -75,7 +75,7 @@ public class TransrationService {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(bodyMap, headers);
 
-        URI uploadUri = serviceUrl("IMAGE-SERVICE", "/image/upload");
+        URI uploadUri = serviceUrl("IMAGE-SERVICE", "/api/image/upload");
 
 
         System.out.println(uploadUri);
@@ -118,7 +118,7 @@ public class TransrationService {
 
         HttpEntity<?> requestEntity = new HttpEntity<>(bodyMap, headers);
 
-        URI uploadUri = serviceUrl("STORE-SERVICE", "/store/update/id");
+        URI uploadUri = serviceUrl("STORE-SERVICE", "/api/store/update/id");
 
         try {
 
@@ -150,7 +150,7 @@ public class TransrationService {
 
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
 
-        URI uploadUri = serviceUrl("STORE-SERVICE","/store/update/id");
+        URI uploadUri = serviceUrl("STORE-SERVICE","/api/store/update/id");
 
         try {
 
@@ -186,7 +186,7 @@ public class TransrationService {
         HttpEntity<?> requestEntity = new HttpEntity<>(bodyMap, headers);
 
 
-        URI uploadUri = serviceUrl("BARCODE-SERVICE", "/barcode");
+        URI uploadUri = serviceUrl("BARCODE-SERVICE", "/api/barcode");
 
         try {
             ResponseEntity response;

@@ -20,7 +20,7 @@ import java.util.Objects;
 
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/api/product")
 public class ProductController {
 
     private final ProductService productService;
@@ -65,8 +65,14 @@ public class ProductController {
         Long productId = productService.initProduct(productDTO);
 
         // STORE서버에 해당 상점이 존재하는지 검사
-        String storeValid = transrationService.initToStore(productDTO.getStoreId(),
-                Collections.singletonList(productId));
+        String storeValid = transrationService.
+                initToStore(productDTO.getStoreId(), Collections.singletonList(productId));
+
+        if(!storeValid.equals("success"))
+        {
+            productService.removeOneProduct(productId);
+            return "존재하지 않는 상점";
+        }
 
         if(Objects.nonNull(optionDTO)){
             return productService.addOption(productId,optionDTO);
@@ -78,8 +84,9 @@ public class ProductController {
 
 
     // 옵션 등록
-    @PutMapping("/seller/option/add") //TODO:바코드 삭제 로직 필요함
-    public String optionRegistry(@RequestParam Long productId, @RequestPart OptionDTO optionDTO) throws URISyntaxException, IOException {
+    @PutMapping("/seller/option/add/product/{productId}") //TODO:바코드 삭제 로직 필요함
+    public String optionRegistry(@PathVariable("productId") Long productId,
+                                 @RequestBody OptionDTO optionDTO) throws URISyntaxException, IOException {
         productService.readOne(productId); //TODO: 상품이 존쟈하지 않는경우 처리
         return productService.addOption(productId,optionDTO);
     }
@@ -100,7 +107,9 @@ public class ProductController {
     }
 
     @PutMapping("/user/product/{productId}/{optionId}/{stockModify}")
-    public String stockModify(@PathVariable("productId") Long productId, @PathVariable("optionId") Long optionId, @PathVariable("stockModify") String stockModify)
+    public String stockModify(@PathVariable("productId") Long productId,
+                              @PathVariable("optionId") Long optionId,
+                              @PathVariable("stockModify") String stockModify)
     {
         return productService.stockModify(productId,optionId,stockModify);
     }
