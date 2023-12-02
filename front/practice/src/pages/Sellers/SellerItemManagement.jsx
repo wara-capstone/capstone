@@ -126,8 +126,6 @@ export default function SellerItemManagement() {
       editable: false,
       filter: true,
     },
-    // valueGetter: params => params.productSize },
-    //valueGetter: params => params.data.options[0].productSize }, //갑자기 이 부분이 안됨
     {
       headerName: "색상",
       field: "productColor",
@@ -135,7 +133,6 @@ export default function SellerItemManagement() {
       editable: false,
       minWidth: 150,
       filter: true,
-      // valueGetter: params => params.data.options.map(option => option.productColor).join(', ') },
     },
 
     {
@@ -224,7 +221,8 @@ export default function SellerItemManagement() {
               onClick={handleDelete}>
               삭제
             </button>
-            <button onClick={() => setRowData([...rowData, {}])}>추가</button>
+            <button onClick={() => setRowData([...rowData, 
+              {  productUrls: '',  productName: '',  productId: '',  productSize: '',  productColor: '',  productStock: '',}])}>추가</button>
           </div>
 
           <div>
