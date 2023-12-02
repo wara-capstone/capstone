@@ -178,7 +178,7 @@ const SellerStoreRegister = ({ store }) => {
                 <input
                   type="file"
                   onChange={handleImageChange}
-                  style={{ height: "25px" }}
+                  style={{ height: "1.4rem" }}
                 />
                 <label>가게 이름</label>
                 <div className="store-edit-name">
@@ -220,8 +220,9 @@ const SellerStoreRegister = ({ store }) => {
                     onChange={(e) => setContent(e.target.value)}
                     style={{
                       width: "90%", // 원하는 폭을 지정하세요.
-                      height: "10vh",
-                      resize: "vertical", // 사용자가 높이를 조절할 수 있도록 함
+                      height: "3.8rem",
+                      resize: "none"
+                      //resize: "vertical", // 사용자가 높이를 조절할 수 있도록 함
                     }}
                   />
                 </div>

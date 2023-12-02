@@ -115,7 +115,7 @@
 .store-sales-info-container {
   height: 92vh;
   background-color: #ffffff;
-  width: 300px;
+  width: 22rem;
 }
 
 .store-sales-info-container {
@@ -195,9 +195,9 @@
 .connect-store-register-button {
   background-color: rgb(233, 116, 116);
   border: none;
-  border-radius: 10px;
-  padding: 10px 15px;
-  font-size: 15px;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.9rem;
   color: #fff;
   margin: auto;
 }
