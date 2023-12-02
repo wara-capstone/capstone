@@ -85,7 +85,7 @@ useEffect(() => {
     //Get
     try {
       const response = await axios.get(
-        `/api/product/all/22/option/13`,
+        `/api/product/all/${productId}/option/${optionId}}`,
         {
           headers: {
             Authorization: `${token}`,
