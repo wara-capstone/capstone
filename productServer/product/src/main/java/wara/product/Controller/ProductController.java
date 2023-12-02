@@ -1,8 +1,10 @@
 package wara.product.Controller;
 
 
+import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import wara.product.DTO.OptionDTO;
@@ -41,9 +43,9 @@ public class ProductController {
      * @return
      */
     @ExceptionHandler(NullPointerException.class)
-    public Object nullPointerExceptionControl(Exception e)
+    public ResponseEntity<String> nullPointerExceptionControl(Exception e)
     {
-        return "NullPointerException 발생";
+        return ResponseEntity.status(400).body("");
     }
 
 
@@ -58,7 +60,7 @@ public class ProductController {
      * @throws IOException
      */
     @PostMapping("/seller") @Transactional
-    public String productRegistry(@RequestPart ProductDTO productDTO, @RequestPart OptionDTO optionDTO, @RequestPart List<MultipartFile> images) throws URISyntaxException, IOException {
+    public ResponseEntity<String> productRegistry(@RequestPart ProductDTO productDTO, @RequestPart OptionDTO optionDTO, @RequestPart List<MultipartFile> images) throws URISyntaxException, IOException {
 
         productDTO.setProductUrls(transrationService.uploadImage(images));
         //productDTO의 값으로 일단 저장 -> 해당 상품의 ID값 반환
@@ -69,49 +71,53 @@ public class ProductController {
                 initToStore(productDTO.getStoreId(), Collections.singletonList(productId));
 
         if(!storeValid.equals("success"))
-        {
+        {//상점이 존재하지 않는 경우
             productService.removeOneProduct(productId);
-            return "존재하지 않는 상점";
+            return ResponseEntity.status(400).body("");
         }
 
         if(Objects.nonNull(optionDTO)){
-            return productService.addOption(productId,optionDTO);
+            productService.addOption(productId,optionDTO);
+            return ResponseEntity.status(200).body("");
         }
-
-        return HttpStatus.CREATED.toString();
+        return ResponseEntity.status(200).body("");
     }
 
 
 
     // 옵션 등록
     @PutMapping("/seller/option/add/product/{productId}") //TODO:바코드 삭제 로직 필요함
-    public String optionRegistry(@PathVariable("productId") Long productId,
+    public ResponseEntity<String> optionRegistry(@PathVariable("productId") Long productId,
                                  @RequestBody OptionDTO optionDTO) throws URISyntaxException, IOException {
         productService.readOne(productId); //TODO: 상품이 존쟈하지 않는경우 처리
-        return productService.addOption(productId,optionDTO);
+        productService.addOption(productId,optionDTO);
+
+        return  ResponseEntity.status(200).body("");
     }
 
     // 상품 수정
     //TODO: 사진 있는경우, 없는경우 분리
     @PutMapping("/seller")
-    public String productModify(@RequestPart ProductDTO productDTO)
+    public ResponseEntity<String> productModify(@RequestPart ProductDTO productDTO)
     {
-        return productService.modifyProduct(productDTO);
-
+        productService.modifyProduct(productDTO);
+        return  ResponseEntity.status(200).body("");
     }
 
     //옵션수정
     @PutMapping("/seller/option/{productId}")
-    public String optionModify(@PathVariable("productId") Long productId, @RequestPart OptionDTO optionDTO){
-        return productService.modifyOption(productId, optionDTO);
+    public ResponseEntity<String> optionModify(@PathVariable("productId") Long productId, @RequestPart OptionDTO optionDTO){
+        productService.modifyOption(productId, optionDTO);
+        return ResponseEntity.status(200).body("");
     }
 
     @PutMapping("/user/product/{productId}/{optionId}/{stockModify}")
-    public String stockModify(@PathVariable("productId") Long productId,
+    public ResponseEntity<String> stockModify(@PathVariable("productId") Long productId,
                               @PathVariable("optionId") Long optionId,
                               @PathVariable("stockModify") String stockModify)
     {
-        return productService.stockModify(productId,optionId,stockModify);
+        productService.stockModify(productId,optionId,stockModify);
+        return  ResponseEntity.status(200).body("");
     }
 
 
@@ -119,23 +125,26 @@ public class ProductController {
 
     // 단일 상품 삭제
     @DeleteMapping("/seller/{storeId}/{productId}") @Transactional
-    public String singleRemove(@PathVariable("storeId")Long storeId, @PathVariable("productId") Long productId) throws URISyntaxException, IOException {
+    public ResponseEntity<String> singleRemove(@PathVariable("storeId")Long storeId, @PathVariable("productId") Long productId) throws URISyntaxException, IOException {
         transrationService.removeToStore(storeId, productId);
-        return productService.removeOneProduct(productId);
+        productService.removeOneProduct(productId);
+        return ResponseEntity.status(200).body("");
     }
 
     //옵션삭제
     @DeleteMapping("/seller/option/{optionId}")
-    public String optionRemove(@PathVariable("optionId") Long optionId)
+    public ResponseEntity<String> optionRemove(@PathVariable("optionId") Long optionId)
     {
-        return productService.removeOption(optionId);
+        productService.removeOption(optionId);
+        return ResponseEntity.status(200).body("");
     }
 
 
     // store id 기준 모든 상품 삭제
     @DeleteMapping("/seller/store/{storeId}")
-    public String multiRemove(@PathVariable("storeId") Long storeId){
-        return productService.removeManyproduct(storeId);
+    public ResponseEntity<String> multiRemove(@PathVariable("storeId") Long storeId){
+        productService.removeManyproduct(storeId);
+        return ResponseEntity.status(200).body("");
     }
 
 
@@ -149,9 +158,9 @@ public class ProductController {
      * @return 단일 상품의 정보와 해당 상품의 모든 옵션
      */
     @GetMapping("/all/{id}")
-    public ProductDTO singleRead(@PathVariable("id") Long productId)
+    public ResponseEntity<ProductDTO> singleRead(@PathVariable("id") Long productId)
     {
-        return productService.readOne(productId);
+        return ResponseEntity.status(200).body(productService.readOne(productId));
     }
 
 
@@ -161,9 +170,9 @@ public class ProductController {
      * @return 단일 상품, 단일 옵션
      */
     @GetMapping("/all/{productId}/option/{optionId}")
-    public ProductDTO readTargetOption(@PathVariable("productId") Long productId, @PathVariable("optionId") Long optionId)
+    public ResponseEntity<ProductDTO> readTargetOption(@PathVariable("productId") Long productId, @PathVariable("optionId") Long optionId)
     {
-        return productService.readTarget(productId,optionId);
+        return ResponseEntity.status(200).body(productService.readTarget(productId,optionId));
     }
 
 
@@ -172,8 +181,8 @@ public class ProductController {
      * @return 한 상점의 모든 상품과 옵션
      */
     @GetMapping("/all/store/{storeId}")
-    public List<ProductDTO> multiRead(@PathVariable("storeId") Long storeId){
-        return productService.readMany(storeId);
+    public ResponseEntity<List<ProductDTO>> multiRead(@PathVariable("storeId") Long storeId){
+        return ResponseEntity.status(200).body(productService.readMany(storeId));
     }
 
 
@@ -182,9 +191,9 @@ public class ProductController {
      * @return 카테고리와 동잍한 모든 상품 + 옵션
      */
     @GetMapping("/all/category/{category}")
-    public List<ProductDTO> categoryFilter(@PathVariable("category") String category)
+    public ResponseEntity<List<ProductDTO>> categoryFilter(@PathVariable("category") String category)
     {
-       return productService.categoryFilter(category);
+       return ResponseEntity.status(200).body(productService.categoryFilter(category));
     }
 
     /**
@@ -193,21 +202,21 @@ public class ProductController {
      * @return 상점아이디&카테고리에 해당하는 모든 상품 + 옵션
      */
     @GetMapping("/all/store/{storeId}/category")
-    public List<ProductDTO> storeCategoryFilter(
+    public ResponseEntity<List<ProductDTO>> storeCategoryFilter(
             @PathVariable("storeId") Long storeId,
             @RequestParam String category)
     {
-        return productService.storeCategoryFilter(storeId,category);
+        return ResponseEntity.status(200).body(productService.storeCategoryFilter(storeId,category));
     }
 
 
 
     @GetMapping("/all/product/{productId}/{color}/{size}")
-    public Long targetOptionSpecify(@PathVariable Long productId,
-                                    @PathVariable String color,
-                                    @PathVariable String size)
+    public ResponseEntity<Long> targetOptionSpecify(@PathVariable Long productId,
+                                                    @PathVariable String color,
+                                                    @PathVariable String size)
     {
-        return productService.optionSpcify(productId, color,size);
+        return ResponseEntity.status(200).body(productService.optionSpcify(productId, color,size));
     }
 
 
