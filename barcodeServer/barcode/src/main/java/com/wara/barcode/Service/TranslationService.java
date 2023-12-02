@@ -56,7 +56,7 @@ public class TranslationService {
 
         HttpEntity<?> requestEntity = new HttpEntity<>(bodyMap, headers);
 
-        URI uploadUri = serviceUrl("PRODUCT-SERVICE","/product/single/read");
+        URI uploadUri = serviceUrl("PRODUCT-SERVICE","/api/product/single/read");
 
         try {
             ResponseEntity response;
@@ -100,7 +100,7 @@ public class TranslationService {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(bodyMap, headers);
 
-        URI uploadUri = serviceUrl("IMAGE-SERVICE","/image/upload");
+        URI uploadUri = serviceUrl("IMAGE-SERVICE","/api/image/upload");
 
 
         try {

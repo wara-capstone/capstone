@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 
 @RestController
-@RequestMapping("/barcode")
+@RequestMapping("/api/barcode")
 public class BarcodeController {
     private final static Logger logger = LoggerFactory.getLogger(BarcodeController.class);
     private final BarcodeService barcodeService;
@@ -37,7 +37,7 @@ public class BarcodeController {
     }
 
 
-    //유저의 바코드 정보 조회 요청
+    //유저의 바코드 정보 조회 요청 <- 없애야함
     @GetMapping("/check")
     public HashMap barcodeInfo(@RequestParam Long productId) throws URISyntaxException, IOException {
         return translationService.toProduct(productId);

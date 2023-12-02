@@ -15,3 +15,4 @@ public class BarcodeDTO {
     Long productId;
     Long optionId;
 }
+

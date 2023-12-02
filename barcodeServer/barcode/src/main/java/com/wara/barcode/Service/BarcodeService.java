@@ -3,6 +3,7 @@ package com.wara.barcode.Service;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.simple.JSONObject;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import com.wara.barcode.DTO.BarcodeDTO;
@@ -20,7 +21,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
+import java.util.HashMap;
 
 
 @Service
@@ -37,9 +38,10 @@ public class BarcodeService {
         try {
             // DTO를 String으로 변환
             String url = objectMapper.writeValueAsString(dto);
-
+            BarcodeDTO barcode =  new BarcodeDTO(dto.getProductId(), dto.getOptionId());
             // 바코드 정보 생성
-            BitMatrix encode = new MultiFormatWriter().encode(url, BarcodeFormat.CODE_128, width, height);
+//            BitMatrix encode = new MultiFormatWriter().encode(url, BarcodeFormat.CODE_128, width, height);
+            BitMatrix encode = new MultiFormatWriter().encode(dto.getProductId()+"A"+dto.getOptionId(), BarcodeFormat.CODE_128, width, height);
 
             // ByteArrayOutputStream에서 byte 배열로 변환
             ByteArrayOutputStream out = new ByteArrayOutputStream();
