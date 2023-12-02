@@ -44,7 +44,7 @@ const CellRenderer = (props) => {
           // ,          state: { productId: productId },
         }}
       >
-        <button>수정</button>
+        <button>등록/수정</button>
       </Link>
     </span>
   );

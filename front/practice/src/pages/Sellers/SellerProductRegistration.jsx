@@ -753,9 +753,13 @@ export default function SellerProductRegistration(props) {
               <hr />
 
               <Upload
-                action=""
+                action="https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/image/upload"
                 listType="picture"
                 defaultFileList={[[]]}
+                headers={{
+                  "Content-Type": "multipart/form-data",
+                  Authorization: `${token}`,
+                }}
               >
                  <Button icon={<UploadOutlined />}>Upload</Button>
               </Upload>
