@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import sellerAd from "../../adImages/sellerAd.png";
 
-import React from "react";
+import React, { useEffect } from "react";
 import "./Seller.css";
 import SellerHeader from "./SellerHeader";
 
 export default function SellerHome() {
-  const email = sessionStorage.getItem("email");
-  const token = sessionStorage.getItem("token");
+  const email = localStorage.getItem("email");
+  const token = localStorage.getItem("token");
 
   // useEffect(() => {
   //     const fetchData = async () => {
@@ -30,6 +30,10 @@ export default function SellerHome() {
   //   };
   //   fetchData();
   // }, []);
+
+  useEffect(() => {
+    console.log("현재 페이지"+ localStorage.getItem("email"), localStorage.getItem("token"));
+  }, []);
 
   return (
     <div className="seller-home">

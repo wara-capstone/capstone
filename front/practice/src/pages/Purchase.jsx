@@ -11,8 +11,8 @@ import "../components/CartComponents.css";
 
 export default function Purchase() {
   const navigate = useNavigate();
-    const email = sessionStorage.getItem("email");
-    const token = sessionStorage.getItem("token");
+    const email = localStorage.getItem("email");
+    const token = localStorage.getItem("token");
 
   const location = useLocation();
     const { checkList, selectedItems } = location.state;
@@ -29,7 +29,7 @@ export default function Purchase() {
 
       const fetchData = async () => {
         const response = await fetch(
-          `/api/product/all/product/${productId}/${pColor}/${pSize}`,
+          `https://port-0-payment-3yl7k2blou10m56.sel5.cloudtype.app/product/all/product/${productId}/${pColor}/${pSize}`,
           {
             method: "GET",
             headers: {
@@ -79,7 +79,7 @@ async function clickPurchase(e) {
 
     try {
       const response = await fetch(
-        "/api/payment/create",
+        "https://port-0-payment-3yl7k2blou10m56.sel5.cloudtype.app/payment/create",
         {
           method: "POST",
           headers: {
@@ -101,7 +101,7 @@ async function clickPurchase(e) {
         console.log(deleteString);
           const fetchData = async () => {
            const response = await fetch(
-             '/api/cart/items/?user_email='+email+deleteString,
+             'http://3.34.227.3:16000/cart/items/?user_email='+email+deleteString,
              {
                method: "DELETE",
                headers: {

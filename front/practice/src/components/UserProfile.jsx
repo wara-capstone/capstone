@@ -5,10 +5,11 @@ import { Link, useNavigate } from "react-router-dom";
 import "./UserProfile.css";
 
 const UserProfile = () => {
-  const email = sessionStorage.getItem("email");
-  const userRole = sessionStorage.getItem("role");
-  const storeId = sessionStorage.getItem("storeid");
-  const token = sessionStorage.getItem("token");
+  
+  const email = localStorage.getItem("email");
+  const userRole = localStorage.getItem("role");
+  const storeId = localStorage.getItem("storeid");
+  const token = localStorage.getItem("token");
 
   let url;
 
@@ -59,12 +60,12 @@ const UserProfile = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // 로그아웃 처리 로직을 구현합니다.
+    // 로그아웃 처리 로직을 구현합니다. 
 
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("email");
-    sessionStorage.removeItem("role");
-    sessionStorage.removeItem("storeid");
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    localStorage.removeItem("role");
+    localStorage.removeItem("storeid");
     // 페이지 이동
     navigate("/");
   };
