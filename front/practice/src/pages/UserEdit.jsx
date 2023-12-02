@@ -6,8 +6,9 @@ import EventButton from "../components/EventButton";
 import Header from "../components/Header";
 
 const UserEdit = ({ user }) => {
-  const token = sessionStorage.getItem("token");
-  const email = sessionStorage.getItem("email");
+  
+  const token = localStorage.getItem("token");
+  const email = localStorage.getItem("email");
 
   const [nickname, setNickname] = useState();
   const [phoneNumber, setPhoneNumber] = useState();

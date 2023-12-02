@@ -5,14 +5,14 @@ import SellerSideNav from "./SellerSideNav";
 
 const { kakao } = window;
 
-const email = sessionStorage.getItem("email");
-const token = sessionStorage.getItem("token");
+const SellerStoreRegister = ({ store }) => {
 
-var map;
+  var map;
 var geocoder;
 var marker;
 
-const SellerStoreRegister = ({ store }) => {
+  const [email, setEmail] = useState(localStorage.getItem("email"));
+  const [token, setToken] = useState(localStorage.getItem("token"));
   const [name, setName] = useState(store?.name || "");
   const [location, setLocation] = useState(store?.location || "");
   const [content, setContent] = useState(store?.content || "");
@@ -28,6 +28,11 @@ const SellerStoreRegister = ({ store }) => {
   );
 
   useEffect(() => {
+    setEmail(localStorage.getItem("email"));
+    setToken(localStorage.getItem("token"));
+
+    console.log("현재 페이지"+ localStorage.getItem("email"), localStorage.getItem("token"));
+
     var mapDiv = document.querySelector("#storeMap"), // 지도를 표시할 div
       mapOption = {
         center: new kakao.maps.LatLng(35.856047838165004, 128.49278206824263), // 지도의 중심좌표 (35.8678658, 128.5967954)
@@ -45,7 +50,7 @@ const SellerStoreRegister = ({ store }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: Implement the code to send updated data to the server
-
+  
     var data = {
       storeName: name,
       storeSeller: email,
@@ -97,6 +102,8 @@ const SellerStoreRegister = ({ store }) => {
           alert("성공!");
           console.log(data.result);
           console.log(formData);
+          console.log(token);
+          console.log(email);
         })
         .catch((error) => {
           console.error(error);

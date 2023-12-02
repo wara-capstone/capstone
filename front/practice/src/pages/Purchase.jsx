@@ -11,8 +11,8 @@ import "../components/CartComponents.css";
 
 export default function Purchase() {
   const navigate = useNavigate();
-    const email = sessionStorage.getItem("email");
-    const token = sessionStorage.getItem("token");
+    const email = localStorage.getItem("email");
+    const token = localStorage.getItem("token");
 
   const location = useLocation();
     const { checkList, selectedItems } = location.state;
@@ -101,7 +101,7 @@ async function clickPurchase(e) {
         console.log(deleteString);
           const fetchData = async () => {
            const response = await fetch(
-             '/api/cart/items/?user_email='+email+deleteString,
+             'http://3.34.227.3:16000/cart/items/?user_email='+email+deleteString,
              {
                method: "DELETE",
                headers: {

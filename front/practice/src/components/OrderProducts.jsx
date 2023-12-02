@@ -16,8 +16,8 @@ export default function OrderProducts({ selectedBread, changeSingleBox, data, ch
     const [result, setResult] = useState(null); // 옵션 가져오기 결과
 
 
-    var email = sessionStorage.getItem('email');
-    var token = sessionStorage.getItem('token');
+    var email = localStorage.getItem('email');
+    var token = localStorage.getItem('token');
 
     const handleColorChange = (e) => { // 선택한 색상 변경
         const newTargetColor = e.target.value;
