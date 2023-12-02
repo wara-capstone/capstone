@@ -21,7 +21,8 @@ export default function Cart() {
       const selectedItems = selectedBread.filter(bread => checkList.includes(bread.cart_item_id)); // 선택된 아이템만 필터링
 
       if(selectedItems.length === 0) {
-        console.log("선택된 상품이 없습니다.");
+        alert("선택된 상품이 없습니다.");
+        console.log("선택된 상품이 없습니다."); 
         return;
       }
       else{
@@ -55,7 +56,7 @@ const changeAllBox = checked => {
   useEffect(() => {
     const fetchData = async () => {
      const response = await fetch(
-       'http://52.79.186.117:8000/api/cart/items/?user_email='+email,
+       'http://3.34.227.3:16000/api/cart/items/?user_email='+email,
        {
          method: "GET",
          headers: {
@@ -117,7 +118,7 @@ useEffect(() => {
     console.log(deleteString);
       const fetchData = async () => {
        const response = await fetch(
-         'http://52.79.186.117:8000/api/cart/items/?user_email='+email+deleteString,
+         'http://3.34.227.3:16000/api/cart/items/?user_email='+email+deleteString,
          {
            method: "DELETE",
            headers: {

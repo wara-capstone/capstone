@@ -41,7 +41,7 @@ export default function SellerStoreSales({ store }) {
     normalImage = createMarkerImage(imageSrc4, imageSize);
 
   // fetch 통신 method
-  const fetchData = async (initMarkers) => {
+  const fetchData = async (initMarkers) => {  
     console.log(email);
     try {
       const response = await fetch(

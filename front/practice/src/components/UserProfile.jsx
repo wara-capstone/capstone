@@ -116,6 +116,19 @@ const UserProfile = () => {
             </div>
           </button>
         </Link>
+
+        <Link to="/user/purchaseHistory" className="user-link">
+          <button className="chattingList-btn">
+            <span role="img" aria-label="conversation">
+              📝
+            </span>{" "}
+            나의 구매 내역
+            <div className="move-page-icon">
+              <FontAwesomeIcon icon={faChevronRight} />
+            </div>
+          </button>
+        </Link>
+
       </div>
 
       <div className="move-seller-page-btn-container">

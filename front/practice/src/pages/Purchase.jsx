@@ -90,8 +90,8 @@ async function clickPurchase(e) {
       );
       if (response.status === 201) {
         console.log("결제 성공!!");
-
-        if (checkList !== null) {
+        console.log(checkList);
+        if (checkList !== undefined) {
         // 구매후 장바구니 삭제
         var deleteString ='';
         checkList.forEach(id => {
@@ -101,7 +101,7 @@ async function clickPurchase(e) {
         console.log(deleteString);
           const fetchData = async () => {
            const response = await fetch(
-             'http://52.79.186.117:8000/api/cart/items/?user_email='+email+deleteString,
+             'http://3.34.227.3:16000/api/cart/items/?user_email='+email+deleteString,
              {
                method: "DELETE",
                headers: {
@@ -129,7 +129,6 @@ async function clickPurchase(e) {
           const errorData = await response.json();
           console.log(errorData);
       }
-      
       else if (response.status === 400) {
         // Handle error
         alert(`실패`);
