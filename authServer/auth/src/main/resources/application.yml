@@ -9,7 +9,10 @@ spring:
     username: root
     password: 1234
     driver-class-name: org.mariadb.jdbc.Driver
-
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
     # Spring boot 2.6버전 이후에 spring.mvc.pathmatch.matching-strategy 값이 ant_apth_matcher에서 path_pattern_parser로 변경되면서 몇몇 라이브러리에서 오류가 발생하고 있다!
     # https://goyunji.tistory.com/137
 #  mvc:
