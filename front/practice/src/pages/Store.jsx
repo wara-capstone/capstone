@@ -4,6 +4,9 @@ import BottomNav from "../components/BottomNav";
 import Category from "../components/Category";
 import EventButton from "../components/EventButton";
 import Header from "../components/Header";
+import{
+  message
+} from "antd";
 
 export default function Store() {
   const { id } = useParams();
@@ -24,7 +27,7 @@ export default function Store() {
       navigate("/login");
     } else if (userId !== null) {
       if(userId === storeData.storeSeller){
-        alert("자신의 상점입니다.");
+        message.error("자신의 상점과는 상담하실 수 없습니다.", 2)
       }else{
       navigate(`/chatting/${storeData.storeSeller}`, {
         state: { seller: storeData.storeSeller },

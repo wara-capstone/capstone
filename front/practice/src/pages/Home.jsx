@@ -7,6 +7,9 @@ import AdComponent from "../components/AdComponent";
 import BottomNav from "../components/BottomNav";
 import Category from "../components/Category";
 import Header from "../components/Header";
+import{
+  message
+} from "antd";
 
 export default function Home() {
   const adImages = [

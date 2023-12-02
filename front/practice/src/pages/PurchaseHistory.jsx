@@ -9,6 +9,9 @@ import { useLocation } from "react-router-dom";
 import PurchaseProduct from "../components/PurchaseProduct";
 import "../components/CartComponents.css";
 import PurchaseHistoryCard from "../components/PurchaseHistoryCard";
+import {
+  message
+}from "antd";
 
 export default function PurchaseHistory() {
 
@@ -16,7 +19,6 @@ export default function PurchaseHistory() {
   const navigate = useNavigate();
     const email = localStorage.getItem("email");
     const token = localStorage.getItem("token");
-
 
     // 총 금액
 //   const totalPrice = purchaseItems.reduce((acc, item) => acc + (item.product.price), 0);
@@ -34,8 +36,8 @@ export default function PurchaseHistory() {
             },
           }
         );
-       const result = await response.json();
         if (response.status === 200) {
+          const result = await response.json();
           console.log("성공");
           console.log(result);
 
@@ -67,11 +69,11 @@ export default function PurchaseHistory() {
             });
           }
           else{
-            console.log("구매내역 없음");
+            message.success("구매 내역이 존재하지 않습니다!");
           }
 
-        } else {
-          console.log("실패");
+        } else{
+          message.error("구매 내역을 불러오는데 실패하였습니다.", 1);
         }
       };
       fetchData();

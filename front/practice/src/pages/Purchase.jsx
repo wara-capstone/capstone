@@ -8,6 +8,9 @@ import { useEffect, useState} from "react";
 import { useLocation } from "react-router-dom";
 import PurchaseProduct from "../components/PurchaseProduct";
 import "../components/CartComponents.css";
+import{
+  message
+} from "antd";
 
 export default function Purchase() {
   const navigate = useNavigate();
@@ -88,9 +91,11 @@ async function clickPurchase(e) {
           body: formData
         }
       );
+      console.log(response);
       if (response.status === 201) {
-        console.log("결제 성공!!");
-        console.log(checkList);
+        
+        message.success("구매가 완료되었습니다.", 2);
+
         if (checkList !== undefined) {
         // 구매후 장바구니 삭제
         var deleteString ='';
@@ -122,7 +127,6 @@ async function clickPurchase(e) {
          fetchData();
         }
 
-         alert("구매완료!");
          navigate("/");
 
       } else if (response.status !== 201) {
@@ -131,10 +135,11 @@ async function clickPurchase(e) {
       }
       else if (response.status === 400) {
         // Handle error
-        alert(`실패`);
+        message.error("잘못된 요청입니다.");
       }
     } catch (error) {
       console.error("오류 발생:", error);
+      message.error("잘못된 요청입니다.");
     }
 }
 
