@@ -57,7 +57,7 @@ const SellerStoreEdit = ({ store }) => {
     console.log(email);
     try {
       const response = await fetch(
-        `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/read/seller/${email}`,
+        `http://52.79.186.117:8000/api/store/read/seller/${email}`,
         {
           method: "GET",
           headers: {
@@ -211,7 +211,7 @@ const SellerStoreEdit = ({ store }) => {
       }
 
       fetch(
-        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/update/id",
+        "http://52.79.186.117:8000/api/store/update/id",
         {
           method: "PUT",
           headers: {
@@ -237,7 +237,7 @@ const SellerStoreEdit = ({ store }) => {
     } else {
       formData = JSON.stringify(data);
       fetch(
-        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/update/id",
+        "http://52.79.186.117:8000/api/store/update/id",
         {
           method: "PUT",
           headers: {
@@ -314,7 +314,7 @@ const SellerStoreEdit = ({ store }) => {
     console.log(storeId);
 
     fetch(
-      `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/delete/id/${storeId}`,
+      `http://52.79.186.117:8000/api/store/delete/id/${storeId}`,
       {
         method: "DELETE",
       }

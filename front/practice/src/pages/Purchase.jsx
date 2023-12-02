@@ -29,7 +29,7 @@ export default function Purchase() {
 
       const fetchData = async () => {
         const response = await fetch(
-          `https://port-0-payment-3yl7k2blou10m56.sel5.cloudtype.app/product/all/product/${productId}/${pColor}/${pSize}`,
+          `http://52.79.186.117:8000/api/product/all/product/${productId}/${pColor}/${pSize}`,
           {
             method: "GET",
             headers: {
@@ -79,7 +79,7 @@ async function clickPurchase(e) {
 
     try {
       const response = await fetch(
-        "https://port-0-payment-3yl7k2blou10m56.sel5.cloudtype.app/payment/create",
+        "http://52.79.186.117:8000/api/payment/create",
         {
           method: "POST",
           headers: {
@@ -101,7 +101,7 @@ async function clickPurchase(e) {
         console.log(deleteString);
           const fetchData = async () => {
            const response = await fetch(
-             'http://3.34.227.3:16000/cart/items/?user_email='+email+deleteString,
+             'http://52.79.186.117:8000/api/cart/items/?user_email='+email+deleteString,
              {
                method: "DELETE",
                headers: {
@@ -124,6 +124,7 @@ async function clickPurchase(e) {
 
          alert("구매완료!");
          navigate("/");
+
       } else if (response.status !== 201) {
           const errorData = await response.json();
           console.log(errorData);

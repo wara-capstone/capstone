@@ -85,7 +85,7 @@ useEffect(() => {
     //Get
     try {
       const response = await axios.get(
-        `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/${productId}/option/${optionId}}`,
+        `http://52.79.186.117:8000/api/product/all/${productId}/option/${optionId}}`,
         {
           headers: {
             Authorization: `${token}`,

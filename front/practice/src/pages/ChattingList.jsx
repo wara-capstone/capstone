@@ -17,7 +17,7 @@ export default function ChattingList() {
   useEffect(() => {
     async function fetchChattingList() {
       try {
-        const response = await fetch(`http://3.34.227.3:14000/api/chat/rooms/?email=${userId}`, {
+        const response = await fetch(`http://52.79.186.117:8000/api/chat/rooms/?email=${userId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -50,7 +50,7 @@ export default function ChattingList() {
   }, [userId]);
 
   const fetchImage = async (email) => {
-    const response = await fetch(`https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user?email=${email}`, {
+    const response = await fetch(`http://52.79.186.117:8000/api/user?email=${email}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

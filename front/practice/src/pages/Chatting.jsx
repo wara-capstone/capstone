@@ -41,7 +41,7 @@ export default function Chatting() {
     }
 
     try {
-      const response = await fetch("http://3.34.227.3:14000/api/chat/rooms/", {
+      const response = await fetch("http://52.79.186.117:8000/api/chat/rooms/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -86,7 +86,7 @@ export default function Chatting() {
   const setupWebSocket = (roomId, authToken) => {
     // 인증 토큰을 URL의 쿼리 파라미터로 추가
     const newSocket = new WebSocket(
-      `http://3.34.227.3:14000/api/ws/room/${roomId}/messages?token=${authToken}`
+      `http://52.79.186.117:8000/api/ws/room/${roomId}/messages?token=${authToken}`
     );
 
     console.log(newSocket.url);

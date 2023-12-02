@@ -31,7 +31,7 @@ const UserProfile = () => {
     }
       const fetchData = async () => {
       const response = await fetch(
-        'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user?email='+email,
+        'http://52.79.186.117:8000/api/user?email='+email,
         {
           method: "GET",
           headers: {
@@ -46,7 +46,8 @@ const UserProfile = () => {
           ...user, // 기존 user 객체를 복사합니다.
           name: result.nickname,
           email: result.email, // email 속성만 변경합니다.
-          profileImage: result.profileImage// profileImage 속성만 변경합니다.
+          profileImage: result.profileImage,// profileImage 속성만 변경합니다.
+          phoneNumber: result.phone
         });
         console.log(result.profileImage);
       } else {

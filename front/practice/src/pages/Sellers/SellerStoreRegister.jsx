@@ -83,7 +83,7 @@ var marker;
         }
       }
       fetch(
-        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/create",
+        "http://52.79.186.117:8000/api/store/create",
         {
           method: "POST",
           headers: {
@@ -112,7 +112,7 @@ var marker;
       formData = JSON.stringify(data);
 
       fetch(
-        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/create",
+        "http://52.79.186.117:8000/api/store/create",
         {
           method: "POST",
           headers: {
