@@ -77,16 +77,16 @@ export default function SellerItemManagement() {
     },
     { headerName: "상품코드", field: "productId", filter: true },
     { headerName: "사이즈", field: "options[0].productSize", filter: true,
-      valueGetter: params => params.data.options[0].productSize },
+      valueGetter: params => params.data.productSize },
+      //valueGetter: params => params.data.options[0].productSize }, //갑자기 이 부분이 안됨
     {
       headerName: "색상",
       field: "options[0].productColor",
       minWidth: 150,
       filter: true,
-      valueGetter: params => params.data.options[0].productColor 
-    },
+      valueGetter: params => params.data.productColor },
     { headerName: "재고 수량", field: "options[0].productStock", filter: true,
-      valueGetter: params => params.data.options[0].productStock },
+      valueGetter: params => params.data.productStock },
     
     {
       headerName: '관리',

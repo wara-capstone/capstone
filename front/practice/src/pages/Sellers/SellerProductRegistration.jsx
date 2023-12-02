@@ -228,85 +228,128 @@ export default function SellerProductRegistration(props) {
   const [options, setOptions] = useState([{ items: ["사이즈 (예시: s)"] }]);
 
 
-  const handleSubmitButtonClick = () => {
-    // 서버로 데이터 전송하는 로직 작성
-    if(isTrue){ // 확인 버튼을 눌렀을 때 상품 수정을 서버로 보냄 
-   //   console.log("트루");
-      axios // 상품 수정
-      .put(
-        `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/modify`,
-        {
-          headers: {
-            "Content-Type" : "application/json",
-            Authorization: `${token}`,
-          },
-          productDTO: {
-            //productId: productId,
-            //storeId: storeId,
-            productName: productName,
-            productCategory: productCategory,
-            //sellerProductCode: sellerProductCode,
-          },
-          // optionDTO: {
-          //   productPrice: productPrice,
-          //   productSize: productSize,
-          //   productColor: productColor,
-          //   productStock: productStock,
-          // },
-        }
-      )
-      .then((response) => {
-        console.log(response.data); // 서버 응답 출력
-      })
-      .catch((error) => {
-        console.error(error); // 오류 처리
-      });
+  // const handleSubmitButtonClick = async() => {
+  //   const response =
+  //   // 서버로 데이터 전송하는 로직 작성
+  // //   if(isTrue){ // 확인 버튼을 눌렀을 때 상품 수정을 서버로 보냄 
+  // //  //   console.log("트루");
+  // //     axios // 상품 수정
+  // //     .put(
+  // //       `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/modify`,
+  // //       {
+  // //         headers: {
+  // //           "Content-Type" : "multipart/form-data",
+  // //           Authorization: `${token}`,
+  // //         },
+  // //         productId: productId,
+  // //         productDTO: {
+  // //           //productId: productId,
+  // //           //storeId: storeId,
+  // //           productName: productName,
+  // //           productCategory: productCategory,
+  // //           //sellerProductCode: sellerProductCode,
+  // //         },
+  // //         // optionDTO: {
+  // //         //   productPrice: productPrice,
+  // //         //   productSize: productSize,
+  // //         //   productColor: productColor,
+  // //         //   productStock: productStock,
+  // //         // },
+  // //       }
+  // //     )
+  // //     .then((response) => {
+  // //       console.log(response.data); // 서버 응답 출력
+  // //     })
+  // //     .catch((error) => {
+  // //       console.error(error); // 오류 처리
+  // //     });
+  // //   }
+    
+  // //   else{
+  //   await axios // 상품 등록
+  //     .post(
+  //       `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/seller`,
+  //       {
+  //         headers: {
+  //           //"Content-Type" : "multipart/form-data",
+  //           Authorization: `${token}`,
+  //         },
+  //         productDTO: {
+  //           //productId: productId,
+  //           //storeId: storeId,
+  //           productName: productName,
+  //           productCategory: productCategory,
+  //           //sellerProductCode: sellerProductCode,
+  //         },
+  //         optionDTO: {
+  //           productPrice: productPrice,
+  //           productSize: productSize,
+  //           productColor: productColor,
+  //           productStock: productStock,
+  //         },
+  //       }
+  //     )
+  //     .then((response) => {
+  //       console.log(response.data); // 서버 응답 출력
+  //     })
+  //     .catch((error) => {
+  //       console.error(error); // 오류 처리
+  //     });
+  //  // console.log("false");
+  //   };
+
+  //   message.success("등록되었습니다");
+  // };
+  
+  const handleSubmitButtonClick = async () => {
+    try {
+      let response;
+      
+      const headers = {
+        Authorization: `${token}`,
+      };
+      
+      const data = {
+        productDTO: {
+          productName: productName,
+          productCategory: productCategory,
+        },
+        optionDTO: {
+          productPrice: productPrice,
+          productSize: productSize,
+          productColor: productColor,
+          productStock: productStock,
+        },
+      };
+      
+      if (isTrue) { // 상품 수정
+        response = await axios.put(
+          `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/modify`,
+          data,
+          { headers }
+        );
+      } else { // 상품 등록
+        response = await axios.post(
+          `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/seller`,
+          data,
+          { headers }
+        );
+      }
+      
+      console.log(response.data); // 서버 응답 출력
+    } catch (error) {
+      console.error(error); // 오류 처리
     }
     
-    else{
-    axios // 상품 등록
-      .post(
-        `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/seller`,
-        {
-          headers: {
-            //"Content-Type" : "multipart/form-data",
-            Authorization: `${token}`,
-          },
-          productDTO: {
-            //productId: productId,
-            //storeId: storeId,
-            productName: productName,
-            productCategory: productCategory,
-            //sellerProductCode: sellerProductCode,
-          },
-          optionDTO: {
-            productPrice: productPrice,
-            productSize: productSize,
-            productColor: productColor,
-            productStock: productStock,
-          },
-        }
-      )
-      .then((response) => {
-        console.log(response.data); // 서버 응답 출력
-      })
-      .catch((error) => {
-        console.error(error); // 오류 처리
-      });
-   // console.log("false");
-    };
-
     message.success("등록되었습니다");
   };
-  
-
  
 
 
   const removeOption = async (index) => {
     try {
       // 1. 서버에 삭제 요청 보내기
-      const response = await axios.delete(`https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/seller/option/${index}`,
+      const response = await axios.delete(`https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/seller/option/${productInfo.options[index-1].optionId}`,
       {
         headers: {
           "Content-Type": "application/json",
