@@ -128,8 +128,7 @@ useEffect(() => {
           //const barcodeData = JSON.parse(result.text); // 바코드 데이터를 JSON 객체로 변환
           if(true){
          // console.log(barcodeData);
-          const optionId = "10"; // 실제 매장 ID로 변경해야 합니다.
-            console.log(data);
+          console.log(data);
 
 
           fetchedProductInfo = await fetchProductInfo(
