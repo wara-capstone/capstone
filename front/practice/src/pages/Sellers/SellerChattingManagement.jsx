@@ -50,7 +50,7 @@ export default function SellerChattingManagement() {
     }
 
     try {
-      const response = await fetch("http://52.79.186.117:8000/api/chat/rooms/", {
+      const response = await fetch("/api/chat/rooms/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -95,7 +95,7 @@ export default function SellerChattingManagement() {
   const setupWebSocket = (roomId, authToken) => {
     // 인증 토큰을 URL의 쿼리 파라미터로 추가
     const newSocket = new WebSocket(
-      `wss://www.onoff.zonehttp://52.79.186.117:8000/api/ws/room/${roomId}/messages?token=${authToken}`
+      `wss://www.onoff.zone/api/ws/room/${roomId}/messages?token=${authToken}`
     );
 
     console.log(newSocket.url);
@@ -136,7 +136,7 @@ export default function SellerChattingManagement() {
     async function fetchChattingList() {
       setLoading(true);
       try {
-        const response = await fetch(`http://52.79.186.117:8000/api/chat/rooms/?email=${userId}`, {
+        const response = await fetch(`/api/chat/rooms/?email=${userId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -171,7 +171,7 @@ export default function SellerChattingManagement() {
   }, [userId]);
 
   const fetchImage = async (email) => {
-    const response = await fetch(`http://52.79.186.117:8000/api/user?email=${email}`, {
+    const response = await fetch(`/api/user?email=${email}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

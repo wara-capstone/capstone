@@ -83,7 +83,7 @@ var marker;
         }
       }
       fetch(
-        "http://52.79.186.117:8000/api/store/create",
+        "/api/store/create",
         {
           method: "POST",
           headers: {
@@ -112,7 +112,7 @@ var marker;
       formData = JSON.stringify(data);
 
       fetch(
-        "http://52.79.186.117:8000/api/store/create",
+        "/api/store/create",
         {
           method: "POST",
           headers: {

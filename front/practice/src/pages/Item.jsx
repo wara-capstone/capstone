@@ -68,7 +68,7 @@ export default function Item() {
     };
 
     try {
-      const response = await fetch("http://3.34.227.3:16000/api/cart/items/", {
+      const response = await fetch("/api/cart/items/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -152,7 +152,7 @@ export default function Item() {
     async function optionGet() {
       //옵션 가져오기
       console.log("가져온 상품아이디", id);
-      const response = await fetch(`http://52.79.186.117:8000/api/product/all/` + id, {
+      const response = await fetch(`/api/product/all/` + id, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

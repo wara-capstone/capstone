@@ -36,7 +36,7 @@ const Signup = () => {
 
     try {
       const response = await fetch(
-        "http://52.79.186.117:8000/api/auth/signup",
+        "/api/auth/signup",
         {
           method: "POST",
           headers: {

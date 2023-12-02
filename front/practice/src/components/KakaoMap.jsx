@@ -58,7 +58,7 @@ export default function KakaoMap() {
     useEffect(() => {
         const fetchData = async () => {
             const response = await fetch(
-                'http://3.34.227.3:16000/api/cart/items/?user_email=' + email,
+                '/api/cart/items/?user_email=' + email,
                 {
                     method: "GET",
                     headers: {
@@ -172,7 +172,7 @@ export default function KakaoMap() {
     const fetchData = async (BodyJson, latlng, initMarkers) => {
         try {
             const response = await fetch(
-                "http://52.79.186.117:8000/api/store/read/map/coordinate",
+                "/api/store/read/map/coordinate",
                 {
                     method: 'POST',
                     headers: {

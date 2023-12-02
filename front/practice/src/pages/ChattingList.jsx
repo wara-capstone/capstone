@@ -20,7 +20,7 @@ export default function ChattingList() {
     async function fetchChattingList() {
       try {
         setLoading(true);
-        const response = await fetch(`http://52.79.186.117:8000/api/chat/rooms/?email=${userId}`, {
+        const response = await fetch(`/api/chat/rooms/?email=${userId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -55,7 +55,7 @@ export default function ChattingList() {
   }, [userId]);
 
   const fetchImage = async (email) => {
-    const response = await fetch(`http://52.79.186.117:8000/api/user?email=${email}`, {
+    const response = await fetch(`/api/user?email=${email}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

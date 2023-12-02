@@ -57,7 +57,7 @@ function quantityMinus () { //수량 감소
 
 async function optionGet() { //옵션 가져오기
     const response = await fetch(
-        'http://52.79.186.117:8000/api/product/all/'+data.product.p_id,
+        '/api/product/all/'+data.product.p_id,
         {
           method: "GET",
           headers: {    
@@ -117,7 +117,7 @@ async function optionEdit(){  //옵션 변경
   
       try {
         const response = await fetch(
-          "http://52.79.186.117:8000/api/cart/items/",
+          "/api/cart/items/",
           {
             method: "PUT",
             headers: {
