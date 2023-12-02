@@ -2,14 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import SellerHeader from "./SellerHeader";
 
 export default function SellerChattingManagement() {
+  
   const [currentRoomId, setCurrentRoomId] = useState(null);
   const [socket, setSocket] = useState(null);
   const [messageInput, setMessageInput] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
   const [customerId, setCustomerId] = useState(null);
 
-  const userId = sessionStorage.getItem("email");
-  const token = sessionStorage.getItem("token"); // 실제 token 값으로 대체
+  const userId = localStorage.getItem("email");
+  const token = localStorage.getItem("token"); // 실제 token 값으로 대체
 
   const [roundImage, setRoundImage] = useState(
     "https://via.placeholder.com/150x150"

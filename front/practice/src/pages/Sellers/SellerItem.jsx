@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import "./Seller.css";
 
 const SellerItem = ({ item }) => {
+  
   const [name, setName] = useState(item?.name || "");
   const [price, setPrice] = useState(item?.price || "");
   const [content, setContent] = useState(item?.content || "");

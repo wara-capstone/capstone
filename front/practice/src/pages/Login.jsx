@@ -15,7 +15,7 @@ const Login = () => {
     await new Promise((r) => setTimeout(r, 1000));
     
     const response = await fetch(
-      "/api/auth/signin",
+      "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/auth/signin",
       {
         method: "POST",
         headers: {
@@ -32,11 +32,13 @@ const Login = () => {
     if (response.status === 200) {
       setLoginCheck(false);
       // Store token in local storage
-      sessionStorage.setItem("token", result.token);
-      sessionStorage.setItem("email", result.email); // 여기서 userid를 저장합니다.
-      sessionStorage.setItem("role", result.role); // 여기서 role를 저장합니다.
-      sessionStorage.setItem("storeid", result.storeId); // 여기서 role를 저장합니다.
+      console.log("로그인 전"+ localStorage.getItem("email"), localStorage.getItem("role"), localStorage.getItem("storeid"), localStorage.getItem("token"));
+      localStorage.setItem("token", result.token);
+      localStorage.setItem("email", result.email); // 여기서 userid를 저장합니다.
+      localStorage.setItem("role", result.role); // 여기서 role를 저장합니다.
+      localStorage.setItem("storeid", result.storeId); // 여기서 role를 저장합니다.
       console.log("로그인성공, 이메일주소:" + result.email);
+      console.log("로그인 후"+ localStorage.getItem("email"), localStorage.getItem("role"), localStorage.getItem("storeid"), localStorage.getItem("token"));
       navigate("/"); // 로그인 성공시 홈으로 이동합니다.
     } else {
       setLoginCheck(true);

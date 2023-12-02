@@ -8,8 +8,8 @@ import SellerHeader from "./SellerHeader";
 import SellerSideNav from "./SellerSideNav";
 
 export default function SellerStoreSales({ store }) {
-  const email = sessionStorage.getItem("email");
-  const token = sessionStorage.getItem("token");
+  const email = localStorage.getItem("email");
+  const token = localStorage.getItem("token");
 
   const { kakao } = window;
   var map;
@@ -45,7 +45,7 @@ export default function SellerStoreSales({ store }) {
     console.log(email);
     try {
       const response = await fetch(
-        `/api/store/read/seller/${email}`,
+        `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/read/seller/${email}`,
         {
           method: "GET",
           headers: {
@@ -142,7 +142,7 @@ export default function SellerStoreSales({ store }) {
     async function fetchPayments() {
       try {
         const response = await fetch(
-          `/api/payment/read/store/${storeId}`,
+          `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/payment/read/store/${storeId}`,
           {
             method: "GET",
             headers: {

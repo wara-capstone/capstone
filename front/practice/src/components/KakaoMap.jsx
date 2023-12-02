@@ -27,8 +27,8 @@ var choiceImageSize = new kakao.maps.Size(44, 58); // 선택한 마커의 크기
 
 export default function KakaoMap() {
 
-const email = sessionStorage.getItem("email");
-const token = sessionStorage.getItem("token");
+const email = localStorage.getItem("email");
+const token = localStorage.getItem("token");
 
 let [popupInfo, setPopupInfo] = useState(null); // 현재 열려있는 팝업 정보를 저장하는 변수, boolean
 let [searchText, setSearchText] = useState(""); // 검색창 값
@@ -55,7 +55,7 @@ function showPopup(info) {
     useEffect(() => {
             const fetchData = async () => {
              const response = await fetch(
-               '/api/cart/items/?user_email='+email,
+               'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/cart/items/?user_email='+email,
                {
                  method: "GET",
                  headers: {
@@ -169,7 +169,7 @@ function placesSearchCB (data, status) {
 const fetchData = async (BodyJson ,latlng, initMarkers) => {
     try {
     const response = await fetch(
-    "/api/store/read/map/coordinate",
+    "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/read/map/coordinate",
     {
     method: 'POST',
     headers:{

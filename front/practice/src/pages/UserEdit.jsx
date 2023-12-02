@@ -6,8 +6,9 @@ import EventButton from "../components/EventButton";
 import Header from "../components/Header";
 
 const UserEdit = ({ user }) => {
-  const token = sessionStorage.getItem("token");
-  const email = sessionStorage.getItem("email");
+  
+  const token = localStorage.getItem("token");
+  const email = localStorage.getItem("email");
 
   const [nickname, setNickname] = useState();
   const [phoneNumber, setPhoneNumber] = useState();
@@ -24,7 +25,7 @@ const UserEdit = ({ user }) => {
     console.log("위에꺼 토큰");
     const fetchData = async () => {
     const response = await fetch(
-      '/api/user?email='+email,
+      'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user?email='+email,
       {
         method: "GET",
         headers: {
@@ -72,7 +73,7 @@ const UserEdit = ({ user }) => {
 
     try {
       const response = await fetch(
-        "/api/user",
+        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user",
         {
           method: "PUT",
           headers: {
@@ -111,7 +112,7 @@ const UserEdit = ({ user }) => {
                 console.log(value);
             }
         }
-        fetch('/api/user/image?email='+email, {
+        fetch('https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user/image?email='+email, {
             method: 'POST',
             headers: {
                 "Authorization": `${token}`

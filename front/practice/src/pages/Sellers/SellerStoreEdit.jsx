@@ -8,6 +8,7 @@ import SellerHeader from "./SellerHeader";
 import SellerSideNav from "./SellerSideNav";
 
 const SellerStoreEdit = ({ store }) => {
+  
   const { kakao } = window;
   var map;
   var geocoder;
@@ -20,8 +21,8 @@ const SellerStoreEdit = ({ store }) => {
   var imageSize = new kakao.maps.Size(42, 56); // 마커의 크기 기존 33, 36
   var choiceImageSize = new kakao.maps.Size(44, 58); // 선택한 마커의 크기 기존 38, 40
 
-  const email = sessionStorage.getItem("email");
-  const token = sessionStorage.getItem("token");
+  const email = localStorage.getItem("email");
+  const token = localStorage.getItem("token");
 
   const [name, setName] = useState(store?.name || "");
   const [location, setLocation] = useState(store?.location || "");
@@ -56,7 +57,7 @@ const SellerStoreEdit = ({ store }) => {
     console.log(email);
     try {
       const response = await fetch(
-        `/api/store/read/seller/${email}`,
+        `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/read/seller/${email}`,
         {
           method: "GET",
           headers: {
@@ -210,7 +211,7 @@ const SellerStoreEdit = ({ store }) => {
       }
 
       fetch(
-        "/api/store/update/id",
+        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/update/id",
         {
           method: "PUT",
           headers: {
@@ -236,7 +237,7 @@ const SellerStoreEdit = ({ store }) => {
     } else {
       formData = JSON.stringify(data);
       fetch(
-        "/api/store/update/id",
+        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/update/id",
         {
           method: "PUT",
           headers: {
@@ -313,7 +314,7 @@ const SellerStoreEdit = ({ store }) => {
     console.log(storeId);
 
     fetch(
-      `/api/store/delete/id/${storeId}`,
+      `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/delete/id/${storeId}`,
       {
         method: "DELETE",
       }

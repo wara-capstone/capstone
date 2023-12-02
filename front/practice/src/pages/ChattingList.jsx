@@ -5,8 +5,8 @@ import Header from "../components/Header";
 
 export default function ChattingList() {
   const [visitorUserEmails, setVisitorUserEmails] = useState([]);
-  const userId = sessionStorage.getItem("email"); // 실제 userId 값으로 대체
-  const token = sessionStorage.getItem("token"); // 실제 token 값으로 대체
+  const userId = localStorage.getItem("email"); // 실제 userId 값으로 대체
+  const token = localStorage.getItem("token"); // 실제 token 값으로 대체
   const { id } = useParams();
 
   const [roundImage, setRoundImage] = useState(

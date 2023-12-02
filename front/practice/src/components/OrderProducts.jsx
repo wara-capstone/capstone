@@ -16,8 +16,8 @@ export default function OrderProducts({ selectedBread, changeSingleBox, data, ch
     const [result, setResult] = useState(null); // 옵션 가져오기 결과
 
 
-    var email = sessionStorage.getItem('email');
-    var token = sessionStorage.getItem('token');
+    var email = localStorage.getItem('email');
+    var token = localStorage.getItem('token');
 
     const handleColorChange = (e) => { // 선택한 색상 변경
         const newTargetColor = e.target.value;
@@ -57,7 +57,7 @@ function quantityMinus () { //수량 감소
 
 async function optionGet() { //옵션 가져오기
     const response = await fetch(
-        '/api/product/all/'+data.product.p_id,
+        'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/'+data.product.p_id,
         {
           method: "GET",
           headers: {    
@@ -117,7 +117,7 @@ async function optionEdit(){  //옵션 변경
   
       try {
         const response = await fetch(
-          "/api/cart/items/",
+          "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/cart/items/",
           {
             method: "PUT",
             headers: {
