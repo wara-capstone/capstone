@@ -4,9 +4,16 @@ import React, { useState, useEffect } from "react";
 import BottomNav from "../components/BottomNav";
 import EventButton from "../components/EventButton";
 import Header from "../components/Header";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  message
+} from "antd";
+
 
 const UserEdit = ({ user }) => {
   
+
+  let navigate = useNavigate();
   const token = localStorage.getItem("token");
   const email = localStorage.getItem("email");
 
@@ -21,6 +28,7 @@ const UserEdit = ({ user }) => {
   const [imageCheck, setImageCheck] = useState(false); // 이미지 체크
 
   useEffect( () => {
+    
     console.log(token);
     console.log("위에꺼 토큰");
     const fetchData = async () => {
@@ -41,9 +49,11 @@ const UserEdit = ({ user }) => {
       setImage(result.profileImage);
       setPreviewImageSrc(result.profileImage);
       console.log(result.profileImage);
-
+      
     } else {
       console.log("실패");
+      message.error("값을 불러오는데 실패하였습니다.");
+      navigate("/user");
     }
   };
 
@@ -57,6 +67,7 @@ const UserEdit = ({ user }) => {
 
   // Check if passwords match
   if (password !== passwordConfirm) {
+    //message.error("비밀번호가 일치하지 않습니다.");
     setLoginCheck(true);
     return
   } else {
@@ -87,12 +98,17 @@ const UserEdit = ({ user }) => {
       if (response.status === 200) {
         // Redirect to login.html
         console.log("성공!");
+        message.success("수정이 완료되었습니다.");
+        navigate("/user");
       } else if (response.status === 400) {
         // Handle error
-        alert(`실패`);
+        message.error("수정에 실패하였습니다.");
+        navigate("/user");
       }
     } catch (error) {
       console.error("오류 발생:", error);
+      message.error("수정에 실패하였습니다.");
+      navigate("/user");
     }
 
 

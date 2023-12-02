@@ -1,5 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import SellerHeader from "./SellerHeader";
+import LoadingScreen from "../../components/LoadingScreen";
+import {
+  message
+} from "antd";
 
 export default function SellerChattingManagement() {
   
@@ -125,10 +129,12 @@ export default function SellerChattingManagement() {
   };
 
   const [visitorUserEmails, setVisitorUserEmails] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // 서버에서 채팅 목록을 불러오는 기능 추가
   useEffect(() => {
     async function fetchChattingList() {
+      setLoading(true);
       try {
         const response = await fetch(`http://52.79.186.117:8000/api/chat/rooms/?email=${userId}`, {
           method: "GET",
@@ -157,7 +163,9 @@ export default function SellerChattingManagement() {
         setVisitorUserEmails(userRoomInfo);
       } catch (error) {
         console.error("Error getting visitor_user_emails:", error);
+        message.error("값을 불러오는데 실패하였습니다.");
       }
+      setLoading(false);
     }
     fetchChattingList();
   }, [userId]);
@@ -181,6 +189,9 @@ export default function SellerChattingManagement() {
       console.log("실패");
     }
   };
+  if(loading){
+    return <LoadingScreen></LoadingScreen>
+  }else{
 
   return (
     <div className="seller-chatting-management">
@@ -237,4 +248,4 @@ export default function SellerChattingManagement() {
       </div>
     </div>
   );
-}
+}}

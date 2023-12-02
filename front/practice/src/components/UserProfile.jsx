@@ -3,6 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./UserProfile.css";
+import LoadingScreen from "./LoadingScreen";
+import {
+  message
+} from "antd";
 
 const UserProfile = () => {
   
@@ -13,6 +17,7 @@ const UserProfile = () => {
 
   let url;
 
+  const [loading, setLoading] = useState(true);
   const [isSeller, setIsSeller] = useState(false);
 
   const [user, setUser] = useState({
@@ -30,6 +35,7 @@ const UserProfile = () => {
       setIsSeller(true);
     }
       const fetchData = async () => {
+      setLoading(true);
       const response = await fetch(
         'http://52.79.186.117:8000/api/user?email='+email,
         {
@@ -40,8 +46,8 @@ const UserProfile = () => {
           },
         }
       );
-      const result = await response.json();
       if (response.status === 200) {
+        const result = await response.json();
         setUser({
           ...user, // 기존 user 객체를 복사합니다.
           name: result.nickname,
@@ -50,10 +56,18 @@ const UserProfile = () => {
           phoneNumber: result.phone
         });
         console.log(result.profileImage);
-      } else {
-        console.log("실패");
-        console.log(result.profileImage);
+      } else if(response.status === 401){
+        localStorage.removeItem("token");
+        localStorage.removeItem("email");
+        localStorage.removeItem("role");
+        localStorage.removeItem("storeid");
+        setLoading(false);
+        navigate("/");
       }
+      else {
+        console.log("실패");
+      }
+      setLoading(false);
     };
     fetchData();
   }, []);
@@ -62,7 +76,7 @@ const UserProfile = () => {
 
   const handleLogout = () => {
     // 로그아웃 처리 로직을 구현합니다. 
-
+    message.success("로그아웃 되었습니다.");
     localStorage.removeItem("token");
     localStorage.removeItem("email");
     localStorage.removeItem("role");
@@ -78,6 +92,9 @@ const UserProfile = () => {
     navigate("/seller");
   };
 
+  if(loading){
+    return <LoadingScreen></LoadingScreen>
+  }else{
   return (
     <div className="user-profile">
       <div className="profile-section">
@@ -143,5 +160,5 @@ const UserProfile = () => {
     </div>
   );
 };
-
+}
 export default UserProfile;

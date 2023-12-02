@@ -23,9 +23,13 @@ export default function Store() {
     if (userId === null) {
       navigate("/login");
     } else if (userId !== null) {
+      if(userId === storeData.storeSeller){
+        alert("자신의 상점입니다.");
+      }else{
       navigate(`/chatting/${storeData.storeSeller}`, {
         state: { seller: storeData.storeSeller },
       });
+    }
     }
   };
 

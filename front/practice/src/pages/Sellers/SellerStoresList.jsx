@@ -7,6 +7,7 @@ import { Card } from 'antd';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { RightCircleFilled } from "@ant-design/icons";
+import LoadingScreen from "../../components/LoadingScreen";
 const token = localStorage.getItem("token");
 
 const { Meta } = Card;
@@ -16,9 +17,11 @@ const StoresListPage = () => {
   // props에서 productInfo 추출
 
   const [storeInfo, setStoreInfo] = useState({ result: "", data: [] });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       const result = await axios.get(
         "http://52.79.186.117:8000/api/store/read/seller/seller@naver.com", // 이 부분은 실제 서버 주소와 API 경로로 변경해야 합니다.
         {
@@ -35,12 +38,15 @@ const StoresListPage = () => {
       } else {
         setStoreInfo({ data: [] });
       }
+      setLoading(false);
     };
-
     fetchData();
   }, []);
 
-
+  if(loading){
+    return <LoadingScreen></LoadingScreen>
+  }
+else{
 
   return (
     <div className="seller-store">
@@ -82,5 +88,5 @@ const StoresListPage = () => {
     </div>
   );
 };
-
+}
 export default StoresListPage;
