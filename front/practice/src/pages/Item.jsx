@@ -65,7 +65,7 @@ export default function Item() {
     };
 
     try {
-      const response = await fetch("http://52.79.186.117:8000/api/cart/items/", {
+      const response = await fetch("http://3.34.227.3:16000/api/cart/items/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
