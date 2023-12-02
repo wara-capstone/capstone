@@ -10,8 +10,8 @@ import Modal from 'react-modal';
 
 export default function Cart() {
 
-  const email = sessionStorage.getItem('email');
-  const token = sessionStorage.getItem('token');
+  const email = localStorage.getItem('email');
+  const token = localStorage.getItem('token');
   const [modalIsOpen, setModalIsOpen] = useState(false); //팝업창
 
   let navigate = useNavigate();
@@ -19,7 +19,14 @@ export default function Cart() {
   function purchaseFunc(e) {  //구매하기 기능
       console.log("구매");  
       const selectedItems = selectedBread.filter(bread => checkList.includes(bread.cart_item_id)); // 선택된 아이템만 필터링
+
+      if(selectedItems.length === 0) {
+        console.log("선택된 상품이 없습니다.");
+        return;
+      }
+      else{
        navigate("/user/purchase", { state: {selectedItems: selectedItems, checkList: checkList } } );
+      }
   }
 
 const [selectedBread, setSelectedBread] = useState ([]); 
@@ -48,7 +55,7 @@ const changeAllBox = checked => {
   useEffect(() => {
     const fetchData = async () => {
      const response = await fetch(
-       '/api/cart/items/?user_email='+email,
+       'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/cart/items/?user_email='+email,
        {
          method: "GET",
          headers: {
@@ -110,7 +117,7 @@ useEffect(() => {
     console.log(deleteString);
       const fetchData = async () => {
        const response = await fetch(
-         '/api/cart/items/?user_email='+email+deleteString,
+         'http://3.34.227.3:16000/cart/items/?user_email='+email+deleteString,
          {
            method: "DELETE",
            headers: {

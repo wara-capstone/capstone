@@ -10,8 +10,8 @@ import ImageSlider from "../components/ImageSlider";
 export default function Item() {
   const { id } = useParams();
 
-  const email = sessionStorage.getItem("email");
-  const token = sessionStorage.getItem("token");
+  const email = localStorage.getItem("email");
+  const token = localStorage.getItem("token");
 
   const [targetColor, setTargetColor] = useState(); //선택한 색상
   const [targetSize, setTargetSize] = useState(); //선택한 사이즈

@@ -8,6 +8,7 @@ import SellerHeader from "./SellerHeader";
 import SellerSideNav from "./SellerSideNav";
 
 const SellerStoreEdit = ({ store }) => {
+  
   const { kakao } = window;
   var map;
   var geocoder;
@@ -20,8 +21,8 @@ const SellerStoreEdit = ({ store }) => {
   var imageSize = new kakao.maps.Size(42, 56); // 마커의 크기 기존 33, 36
   var choiceImageSize = new kakao.maps.Size(44, 58); // 선택한 마커의 크기 기존 38, 40
 
-  const email = sessionStorage.getItem("email");
-  const token = sessionStorage.getItem("token");
+  const email = localStorage.getItem("email");
+  const token = localStorage.getItem("token");
 
   const [name, setName] = useState(store?.name || "");
   const [location, setLocation] = useState(store?.location || "");

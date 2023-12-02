@@ -5,8 +5,8 @@ import Header from "../components/Header";
 
 export default function ChattingList() {
   const [visitorUserEmails, setVisitorUserEmails] = useState([]);
-  const userId = sessionStorage.getItem("email"); // 실제 userId 값으로 대체
-  const token = sessionStorage.getItem("token"); // 실제 token 값으로 대체
+  const userId = localStorage.getItem("email"); // 실제 userId 값으로 대체
+  const token = localStorage.getItem("token"); // 실제 token 값으로 대체
   const { id } = useParams();
 
   const [roundImage, setRoundImage] = useState(
@@ -17,7 +17,7 @@ export default function ChattingList() {
   useEffect(() => {
     async function fetchChattingList() {
       try {
-        const response = await fetch(`/api/chat/rooms/?email=${userId}`, {
+        const response = await fetch(`http://3.34.227.3:14000/api/chat/rooms/?email=${userId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -50,7 +50,7 @@ export default function ChattingList() {
   }, [userId]);
 
   const fetchImage = async (email) => {
-    const response = await fetch(`/api/user?email=${email}`, {
+    const response = await fetch(`https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user?email=${email}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

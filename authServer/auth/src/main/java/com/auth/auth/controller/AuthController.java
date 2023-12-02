@@ -23,6 +23,10 @@ public class AuthController {
     }
 
 
+    /**
+     * @param userDTO
+     * @return 회원가입에 대한 결과 ResponseEntity
+     */
     @PostMapping("/signup")
     public ResponseEntity<UserDTO> signup(
             @RequestBody UserDTO userDTO
@@ -31,6 +35,10 @@ public class AuthController {
         return this.authService.signUp(userDTO);
     }
 
+    /**
+     * @param userDTO
+     * @return 로그인에 대한 결과 Response Entity
+     */
     @PostMapping("/signin")
     public ResponseEntity<TokenDTO> signin(
             @RequestBody UserDTO userDTO

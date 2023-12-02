@@ -6,10 +6,10 @@ import "./Card.css";
 function CardList({ category, url }) {
   const { id } = useParams();
 
-  const userId = sessionStorage.getItem("email");
-  const userRole = sessionStorage.getItem("role");
-  const storeId = sessionStorage.getItem("storeid");
-  const token = sessionStorage.getItem("token");
+  const userId = localStorage.getItem("email");
+  const userRole = localStorage.getItem("role");
+  const storeId = localStorage.getItem("storeid");
+  const token = localStorage.getItem("token");
 
   const [categoryData, setCategoryData] = useState(null); // 상태 추가
   var result;

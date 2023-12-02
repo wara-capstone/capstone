@@ -8,6 +8,7 @@
   overflow: hidden;
   background-color: white;
   min-width: 360px; 
+  max-width: 390px;
 }
 
 .card-list {
@@ -47,6 +48,11 @@
   margin-right: 2rem;
 }
 
+.card-contet3 {
+  font-size: 1rem;
+  color: gray;
+  margin-right: 2rem;
+}
 .card-image {
   border-radius: 16px;
   height: 100%;

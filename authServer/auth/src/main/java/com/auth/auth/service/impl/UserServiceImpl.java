@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Optional;
 
 
+/**
+ * 유저 정보와 관련된 비즈니스 로직 인터페이스 구현체
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -40,12 +43,21 @@ public class UserServiceImpl implements UserService {
         this.discoveryClient = discoveryClient;
     }
 
+    /**
+     * 유저의 프로필 이미지 수정
+     * @param email 유저 이메일
+     * @param image 수정하려는 이미지
+     * @return 수정된 이미지의 경로
+     * @throws URISyntaxException
+     * @throws IOException
+     */
     @Override
     public ResponseEntity<String> createImage(String email, MultipartFile image) throws URISyntaxException, IOException {
         Optional<UserEntity> user = this.userDAO.readUser(email);
         if(!user.isPresent()){
             return ResponseEntity.status(400).body(null);
         }
+        // 이미지를 RestTemplate로 전송하기 위해 ByteArray로 수정
         ByteArrayResource body = new ByteArrayResource(image.getBytes()) {
             @Override
             public String getFilename() {
@@ -55,6 +67,7 @@ public class UserServiceImpl implements UserService {
 
 
         try {
+            // 이미지 서버의 주소를 디스커버리 서버로부터 받아온다.
             ServiceInstance imageService = discoveryClient.getInstances("IMAGE-SERVICE").get(0);
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
@@ -92,6 +105,11 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.status(400).body(null);
     }
 
+    /**
+     * 유저 정보를 수정
+     * @param userDTO
+     * @return
+     */
     @Override
     public ResponseEntity<UserDTO> updateUser(UserDTO userDTO) {
         Optional<UserEntity> user = this.userDAO.readUser(userDTO.getEmail());
@@ -123,6 +141,11 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.status(200).body(userDTO);
     }
 
+    /**
+     * 유저 정보를 읽어온다.
+     * @param email
+     * @return
+     */
     @Override
     public ResponseEntity<UserDTO> readUser(String email) {
         Optional<UserEntity> user = this.userDAO.readUser(email);

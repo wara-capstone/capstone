@@ -6,6 +6,7 @@ function Card({
   subTitle,
   content,
   content2,
+  content3,
   mainImage,
   id,
   price,
@@ -30,6 +31,7 @@ function Card({
         <p className="card-count">
           {count ? "재고: " : null} {count}
         </p>
+        <p className="card-content3">{content3}</p>
       </div>
     </div>
   );

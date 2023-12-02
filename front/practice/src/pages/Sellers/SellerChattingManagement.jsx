@@ -2,14 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import SellerHeader from "./SellerHeader";
 
 export default function SellerChattingManagement() {
+  
   const [currentRoomId, setCurrentRoomId] = useState(null);
   const [socket, setSocket] = useState(null);
   const [messageInput, setMessageInput] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
   const [customerId, setCustomerId] = useState(null);
 
-  const userId = sessionStorage.getItem("email");
-  const token = sessionStorage.getItem("token"); // 실제 token 값으로 대체
+  const userId = localStorage.getItem("email");
+  const token = localStorage.getItem("token"); // 실제 token 값으로 대체
 
   const [roundImage, setRoundImage] = useState(
     "https://via.placeholder.com/150x150"
@@ -45,7 +46,7 @@ export default function SellerChattingManagement() {
     }
 
     try {
-      const response = await fetch("/api/chat/rooms/", {
+      const response = await fetch("https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/chat/rooms/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -90,7 +91,7 @@ export default function SellerChattingManagement() {
   const setupWebSocket = (roomId, authToken) => {
     // 인증 토큰을 URL의 쿼리 파라미터로 추가
     const newSocket = new WebSocket(
-      `wss://www.onoff.zone/api/ws/room/${roomId}/messages?token=${authToken}`
+      `wss://www.onoff.zonehttps://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/ws/room/${roomId}/messages?token=${authToken}`
     );
 
     console.log(newSocket.url);
@@ -129,7 +130,7 @@ export default function SellerChattingManagement() {
   useEffect(() => {
     async function fetchChattingList() {
       try {
-        const response = await fetch(`/api/chat/rooms/?email=${userId}`, {
+        const response = await fetch(`https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/chat/rooms/?email=${userId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -162,7 +163,7 @@ export default function SellerChattingManagement() {
   }, [userId]);
 
   const fetchImage = async (email) => {
-    const response = await fetch(`/api/user?email=${email}`, {
+    const response = await fetch(`https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user?email=${email}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

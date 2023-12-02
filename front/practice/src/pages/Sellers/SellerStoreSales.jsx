@@ -8,8 +8,8 @@ import SellerHeader from "./SellerHeader";
 import SellerSideNav from "./SellerSideNav";
 
 export default function SellerStoreSales({ store }) {
-  const email = sessionStorage.getItem("email");
-  const token = sessionStorage.getItem("token");
+  const email = localStorage.getItem("email");
+  const token = localStorage.getItem("token");
 
   const { kakao } = window;
   var map;
