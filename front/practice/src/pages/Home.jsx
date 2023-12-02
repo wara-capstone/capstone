@@ -2,10 +2,10 @@ import adImage1 from "../adImages/ad1.png";
 import adImage2 from "../adImages/ad2.png";
 import adImage3 from "../adImages/ad3.png";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import AdComponent from "../components/AdComponent";
 import BottomNav from "../components/BottomNav";
-import CardList from "../components/CardList";
+import Category from "../components/Category";
 import Header from "../components/Header";
 
 export default function Home() {
@@ -41,15 +41,18 @@ export default function Home() {
   //   fetchData();
   // }, []);
 
-
-
   return (
     <div className="home">
       <Header />
       <div className="ad-image-container">
         <AdComponent images={adImages} />
       </div>
-      <CardList />
+      <Category
+        //현재 메인화면에서 카테고리 선택을 하지 않을 시, store1의 상품을 보여주도록 설정함. 추후 수정 필요.
+        allUrl={`https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/store/51`}
+        categoryUrl="https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/category/"
+      />
+      {/* <CardList /> */}
       <BottomNav />
     </div>
   );

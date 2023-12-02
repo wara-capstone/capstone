@@ -12,7 +12,10 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: 'http://127.0.0.1:3000'
+            #allowedOrigins: 'https://www.onoff.zone'
+            allowed-origins:
+              - 'https://www.onoff.zone'
+              - 'http://127.0.0.1:3000'
             allow-credentials: true
             allowedHeaders: '*'
             allowedMethods:
@@ -28,11 +31,10 @@ eureka:
     fetch-registry: true
     service-url:
       # eureka 주소
-      defaultZone: https://port-0-capstone-jvpb2mlodwuvxm.sel5.cloudtype.app/eureka
+      defaultZone: http://52.79.186.117:8761/eureka
 springboot:
   jwt:
     secret: secretKey123
-
 
 
 #spring:

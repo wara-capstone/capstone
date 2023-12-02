@@ -1,15 +1,13 @@
 import { Link } from "react-router-dom";
 import sellerAd from "../../adImages/sellerAd.png";
-import EventButton from "../../components/EventButton";
 
+import React, { useEffect } from "react";
 import "./Seller.css";
 import SellerHeader from "./SellerHeader";
-import React, { useEffect, useState } from "react";
-
 
 export default function SellerHome() {
-  const email = sessionStorage.getItem("email");
-  const token = sessionStorage.getItem("token");
+  const email = localStorage.getItem("email");
+  const token = localStorage.getItem("token");
 
   // useEffect(() => {
   //     const fetchData = async () => {
@@ -33,9 +31,9 @@ export default function SellerHome() {
   //   fetchData();
   // }, []);
 
-
-
-
+  useEffect(() => {
+    console.log("현재 페이지"+ localStorage.getItem("email"), localStorage.getItem("token"));
+  }, []);
 
   return (
     <div className="seller-home">
@@ -43,8 +41,9 @@ export default function SellerHome() {
       <div className="ad-image-container">
         <img src={sellerAd} className="ad-image" alt="sellerAd" />
       </div>
-      <Link to="/seller/store/management">
-        <EventButton buttonText={"가게 관리하기"} />
+      <Link to="/seller/store/register">
+        {/* <EventButton buttonText={"가게 관리하기"} /> */}
+        <button className="connect-store-register-button">가게 관리하기</button>
       </Link>
     </div>
   );

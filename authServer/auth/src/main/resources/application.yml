@@ -1,11 +1,13 @@
 
 spring:
   jpa:
+    ## spring jpa hibernate
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
+    ## database connect
   datasource:
-    url: jdbc:mariadb://svc.sel5.cloudtype.app:30261/capstoneAuth?createDatabaseIfNotExist=true
+    url: jdbc:mariadb://changuii_maria:3306/capstoneAuth?createDatabaseIfNotExist=true
     username: root
     password: 1234
     driver-class-name: org.mariadb.jdbc.Driver
@@ -21,15 +23,24 @@ server:
   port: 11000
 eureka:
   instance:
-    instance-id: ${spring.cloud.client.ip-address}:${spring.application.instance_id:${random.value}}
+    instance-id: 52.79.186.117:${spring.application.instance_id:${random.value}}
     prefer-ip-address: true
+    ip-address: 52.79.186.117
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: https://port-0-capstone-jvpb2mlodwuvxm.sel5.cloudtype.app/eureka
+      defaultZone: http://52.79.186.117:8761/eureka
 
 
 springboot:
   jwt:
     secret: secretKey123
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  endpoint:
+    prometheus:
+      enabled: true

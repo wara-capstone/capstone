@@ -27,12 +27,15 @@ var choiceImageSize = new kakao.maps.Size(44, 58); // 선택한 마커의 크기
 
 export default function KakaoMap() {
 
-const token = sessionStorage.getItem("token");
+const email = localStorage.getItem("email");
+const token = localStorage.getItem("token");
 
 let [popupInfo, setPopupInfo] = useState(null); // 현재 열려있는 팝업 정보를 저장하는 변수, boolean
 let [searchText, setSearchText] = useState(""); // 검색창 값
 
 let prevInfo = null;
+let userMarker; // 사용자 위치 마커
+let uniqueStoreIds = []; // 중복 제거된 "store_id" 값들을 저장할 배열
 
 //Popup창 켜고 끄는 method
 function showPopup(info) {
@@ -50,6 +53,37 @@ function showPopup(info) {
 }
 
     useEffect(() => {
+            const fetchData = async () => {
+             const response = await fetch(
+               'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/cart/items/?user_email='+email,
+               {
+                 method: "GET",
+                 headers: {
+                   "Content-Type": "application/json",
+                   "Authorization": `${token}`
+                 },
+               }
+             );
+            const result = await response.json();
+        
+             if (response.status === 200) {
+               console.log("성공");        
+               console.log(result);
+
+                           // "store_id" 값만 따로 추출하여 배열에 저장합니다.
+            const storeIds = result.map(item => item.store_id);
+            // Set 객체를 활용하여 중복되는 값들을 제거합니다.
+            uniqueStoreIds = [...new Set(storeIds)];
+            console.log(uniqueStoreIds);  // 중복 제거된 "store_id" 값들을 확인합니다.
+
+             } else {
+              console.log(response);
+               console.log("실패");
+             }
+           };
+           fetchData();
+
+
 // 위치 정보를 가져오는 함수
 const getLocation = new Promise((resolve) => {
     if(navigator.geolocation) {
@@ -81,8 +115,14 @@ const getLocation = new Promise((resolve) => {
         lon = position.coords.longitude;
     var locPosition = new kakao.maps.LatLng(lat, lon);
 
+
+   // 이전 위치 마커가 있으면 지도에서 제거
+   if (userMarker) {
+    userMarker.setMap(null);
+    }
+
     // 사용자의 위치에 마커 표시
-    var marker = new kakao.maps.Marker({
+    userMarker = new kakao.maps.Marker({
         map: map,
         position: locPosition
     });
@@ -134,7 +174,6 @@ const fetchData = async (BodyJson ,latlng, initMarkers) => {
     method: 'POST',
     headers:{
         "Content-type": "application/json",
-        "Authorization": `${token}`
     },
     body : BodyJson,
     }
@@ -145,7 +184,6 @@ const fetchData = async (BodyJson ,latlng, initMarkers) => {
         markerList = data;
         console.log("데이터 전송 완료");
         console.log(markerList);
-        console.log(latlng);
         initMarkers();
     }else if (response.status === 400) {
         console.log("데이터 전송 실패");
@@ -261,17 +299,17 @@ function initMarkers() {
     }
 markerList.forEach(function(markerInfo) {
 // 마커를 생성합니다
+if(uniqueStoreIds.includes(markerInfo.storeId)){  // 중복되는 "store_id" 값이 있다면
+    console.log("중복된 값이 있습니다.");
+var marker = new kakao.maps.Marker({
+    position: new kakao.maps.LatLng( markerInfo.storeLocationY,markerInfo.storeLocationX),
+    map: map,
+    image: shopNormalImage, // 마커 이미지
+});
+    marker.normalImage = shopNormalImage;
+    marker.clickImage = shopClickImage;
 
-// if(markerInfo.Shopping){
-// var marker = new kakao.maps.Marker({
-//     position: new kakao.maps.LatLng( markerInfo.storeLocationY,markerInfo.storeLocationX),
-//     map: map,
-//     image: shopNormalImage, // 마커 이미지
-// });
-//     marker.normalImage = shopNormalImage;
-//     marker.clickImage = shopClickImage;
-
-// }else{
+}else{
     var marker = new kakao.maps.Marker({
         position: new kakao.maps.LatLng(markerInfo.storeLocationY,markerInfo.storeLocationX),
         map: map,
@@ -280,7 +318,7 @@ markerList.forEach(function(markerInfo) {
     });
     marker.normalImage = normalImage;
     marker.clickImage = clickImage;
-// }
+}
     markers.push(marker);
 
     // 마커에 click 이벤트를 등록합니다
@@ -315,7 +353,6 @@ markerList.forEach(function(markerInfo) {
 
 initMarkers();
 
-
 map.setCenter(options.center); // 지도 중심을 이동
 }
 
@@ -338,7 +375,7 @@ function myFunction(event) {
         
         {popupInfo && (
             <div className="map-store-data" id ="popup" style={{ zIndex: 100 }}>
-                <Link to={`/store/${popupInfo.key}`} key={popupInfo.key} className="card-link">
+                <Link to={`/store/${popupInfo.storeId}`} key={popupInfo.storeId} className="card-link">
                 <Card
                     title={popupInfo.storeName}
                     subTitle={popupInfo.storeAddress}
@@ -349,14 +386,6 @@ function myFunction(event) {
                 </Link>
             </div>
         )}
-
-    
         </div>
-        
-        )
-        
+        )        
 }
-
-
-
-

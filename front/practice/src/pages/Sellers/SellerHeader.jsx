@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import "./Seller.css";
 
 function SellerHeader() {
+  const email = localStorage.getItem("email");
+
   return (
     <header className="seller-header">
       <Link to="/seller" className="seller-title-link">
@@ -10,7 +12,13 @@ function SellerHeader() {
       </Link>
 
       <div className="seller-header-container">
-        <Link to="/seller/store/management" className="seller-header-link">
+        <Link to="/user" className="seller-header-link">
+          <h2 className="seller-header-menu" style={{ color: "gray" }}>
+            {email}
+          </h2>
+        </Link>
+
+        <Link to="/seller/store/register" className="seller-header-link">
           <h2 className="seller-header-menu">가게관리</h2>
         </Link>
         <Link to="/seller/item/management" className="seller-header-link">

@@ -34,7 +34,7 @@ public class ImageServiceImpl implements ImageService {
         List<String> imagesURI = new ArrayList<>();
         for(MultipartFile image : images){
             ImageEntity imageEntity = this.imageDAO.uploadImage(ImageEntity.builder().image(image.getBytes()).build());
-            imagesURI.add("https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/image/download/"+imageEntity.getId());
+            imagesURI.add("https://www.onoff.zone/api/image/download/"+imageEntity.getId());
         }
 
         return ResponseEntity.status(201)
@@ -51,5 +51,29 @@ public class ImageServiceImpl implements ImageService {
 
         return ResponseEntity.status(200)
                 .body(image.get().getImage());
+    }
+
+    @Override
+    public ResponseEntity<String> updateImage(Long id, MultipartFile image) throws IOException {
+        Optional<ImageEntity> optionalImage = this.imageDAO.downloadImage(id);
+        if(!optionalImage.isPresent()){
+            return ResponseEntity.status(400).body(null);
+        }
+        ImageEntity imageEntity = optionalImage.get();
+        imageEntity = ImageEntity.builder()
+                .id(imageEntity.getId())
+                .image(image.getBytes())
+                .build();
+        imageEntity = this.imageDAO.uploadImage(imageEntity);
+
+        return ResponseEntity.status(200).body("https://www.onoff.zone/api/image/download/"+imageEntity.getId());
+    }
+
+    @Override
+    public ResponseEntity<Boolean> deleteImage(Long id) {
+        if(!this.imageDAO.deleteImage(id)){
+            return ResponseEntity.status(400).body(false);
+        }
+        return ResponseEntity.status(200).body(true);
     }
 }

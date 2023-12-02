@@ -12,10 +12,10 @@ function Header() {
     navigate(-1);
   };
 
-  const userId = sessionStorage.getItem("email");
-  const userRole = sessionStorage.getItem("role");
-  const storeId = sessionStorage.getItem("storeid");
-  const token = sessionStorage.getItem("token");
+  const userId = localStorage.getItem("email");
+  const userRole = localStorage.getItem("role");
+  const storeId = localStorage.getItem("storeid");
+  const token = localStorage.getItem("token");
 
   let url;
 

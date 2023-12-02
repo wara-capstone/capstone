@@ -5,8 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: gainsboro;
-  /* height:100%; */
+  background-color: rgba(205, 205, 205, 0.511);
 }
 
 code {
@@ -22,15 +21,38 @@ code {
 .user,
 .user-edit,
 .chatting-list,
+.chatting,
 .cart-page,
-.item,
 .store {
-  /* margin-bottom: 50px; 하단 네비게이션 바의 높이에 맞게 조절 */
   max-width: 400px;
-  height: 100vh;
+  /* top: 6vh; */
+  height: 88vh;      /* 높이를 100%로 설정 */
   margin-left: auto;
   margin-right: auto;
   background-color: #f2f2f2;
+}
+
+.item{
+  max-width: 400px;
+  /* top: 6vh; */
+  min-height: 120vh; /* 뷰포트 높이를 최소 높이로 설정 */
+  height: 100%;      /* 높이를 100%로 설정 */
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #f2f2f2;
+}
+
+
+.home,
+.user,
+.user-edit,
+.item,
+.store,
+.cart-page,
+.barcode,
+.chatting,
+.chatting-list {
+  height: 100vh;
 }
 
 .item-image {
@@ -288,4 +310,166 @@ code {
 
 .login-link a:active {
   color: darkred;
+}
+
+/* 로그인 버튼 스타일 */
+.login-btn {
+  padding: 10px 15px;
+  margin-bottom: 20px;
+}
+
+/* chatting */
+/* 전체 채팅 컨테이너 스타일 */
+#chat-container,
+.chatting-list-container {
+  /* margin: auto; */
+  /* max-width: 80%; */
+  max-width: 800px;
+  padding: 20px;
+  /* background: #943636; */
+  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+  /* border-radius: 10px; 모서리를 더 둥글게 만듭니다. */
+}
+
+/* 채팅 메시지 리스트 스타일 */
+#chat-messages,
+.chatting-lists {
+  height: 80vh; /* 높이를 줄였습니다. */
+  overflow-y: auto;
+  /* border: 1px solid #ccc; */
+  /* margin-bottom: 10px; */
+  padding: 10px;
+  background: #fff; /* 밝은 배경을 사용합니다. */
+  border-radius: 10px; /* 모서리를 더 둥글게 만듭니다. */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 메시지 입력 영역 스타일 */
+#message-input {
+  width: 75%; /* 너비를 100%로 설정합니다. */
+  padding: 10px;
+  border: none; /* 테두리를 없앱니다. */
+  border-radius: 10px; /* 모서리를 더 둥글게 만듭니다. */
+  background: #e7e7e7; /* 밝은 배경을 사용합니다. */
+  height: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#message-input:focus {
+  outline: none;
+  background: #d3d3d3; /* 포커스 시 배경 색상 변경 */
+}
+
+/* 전송 버튼 스타일 */
+#send-btn {
+  width: 19%;
+  height: 43px;
+  padding: 10px;
+  background: rgb(255, 100, 100);
+  color: white;
+  border: none;
+  border-radius: 10px; /* 모서리를 더 둥글게 만듭니다. */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#send-btn:active {
+  background: rgb(188, 46, 46);
+  transform: scale(0.9);
+}
+
+/* 메시지 말풍선 스타일 */
+.message-bubble {
+  padding: 10px 15px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  display: inline-block;
+  max-width: 80%; /* 말풍선 너비를 늘렸습니다. */
+  word-wrap: break-word; /* 긴 단어가 말풍선을 벗어나지 않도록 설정 */
+}
+
+/* 발신자 메시지 스타일 */
+.message-bubble.sent {
+  background: #e7f3ff;
+  align-self: flex-end;
+}
+
+/* 수신자 메시지 스타일 */
+.message-bubble.received {
+  background: #fff4f4;
+  align-self: flex-start;
+}
+
+/* 메시지가 추가될 때의 정렬 */
+#chat-messages {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 채팅방 목록 */
+/* ChattingList */
+.chatting-list .chatting-lists,
+.seller-chatting-management .chatting-lists {
+  height: 85vh;
+}
+
+/* 개별 채팅 항목 스타일 */
+.chatting-list .list-item,
+.seller-chatting-management .list-item {
+  padding: 10px; /* 안쪽 여백 추가 */
+  border-bottom: 1px solid #ccc; /* 아래쪽 경계선 추가 */
+  display: flex; /* 내용을 가로로 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
+  cursor: pointer; /* 커서를 손가락 모양으로 변경 */
+  flex-direction: row; /* 세로로 정렬 */
+}
+
+.chatting-list .list-item:active,
+.seller-chatting-management .list-item:active {
+  background-color: #dcdcdc;
+  border-radius: 20px; /* 원형 모양 */
+}
+
+.chatting-list .list-item-content,
+.seller-chatting-management .list-item-content {
+  display: flex;
+  align-items: center;
+}
+
+/* 이미지 스타일 */
+.chatting-list .round-image,
+.seller-chatting-management .round-image {
+  width: 75px; /* 너비 설정 */
+  height: 75px; /* 높이 설정 */
+  border-radius: 50%; /* 원형 모양 */
+  object-fit: cover; /* 이미지 크기 조정 */
+  margin-right: 20px; /* 오른쪽 여백 추가 */
+  display: flex; /* 내용을 가로로 정렬 */
+}
+
+/* 사용자 세부 정보 스타일 */
+.chatting-list .user-details,
+.seller-chatting-management .user-details {
+  margin-left: 20px; /* 왼쪽 여백 추가 */
+  flex-grow: 1; /* 남은 공간을 모두 채움 */
+}
+
+/* 사용자 이름 스타일 */
+.chatting-list h2,
+.seller-chatting-management h2 {
+  margin: 1px; /* 위아래 여백 제거 */
+  font-size: 1.3em; /* 글자 크기를 약간 증가시킵니다 */
+}
+
+/* 최신 메시지 스타일 */
+.chatting-list p,
+.seller-chatting-management p {
+  margin: 0; /* 위아래 여백 제거 */
+  color: #666; /* 회색 글자 색상 */
+  font-size: 0.8em; /* 글자 크기를 약간 증가시킵니다 */
+}
+
+.chatting-list .card-separator,
+.seller-chatting-management .card-separator {
+  border-top: 1px solid #ccc;
+  margin: 20px 0;
 }

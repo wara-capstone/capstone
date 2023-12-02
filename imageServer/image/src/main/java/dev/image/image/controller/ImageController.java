@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("image")
+@RequestMapping("/api/image")
 public class ImageController {
 
     private static final Logger logger = LoggerFactory.getLogger(ImageController.class);
@@ -31,6 +31,7 @@ public class ImageController {
     public ResponseEntity<ImageDTO> uploadImage(
             @RequestPart List<MultipartFile> images
     ) throws IOException {
+        logger.info("[upload image]");
       return this.imageService.uploadImage(images);
     }
 
@@ -38,8 +39,24 @@ public class ImageController {
     public  ResponseEntity<byte[]> downloadImage(
             @PathVariable("id") Long id
     ){
+        logger.info("[download image] " + id);
         return this.imageService.downloadImage(id);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateImage(
+            @PathVariable("id") Long id,
+            @RequestPart("image") MultipartFile image
+    ) throws IOException {
+        return this.imageService.updateImage(id, image);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> deleteImage(
+            @PathVariable("id") Long id
+    ){
+        logger.info("[delete Image] "+id);
+        return this.imageService.deleteImage(id);
+    }
 
 }

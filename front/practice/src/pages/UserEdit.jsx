@@ -6,8 +6,9 @@ import EventButton from "../components/EventButton";
 import Header from "../components/Header";
 
 const UserEdit = ({ user }) => {
-  const token = sessionStorage.getItem("token");
-  const email = sessionStorage.getItem("email");
+  
+  const token = localStorage.getItem("token");
+  const email = localStorage.getItem("email");
 
   const [nickname, setNickname] = useState();
   const [phoneNumber, setPhoneNumber] = useState();
@@ -72,7 +73,7 @@ const UserEdit = ({ user }) => {
 
     try {
       const response = await fetch(
-        " https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user",
+        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user",
         {
           method: "PUT",
           headers: {

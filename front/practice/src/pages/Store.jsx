@@ -1,22 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Data from "../DB/Data.json";
 import BottomNav from "../components/BottomNav";
+import Category from "../components/Category";
 import EventButton from "../components/EventButton";
 import Header from "../components/Header";
 
 export default function Store() {
   const { id } = useParams();
-  const selectedStore = Data.storeDate.filter(
-    (store) => store.id === Number(id)
-  );
 
-  const userId = sessionStorage.getItem("email");
-  const userRole = sessionStorage.getItem("role");
-  const storeId = sessionStorage.getItem("storeid");
-  const token = sessionStorage.getItem("token");
+  const userId = localStorage.getItem("email");
+  const userRole = localStorage.getItem("role");
+  const storeId = localStorage.getItem("storeid");
+  const token = localStorage.getItem("token");
 
-  let url;
+  const [storeData, setStoreData] = useState(null); // 상태 추가
+  var result;
 
   const navigate = useNavigate();
 
@@ -25,30 +23,65 @@ export default function Store() {
     if (userId === null) {
       navigate("/login");
     } else if (userId !== null) {
-      navigate("/chatting");
+      navigate(`/chatting/${storeData.storeSeller}`, {
+        state: { seller: storeData.storeSeller },
+      });
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(
+        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/read/id/" +
+          id,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        }
+      );
+      result = await response.json();
+      if (response.status === 200) {
+        setStoreData(result.data); // 상태 업데이트
+        //console.log(result.storeId);
+        //console.log(result);
+        //console.log(result.storeName);
+        console.log("상점정보 가져오기 성공");
+      } else {
+        console.log("실패");
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="store">
       <Header />
-      {selectedStore.map((store) => (
-        <div key={store.id}>
+      {storeData && ( // storeData가 null이 아닐 때만 렌더링
+        <div key={storeData.storeId}>
           <div className="item-image-container">
             <img
-              src={store.images[0].image}
-              alt={store.title}
+              src={storeData.storeImage}
+              alt={storeData.storeName}
               className="item-image"
             />
           </div>
-          <h1>{store.title}</h1>
-          <p>store location: {store.subTitle}</p>
-          <p>store detail: {store.content}</p>
+          <h1>{storeData.storeName}</h1>
+          <div className="button-link" onClick={handleConnectChatting}>
+            <EventButton buttonText={"1대1 상담"} />
+          </div>
+          <p>store location: {storeData.storeAddress}</p>
+          <p>store detail: {storeData.storeContents}</p>
         </div>
-      ))}
-      <div className="button-link" onClick={handleConnectChatting}>
-        <EventButton buttonText={"1대1 상담"} />
-      </div>
+      )}
+
+      <Category
+        allUrl={`https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/store/${id}`}
+        categoryUrl={`https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/store/${id}/category?category=`}
+      />
+
       <BottomNav />
     </div>
   );

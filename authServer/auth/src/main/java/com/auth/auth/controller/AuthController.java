@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
     private final static Logger logger = LoggerFactory.getLogger(AuthController.class);
     private final AuthService authService;
@@ -23,17 +23,27 @@ public class AuthController {
     }
 
 
+    /**
+     * @param userDTO
+     * @return 회원가입에 대한 결과 ResponseEntity
+     */
     @PostMapping("/signup")
     public ResponseEntity<UserDTO> signup(
             @RequestBody UserDTO userDTO
     ){
+        logger.info("[SignUp] 회원가입 요청 "+userDTO.toString());
         return this.authService.signUp(userDTO);
     }
 
+    /**
+     * @param userDTO
+     * @return 로그인에 대한 결과 Response Entity
+     */
     @PostMapping("/signin")
     public ResponseEntity<TokenDTO> signin(
             @RequestBody UserDTO userDTO
     ){
+        logger.info("[SignIn] 로그인 요청 "+userDTO.toString());
         return this.authService.signIn(userDTO);
     }
 

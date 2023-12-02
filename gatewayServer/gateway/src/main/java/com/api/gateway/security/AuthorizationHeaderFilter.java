@@ -46,15 +46,29 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         return (exchange, chain) -> {
             String requiredRole = config.getRequiredRole();
             ServerHttpRequest request = exchange.getRequest();
+            logger.info("요청한 uri : "+request.getURI());
+            String a = "";
+            String authorizationHeader = "";
+            String jwt = "";
+            try {
+                a = String.valueOf(request.getQueryParams().get("token"));
+            } catch (Exception e){
+            }
             // Authorization 헤더 없다면 에러
-            if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
+            if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION) && a == "null") return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
             //헤더값
-            String authorizationHeader = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+            else if(a != "null"){
+                jwt = a.replace("Bearer ", "").replace("[", "").replace("]", "");
+            }
+            else {
+                authorizationHeader = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+                jwt = authorizationHeader.replace("Bearer ", "");
+            }
             // jwt
-            String jwt = authorizationHeader.replace("Bearer ", "");
             logger.info(jwt);
             if (!isJwtValid(jwt)) return onError(exchange, "JWT token is not valid", HttpStatus.UNAUTHORIZED);
             logger.info("JWT VALID");
+            logger.info("요청한 User : "+resolveTokenUser(jwt));
             String userRole = resolveTokenRole(jwt).replace("[", "").replace("]", "");
             logger.info(userRole);
             // 인가처리
@@ -64,7 +78,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
                 if(!userRole.equalsIgnoreCase("role_seller") && !userRole.equalsIgnoreCase("role_admin"))
                     return onError(exchange, "do not have permission", HttpStatus.FORBIDDEN);
             }
-
+            logger.info("필요 유효성 : "+requiredRole+" 유효성 체크 완료 :" + userRole);
             return chain.filter(exchange);
         };
     }
@@ -78,6 +92,15 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     private String resolveTokenRole(String token){
         try {
             String subject = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("roles").toString();
+            return subject;
+        }catch (Exception e){
+            logger.info("유저 권한 체크 실패");
+            return "e";
+        }
+    }
+    private String resolveTokenUser(String token){
+        try {
+            String subject = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("sub").toString();
             return subject;
         }catch (Exception e){
             logger.info("유저 권한 체크 실패");

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [userNickname, setUserNickname] = useState("");
@@ -35,7 +36,7 @@ const Signup = () => {
 
     try {
       const response = await fetch(
-        " https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/auth/signup",
+        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/auth/signup",
         {
           method: "POST",
           headers: {
