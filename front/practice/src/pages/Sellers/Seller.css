@@ -260,6 +260,11 @@
   height: 100%;
   width: 100%;
 }
+
+
+.ag-header-cell-label {
+	justify-content: center; 
+}
 /* seller item, seller item management */
 
 .seller-product-registration .outer-div {

@@ -324,13 +324,13 @@ export default function SellerProductRegistration(props) {
       
       if (isTrue) { // 상품 수정
         response = await axios.put(
-          `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/modify`,
+          "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/modify",
           data,
           { headers }
         );
       } else { // 상품 등록
-        response = await axios.post(
-          `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/seller`,
+        response = await axios.post( //보낼 때 `` 이거랑 "" 이거 차이가 뭐지? `랑 $ 세트인가 
+          "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/seller",
           data,
           { headers }
         );
@@ -767,7 +767,7 @@ export default function SellerProductRegistration(props) {
                     </React.Fragment>
                   ))}
                       <div>
-                          <Button style={{backgroundColor:"blue", color:"white"}} onClick={plusOption}>
+                          <Button style={{backgroundColor:"#89CFF0", color:"white"}} onClick={plusOption}>
                           <PlusCircleOutlined />
                             </Button>
                     </div>
