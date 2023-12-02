@@ -35,7 +35,7 @@ const Signup = () => {
 
     try {
       const response = await fetch(
-        "/api/auth/signup",
+        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/auth/signup",
         {
           method: "POST",
           headers: {

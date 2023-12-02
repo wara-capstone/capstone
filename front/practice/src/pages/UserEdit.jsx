@@ -24,7 +24,7 @@ const UserEdit = ({ user }) => {
     console.log("위에꺼 토큰");
     const fetchData = async () => {
     const response = await fetch(
-      '/api/user?email='+email,
+      'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user?email='+email,
       {
         method: "GET",
         headers: {
@@ -72,7 +72,7 @@ const UserEdit = ({ user }) => {
 
     try {
       const response = await fetch(
-        "/api/user",
+        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user",
         {
           method: "PUT",
           headers: {
@@ -111,7 +111,7 @@ const UserEdit = ({ user }) => {
                 console.log(value);
             }
         }
-        fetch('/api/user/image?email='+email, {
+        fetch('https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user/image?email='+email, {
             method: 'POST',
             headers: {
                 "Authorization": `${token}`

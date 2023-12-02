@@ -55,7 +55,7 @@ function showPopup(info) {
     useEffect(() => {
             const fetchData = async () => {
              const response = await fetch(
-               '/api/cart/items/?user_email='+email,
+               'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/cart/items/?user_email='+email,
                {
                  method: "GET",
                  headers: {
@@ -169,7 +169,7 @@ function placesSearchCB (data, status) {
 const fetchData = async (BodyJson ,latlng, initMarkers) => {
     try {
     const response = await fetch(
-    "/api/store/read/map/coordinate",
+    "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/read/map/coordinate",
     {
     method: 'POST',
     headers:{

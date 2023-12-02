@@ -30,7 +30,7 @@ const UserProfile = () => {
     }
       const fetchData = async () => {
       const response = await fetch(
-        '/api/user?email='+email,
+        'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user?email='+email,
         {
           method: "GET",
           headers: {
