@@ -44,7 +44,19 @@ export default function SellerItemManagement() {
             }
           }
         );
-        setRowData(response.data);
+
+        // 데이터 변형
+      const transformedData = response.data.flatMap(item => 
+        item.options.map(option => ({
+          ...item,
+          productSize: option.productSize,
+          productColor: option.productColor,
+          productStock: option.productStock,
+        }))
+      );
+      
+       setRowData(transformedData);
+        //setRowData(response.data);
         console.log(response.data);
       } catch (error) {
         console.log("실패");
@@ -77,20 +89,22 @@ export default function SellerItemManagement() {
       minWidth: 180,
       
     },
-    { headerName: "상품코드", field: "productId", filter: true },
-    { headerName: "사이즈", field: "options[0].productSize", filter: true,
-      valueGetter: params => params.data.productSize },
+    { headerName: "상품코드", field: "productId", editable: false, filter: true },
+    { headerName: "사이즈", field: "productSize", editable: false, filter: true},
+      // valueGetter: params => params.productSize },
       //valueGetter: params => params.data.options[0].productSize }, //갑자기 이 부분이 안됨
     {
       headerName: "색상",
-      field: "options[0].productColor",
+      field: "productColor",
       editable: false,
       minWidth: 150,
       filter: true,
-      valueGetter: params => params.data.productColor },
-    { headerName: "재고 수량", field: "options[0].productStock", filter: true,
-      valueGetter: params => params.data.productStock },
-    
+      // valueGetter: params => params.data.options.map(option => option.productColor).join(', ') },
+    },
+
+    { headerName: "재고 수량", field: "productStock", editable: false, filter: true,
+      // valueGetter: params => params.data.options.map(option => option.productStock).join(', ')},
+  },
     {
       headerName: '관리',
       editable: false,

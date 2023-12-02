@@ -20,7 +20,7 @@ const StoresListPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios.get(
-        'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/read/seller/seller@naver.com', // 이 부분은 실제 서버 주소와 API 경로로 변경해야 합니다.
+        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/read/seller/seller@naver.com", // 이 부분은 실제 서버 주소와 API 경로로 변경해야 합니다.
         {
           method: "GET",
           headers: {
