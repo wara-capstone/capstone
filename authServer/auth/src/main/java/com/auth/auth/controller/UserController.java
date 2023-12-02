@@ -25,6 +25,14 @@ public class UserController {
         this.userService = userService;
     }
 
+
+    /**
+     * @param image 유저의 프로필 이미지
+     * @param email 유저의 이메일(아이디)
+     * @return 이미지 수정에 대한 결과
+     * @throws URISyntaxException
+     * @throws IOException
+     */
     @PostMapping("/image")
     public ResponseEntity<String> createImage(
             @RequestPart("image") MultipartFile image,
@@ -34,6 +42,11 @@ public class UserController {
         return this.userService.createImage(email, image);
     }
 
+
+    /**
+     * @param userDTO 유저 정보
+     * @return
+     */
     @PutMapping()
     public ResponseEntity<UserDTO> updateUser(
             @RequestBody UserDTO userDTO
@@ -42,6 +55,11 @@ public class UserController {
         return this.userService.updateUser(userDTO);
     }
 
+    /**
+     * 유저의 정보를 읽는다.
+     * @param email 유저의 이메일
+     * @return
+     */
     @GetMapping()
     public ResponseEntity<UserDTO> readUser(
             @RequestParam("email") String email
