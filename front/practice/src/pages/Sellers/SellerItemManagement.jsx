@@ -26,7 +26,7 @@ export default function SellerItemManagement() {
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
   const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
   const [savedRowData, setSavedRowData] = useState([]);
-  const token = sessionStorage.getItem("token");
+  const token = localStorage.getItem("token");
   const [productInfo, setProductInfo] = useState({ result: "", data: [] });
 
   const fetchData = useCallback(async () => {

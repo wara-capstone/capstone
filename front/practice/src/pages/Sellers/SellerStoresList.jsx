@@ -7,7 +7,7 @@ import { Card } from 'antd';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { RightCircleFilled } from "@ant-design/icons";
-const token = sessionStorage.getItem("token");
+const token = localStorage.getItem("token");
 
 const { Meta } = Card;
 
