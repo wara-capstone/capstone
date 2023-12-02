@@ -15,7 +15,7 @@ const Login = () => {
     await new Promise((r) => setTimeout(r, 1000));
     
     const response = await fetch(
-      "/api/auth/signin",
+      "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/auth/signin",
       {
         method: "POST",
         headers: {

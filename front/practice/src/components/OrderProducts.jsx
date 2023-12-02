@@ -57,7 +57,7 @@ function quantityMinus () { //수량 감소
 
 async function optionGet() { //옵션 가져오기
     const response = await fetch(
-        '/api/product/all/'+data.product.p_id,
+        'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/'+data.product.p_id,
         {
           method: "GET",
           headers: {    
@@ -117,7 +117,7 @@ async function optionEdit(){  //옵션 변경
   
       try {
         const response = await fetch(
-          "/api/cart/items/",
+          "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/cart/items/",
           {
             method: "PUT",
             headers: {

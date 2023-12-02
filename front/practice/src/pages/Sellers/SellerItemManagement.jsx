@@ -32,7 +32,7 @@ export default function SellerItemManagement() {
   const fetchData = useCallback(async () => {
     try {
       const response = await axios.get(
-        "/api/product/all/store/22",
+        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/store/22",
         {
           headers: {
             "Content-Type": "application/json",
@@ -68,7 +68,7 @@ export default function SellerItemManagement() {
     for (let item of selectedData) {
       try {
         const response = await axios.delete(
-          `/api/product/seller/${storeId}/${item.productId}`,
+          `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/seller/${storeId}/${item.productId}`,
           {
             headers: {
               Authorization: `${token}`,

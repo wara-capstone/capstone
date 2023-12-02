@@ -21,7 +21,7 @@ export default function Home() {
   // useEffect(() => {
   //     const fetchData = async () => {
   //     const response = await fetch(
-  //       '/api/user?',
+  //       'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user?',
   //       {
   //         method: "GET",
   //         headers: {
@@ -49,8 +49,8 @@ export default function Home() {
       </div>
       <Category
         //현재 메인화면에서 카테고리 선택을 하지 않을 시, store1의 상품을 보여주도록 설정함. 추후 수정 필요.
-        allUrl={`/api/product/all/store/51`}
-        categoryUrl="/api/product/all/category/"
+        allUrl={`https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/store/51`}
+        categoryUrl="https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/category/"
       />
       {/* <CardList /> */}
       <BottomNav />

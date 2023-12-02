@@ -55,7 +55,7 @@ const changeAllBox = checked => {
   useEffect(() => {
     const fetchData = async () => {
      const response = await fetch(
-       '/api/cart/items/?user_email='+email,
+       'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/cart/items/?user_email='+email,
        {
          method: "GET",
          headers: {
