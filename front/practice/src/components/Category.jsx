@@ -10,6 +10,7 @@ const Category = ({ allUrl, categoryUrl }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const handleCategoryClick = (category) => {
+    console.log(category);
     setSelectedCategory(category);
   };
 
@@ -38,9 +39,12 @@ const Category = ({ allUrl, categoryUrl }) => {
         </div>
         <div
           className="category-row"
-          onClick={() => handleCategoryClick("신발")}
         >
-          <div className="category-item">
+          
+          <div 
+          className="category-item"
+          onClick={() => handleCategoryClick("신발")}
+          >  
             <GiConverseShoe size={20} /> <br /> 신발
           </div>
           <div

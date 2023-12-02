@@ -4,6 +4,9 @@ import BottomNav from "../components/BottomNav";
 import Category from "../components/Category";
 import EventButton from "../components/EventButton";
 import Header from "../components/Header";
+import{
+  message
+} from "antd";
 
 export default function Store() {
   const { id } = useParams();
@@ -23,16 +26,20 @@ export default function Store() {
     if (userId === null) {
       navigate("/login");
     } else if (userId !== null) {
+      if(userId === storeData.storeSeller){
+        message.error("자신의 상점과는 상담하실 수 없습니다.", 2)
+      }else{
       navigate(`/chatting/${storeData.storeSeller}`, {
         state: { seller: storeData.storeSeller },
       });
+    }
     }
   };
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        "/api/store/read/id/" +
+        "http://52.79.186.117:8000/api/store/read/id/" +
           id,
         {
           method: "GET",
@@ -78,8 +85,8 @@ export default function Store() {
       )}
 
       <Category
-        allUrl={`/api/product/all/store/${id}`}
-        categoryUrl={`/api/product/all/store/${id}/category?category=`}
+        allUrl={`http://52.79.186.117:8000/api/product/all/store/${id}`}
+        categoryUrl={`http://52.79.186.117:8000/api/product/all/store/${id}/category?category=`}
       />
 
       <BottomNav />

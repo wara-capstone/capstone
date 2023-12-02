@@ -6,6 +6,9 @@ import "../components/Button.css";
 import EventButton from "../components/EventButton";
 import Header from "../components/Header";
 import ImageSlider from "../components/ImageSlider";
+import {
+  message
+} from "antd";
 
 export default function Item() {
   const { id } = useParams();
@@ -65,7 +68,7 @@ export default function Item() {
     };
 
     try {
-      const response = await fetch("/api/cart/items/", {
+      const response = await fetch("http://3.34.227.3:16000/api/cart/items/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -73,18 +76,24 @@ export default function Item() {
         },
         body: JSON.stringify(payload),
       });
-      console.log(payload);
-      if (response.status === 200) {
+      
+      if (response.status === 201) {
         console.log("성공!");
+
+        message.success("장바구니에 성공적으로 담겼습니다.");
       } else if (response.status !== 200) {
+        
         const errorData = await response.json();
         console.log(errorData);
       } else if (response.status === 400) {
+
+        message.error("장바구니에 담기지 않았습니다. 재시도 해주세요");
         // Handle error
-        alert(`실패`);
       }
     } catch (error) {
+
       console.error("오류 발생:", error);
+      message.error("오류가 발생했습니다. 재시도 해주세요");
     }
   }
 
@@ -143,7 +152,7 @@ export default function Item() {
     async function optionGet() {
       //옵션 가져오기
       console.log("가져온 상품아이디", id);
-      const response = await fetch(`/api/product/all/` + id, {
+      const response = await fetch(`http://52.79.186.117:8000/api/product/all/` + id, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

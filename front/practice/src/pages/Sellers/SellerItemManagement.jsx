@@ -17,6 +17,7 @@ import React, {
   useCallback,
 } from "react";
 import axios from "axios";
+import LoadingScreen from "../../components/LoadingScreen.jsx";
 
 // SellerItemManagement 컴포넌트 정의
 export default function SellerItemManagement() {
@@ -28,11 +29,13 @@ export default function SellerItemManagement() {
   const [savedRowData, setSavedRowData] = useState([]);
   const token = localStorage.getItem("token");
   const [productInfo, setProductInfo] = useState({ result: "", data: [] });
+  const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
     try {
+      setLoading(true);
       const response = await axios.get(
-        "/api/product/all/store/22",
+        "http://52.79.186.117:8000/api/product/all/store/1",
         {
           headers: {
             "Content-Type": "application/json",
@@ -57,6 +60,8 @@ export default function SellerItemManagement() {
     } catch (error) {
       console.log("실패");
       console.error(error);
+    } finally{
+      setLoading(false);
     }
   }, [token]);
 
@@ -68,7 +73,7 @@ export default function SellerItemManagement() {
     for (let item of selectedData) {
       try {
         const response = await axios.delete(
-          `/api/product/seller/${storeId}/${item.productId}`,
+          `http://52.79.186.117:8000/api/product/seller/${storeId}/${item.productId}`,
           {
             headers: {
               Authorization: `${token}`,
@@ -204,6 +209,10 @@ export default function SellerItemManagement() {
     console.log(allRowData); // 콘솔에 모든 행의 데이터를 출력
   }, []);
 
+  if(loading){
+    <LoadingScreen> </LoadingScreen>
+  }else{
+
   return (
     <div style={containerStyle}>
       <div className="seller-item-management">
@@ -250,4 +259,5 @@ export default function SellerItemManagement() {
       </div>
     </div>
   );
+}
 }

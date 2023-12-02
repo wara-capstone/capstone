@@ -41,11 +41,11 @@ export default function SellerStoreSales({ store }) {
     normalImage = createMarkerImage(imageSrc4, imageSize);
 
   // fetch 통신 method
-  const fetchData = async (initMarkers) => {
+  const fetchData = async (initMarkers) => {  
     console.log(email);
     try {
       const response = await fetch(
-        `/api/store/read/seller/${email}`,
+        `http://52.79.186.117:8000/api/store/read/seller/${email}`,
         {
           method: "GET",
           headers: {
@@ -142,7 +142,7 @@ export default function SellerStoreSales({ store }) {
     async function fetchPayments() {
       try {
         const response = await fetch(
-          `/api/payment/read/store/${storeId}`,
+          `http://52.79.186.117:8000/api/payment/read/store/${storeId}`,
           {
             method: "GET",
             headers: {

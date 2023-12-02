@@ -1,6 +1,9 @@
 // Login.js
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import{
+  message
+} from "antd";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,7 +18,7 @@ const Login = () => {
     await new Promise((r) => setTimeout(r, 1000));
     
     const response = await fetch(
-      "/api/auth/signin",
+      "http://52.79.186.117:8000/api/auth/signin",
       {
         method: "POST",
         headers: {
@@ -39,6 +42,7 @@ const Login = () => {
       localStorage.setItem("storeid", result.storeId); // 여기서 role를 저장합니다.
       console.log("로그인성공, 이메일주소:" + result.email);
       console.log("로그인 후"+ localStorage.getItem("email"), localStorage.getItem("role"), localStorage.getItem("storeid"), localStorage.getItem("token"));
+      message.success("로그인되었습니다.", 2);
       navigate("/"); // 로그인 성공시 홈으로 이동합니다.
     } else {
       setLoginCheck(true);

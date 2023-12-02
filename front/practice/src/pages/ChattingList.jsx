@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import BottomNav from "../components/BottomNav";
 import Header from "../components/Header";
+import LoadingScreen from "../components/LoadingScreen";
 
 export default function ChattingList() {
   const [visitorUserEmails, setVisitorUserEmails] = useState([]);
@@ -9,6 +10,7 @@ export default function ChattingList() {
   const token = localStorage.getItem("token"); // 실제 token 값으로 대체
   const { id } = useParams();
 
+  const [loading, setLoading] = useState(false);
   const [roundImage, setRoundImage] = useState(
     "https://via.placeholder.com/150x150"
   );
@@ -17,7 +19,8 @@ export default function ChattingList() {
   useEffect(() => {
     async function fetchChattingList() {
       try {
-        const response = await fetch(`/api/chat/rooms/?email=${userId}`, {
+        setLoading(true);
+        const response = await fetch(`http://52.79.186.117:8000/api/chat/rooms/?email=${userId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -44,13 +47,15 @@ export default function ChattingList() {
         setVisitorUserEmails(userRoomInfo);
       } catch (error) {
         console.error("Error getting visitor_user_emails:", error);
+      } finally{
+        setLoading(false);
       }
     }
     fetchChattingList();
   }, [userId]);
 
   const fetchImage = async (email) => {
-    const response = await fetch(`/api/user?email=${email}`, {
+    const response = await fetch(`http://52.79.186.117:8000/api/user?email=${email}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -81,7 +86,9 @@ export default function ChattingList() {
       });
     }
   };
-
+  if(loading){
+    return <LoadingScreen></LoadingScreen>
+  }else{
   return (
     <div className="chatting-list">
       <Header />
@@ -109,4 +116,5 @@ export default function ChattingList() {
       <BottomNav />
     </div>
   );
+          }
 }
