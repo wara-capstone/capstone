@@ -117,8 +117,6 @@ public class ProductController {
 
 
 
-
-
     // 단일 상품 삭제
     @DeleteMapping("/seller/{storeId}/{productId}") @Transactional
     public String singleRemove(@PathVariable("storeId")Long storeId, @PathVariable("productId") Long productId) throws URISyntaxException, IOException {
