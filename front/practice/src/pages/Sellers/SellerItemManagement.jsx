@@ -67,11 +67,13 @@ export default function SellerItemManagement() {
       headerCheckboxSelection: true,
       headerCheckboxSelectionFilteredOnly: true,
       checkboxSelection: true,
+      editable: false,
       cellRenderer: ImageCellRenderer,
     },
     {
       headerName: "상품명",
       field: "productName",
+      editable: false,
       minWidth: 180,
       
     },
@@ -82,6 +84,7 @@ export default function SellerItemManagement() {
     {
       headerName: "색상",
       field: "options[0].productColor",
+      editable: false,
       minWidth: 150,
       filter: true,
       valueGetter: params => params.data.productColor },
@@ -90,6 +93,7 @@ export default function SellerItemManagement() {
     
     {
       headerName: '관리',
+      editable: false,
       minWidth: 150, cellRenderer: 
       
       (params) => {
@@ -192,7 +196,7 @@ export default function SellerItemManagement() {
               defaultColDef={defaultColDef}
               suppressRowClickSelection={true}
               rowSelection={"multiple"}
-             
+              rowHeight={100}
               frameworkComponents={{ 
                 imageCellRenderer: ImageCellRenderer, // 컴포넌트 등록
                 cellRenderer: CellRenderer }}

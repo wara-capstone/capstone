@@ -547,14 +547,53 @@ export default function SellerProductRegistration(props) {
 };
   
 
+
+
+  const LoadingScreen = () => {
+    return (
+      <div style={styles.container}>
+        <div style={styles.spinner}></div>
+        <p style={styles.message}>로딩 중...</p>
+      </div>
+    );
+  };
+
+  const styles = {
+    container: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100vh',
+      margin: 0,
+    },
+    spinner: {
+      border: '4px solid rgba(0, 0, 0, 0.1)',
+      borderLeft: '4px solid #3498db',
+      borderRadius: '50%',
+      width: '40px',
+      height: '40px',
+      animation: 'spin 1s linear infinite',
+    },
+    message: {
+      marginLeft: '10px',
+      fontSize: '16px',
+    },
+    '@keyframes spin': {
+      '0%': { transform: 'rotate(0deg)' },
+      '100%': { transform: 'rotate(360deg)' },
+    },
+  };
+
+
+
   const [price, setPrice] = useState({ buy: "", sell: "", discount: "" });
   if (loading) {
-    return <h1>로딩중</h1>;
+    return <LoadingScreen></LoadingScreen>
   } else {
-    return (
-      
+  return (
+
       <div className="seller-product-registration">
-        
+
         <SellerHeader />
         <h1>상품 등록</h1>
         <div className="outer-div">
@@ -761,7 +800,7 @@ export default function SellerProductRegistration(props) {
                   Authorization: `${token}`,
                 }}
               >
-                 <Button icon={<UploadOutlined />}>Upload</Button>
+                <Button icon={<UploadOutlined />}>Upload</Button>
               </Upload>
               { /*
               <br />
@@ -790,41 +829,41 @@ export default function SellerProductRegistration(props) {
                 hideModeSwitch={true}
                 plugins={[colorSyntax]}
                 language="ko-KR"
-                // hooks={{
-                //   addImageBlobHook: async (blob, callback) => {
-                //     try {
-                //       const imageData = new FormData();
+              // hooks={{
+              //   addImageBlobHook: async (blob, callback) => {
+              //     try {
+              //       const imageData = new FormData();
 
-                //       // OptionDTO 추가
-                //       imageData.append("OptionDTO", optionValue); // optionValue는 실제 OptionDTO의 값입니다.
+              //       // OptionDTO 추가
+              //       imageData.append("OptionDTO", optionValue); // optionValue는 실제 OptionDTO의 값입니다.
 
-                //       // ProductDTO 추가
-                //       imageData.append("ProductDTO", productValue); // productValue는 실제 ProductDTO의 값입니다.
+              //       // ProductDTO 추가
+              //       imageData.append("ProductDTO", productValue); // productValue는 실제 ProductDTO의 값입니다.
 
-                //       // 이미지 추가 (Images 키로 여러 이미지 추가)
-                //       for (let i = 0; i < blobs.length; i++) {
-                //         const blob = blobs[i]; // blobs는 실제 이미지 blob들의 배열입니다.
-                //         const file = new File([blob], encodeURI(blob.name), {
-                //           type: blob.type,
-                //         });
-                //         imageData.append("Images", file);
-                //       }
+              //       // 이미지 추가 (Images 키로 여러 이미지 추가)
+              //       for (let i = 0; i < blobs.length; i++) {
+              //         const blob = blobs[i]; // blobs는 실제 이미지 blob들의 배열입니다.
+              //         const file = new File([blob], encodeURI(blob.name), {
+              //           type: blob.type,
+              //         });
+              //         imageData.append("Images", file);
+              //       }
 
-                //       // 서버에 전송
-                //       const imageURI = await axios({
-                //         method: "POST",
-                //         headers: {
-                //           "Content-Type": "multipart/form-data",
-                //         },
-                //         url: `${"https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app"}/product/seller`,
-                //         data: imageData,
-                //         withCredentials: true,
-                //       });
-                //     } catch (error) {
-                //       console.log(error);
-                //     }
-                //   },
-                // }}
+              //       // 서버에 전송
+              //       const imageURI = await axios({
+              //         method: "POST",
+              //         headers: {
+              //           "Content-Type": "multipart/form-data",
+              //         },
+              //         url: `${"https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app"}/product/seller`,
+              //         data: imageData,
+              //         withCredentials: true,
+              //       });
+              //     } catch (error) {
+              //       console.log(error);
+              //     }
+              //   },
+              // }}
               />
 
               <br />
