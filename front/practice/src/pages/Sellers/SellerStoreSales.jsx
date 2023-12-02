@@ -45,7 +45,7 @@ export default function SellerStoreSales({ store }) {
     console.log(email);
     try {
       const response = await fetch(
-        `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/read/seller/${email}`,
+        `/api/store/read/seller/${email}`,
         {
           method: "GET",
           headers: {
@@ -142,7 +142,7 @@ export default function SellerStoreSales({ store }) {
     async function fetchPayments() {
       try {
         const response = await fetch(
-          `https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/payment/read/store/${storeId}`,
+          `/api/payment/read/store/${storeId}`,
           {
             method: "GET",
             headers: {

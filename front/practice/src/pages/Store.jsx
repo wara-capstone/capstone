@@ -32,7 +32,7 @@ export default function Store() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        "https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/store/read/id/" +
+        "/api/store/read/id/" +
           id,
         {
           method: "GET",
@@ -78,8 +78,8 @@ export default function Store() {
       )}
 
       <Category
-        allUrl={`https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/store/${id}`}
-        categoryUrl={`https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/product/all/store/${id}/category?category=`}
+        allUrl={`/api/product/all/store/${id}`}
+        categoryUrl={`/api/product/all/store/${id}/category?category=`}
       />
 
       <BottomNav />

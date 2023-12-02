@@ -12,7 +12,7 @@ export default function SellerHome() {
   // useEffect(() => {
   //     const fetchData = async () => {
   //     const response = await fetch(
-  //       'https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/user?email='+email,
+  //       '/api/user?email='+email,
   //       {
   //         method: "GET",
   //         headers: {
