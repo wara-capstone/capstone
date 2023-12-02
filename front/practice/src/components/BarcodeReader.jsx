@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { BrowserMultiFormatReader, NotFoundException } from "@zxing/library"; // ZXing 라이브러리 (바코드 및 QR 코드 리더)
+import { BrowserMultiFormatReader, NotFoundException, BarcodeFormat, DecodeHintType } from "@zxing/library"; // ZXing 라이브러리 (바코드 및 QR 코드 리더)
 import Data from "../DB/Data.json"; // 로컬 JSON 데이터
+import { MultiFormatReader } from '@zxing/library';
 
 import BarcodeModal from "../components/BarcodeModal"; // 바코드 모달 컴포넌트
 import ImageSlider from "../components/ImageSlider"; // 이미지 슬라이더 컴포넌트
 import { useNavigate, useParams } from "react-router-dom"; // React Router의 Navigate, useParams 사용
 import axios from "axios";
-import { BarcodeFormat, DecodeHintType } from '@zxing/library';
 function BarcodeReader() {
   const [videoInputDevices, setVideoInputDevices] = useState([]); // 비디오 입력 장치 목록
   const [selectedDeviceId, setSelectedDeviceId] = useState(""); // 선택된 비디오 입력 장치 ID
@@ -83,15 +83,23 @@ useEffect(() => {
 
   const fetchProductInfo = async (productId, optionId) => {
     //Get
+    // if(productId == null ){return}
     try {
       const response = await axios.get(
-        `/api/product/all/${productId}/option/${optionId}}`,
+        `/api/product/all/${productId}/option/${optionId}`,
         {
           headers: {
             Authorization: `${token}`,
           },
         }
-      );
+              );
+      if(response.status == 200){
+        console.log(response.data);
+      }else{
+        console.log("잘못된 요청")
+        response.data={"result":
+      "실패!"}
+      }
 
       console.log("받아온 값:" + JSON.stringify(response.data)); // 서버로부터 받아온 데이터를 JSON 문자열로 변환하여 출력
 
@@ -111,25 +119,38 @@ useEffect(() => {
       async (result, err) => {
         // 비디오 장치에서 바코드 디코딩
         if (result) {
+
+          console.log(result);
           // 결과가 있으면
           console.log(result); // 결과 로깅
-          const barcodeData = JSON.parse(result.text); // 바코드 데이터를 JSON 객체로 변환
-          console.log(barcodeData);
+          var data = result.text.split("A");
+
+          //const barcodeData = JSON.parse(result.text); // 바코드 데이터를 JSON 객체로 변환
+          if(true){
+         // console.log(barcodeData);
           const optionId = "10"; // 실제 매장 ID로 변경해야 합니다.
+            console.log(data);
+
+
           fetchedProductInfo = await fetchProductInfo(
-            barcodeData.productId,
-            barcodeData.optionId
+            data[0],
+            data[1]
           ); // 서버에서 바코드에 해당하는 제품 정보 가져오기
           setProductInfo(fetchedProductInfo); // 제품 정보를 productInfo 상태 변수에 저장
           setResult(fetchedProductInfo); // 결과 설정
           setShowModal(true); // 모달 표시
           setIsBarcodeDetected(true); // 바코드 인식 상태 설정
-        }
+        
         if (err && !(err instanceof NotFoundException)) {
           // 에러가 있고, NotFoundException이 아니면
           console.error(err); // 에러 로깅
           console.error(err.message); // 오류 메시지 출력
           setResult(err.message); // 에러 메시지 설정
+        }
+        }else{
+          console.log("barcode detect error");
+          //console.log(barcodeData);
+        }
         }
       }
     );
