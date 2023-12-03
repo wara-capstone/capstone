@@ -1,8 +1,8 @@
+import { message } from "antd";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
-  
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [userNickname, setUserNickname] = useState("");
@@ -54,7 +54,7 @@ const Signup = () => {
         navigate("/login"); // 로그인 성공시 홈으로 이동합니다.
       } else if (response.status === 400) {
         // Handle error
-        alert(`회원가입 실패: ${data.email}`);
+        message.error("회원가입에 실패하였습니다.");
       }
     } catch (error) {
       console.error("오류 발생:", error);

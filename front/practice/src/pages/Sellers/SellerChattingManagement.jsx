@@ -1,12 +1,9 @@
+import { message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import SellerHeader from "./SellerHeader";
 import LoadingScreen from "../../components/LoadingScreen";
-import {
-  message
-} from "antd";
+import SellerHeader from "./SellerHeader";
 
 export default function SellerChattingManagement() {
-  
   const [currentRoomId, setCurrentRoomId] = useState(null);
   const [socket, setSocket] = useState(null);
   const [messageInput, setMessageInput] = useState("");
@@ -31,6 +28,20 @@ export default function SellerChattingManagement() {
   useEffect(scrollToBottom, [chatMessages]); // 메시지가 추가될 때마다 스크롤 내리기
 
   useEffect(() => {
+    if (chatMessages.length > 0) {
+      const lastMessage = chatMessages[chatMessages.length - 1].props.children;
+
+      setVisitorUserEmails((prevEmails) =>
+        prevEmails.map((user) =>
+          user.email === customerId
+            ? { ...user, latestMessage: lastMessage }
+            : user
+        )
+      );
+    }
+  }, [chatMessages]);
+
+  useEffect(() => {
     if (customerId) {
       openOrCreateRoom();
     }
@@ -50,17 +61,20 @@ export default function SellerChattingManagement() {
     }
 
     try {
-      const response = await fetch("/api/chat/rooms/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${token}`,
-        },
-        body: JSON.stringify({
-          shop_user_email: userId,
-          visitor_user_email: customerId,
-        }),
-      });
+      const response = await fetch(
+        "http://52.79.186.117:8000/api/chat/rooms/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+          body: JSON.stringify({
+            shop_user_email: userId,
+            visitor_user_email: customerId,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -136,13 +150,16 @@ export default function SellerChattingManagement() {
     async function fetchChattingList() {
       setLoading(true);
       try {
-        const response = await fetch(`/api/chat/rooms/?email=${userId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-        });
+        const response = await fetch(
+          `http://52.79.186.117:8000/api/chat/rooms/?email=${userId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -171,13 +188,16 @@ export default function SellerChattingManagement() {
   }, [userId]);
 
   const fetchImage = async (email) => {
-    const response = await fetch(`/api/user?email=${email}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${token}`,
-      },
-    });
+    const response = await fetch(
+      `http://52.79.186.117:8000/api/user?email=${email}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      }
+    );
     const result = await response.json();
     if (response.status === 200) {
       setRoundImage(result.profileImage); // 상태 업데이트
@@ -189,63 +209,63 @@ export default function SellerChattingManagement() {
       console.log("실패");
     }
   };
-  if(loading){
-    return <LoadingScreen></LoadingScreen>
-  }else{
-
-  return (
-    <div className="seller-chatting-management">
-      <SellerHeader />
-      <div className="seller-chatting-management-container">
-        <div className="chatting-list-container">
-          <div className="chatting-lists">
-            {visitorUserEmails.map((user, index) => (
-              <div
-                key={index}
-                className="list-item"
-                onClick={() => handleCustomerIdChange(user.email)}
-              >
-                <div className="list-item-content">
-                  <img src={user.image} alt="User" className="round-image" />
-                  <div className="user-details">
-                    <h2>{user.email}</h2>
-                    <p>최근 메세지: {user.latestMessage}</p>
+  if (loading) {
+    return <LoadingScreen></LoadingScreen>;
+  } else {
+    return (
+      <div className="seller-chatting-management">
+        <SellerHeader />
+        <div className="seller-chatting-management-container">
+          <div className="chatting-list-container">
+            <div className="chatting-lists">
+              {visitorUserEmails.map((user, index) => (
+                <div
+                  key={index}
+                  className="list-item"
+                  onClick={() => handleCustomerIdChange(user.email)}
+                >
+                  <div className="list-item-content">
+                    <img src={user.image} alt="User" className="round-image" />
+                    <div className="user-details">
+                      <h2>{user.email}</h2>
+                      <p>최근 메세지: {user.latestMessage}</p>
+                    </div>
                   </div>
+                  <div className="card-separator"></div>
                 </div>
-                <div className="card-separator"></div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div id="chat-container" className="seller-chat-container">
-          {/* <!-- 채팅방 메시지 --> */}
-          <div id="chat-messages">
-            {chatMessages}
-            <div ref={chatMessagesRef} />
+              ))}
+            </div>
           </div>
 
-          {/* <!-- 메시지 입력 및 전송 --> */}
+          <div id="chat-container" className="seller-chat-container">
+            {/* <!-- 채팅방 메시지 --> */}
+            <div id="chat-messages">
+              {chatMessages}
+              <div ref={chatMessagesRef} />
+            </div>
 
-          <form
-          onSubmit={(e) => {
-          e.preventDefault();
-            sendMessage();
-         }}
-          >
-          <input
-            type="text"
-            value={messageInput}
-            onChange={handleInputChange}
-            placeholder="메시지를 입력하세요"
-            id="message-input"
-          />
-          <button id="send-btn" onClick={sendMessage}>
-            보내기
-          </button>
-          </form>
+            {/* <!-- 메시지 입력 및 전송 --> */}
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                sendMessage();
+              }}
+            >
+              <input
+                type="text"
+                value={messageInput}
+                onChange={handleInputChange}
+                placeholder="메시지를 입력하세요"
+                id="message-input"
+              />
+              <button id="send-btn" onClick={sendMessage}>
+                보내기
+              </button>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
-  );
-}}
+    );
+  }
+}
