@@ -6,14 +6,14 @@ import SellerSideNav from "./SellerSideNav";
 const { kakao } = window;
 
 const SellerStoreRegister = ({ store }) => {
-  var map;
-  var geocoder;
-  var marker;
+  const [map, setMap] = useState(null); // 지도 객체를 저장할 상태
+  const [geocoder, setGeocoder] = useState(null);
+  const [marker, setMarker] = useState(null); // 마커 객체를 저장할 상태
 
   const [email, setEmail] = useState(localStorage.getItem("email"));
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [name, setName] = useState(store?.name || "");
-  const [location, setLocation] = useState(store?.location || "");
+  const [location, setLocation] = useState("");
   const [content, setContent] = useState(store?.content || "");
   const [phone, setPhoneNum] = useState("");
   const [lat, setLat] = useState(0);
@@ -42,10 +42,12 @@ const SellerStoreRegister = ({ store }) => {
       };
     //mapDiv에 첫번째 자식이 없다면 지도 생성
     if (!mapDiv.firstChild) {
-      map = new kakao.maps.Map(mapDiv, mapOption); // 지도를 생성합니다
+      setMap(new kakao.maps.Map(mapDiv, mapOption)); // 지도를 생성합니다
+      console.log(map === null);
     }
 
-    geocoder = new kakao.maps.services.Geocoder(); // 주소-좌표 변환 객체를 생성합니다
+    const newGeocoder = new kakao.maps.services.Geocoder();
+    setGeocoder(newGeocoder); // geocoder 상태 업데이트
   }, []);
 
   // form submission handler
@@ -98,7 +100,7 @@ const SellerStoreRegister = ({ store }) => {
           throw new Error("네트워크 응답이 실패했습니다.");
         })
         .then((data) => {
-          alert("data.result");
+          alert("성공!");
           console.log(data.result);
           console.log(formData);
           console.log(token);
@@ -125,23 +127,13 @@ const SellerStoreRegister = ({ store }) => {
           throw new Error("네트워크 응답이 실패했습니다.");
         })
         .then((data) => {
-          alert(data.result);
+          alert("성공!");
           console.log(data.result);
         })
         .catch((error) => {
           console.error(error);
         });
     }
-
-    // fetch 등 비동기 작업이 끝난 후에 실행되어야 한다면 아래 코드를 .then() 또는 .catch() 이후에 넣으세요.
-    setName("");
-    setLocation("");
-    setContent("");
-    setPhoneNum("");
-    setImage(null);
-    setPreviewImageSrc("https://via.placeholder.com/150x150");
-    setLat(0);
-    setLng(0);
   };
 
   // image change handler
@@ -153,26 +145,38 @@ const SellerStoreRegister = ({ store }) => {
   };
 
   function searchAddress() {
+    console.log(location);
+    console.log(geocoder === null);
     // 주소로 좌표를 검색합니다
-    geocoder.addressSearch(location, function (result, status) {
-      // 정상적으로 검색이 완료됐으면
-      if (status === kakao.maps.services.Status.OK) {
-        if (marker) {
-          // 이전에 생성된 마커가 있으면
-          marker.setMap(null); // 마커를 지도에서 제거
-        }
-        coord = new kakao.maps.LatLng(result[0].y, result[0].x);
-        setLat(result[0].y);
-        setLng(result[0].x);
 
-        // 결과값으로 받은 위치를 마커로 표시합니다
-        marker = new kakao.maps.Marker({
-          map: map,
-          position: coord,
-        });
-        map.panTo(coord);
-      }
-    });
+    if (geocoder) {
+      geocoder.addressSearch(location, function (result, status) {
+        // 정상적으로 검색이 완료됐으면
+        if (status === kakao.maps.services.Status.OK) {
+          if (marker) {
+            // 이전에 생성된 마커가 있으면
+            marker.setMap(null); // 마커를 지도에서 제거
+          }
+          coord = new kakao.maps.LatLng(result[0].y, result[0].x);
+          setLat(result[0].y);
+          setLng(result[0].x);
+
+          // 결과값으로 받은 위치를 마커로 표시합니다
+          setMarker(
+            new kakao.maps.Marker({
+              map: map,
+              position: coord,
+            })
+          );
+          console.log(marker === null);
+          map.panTo(coord);
+        } else {
+          alert("오류발생!");
+        }
+      });
+    } else {
+      console.log("geocoder가 아직 정의되지 않았습니다.");
+    }
   }
   return (
     <div className="seller-store-register">
