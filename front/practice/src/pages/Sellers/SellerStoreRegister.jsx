@@ -6,10 +6,9 @@ import SellerSideNav from "./SellerSideNav";
 const { kakao } = window;
 
 const SellerStoreRegister = ({ store }) => {
-
   var map;
-var geocoder;
-var marker;
+  var geocoder;
+  var marker;
 
   const [email, setEmail] = useState(localStorage.getItem("email"));
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -31,7 +30,10 @@ var marker;
     setEmail(localStorage.getItem("email"));
     setToken(localStorage.getItem("token"));
 
-    console.log("현재 페이지"+ localStorage.getItem("email"), localStorage.getItem("token"));
+    console.log(
+      "현재 페이지" + localStorage.getItem("email"),
+      localStorage.getItem("token")
+    );
 
     var mapDiv = document.querySelector("#storeMap"), // 지도를 표시할 div
       mapOption = {
@@ -50,7 +52,7 @@ var marker;
   const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: Implement the code to send updated data to the server
-  
+
     var data = {
       storeName: name,
       storeSeller: email,
@@ -82,16 +84,13 @@ var marker;
           console.log(value);
         }
       }
-      fetch(
-        "http://52.79.186.117:8000/api/store/create",
-        {
-          method: "POST",
-          headers: {
-            "Authorization": `${token}`
-          },
-          body: formData,
-        }
-      )
+      fetch("http://52.79.186.117:8000/api/store/create", {
+        method: "POST",
+        headers: {
+          Authorization: `${token}`,
+        },
+        body: formData,
+      })
         .then((response) => {
           if (response.ok) {
             return response.json(); // JSON 형식의 응답을 파싱
@@ -99,7 +98,7 @@ var marker;
           throw new Error("네트워크 응답이 실패했습니다.");
         })
         .then((data) => {
-          alert("성공!");
+          alert("data.result");
           console.log(data.result);
           console.log(formData);
           console.log(token);
@@ -111,17 +110,14 @@ var marker;
     } else {
       formData = JSON.stringify(data);
 
-      fetch(
-        "http://52.79.186.117:8000/api/store/create",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-          body: formData,
-        }
-      )
+      fetch("http://52.79.186.117:8000/api/store/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+        body: formData,
+      })
         .then((response) => {
           if (response.ok) {
             return response.json(); // JSON 형식의 응답을 파싱
@@ -129,13 +125,23 @@ var marker;
           throw new Error("네트워크 응답이 실패했습니다.");
         })
         .then((data) => {
-          alert("성공!");
+          alert(data.result);
           console.log(data.result);
         })
         .catch((error) => {
           console.error(error);
         });
     }
+
+    // fetch 등 비동기 작업이 끝난 후에 실행되어야 한다면 아래 코드를 .then() 또는 .catch() 이후에 넣으세요.
+    setName("");
+    setLocation("");
+    setContent("");
+    setPhoneNum("");
+    setImage(null);
+    setPreviewImageSrc("https://via.placeholder.com/150x150");
+    setLat(0);
+    setLng(0);
   };
 
   // image change handler
@@ -228,7 +234,7 @@ var marker;
                     style={{
                       width: "90%", // 원하는 폭을 지정하세요.
                       height: "3.8rem",
-                      resize: "none"
+                      resize: "none",
                       //resize: "vertical", // 사용자가 높이를 조절할 수 있도록 함
                     }}
                   />
