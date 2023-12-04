@@ -7,19 +7,19 @@ export default function PurchaseHistoryCard({data}) {
     // const perPrice = parseInt (selectedBread.product.price); // Product당 가격 * 개수 값
 return (
     <div className="orderProductList"> 
-    {/* <div style={{display: 'flex', height:'3vh'}}>
-    <label>{selectedBread.product.p_name}</label>
+    <div style={{display: 'flex', height:'3vh'}}>
+    <label>{data.productName}</label>
     </div>
     <div style={{display:'flex',justifyContent:'space-around'}}>
      <div className="imageWrapper">
-     <img src={selectedBread.product.p_image} alt="bread" className="breadImage" />
+     <img src={data.productUrls[0]} alt="bread" className="breadImage" />
     </div>
-        <span className="dayOption">{selectedBread.product.color + ", " + selectedBread.product.size}</span> 
-        <label>{quantity} 개</label>
+        <span className="dayOption">{data.options[0].productColor + ", " + data.options[0].productSize}</span> 
+        <label>{data.quantity} 개</label>
     <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}} >
-        <label>{perPrice}원</label> 
+        <label>{data.price}원</label> 
     </div>
-        </div> */}
+        </div>
 </div>
 );
 }

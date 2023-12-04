@@ -111,13 +111,13 @@ async function optionEdit(){  //옵션 변경
             size: targetSize,
             color: targetColor,
             quantity:quantity,
-            price: (data.product.price * quantity),
+            price: (perPrice * quantity),
         }
       };
   
       try {
         const response = await fetch(
-          "http://52.79.186.117:8000/api/cart/items/",
+          "http://3.34.227.3:16000/api/cart/items/",
           {
             method: "PUT",
             headers: {
@@ -187,11 +187,11 @@ return (
         옵션 변경
         <div className="quantityWrapper">
         개수
-        <button className="quantityButton" onClick={quantityMinus}> - </button> 
+        <button className="quantityButton" style={{width:"2rem"}} onClick={quantityMinus}> - </button> 
              <h5>{quantity}</h5>
-        <button className="quantityButton" onClick={quantityPlus}> + </button> 
+        <button className="quantityButton" style={{width:"2rem"}} onClick={quantityPlus}> + </button> 
         </div>
-        <div>색상
+        <div style={{justifyContent:"space-around"}}>색상
         <select value={targetColor} onChange={handleColorChange} >
             {colorArray.map((color, index) => 
                 <option value={color} key={index}>{color}</option>
@@ -209,11 +209,11 @@ return (
         </div>
         <div style={{display:"flex"}}>
             <button className="changeOption" onClick={optionClose}>취소</button>  
-            <button className="changeOption"style={{backgroundColor:"blue", color:"white"}} onClick={optionEdit}>저장</button>
+            <button className="changeOption"style={{backgroundColor: "#32A4FF", color:"white"}} onClick={optionEdit}>저장</button>
          </div>
       </Modal>
     <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}} >
-        <label>{perPrice}원</label> 
+        <label>{data.product.price}원</label> 
         {/* <div className='buttonWrapper'>
             <button className="button">결제</button>
             <button className="button">삭제</button> 
