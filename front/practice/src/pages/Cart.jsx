@@ -147,7 +147,7 @@ export default function Cart() {
   return (
     <div className="cart-page">
       <Header />
-      {selectedBread.length && (
+      {selectedBread.length > 0 ? (
         <div className="shoppingBag">
           <div className="orderContainer">
             <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -188,8 +188,12 @@ export default function Cart() {
             ))}
           </div>
         </div>
+       ) : (
+        <div>장바구니가 비어있습니다.</div> // 상품이 없을 때 표시할 메시지 또는 컴포넌트
       )}
-      <EventButton buttonText={"구매하기"} onClick={purchaseFunc} />
+      <div style={{bottom: "1rem", position: "fixed", justifyContent:"center", transform: "translate(-50%, -50%)", left:"50%"}}>
+      <EventButton  buttonText={"구매하기"} onClick={purchaseFunc} />
+      </div>
       <BottomNav />
     </div>
   );

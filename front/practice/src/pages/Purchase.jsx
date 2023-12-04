@@ -173,8 +173,9 @@ async function clickPurchase(e) {
           <span>{totalPrice.toLocaleString()}원</span> 
         </div>
       </div>
-
+<div style={{bottom: "1rem", position: "fixed", justifyContent:"center", transform: "translate(-50%, -50%)", left:"50%"}}>
       <EventButton buttonText={"결제"} onClick={clickPurchase} />
+</div>
       <BottomNav />
     </div>
   );

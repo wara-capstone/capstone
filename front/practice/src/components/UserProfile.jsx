@@ -133,7 +133,7 @@ const UserProfile = () => {
             </div>
           </button>
         </Link>
-
+        {!isSeller && (
         <Link to="/user/purchaseHistory" className="user-link">
           <button className="chattingList-btn">
             <span role="img" aria-label="conversation">
@@ -145,6 +145,8 @@ const UserProfile = () => {
             </div>
           </button>
         </Link>
+
+        )}
 
       </div>
 
