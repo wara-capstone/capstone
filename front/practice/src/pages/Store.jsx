@@ -39,7 +39,7 @@ export default function Store() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        "/api/store/read/id/" +
+        "http://52.79.186.117:8000/api/store/read/id/" +
           id,
         {
           method: "GET",
@@ -85,8 +85,8 @@ export default function Store() {
       )}
 
       <Category
-        allUrl={`/api/product/all/store/${id}`}
-        categoryUrl={`/api/product/all/store/${id}/category?category=`}
+        allUrl={`http://52.79.186.117:8000/api/product/all/store/${id}`}
+        categoryUrl={`http://52.79.186.117:8000/api/product/all/store/${id}/category?category=`}
       />
 
       <BottomNav />

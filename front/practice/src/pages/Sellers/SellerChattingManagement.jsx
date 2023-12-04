@@ -62,7 +62,7 @@ export default function SellerChattingManagement() {
 
     try {
       const response = await fetch(
-        "http://52.79.186.117:8000/api/chat/rooms/",
+        "http://52.79.186.117:8000http://52.79.186.117:8000/api/chat/rooms/",
         {
           method: "POST",
           headers: {
@@ -109,7 +109,7 @@ export default function SellerChattingManagement() {
   const setupWebSocket = (roomId, authToken) => {
     // 인증 토큰을 URL의 쿼리 파라미터로 추가
     const newSocket = new WebSocket(
-      `wss://www.onoff.zone/api/ws/room/${roomId}/messages?token=${authToken}`
+      `wss://www.onoff.zonehttp://52.79.186.117:8000/api/ws/room/${roomId}/messages?token=${authToken}`
     );
 
     console.log(newSocket.url);
@@ -151,7 +151,7 @@ export default function SellerChattingManagement() {
       setLoading(true);
       try {
         const response = await fetch(
-          `http://52.79.186.117:8000/api/chat/rooms/?email=${userId}`,
+          `http://52.79.186.117:8000http://52.79.186.117:8000/api/chat/rooms/?email=${userId}`,
           {
             method: "GET",
             headers: {
@@ -189,7 +189,7 @@ export default function SellerChattingManagement() {
 
   const fetchImage = async (email) => {
     const response = await fetch(
-      `http://52.79.186.117:8000/api/user?email=${email}`,
+      `http://52.79.186.117:8000http://52.79.186.117:8000/api/user?email=${email}`,
       {
         method: "GET",
         headers: {

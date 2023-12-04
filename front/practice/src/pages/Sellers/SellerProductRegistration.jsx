@@ -43,6 +43,7 @@ import {
   Upload,
 } from "antd";
 import "./Seller.css";
+import CellRenderer from "./CellRenderer";
 const { TextArea } = Input;
 
 const mainCategory = [
@@ -160,7 +161,7 @@ export default function SellerProductRegistration(props) {
         // 단일 상품 조회
         setLoading(true);
         const response = await axios.get(
-          `/api/product/all/${productId}`,
+          `http://52.79.186.117:8000/api/product/all/${productId}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -216,90 +217,18 @@ export default function SellerProductRegistration(props) {
   );
 
   // 서버로 보낼 변수들 이름 지정
-  const [productName, setProductName] = useState("");
-  const [productCategory, setProductCategory] = useState("");
-  const [productPrice, setProducPrice] = useState("");
-  const [productSize, setProductSize] = useState("");
-  const [productStock, setProductStock] = useState("");
-  const [productColor, setProducColor] = useState("");
+  const [productName, setProductName] = useState(productInfo ? productInfo.productName : '');
+  const [productCategory, setProductCategory] = useState(productInfo ? productInfo.productCategory : '');
+  
 
   const [editingKey, setEditingKey] = useState(null);
-
   const [options, setOptions] = useState([{ items: ["사이즈 (예시: s)"] }]);
 
-
-  // const handleSubmitButtonClick = async() => {
-  //   const response =
-  //   // 서버로 데이터 전송하는 로직 작성
-  // //   if(isTrue){ // 확인 버튼을 눌렀을 때 상품 수정을 서버로 보냄 
-  // //  //   console.log("트루");
-  // //     axios // 상품 수정
-  // //     .put(
-  // //       `/api/product/modify`,
-  // //       {
-  // //         headers: {
-  // //           "Content-Type" : "multipart/form-data",
-  // //           Authorization: `${token}`,
-  // //         },
-  // //         productId: productId,
-  // //         productDTO: {
-  // //           //productId: productId,
-  // //           //storeId: storeId,
-  // //           productName: productName,
-  // //           productCategory: productCategory,
-  // //           //sellerProductCode: sellerProductCode,
-  // //         },
-  // //         // optionDTO: {
-  // //         //   productPrice: productPrice,
-  // //         //   productSize: productSize,
-  // //         //   productColor: productColor,
-  // //         //   productStock: productStock,
-  // //         // },
-  // //       }
-  // //     )
-  // //     .then((response) => {
-  // //       console.log(response.data); // 서버 응답 출력
-  // //     })
-  // //     .catch((error) => {
-  // //       console.error(error); // 오류 처리
-  // //     });
-  // //   }
-    
-  // //   else{
-  //   await axios // 상품 등록
-  //     .post(
-  //       `/api/product/seller`,
-  //       {
-  //         headers: {
-  //           //"Content-Type" : "multipart/form-data",
-  //           Authorization: `${token}`,
-  //         },
-  //         productDTO: {
-  //           //productId: productId,
-  //           //storeId: storeId,
-  //           productName: productName,
-  //           productCategory: productCategory,
-  //           //sellerProductCode: sellerProductCode,
-  //         },
-  //         optionDTO: {
-  //           productPrice: productPrice,
-  //           productSize: productSize,
-  //           productColor: productColor,
-  //           productStock: productStock,
-  //         },
-  //       }
-  //     )
-  //     .then((response) => {
-  //       console.log(response.data); // 서버 응답 출력
-  //     })
-  //     .catch((error) => {
-  //       console.error(error); // 오류 처리
-  //     });
-  //  // console.log("false");
-  //   };
-
-  //   message.success("등록되었습니다");
-  // };
+  const [productStock, setProductStock] = useState(productInfo && productInfo.options && productInfo.options[0] ? productInfo.options[0].productStock : '');
+  const [productPrice, setProductPrice] = useState(productInfo && productInfo.options && productInfo.options[0] ? productInfo.options[0].productPrice : '');
+  const [productSize, setProductSize] = useState(productInfo && productInfo.options && productInfo.options[0] ? productInfo.options[0].productSize : '');
+  const [productColor, setProductColor] = useState(productInfo && productInfo.options && productInfo.options[0] ? productInfo.options[0].productColor : '');
+  
   
   const handleSubmitButtonClick = async () => {
     try {
@@ -324,13 +253,13 @@ export default function SellerProductRegistration(props) {
       
       if (isTrue) { // 상품 수정
         response = await axios.put(
-          "/api/product/modify",
+          "http://52.79.186.117:8000/api/product/modify",
           data,
           { headers }
         );
       } else { // 상품 등록
         response = await axios.post( //보낼 때 `` 이거랑 "" 이거 차이가 뭐지? `랑 $ 세트인가 
-          "/api/product/seller",
+          "http://52.79.186.117:8000/api/product/seller",
           data,
           { headers }
         );
@@ -349,7 +278,7 @@ export default function SellerProductRegistration(props) {
   const removeOption = async (index) => {
     try {
       // 1. 서버에 삭제 요청 보내기
-      const response = await axios.delete(`/api/product/seller/option/${productInfo.options[index-1].optionId}`,
+      const response = await axios.delete(`http://52.79.186.117:8000/api/product/seller/option/${productInfo.options[index-1].optionId}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -469,7 +398,7 @@ export default function SellerProductRegistration(props) {
     setProductInfo(prevProductInfo => {
       return {
         ...prevProductInfo,
-        options: [...prevProductInfo.options, newOption]
+        options: [...(prevProductInfo.options || []), newOption]
       };
     });
   }
@@ -482,6 +411,8 @@ export default function SellerProductRegistration(props) {
       return {...prevProductInfo, options: newOptions};
     });
   };
+
+  
 
   const [quillValue, setQuillValue] = useState("");
 
@@ -519,7 +450,7 @@ export default function SellerProductRegistration(props) {
     console.log("담긴 옵션 정보"+ productInfo.options[index].productPrice);
     axios // 상품 등록
     .put(
-     `/api/product/seller/option/add/product/${productInfo.productId}`,
+     `http://52.79.186.117:8000/api/product/seller/option/add/product/${productInfo.productId}`,
     // `https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app/product/seller/option/add?productId=19`,
       { 
    
@@ -586,7 +517,7 @@ export default function SellerProductRegistration(props) {
 
 
 
-  const [price, setPrice] = useState({ buy: "", sell: "", discount: "" });
+ 
   if (loading) {
     return <LoadingScreen></LoadingScreen>
   } else {
@@ -628,6 +559,7 @@ export default function SellerProductRegistration(props) {
               <br />
             </div>
             <br />
+
             <div className="productInfo">
               <Typography.Title level={4}>기본정보</Typography.Title>
               <hr />
@@ -636,6 +568,7 @@ export default function SellerProductRegistration(props) {
                   <td>상품명&nbsp;</td>
                   <Input
                     value={productInfo.productName}
+                    onChange={(e) => setProductName(e.target.value)}
                     count={{
                       show: true,
                       max: 100,
@@ -672,17 +605,18 @@ export default function SellerProductRegistration(props) {
                   </Space>
                 </tr>
                 <br />
-                <tr>
+                {/* <tr>
                   <td>수량</td>
                   <td>
                     <Input
-                      value={productInfo.options[0].productStock}
+                      value={productInfo.productStock}
+                      onChange={(e) => setProductStock(e.target.value)}
                       count={{
                         show: true,
                       }}
                     />
                   </td>
-                </tr>
+                </tr> */}
 
                 <tr>
                   <td>해시태그</td>
@@ -718,7 +652,7 @@ export default function SellerProductRegistration(props) {
               <hr />
               <div id="option-table">
                 <table>
-                  {productInfo.options.map((option, index) => (
+                {productInfo && productInfo.options ? productInfo.options.map((option, index) => (
                     <React.Fragment key={index}>
                       <tr>
                         <div className="option-small-box">
@@ -765,12 +699,13 @@ export default function SellerProductRegistration(props) {
                         </div>
                       </tr>
                     </React.Fragment>
-                  ))}
+                  )):null}
                       <div>
                           <Button style={{backgroundColor:"#89CFF0", color:"white"}} onClick={plusOption}>
                           <PlusCircleOutlined />
                             </Button>
                     </div>
+                    
                 </table>
               </div>
             </div>
@@ -792,7 +727,7 @@ export default function SellerProductRegistration(props) {
               <hr />
 
               <Upload
-                action="/api/image/upload"
+                action="http://52.79.186.117:8000/api/image/upload"
                 listType="picture"
                 defaultFileList={[[]]}
                 headers={{
@@ -855,7 +790,7 @@ export default function SellerProductRegistration(props) {
               //         headers: {
               //           "Content-Type": "multipart/form-data",
               //         },
-              //         url: `${"/api"}/product/seller`,
+              //         url: `${"http://52.79.186.117:8000/api"}/product/seller`,
               //         data: imageData,
               //         withCredentials: true,
               //       });

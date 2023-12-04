@@ -35,7 +35,7 @@ export default function SellerItemManagement() {
     try {
       setLoading(true);
       const response = await axios.get(
-        "/api/product/all/store/1",
+        `http://52.79.186.117:8000/api/product/all/store/${storeId}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -73,7 +73,7 @@ export default function SellerItemManagement() {
     for (let item of selectedData) {
       try {
         const response = await axios.delete(
-          `/api/product/seller/${storeId}/${item.productId}`,
+          `http://52.79.186.117:8000/api/product/seller/${storeId}/${item.productId}`,
           {
             headers: {
               Authorization: `${token}`,
@@ -230,8 +230,10 @@ export default function SellerItemManagement() {
               onClick={handleDelete}>
               삭제
             </button>
-            <button onClick={() => setRowData([...rowData, 
-              {  productUrls: '',  productName: '',  productId: '',  productSize: '',  productColor: '',  productStock: '',}])}>추가</button>
+            <button onClick={() => {
+              const maxId = Math.max(...rowData.map(data => data.productId));
+              setRowData([...rowData, 
+              {  productUrls: '',  productName: '',  productId: maxId+1,  productSize: '',  productColor: '',  productStock: '',}])}}>추가</button>
           </div>
 
           <div>
