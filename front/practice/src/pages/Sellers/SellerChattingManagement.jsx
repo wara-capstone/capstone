@@ -23,9 +23,10 @@ export default function SellerChattingManagement() {
     chatMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  useEffect(scrollToBottom, [chatMessages]); // 메시지가 추가될 때마다 스크롤 내리기
-
-  useEffect(scrollToBottom, [chatMessages]); // 메시지가 추가될 때마다 스크롤 내리기
+  useEffect(() => {
+    // 메시지 배열이 변경될 때마다 스크롤을 최하단으로 이동
+    scrollToBottom();
+  }, [chatMessages]);
 
   useEffect(() => {
     if (chatMessages.length > 0) {
@@ -47,6 +48,15 @@ export default function SellerChattingManagement() {
     }
   }, [customerId]);
 
+  useEffect(() => {
+    // 컴포넌트가 언마운트될 때 웹소켓 연결 종료
+    return () => {
+      if (socket) {
+        socket.close();
+      }
+    };
+  }, [socket]);
+
   const handleInputChange = (event) => {
     setMessageInput(event.target.value);
   };
@@ -56,7 +66,7 @@ export default function SellerChattingManagement() {
   };
 
   const openOrCreateRoom = async () => {
-    if (socket && socket.readyState !== WebSocket.CLOSED) {
+    if (socket) {
       socket.close();
     }
 
@@ -78,27 +88,29 @@ export default function SellerChattingManagement() {
       }
 
       const roomData = await response.json();
-      if (response.status === 200) {
-        setCurrentRoomId(roomData.id);
-        displayMessages(roomData.messages);
-        setupWebSocket(roomData.id, token);
-      }
+
+      setCurrentRoomId(roomData.id);
+      displayMessages(roomData.messages);
+      setupWebSocket(roomData.id, token);
     } catch (error) {
       console.error(error);
     }
   };
 
   const displayMessages = (messages) => {
+    // 메시지를 시간 순서대로 정렬
+    messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
     const messageElements = messages.map((message) => {
-      if (message.sender_email && message.text) {
-        const className = message.sender_email === userId ? "sent" : "received";
-        return (
-          <div key={message.id} className={`message-bubble ${className}`}>
-            {`${message.sender_email}: ${message.text}`}
-          </div>
-        );
-      }
-      return null;
+      // if (message.sender_email && message.text) {
+      const className = message.sender_email === userId ? "sent" : "received";
+      return (
+        <div key={message.id} className={`message-bubble ${className}`}>
+          {`${message.sender_email}: ${message.text}`}
+        </div>
+      );
+      // }
+      // return null;
     });
     setChatMessages(messageElements);
   };
@@ -113,20 +125,30 @@ export default function SellerChattingManagement() {
 
     newSocket.onmessage = (event) => {
       const data = JSON.parse(event.data);
+
       const className = data.sender_email === userId ? "sent" : "received";
       const messageElem = (
-        <div className={`message-bubble ${className}`}>
+        <div key={data.id} className={`message-bubble ${className}`}>
           {`${data.sender_email}: ${data.message}`}
         </div>
       );
-      setChatMessages((prevMessages) => [...prevMessages, messageElem]);
+      // setChatMessages((prevMessages) => [...prevMessages, messageElem]);
+      setChatMessages((prevMessages) => {
+        // 새로운 메시지를 메시지 배열의 끝에 추가
+        const newMessages = [...prevMessages, messageElem];
+
+        // 메시지 배열을 timestamp에 따라 정렬
+        newMessages.sort((a, b) => new Date(a.key) - new Date(b.key));
+
+        return newMessages;
+      });
     };
 
     setSocket(newSocket);
   };
 
   const sendMessage = () => {
-    if (messageInput) {
+    if (messageInput && socket && socket.readyState === WebSocket.OPEN) {
       const messagePayload = {
         sender_email: userId,
         message: messageInput,
