@@ -727,7 +727,7 @@ export default function SellerProductRegistration(props) {
               <hr />
 
               <Upload
-                action="http://52.79.186.117:8000/api/image/upload"
+                // action="http://52.79.186.117:8000/api/image/upload"
                 listType="picture"
                 defaultFileList={[[]]}
                 headers={{
