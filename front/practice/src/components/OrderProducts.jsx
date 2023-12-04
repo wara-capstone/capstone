@@ -213,7 +213,7 @@ return (
          </div>
       </Modal>
     <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}} >
-        <label>{data.product.price}원</label> 
+        <label>{data.product.price.toLocaleString()}원</label> 
         {/* <div className='buttonWrapper'>
             <button className="button">결제</button>
             <button className="button">삭제</button> 

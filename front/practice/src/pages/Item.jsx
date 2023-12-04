@@ -213,7 +213,7 @@ export default function Item() {
               <ImageSlider images={result.productUrls}></ImageSlider>
             </div>
             <h3>{result.productName}</h3>
-            <p>가격: {price}</p>
+            <p>가격: {parseInt(price).toLocaleString()}</p>
             {/* <p>상세 정보: {"없음"}</p> */}
             <p>재고: {result.options[0].productStock}</p>
             <div>
