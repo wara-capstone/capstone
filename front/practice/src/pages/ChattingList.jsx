@@ -32,7 +32,10 @@ export default function ChattingList() {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const data = await response.json();
+        let data = await response.json();
+
+        // userId와 visitor_user_email이 다른 경우만 남깁니다.
+        data = data.filter((room) => room.shop_user_email !== userId);
 
         const userRoomInfoPromises = data.map(async (room) => {
           const image = await fetchImage(room.shop_user_email);
@@ -47,7 +50,7 @@ export default function ChattingList() {
         setVisitorUserEmails(userRoomInfo);
       } catch (error) {
         console.error("Error getting visitor_user_emails:", error);
-      } finally{
+      } finally {
         setLoading(false);
       }
     }
@@ -86,35 +89,35 @@ export default function ChattingList() {
       });
     }
   };
-  if(loading){
-    return <LoadingScreen></LoadingScreen>
-  }else{
-  return (
-    <div className="chatting-list">
-      <Header />
-      <div className="chatting-list-container">
-        <div className="chatting-lists">
-          {visitorUserEmails.map((user, index) => (
-            <div key={index} className="list-item">
-              <div
-                className="button-link"
-                onClick={() => handleConnectChatting(user)}
-              >
-                <div className="list-item-content">
-                  <img src={user.image} alt="User" className="round-image" />
-                  <div className="user-details">
-                    <h2>{user.email}</h2>
-                    <p>최근 메세지: {user.latestMessage}</p>
+  if (loading) {
+    return <LoadingScreen></LoadingScreen>;
+  } else {
+    return (
+      <div className="chatting-list">
+        <Header />
+        <div className="chatting-list-container">
+          <div className="chatting-lists">
+            {visitorUserEmails.map((user, index) => (
+              <div key={index} className="list-item">
+                <div
+                  className="button-link"
+                  onClick={() => handleConnectChatting(user)}
+                >
+                  <div className="list-item-content">
+                    <img src={user.image} alt="User" className="round-image" />
+                    <div className="user-details">
+                      <h2>{user.email}</h2>
+                      <p>최근 메세지: {user.latestMessage}</p>
+                    </div>
                   </div>
                 </div>
+                <div className="card-separator"></div>
               </div>
-              <div className="card-separator"></div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+        <BottomNav />
       </div>
-      <BottomNav />
-    </div>
-  );
-          }
+    );
+  }
 }

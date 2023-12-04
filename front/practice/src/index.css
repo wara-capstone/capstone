@@ -26,22 +26,21 @@ code {
 .store {
   max-width: 400px;
   /* top: 6vh; */
-  height: 88vh;      /* 높이를 100%로 설정 */
+  height: 88vh; /* 높이를 100%로 설정 */
   margin-left: auto;
   margin-right: auto;
   background-color: #f2f2f2;
 }
 
-.item{
+.item {
   max-width: 400px;
   /* top: 6vh; */
   min-height: 120vh; /* 뷰포트 높이를 최소 높이로 설정 */
-  height: 100%;      /* 높이를 100%로 설정 */
+  height: 100%; /* 높이를 100%로 설정 */
   margin-left: auto;
   margin-right: auto;
   background-color: #f2f2f2;
 }
-
 
 .home,
 .user,
@@ -51,7 +50,8 @@ code {
 .cart-page,
 .barcode,
 .chatting,
-.chatting-list {
+.chatting-list,
+.search {
   height: 100vh;
 }
 

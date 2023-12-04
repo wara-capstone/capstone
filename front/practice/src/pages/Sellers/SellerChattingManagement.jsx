@@ -1,12 +1,9 @@
+import { message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import SellerHeader from "./SellerHeader";
 import LoadingScreen from "../../components/LoadingScreen";
-import {
-  message
-} from "antd";
+import SellerHeader from "./SellerHeader";
 
 export default function SellerChattingManagement() {
-  
   const [currentRoomId, setCurrentRoomId] = useState(null);
   const [socket, setSocket] = useState(null);
   const [messageInput, setMessageInput] = useState("");
@@ -26,15 +23,39 @@ export default function SellerChattingManagement() {
     chatMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  useEffect(scrollToBottom, [chatMessages]); // 메시지가 추가될 때마다 스크롤 내리기
+  useEffect(() => {
+    // 메시지 배열이 변경될 때마다 스크롤을 최하단으로 이동
+    scrollToBottom();
+  }, [chatMessages]);
 
-  useEffect(scrollToBottom, [chatMessages]); // 메시지가 추가될 때마다 스크롤 내리기
+  useEffect(() => {
+    if (chatMessages.length > 0) {
+      const lastMessage = chatMessages[chatMessages.length - 1].props.children;
+
+      setVisitorUserEmails((prevEmails) =>
+        prevEmails.map((user) =>
+          user.email === customerId
+            ? { ...user, latestMessage: lastMessage }
+            : user
+        )
+      );
+    }
+  }, [chatMessages]);
 
   useEffect(() => {
     if (customerId) {
       openOrCreateRoom();
     }
   }, [customerId]);
+
+  useEffect(() => {
+    // 컴포넌트가 언마운트될 때 웹소켓 연결 종료
+    return () => {
+      if (socket) {
+        socket.close();
+      }
+    };
+  }, [socket]);
 
   const handleInputChange = (event) => {
     setMessageInput(event.target.value);
@@ -45,7 +66,7 @@ export default function SellerChattingManagement() {
   };
 
   const openOrCreateRoom = async () => {
-    if (socket && socket.readyState !== WebSocket.CLOSED) {
+    if (socket) {
       socket.close();
     }
 
@@ -67,27 +88,29 @@ export default function SellerChattingManagement() {
       }
 
       const roomData = await response.json();
-      if (response.status === 200) {
-        setCurrentRoomId(roomData.id);
-        displayMessages(roomData.messages);
-        setupWebSocket(roomData.id, token);
-      }
+
+      setCurrentRoomId(roomData.id);
+      displayMessages(roomData.messages);
+      setupWebSocket(roomData.id, token);
     } catch (error) {
       console.error(error);
     }
   };
 
   const displayMessages = (messages) => {
+    // 메시지를 시간 순서대로 정렬
+    messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
     const messageElements = messages.map((message) => {
-      if (message.sender_email && message.text) {
-        const className = message.sender_email === userId ? "sent" : "received";
-        return (
-          <div key={message.id} className={`message-bubble ${className}`}>
-            {`${message.sender_email}: ${message.text}`}
-          </div>
-        );
-      }
-      return null;
+      // if (message.sender_email && message.text) {
+      const className = message.sender_email === userId ? "sent" : "received";
+      return (
+        <div key={message.id} className={`message-bubble ${className}`}>
+          {`${message.sender_email}: ${message.text}`}
+        </div>
+      );
+      // }
+      // return null;
     });
     setChatMessages(messageElements);
   };
@@ -102,20 +125,30 @@ export default function SellerChattingManagement() {
 
     newSocket.onmessage = (event) => {
       const data = JSON.parse(event.data);
+
       const className = data.sender_email === userId ? "sent" : "received";
       const messageElem = (
-        <div className={`message-bubble ${className}`}>
+        <div key={data.id} className={`message-bubble ${className}`}>
           {`${data.sender_email}: ${data.message}`}
         </div>
       );
-      setChatMessages((prevMessages) => [...prevMessages, messageElem]);
+      // setChatMessages((prevMessages) => [...prevMessages, messageElem]);
+      setChatMessages((prevMessages) => {
+        // 새로운 메시지를 메시지 배열의 끝에 추가
+        const newMessages = [...prevMessages, messageElem];
+
+        // 메시지 배열을 timestamp에 따라 정렬
+        newMessages.sort((a, b) => new Date(a.key) - new Date(b.key));
+
+        return newMessages;
+      });
     };
 
     setSocket(newSocket);
   };
 
   const sendMessage = () => {
-    if (messageInput) {
+    if (messageInput && socket && socket.readyState === WebSocket.OPEN) {
       const messagePayload = {
         sender_email: userId,
         message: messageInput,
@@ -148,7 +181,10 @@ export default function SellerChattingManagement() {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const data = await response.json();
+        let data = await response.json();
+
+        // userId와 visitor_user_email이 다른 경우만 남깁니다.
+        data = data.filter((room) => room.visitor_user_email !== userId);
 
         const userRoomInfoPromises = data.map(async (room) => {
           const image = await fetchImage(room.visitor_user_email);
@@ -189,63 +225,63 @@ export default function SellerChattingManagement() {
       console.log("실패");
     }
   };
-  if(loading){
-    return <LoadingScreen></LoadingScreen>
-  }else{
-
-  return (
-    <div className="seller-chatting-management">
-      <SellerHeader />
-      <div className="seller-chatting-management-container">
-        <div className="chatting-list-container">
-          <div className="chatting-lists">
-            {visitorUserEmails.map((user, index) => (
-              <div
-                key={index}
-                className="list-item"
-                onClick={() => handleCustomerIdChange(user.email)}
-              >
-                <div className="list-item-content">
-                  <img src={user.image} alt="User" className="round-image" />
-                  <div className="user-details">
-                    <h2>{user.email}</h2>
-                    <p>최근 메세지: {user.latestMessage}</p>
+  if (loading) {
+    return <LoadingScreen></LoadingScreen>;
+  } else {
+    return (
+      <div className="seller-chatting-management">
+        <SellerHeader />
+        <div className="seller-chatting-management-container">
+          <div className="chatting-list-container">
+            <div className="chatting-lists">
+              {visitorUserEmails.map((user, index) => (
+                <div
+                  key={index}
+                  className="list-item"
+                  onClick={() => handleCustomerIdChange(user.email)}
+                >
+                  <div className="list-item-content">
+                    <img src={user.image} alt="User" className="round-image" />
+                    <div className="user-details">
+                      <h2>{user.email}</h2>
+                      <p>최근 메세지: {user.latestMessage}</p>
+                    </div>
                   </div>
+                  <div className="card-separator"></div>
                 </div>
-                <div className="card-separator"></div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div id="chat-container" className="seller-chat-container">
-          {/* <!-- 채팅방 메시지 --> */}
-          <div id="chat-messages">
-            {chatMessages}
-            <div ref={chatMessagesRef} />
+              ))}
+            </div>
           </div>
 
-          {/* <!-- 메시지 입력 및 전송 --> */}
+          <div id="chat-container" className="seller-chat-container">
+            {/* <!-- 채팅방 메시지 --> */}
+            <div id="chat-messages">
+              {chatMessages}
+              <div ref={chatMessagesRef} />
+            </div>
 
-          <form
-          onSubmit={(e) => {
-          e.preventDefault();
-            sendMessage();
-         }}
-          >
-          <input
-            type="text"
-            value={messageInput}
-            onChange={handleInputChange}
-            placeholder="메시지를 입력하세요"
-            id="message-input"
-          />
-          <button id="send-btn" onClick={sendMessage}>
-            보내기
-          </button>
-          </form>
+            {/* <!-- 메시지 입력 및 전송 --> */}
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                sendMessage();
+              }}
+            >
+              <input
+                type="text"
+                value={messageInput}
+                onChange={handleInputChange}
+                placeholder="메시지를 입력하세요"
+                id="message-input"
+              />
+              <button id="send-btn" onClick={sendMessage}>
+                보내기
+              </button>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
-  );
-}}
+    );
+  }
+}

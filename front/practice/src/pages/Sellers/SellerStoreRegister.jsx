@@ -6,15 +6,14 @@ import SellerSideNav from "./SellerSideNav";
 const { kakao } = window;
 
 const SellerStoreRegister = ({ store }) => {
-
-  var map;
-var geocoder;
-var marker;
+  const [map, setMap] = useState(null); // 지도 객체를 저장할 상태
+  const [geocoder, setGeocoder] = useState(null);
+  const [marker, setMarker] = useState(null); // 마커 객체를 저장할 상태
 
   const [email, setEmail] = useState(localStorage.getItem("email"));
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [name, setName] = useState(store?.name || "");
-  const [location, setLocation] = useState(store?.location || "");
+  const [location, setLocation] = useState("");
   const [content, setContent] = useState(store?.content || "");
   const [phone, setPhoneNum] = useState("");
   const [lat, setLat] = useState(0);
@@ -31,7 +30,10 @@ var marker;
     setEmail(localStorage.getItem("email"));
     setToken(localStorage.getItem("token"));
 
-    console.log("현재 페이지"+ localStorage.getItem("email"), localStorage.getItem("token"));
+    console.log(
+      "현재 페이지" + localStorage.getItem("email"),
+      localStorage.getItem("token")
+    );
 
     var mapDiv = document.querySelector("#storeMap"), // 지도를 표시할 div
       mapOption = {
@@ -40,17 +42,19 @@ var marker;
       };
     //mapDiv에 첫번째 자식이 없다면 지도 생성
     if (!mapDiv.firstChild) {
-      map = new kakao.maps.Map(mapDiv, mapOption); // 지도를 생성합니다
+      setMap(new kakao.maps.Map(mapDiv, mapOption)); // 지도를 생성합니다
+      console.log(map === null);
     }
 
-    geocoder = new kakao.maps.services.Geocoder(); // 주소-좌표 변환 객체를 생성합니다
+    const newGeocoder = new kakao.maps.services.Geocoder();
+    setGeocoder(newGeocoder); // geocoder 상태 업데이트
   }, []);
 
   // form submission handler
   const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: Implement the code to send updated data to the server
-  
+
     var data = {
       storeName: name,
       storeSeller: email,
@@ -82,16 +86,13 @@ var marker;
           console.log(value);
         }
       }
-      fetch(
-        "/api/store/create",
-        {
-          method: "POST",
-          headers: {
-            "Authorization": `${token}`
-          },
-          body: formData,
-        }
-      )
+      fetch("/api/store/create", {
+        method: "POST",
+        headers: {
+          Authorization: `${token}`,
+        },
+        body: formData,
+      })
         .then((response) => {
           if (response.ok) {
             return response.json(); // JSON 형식의 응답을 파싱
@@ -111,17 +112,14 @@ var marker;
     } else {
       formData = JSON.stringify(data);
 
-      fetch(
-        "/api/store/create",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-          body: formData,
-        }
-      )
+      fetch("/api/store/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+        body: formData,
+      })
         .then((response) => {
           if (response.ok) {
             return response.json(); // JSON 형식의 응답을 파싱
@@ -147,26 +145,38 @@ var marker;
   };
 
   function searchAddress() {
+    console.log(location);
+    console.log(geocoder === null);
     // 주소로 좌표를 검색합니다
-    geocoder.addressSearch(location, function (result, status) {
-      // 정상적으로 검색이 완료됐으면
-      if (status === kakao.maps.services.Status.OK) {
-        if (marker) {
-          // 이전에 생성된 마커가 있으면
-          marker.setMap(null); // 마커를 지도에서 제거
-        }
-        coord = new kakao.maps.LatLng(result[0].y, result[0].x);
-        setLat(result[0].y);
-        setLng(result[0].x);
 
-        // 결과값으로 받은 위치를 마커로 표시합니다
-        marker = new kakao.maps.Marker({
-          map: map,
-          position: coord,
-        });
-        map.panTo(coord);
-      }
-    });
+    if (geocoder) {
+      geocoder.addressSearch(location, function (result, status) {
+        // 정상적으로 검색이 완료됐으면
+        if (status === kakao.maps.services.Status.OK) {
+          if (marker) {
+            // 이전에 생성된 마커가 있으면
+            marker.setMap(null); // 마커를 지도에서 제거
+          }
+          coord = new kakao.maps.LatLng(result[0].y, result[0].x);
+          setLat(result[0].y);
+          setLng(result[0].x);
+
+          // 결과값으로 받은 위치를 마커로 표시합니다
+          setMarker(
+            new kakao.maps.Marker({
+              map: map,
+              position: coord,
+            })
+          );
+          console.log(marker === null);
+          map.panTo(coord);
+        } else {
+          alert("오류발생!");
+        }
+      });
+    } else {
+      console.log("geocoder가 아직 정의되지 않았습니다.");
+    }
   }
   return (
     <div className="seller-store-register">
@@ -228,7 +238,7 @@ var marker;
                     style={{
                       width: "90%", // 원하는 폭을 지정하세요.
                       height: "3.8rem",
-                      resize: "none"
+                      resize: "none",
                       //resize: "vertical", // 사용자가 높이를 조절할 수 있도록 함
                     }}
                   />
