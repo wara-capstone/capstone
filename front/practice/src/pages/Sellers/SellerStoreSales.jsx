@@ -1,3 +1,4 @@
+import { message } from "antd";
 import React, { useEffect, useState } from "react";
 import imageSrc4 from "../../adImages/iconImage/iconBlue.png";
 import imageSrc3 from "../../adImages/iconImage/iconRed.png";
@@ -41,7 +42,7 @@ export default function SellerStoreSales({ store }) {
     normalImage = createMarkerImage(imageSrc4, imageSize);
 
   // fetch 통신 method
-  const fetchData = async (initMarkers) => {  
+  const fetchData = async (initMarkers) => {
     console.log(email);
     try {
       const response = await fetch(
@@ -140,6 +141,9 @@ export default function SellerStoreSales({ store }) {
 
   useEffect(() => {
     async function fetchPayments() {
+      // Payments 상태 초기화
+      setPayments([]);
+
       try {
         const response = await fetch(
           `http://52.79.186.117:8000/api/payment/read/store/${storeId}`,
@@ -157,8 +161,9 @@ export default function SellerStoreSales({ store }) {
         }
 
         const data = await response.json();
-        if (data.message != null && storeId != 0) {
-          alert(data.message);
+        if (selectedMarker != null && data != null && data.data === null) {
+          // alert(data.message);
+          message.error("값을 불러오는데 실패하였습니다.");
         }
         console.log(data);
 
@@ -168,7 +173,13 @@ export default function SellerStoreSales({ store }) {
           setPayments(data.data); // 상태 업데이트
         }
       } catch (error) {
-        console.error("Error fetching payments:", error);
+        console.error("Error getting visitor_user_emails:", error);
+
+        // if ((selectedMarker = null)) {
+        //   message("상점을 선택해주세요.");
+        // } else {
+        //   message.error("값을 불러오는데 실패하였습니다.");
+        // }
       }
     }
 

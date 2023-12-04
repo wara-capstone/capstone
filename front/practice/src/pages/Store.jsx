@@ -1,12 +1,10 @@
+import { message } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import BottomNav from "../components/BottomNav";
 import Category from "../components/Category";
 import EventButton from "../components/EventButton";
 import Header from "../components/Header";
-import{
-  message
-} from "antd";
 
 export default function Store() {
   const { id } = useParams();
@@ -26,21 +24,20 @@ export default function Store() {
     if (userId === null) {
       navigate("/login");
     } else if (userId !== null) {
-      if(userId === storeData.storeSeller){
-        message.error("자신의 상점과는 상담하실 수 없습니다.", 2)
-      }else{
-      navigate(`/chatting/${storeData.storeSeller}`, {
-        state: { seller: storeData.storeSeller },
-      });
-    }
+      if (userId === storeData.storeSeller) {
+        message.error("자신의 상점과는 상담하실 수 없습니다.", 2);
+      } else {
+        navigate(`/chatting/${storeData.storeSeller}`, {
+          state: { seller: storeData.storeSeller },
+        });
+      }
     }
   };
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        "http://52.79.186.117:8000/api/store/read/id/" +
-          id,
+        "http://52.79.186.117:8000/api/store/read/id/" + id,
         {
           method: "GET",
           headers: {
@@ -79,8 +76,14 @@ export default function Store() {
           <div className="button-link" onClick={handleConnectChatting}>
             <EventButton buttonText={"1대1 상담"} />
           </div>
-          <p>store location: {storeData.storeAddress}</p>
-          <p>store detail: {storeData.storeContents}</p>
+          <p>
+            <span style={{ fontWeight: "bold" }}>가게위치:</span>{" "}
+            {storeData.storeAddress}
+          </p>
+          <p>
+            <span style={{ fontWeight: "bold" }}>가게정보:</span>{" "}
+            {storeData.storeContents}
+          </p>
         </div>
       )}
 

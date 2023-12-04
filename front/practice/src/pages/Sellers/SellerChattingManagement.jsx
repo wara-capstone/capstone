@@ -61,20 +61,17 @@ export default function SellerChattingManagement() {
     }
 
     try {
-      const response = await fetch(
-        "http://52.79.186.117:8000/api/chat/rooms/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-          body: JSON.stringify({
-            shop_user_email: userId,
-            visitor_user_email: customerId,
-          }),
-        }
-      );
+      const response = await fetch("http://3.34.227.3:14000/api/chat/rooms/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+        body: JSON.stringify({
+          shop_user_email: userId,
+          visitor_user_email: customerId,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -109,7 +106,7 @@ export default function SellerChattingManagement() {
   const setupWebSocket = (roomId, authToken) => {
     // 인증 토큰을 URL의 쿼리 파라미터로 추가
     const newSocket = new WebSocket(
-      `wss://www.onoff.zonehttp://52.79.186.117:8000/api/ws/room/${roomId}/messages?token=${authToken}`
+      `ws://3.34.227.3:14000/api/ws/room/${roomId}/messages?token=${authToken}`
     );
 
     console.log(newSocket.url);
@@ -151,7 +148,7 @@ export default function SellerChattingManagement() {
       setLoading(true);
       try {
         const response = await fetch(
-          `http://52.79.186.117:8000/api/chat/rooms/?email=${userId}`,
+          `http://3.34.227.3:14000/api/chat/rooms/?email=${userId}`,
           {
             method: "GET",
             headers: {
@@ -165,7 +162,10 @@ export default function SellerChattingManagement() {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const data = await response.json();
+        let data = await response.json();
+
+        // userId와 visitor_user_email이 다른 경우만 남깁니다.
+        data = data.filter((room) => room.visitor_user_email !== userId);
 
         const userRoomInfoPromises = data.map(async (room) => {
           const image = await fetchImage(room.visitor_user_email);
