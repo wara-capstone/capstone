@@ -6,6 +6,7 @@ import SellerSideNav from "./SellerSideNav";
 const { kakao } = window;
 
 const SellerStoreRegister = ({ store }) => {
+
   const [map, setMap] = useState(null); // 지도 객체를 저장할 상태
   const [geocoder, setGeocoder] = useState(null);
   const [marker, setMarker] = useState(null); // 마커 객체를 저장할 상태
@@ -17,7 +18,7 @@ const SellerStoreRegister = ({ store }) => {
   const [content, setContent] = useState(store?.content || "");
   const [phone, setPhoneNum] = useState("");
   const [lat, setLat] = useState(0);
-  const [lng, setLng] = useState(0);
+  const [lng, setLng] = useState(0);  
 
   var coord;
 
@@ -30,10 +31,7 @@ const SellerStoreRegister = ({ store }) => {
     setEmail(localStorage.getItem("email"));
     setToken(localStorage.getItem("token"));
 
-    console.log(
-      "현재 페이지" + localStorage.getItem("email"),
-      localStorage.getItem("token")
-    );
+    console.log("현재 페이지"+ localStorage.getItem("email"), localStorage.getItem("token"));
 
     var mapDiv = document.querySelector("#storeMap"), // 지도를 표시할 div
       mapOption = {
@@ -54,7 +52,7 @@ const SellerStoreRegister = ({ store }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: Implement the code to send updated data to the server
-
+  
     var data = {
       storeName: name,
       storeSeller: email,
@@ -86,13 +84,16 @@ const SellerStoreRegister = ({ store }) => {
           console.log(value);
         }
       }
-      fetch("http://52.79.186.117:8000/api/store/create", {
-        method: "POST",
-        headers: {
-          Authorization: `${token}`,
-        },
-        body: formData,
-      })
+      fetch(
+        "http://52.79.186.117:8000/api/store/create",
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `${token}`
+          },
+          body: formData,
+        }
+      )
         .then((response) => {
           if (response.ok) {
             return response.json(); // JSON 형식의 응답을 파싱
@@ -112,14 +113,17 @@ const SellerStoreRegister = ({ store }) => {
     } else {
       formData = JSON.stringify(data);
 
-      fetch("http://52.79.186.117:8000/api/store/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${token}`,
-        },
-        body: formData,
-      })
+      fetch(
+        "http://52.79.186.117:8000/api/store/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+          body: formData,
+        }
+      )
         .then((response) => {
           if (response.ok) {
             return response.json(); // JSON 형식의 응답을 파싱
@@ -150,33 +154,35 @@ const SellerStoreRegister = ({ store }) => {
     // 주소로 좌표를 검색합니다
 
     if (geocoder) {
-      geocoder.addressSearch(location, function (result, status) {
-        // 정상적으로 검색이 완료됐으면
-        if (status === kakao.maps.services.Status.OK) {
-          if (marker) {
-            // 이전에 생성된 마커가 있으면
-            marker.setMap(null); // 마커를 지도에서 제거
-          }
-          coord = new kakao.maps.LatLng(result[0].y, result[0].x);
-          setLat(result[0].y);
-          setLng(result[0].x);
-
-          // 결과값으로 받은 위치를 마커로 표시합니다
-          setMarker(
-            new kakao.maps.Marker({
-              map: map,
-              position: coord,
-            })
-          );
-          console.log(marker === null);
-          map.panTo(coord);
-        } else {
-          alert("오류발생!");
+    geocoder.addressSearch(location, function (result, status) {
+      // 정상적으로 검색이 완료됐으면
+      if (status === kakao.maps.services.Status.OK) {
+        if (marker) {
+          // 이전에 생성된 마커가 있으면
+          marker.setMap(null); // 마커를 지도에서 제거
         }
-      });
-    } else {
-      console.log("geocoder가 아직 정의되지 않았습니다.");
-    }
+        coord = new kakao.maps.LatLng(result[0].y, result[0].x);
+        setLat(result[0].y);
+        setLng(result[0].x);
+
+        // 결과값으로 받은 위치를 마커로 표시합니다
+        setMarker(new kakao.maps.Marker({
+          map: map,
+          position: coord,
+        })
+        );
+        console.log(marker === null);
+        map.panTo(coord);
+      }
+      else{
+        alert("오류발생!");
+      }
+    });
+  } else {
+    console.log('geocoder가 아직 정의되지 않았습니다.');
+  }
+
+    
   }
   return (
     <div className="seller-store-register">
@@ -238,7 +244,7 @@ const SellerStoreRegister = ({ store }) => {
                     style={{
                       width: "90%", // 원하는 폭을 지정하세요.
                       height: "3.8rem",
-                      resize: "none",
+                      resize: "none"
                       //resize: "vertical", // 사용자가 높이를 조절할 수 있도록 함
                     }}
                   />
