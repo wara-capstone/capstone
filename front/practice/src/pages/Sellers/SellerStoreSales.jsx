@@ -203,7 +203,7 @@ export default function SellerStoreSales({ store }) {
                     fontSize: "1.2rem",
                   }}
                 >
-                  결제ID
+                  결제번호
                 </th>
                 <th
                   style={{
@@ -213,7 +213,7 @@ export default function SellerStoreSales({ store }) {
                     fontSize: "1.2rem",
                   }}
                 >
-                  상품ID
+                  상품번호
                 </th>
                 <th
                   style={{
@@ -223,7 +223,7 @@ export default function SellerStoreSales({ store }) {
                     fontSize: "1.2rem",
                   }}
                 >
-                  옵션ID
+                  옵션번호
                 </th>
                 <th
                   style={{
@@ -267,6 +267,7 @@ export default function SellerStoreSales({ store }) {
                         padding: "8px",
                         textAlign: "left",
                         borderBottom: "1px solid #ddd",
+                        fontSize: "1rem",
                       }}
                     >
                       {payment.paymentId}
@@ -276,6 +277,7 @@ export default function SellerStoreSales({ store }) {
                         padding: "8px",
                         textAlign: "left",
                         borderBottom: "1px solid #ddd",
+                        fontSize: "1rem",
                       }}
                     >
                       {payment.productId}
@@ -285,6 +287,7 @@ export default function SellerStoreSales({ store }) {
                         padding: "8px",
                         textAlign: "left",
                         borderBottom: "1px solid #ddd",
+                        fontSize: "1rem",
                       }}
                     >
                       {payment.optionId}
@@ -294,6 +297,7 @@ export default function SellerStoreSales({ store }) {
                         padding: "8px",
                         textAlign: "left",
                         borderBottom: "1px solid #ddd",
+                        fontSize: "1rem",
                       }}
                     >
                       {payment.price}
@@ -303,6 +307,7 @@ export default function SellerStoreSales({ store }) {
                         padding: "8px",
                         textAlign: "left",
                         borderBottom: "1px solid #ddd",
+                        fontSize: "1rem",
                       }}
                     >
                       {payment.quantity}
@@ -312,6 +317,7 @@ export default function SellerStoreSales({ store }) {
                         padding: "8px",
                         textAlign: "left",
                         borderBottom: "1px solid #ddd",
+                        fontSize: "1rem",
                       }}
                     >
                       {payment.dateTime}
@@ -327,7 +333,7 @@ export default function SellerStoreSales({ store }) {
           <div className="store-sales-map">
             <div
               id="storeMapEdit"
-              style={{ width: "100%", height: "91vh", zIndex: "0" }}
+              style={{ width: "100%", height: "92vh", zIndex: "0" }}
             ></div>
           </div>
         </div>

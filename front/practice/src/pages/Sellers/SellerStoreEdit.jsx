@@ -8,7 +8,6 @@ import SellerHeader from "./SellerHeader";
 import SellerSideNav from "./SellerSideNav";
 
 const SellerStoreEdit = ({ store }) => {
-  
   const { kakao } = window;
   var map;
   var geocoder;
@@ -56,16 +55,13 @@ const SellerStoreEdit = ({ store }) => {
   const fetchData = async (initMarkers) => {
     console.log(email);
     try {
-      const response = await fetch(
-        `/api/store/read/seller/${email}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-type": "application/json",
-            "Authorization": `${token}`
-          },
-        }
-      );
+      const response = await fetch(`/api/store/read/seller/${email}`, {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `${token}`,
+        },
+      });
       const { data } = await response.json();
       if (response.status === 200) {
         // 서버에서 받은 데이터를 markerList에 저장
@@ -210,16 +206,13 @@ const SellerStoreEdit = ({ store }) => {
         }
       }
 
-      fetch(
-        "/api/store/update/id",
-        {
-          method: "PUT",
-          headers: {
-            "Authorization": `${token}`
-          },
-          body: formData,
-        }
-      )
+      fetch("/api/store/update/id", {
+        method: "PUT",
+        headers: {
+          Authorization: `${token}`,
+        },
+        body: formData,
+      })
         .then((response) => {
           if (response.ok) {
             return response.json();
@@ -236,17 +229,14 @@ const SellerStoreEdit = ({ store }) => {
         });
     } else {
       formData = JSON.stringify(data);
-      fetch(
-        "/api/store/update/id",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `${token}`
-          },
-          body: formData,
-        }
-      )
+      fetch("/api/store/update/id", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+        body: formData,
+      })
         .then((response) => {
           if (response.ok) {
             return response.json();
@@ -313,12 +303,9 @@ const SellerStoreEdit = ({ store }) => {
 
     console.log(storeId);
 
-    fetch(
-      `/api/store/delete/id/${storeId}`,
-      {
-        method: "DELETE",
-      }
-    )
+    fetch(`/api/store/delete/id/${storeId}`, {
+      method: "DELETE",
+    })
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -394,22 +381,27 @@ const SellerStoreEdit = ({ store }) => {
                     onChange={(e) => setContent(e.target.value)}
                     style={{
                       width: "90%", // 원하는 폭을 지정하세요.
-                      height: "10vh",
+                      height: "3.8rem",
                       resize: "vertical", // 사용자가 높이를 조절할 수 있도록 함
                     }}
                   />
                 </div>
-                <button className="store-save-button">변경하기</button>
+                <div
+                  className="button-container"
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <button className="store-save-button">변경하기</button>
+                  {deleteButtonVisible && (
+                    <button
+                      className="store-delete-button"
+                      onClick={handleDeleteStore}
+                    >
+                      삭제하기
+                    </button>
+                  )}
+                </div>
               </div>
             </form>
-            {deleteButtonVisible && (
-              <button
-                className="store-delete-button"
-                onClick={handleDeleteStore}
-              >
-                삭제하기
-              </button>
-            )}
           </div>
         </div>
 
@@ -417,7 +409,7 @@ const SellerStoreEdit = ({ store }) => {
           <div className="store-management-map">
             <div
               id="storeMapEdit"
-              style={{ width: "100%", height: "91vh", zIndex: "0" }}
+              style={{ width: "100%", height: "92vh", zIndex: "0" }}
             ></div>
           </div>
         </div>

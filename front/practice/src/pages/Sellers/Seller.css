@@ -119,7 +119,7 @@
 }
 
 .store-sales-info-container {
-  width: 550px;
+  width: 580px;
   overflow-y: auto;
 }
 
@@ -132,7 +132,7 @@
 }
 
 .store-sales-map-container {
-  width: calc(100% - 700px);
+  width: calc(100% - 730px);
 }
 
 .seller-store-management .store-edit-info-container,
@@ -192,6 +192,7 @@
 }
 
 .seller-store-management .store-save-button,
+.seller-store-management .store-delete-button,
 .seller-store-register .store-register-button,
 .connect-store-register-button {
   background-color: rgb(233, 116, 116);
@@ -211,16 +212,17 @@
 }
 
 .seller-store-management .store-delete-button {
-  font-size: 13px;
+  /* font-size: 13px;
   border-radius: 5px;
-  border: none;
+  border: none; */
   /* display: none; */
-  position: absolute;
-  top: 338px;
-  left: 365px;
-  background-color: rgb(252, 125, 125);
+  /* position: absolute; */
+  /* top: 338px; */
+  /* left: 365px; */
+  /* background-color: rgb(252, 125, 125);
   color: #242424;
-  font-weight: bold;
+  font-weight: bold; */
+  background-color: red;
 }
 
 .seller-store-management .store-save-button:active,
