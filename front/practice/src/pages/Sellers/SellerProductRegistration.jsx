@@ -129,7 +129,7 @@ const beforeUpload = (file) => {
 export default function SellerProductRegistration(props) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const { storeId, productId } = useParams();
+  const { storeId, productId} = useParams();
   const [tableData, setTableData] = useState(initialData);
 
   // onChange로 관리할 문자열
@@ -307,8 +307,9 @@ export default function SellerProductRegistration(props) {
       formData = new FormData();
 
       if(file){
+      console.log("file : "+file);
       formData.append("images", file);
-
+      message.error("adsda");
       fetch("http://52.79.186.117:8000/api/product/seller/product/"+productId,
         {
           method : "PUT",
