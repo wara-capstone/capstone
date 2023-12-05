@@ -225,10 +225,8 @@ export default function SellerItemManagement() {
       productCategory: "",
       productUrls :[]
     }
-    
     var formData = new FormData();
     formData.append("productDTO", new Blob([JSON.stringify(data)], { type: "application/json" }));
-    formData.append("optionDTO", new Blob([JSON.stringify({})], { type: "application/json" }));
     const response = await fetch("http://52.79.186.117:8000/api/product/seller", {
       method: "POST",
       headers: {
