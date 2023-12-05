@@ -26,6 +26,9 @@ export default function Item() {
   const [sizeArrayForColor, setSizeArrayForColor] = useState([]); //선택한 색상에 따른 사이즈 배열
   const [result, setResult] = useState(null); // 옵션 가져오기 결과
 
+
+  const [stock, setStock] = useState(0); // 재고
+
   function clickPurchase(e) {
     if (email === null) {
       navigate("/login");
@@ -68,7 +71,7 @@ export default function Item() {
     };
 
     try {
-      const response = await fetch("/api/cart/items/", {
+      const response = await fetch("http://52.79.186.117:8000/api/cart/items/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -118,8 +121,21 @@ export default function Item() {
   }
 
   useEffect(() => {
+    if(result){
+    const targetOption = result.options.find(
+      (option) =>
+        option.productColor === targetColor && option.productSize === targetSize
+    );
+    if (targetOption) {
+      setStock(targetOption.productStock);
+    }
+  }
+  }, [targetColor, targetSize, result]);
+
+  useEffect(() => {
     if (result) {
       // 색상이 변경되었을 때, 사이즈 배열 업데이트
+
       const newSizeArray = result.options.reduce((acc, current) => {
         if (
           current.productColor === targetColor &&
@@ -129,6 +145,8 @@ export default function Item() {
         }
         return acc;
       }, []);
+      
+
       setSizeArrayForColor(newSizeArray);
       setTargetSize(newSizeArray[0]);
       setPrice(result.options[0].productPrice);
@@ -138,21 +156,22 @@ export default function Item() {
   const handleColorChange = (e) => {
     // 선택한 색상 변경
     const newTargetColor = e.target.value;
-    setTargetColor(newTargetColor);
+    setTargetColor(color => color = newTargetColor);
     console.log("Color changed to: " + e.target.value);
   };
 
   const handleSizeChange = (e) => {
     // 선택한 사이즈 변경
-    setTargetSize(e.target.value);
+    setTargetSize(size => size = e.target.value);
     console.log("Size changed to: " + e.target.value);
+
   };
 
   useEffect(() => {
     async function optionGet() {
       //옵션 가져오기
       console.log("가져온 상품아이디", id);
-      const response = await fetch(`/api/product/all/` + id, {
+      const response = await fetch(`http://52.79.186.117:8000/api/product/all/` + id, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -176,6 +195,7 @@ export default function Item() {
         setColorArray(newColorArray);
         setTargetColor(newColorArray[0]); // 초기 색상 설정
         setPrice(resultData.options[0].productPrice); // 초기 가격 설정
+        setStock(resultData.options[0].productStock); // 초기 재고 설정  
 
         console.log("색깔" + colorArray);
 
@@ -196,7 +216,6 @@ export default function Item() {
         console.log("실패");
       }
     }
-
     optionGet();
   }, []);
 
@@ -215,7 +234,7 @@ export default function Item() {
             <h2>{result.productName}</h2>
             <h3>가격: {parseInt(price).toLocaleString()}</h3>
             {/* <p>상세 정보: {"없음"}</p> */}
-            <h3>재고: {result.options[0].productStock}</h3>
+            <h3>재고: {stock}</h3>
             <div>
             <span style={{ fontSize: "20px" }}>색상</span>
               <select style={{ marginLeft: "1.3rem" }} value={targetColor} onChange={handleColorChange}>

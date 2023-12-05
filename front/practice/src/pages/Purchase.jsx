@@ -32,7 +32,7 @@ export default function Purchase() {
 
       const fetchData = async () => {
         const response = await fetch(
-          `/api/product/all/product/${productId}/${pColor}/${pSize}`,
+          `http://52.79.186.117:8000/api/product/all/product/${productId}/${pColor}/${pSize}`,
           {
             method: "GET",
             headers: {
@@ -82,7 +82,7 @@ async function clickPurchase(e) {
 
     try {
       const response = await fetch(
-        "/api/payment/create",
+        "http://52.79.186.117:8000/api/payment/create",
         {
           method: "POST",
           headers: {
@@ -106,7 +106,7 @@ async function clickPurchase(e) {
         console.log(deleteString);
           const fetchData = async () => {
            const response = await fetch(
-             '/api/cart/items/?user_email='+email+deleteString,
+             'http://52.79.186.117:8000/api/cart/items/?user_email='+email+deleteString,
              {
                method: "DELETE",
                headers: {

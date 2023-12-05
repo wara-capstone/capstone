@@ -35,7 +35,7 @@ export default function SellerItemManagement() {
     try {
       setLoading(true);
       const response = await axios.get(
-        "/api/product/all/store/1",
+        "http://52.79.186.117:8000/api/product/all/store/1",
         {
           headers: {
             "Content-Type": "application/json",
@@ -73,7 +73,7 @@ export default function SellerItemManagement() {
     for (let item of selectedData) {
       try {
         const response = await axios.delete(
-          `/api/product/seller/${storeId}/${item.productId}`,
+          `http://52.79.186.117:8000/api/product/seller/${storeId}/${item.productId}`,
           {
             headers: {
               Authorization: `${token}`,
