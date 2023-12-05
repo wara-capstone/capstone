@@ -11,7 +11,7 @@ const CellRenderer = (props) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://52.79.186.117:8000/api/store/read/seller/seller@naver.com",
+          "/api/store/read/seller/seller@naver.com",
           {
             headers: {
               "Content-Type": "application/json",

@@ -30,7 +30,7 @@ export default function PurchaseHistory() {
   useEffect(() => {
       const fetchData = async () => {
         const response = await fetch(
-          `http://52.79.186.117:8000/api/payment/read/user/${email}`,
+          `/api/payment/read/user/${email}`,
           {
             method: "GET",
             headers: {
@@ -56,7 +56,7 @@ export default function PurchaseHistory() {
 
 
               let response2 =  await fetch(
-                `http://52.79.186.117:8000/api/product/all/${productId}/option/${optionId}`,
+                `/api/product/all/${productId}/option/${optionId}`,
                 {
                   method: "GET",
                   headers: {
