@@ -56,7 +56,7 @@ export default function PurchaseHistory() {
 
 
               let response2 =  await fetch(
-                `api/product/all/${productId}/option/${optionId}`,
+                `/api/product/all/${productId}/option/${optionId}`,
                 {
                   method: "GET",
                   headers: {
@@ -95,7 +95,7 @@ export default function PurchaseHistory() {
     <div className="cart-page">
       <Header />
       <div>
-        {purchaseItems.length && ( 
+        {purchaseItems.length > 0 ? ( 
             <div className="Cart">
     {purchaseItems.map(data =>(
         <PurchaseHistoryCard
@@ -103,6 +103,7 @@ export default function PurchaseHistory() {
         />
         ))}
         </div>
+        ):( <h2>구매내역이 없습니다.</h2> // 상품이 없을 때 표시할 메시지 또는 컴포넌트
         )}
         </div>
 
