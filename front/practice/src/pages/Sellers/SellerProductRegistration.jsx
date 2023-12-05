@@ -131,6 +131,7 @@ export default function SellerProductRegistration(props) {
   const [loading, setLoading] = useState(true);
   const { storeId, productId} = useParams();
   const [tableData, setTableData] = useState(initialData);
+  const [optionIndex, setOptionIndex] = useState(0);
 
   // onChange로 관리할 문자열
   const [hashtag, setHashtag] = useState("");
@@ -171,7 +172,11 @@ export default function SellerProductRegistration(props) {
           setProductInfo(response.data);
           setImages(response.data.productUrls);
           setProductName(response.data.productName || "");
+          setSelectedCategory(response.data.productCategory);
           setIsTrue(true);
+
+          setOptionIndex(response.data.options.length);
+          console.log("옵션이 존재??? ",response.data.options);
         } else {
           setProductInfo({ data: [] });
           setIsTrue(false);
@@ -274,13 +279,14 @@ export default function SellerProductRegistration(props) {
 
   const handleSubmitButtonClick = async () => {
     try {
+      
       var data = {
         "productId" : productId,
         "storeId" : storeId,
         "productCategory" : selectedCategory,
         "productName" : productName
       }
-
+      console.log("data :            "+data);
       const headers = {
         Authorization: `${token}`,
         // "content-type": "application/json",
@@ -473,14 +479,25 @@ export default function SellerProductRegistration(props) {
   };
 
   const handleInputChange = (index, field, value) => {
-    // 옵션 input필드에 입력한 값대로 option에 저장
+    // 이전 상태를 기반으로 새로운 options 배열 생성
     setProductInfo((prevProductInfo) => {
-      const newOptions = prevProductInfo.options.map((option, i) =>
-        i === index ? { ...option, [field]: value } : option
-      );
+      // 새로운 요소를 추가하는 방식으로 기존 options 배열을 복사
+      const newOptions = [...prevProductInfo.options];
+  
+      // 주어진 인덱스에 해당하는 옵션의 필드를 업데이트하거나, 새로운 요소를 추가
+      if (newOptions[index]) {
+        // 주어진 인덱스에 해당하는 옵션이 이미 존재하면 업데이트
+        newOptions[index] = { ...newOptions[index], [field]: value };
+      } else {
+        // 주어진 인덱스에 해당하는 옵션이 없으면 새로운 요소 추가
+        newOptions.push({ [field]: value });
+      }
+  
+      // 이전 상태를 복사하고 새로운 options 배열을 할당하여 상태 업데이트
       return { ...prevProductInfo, options: newOptions };
     });
   };
+  
 
   const [quillValue, setQuillValue] = useState("");
 
@@ -506,14 +523,12 @@ export default function SellerProductRegistration(props) {
   // 상품의 옵션 추가
   const addProductOption = (index) => {
     // 서버로 데이터 전송하는 로직 작성
-
-    index -= 1;
-
     //var formData = new FormData();
     //formData.append('optionDTO', new Blob([JSON.stringify(optionDTO)], { type: "application/json" }));
     console.log("문자열:" + productInfo.productId);
-    console.log(index);
+    console.log("몇 번째 인덱스 입니까?",index);
     console.log("담긴 옵션 정보" + productInfo.options[index].productPrice);
+    if(index > optionIndex){
     axios // 상품 등록
       .put(
         `http://52.79.186.117:8000/api/product/seller/option/add/product/${productInfo.productId}`,
@@ -537,8 +552,34 @@ export default function SellerProductRegistration(props) {
       .catch((error) => {
         console.error(error); // 오류 처리
       });
-
+    }else{
+      axios // 상품 등록
+      .put(
+        `http://52.79.186.117:8000/api/product/option/modify`,
+        // `https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app/product/seller/option/add?productId=19`,
+        {
+          optionId: productInfo.options[index].optionId,
+          productPrice: productInfo.options[index].productPrice,
+          productSize: productInfo.options[index].productSize,
+          productColor: productInfo.options[index].productColor,
+          productStock: productInfo.options[index].productStock,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data); // 서버 응답 출력
+      })
+      .catch((error) => {
+        console.error(error); // 오류 처리
+      });
+    }
     message.success("저장되었습니다");
+    
   };
 
   const LoadingScreen = () => {
@@ -721,14 +762,14 @@ export default function SellerProductRegistration(props) {
                             <div className="option-small-box">
                               <table>
                                 <div>
-                                  <td rowSpan={4}>옵션{++index}</td>
+                                  <td rowSpan={4}>옵션{index+1}</td>
                                   <Input
                                     placeholder="가격"
                                     style={{ color: "gray" }}
                                     defaultValue={option.productPrice}
                                     onChange={(e) =>
                                       handleInputChange(
-                                        index - 1,
+                                        index,
                                         "productPrice",
                                         e.target.value
                                       )
@@ -740,7 +781,7 @@ export default function SellerProductRegistration(props) {
                                     defaultValue={option.productSize}
                                     onChange={(e) =>
                                       handleInputChange(
-                                        index - 1,
+                                        index,
                                         "productSize",
                                         e.target.value
                                       )
@@ -752,7 +793,7 @@ export default function SellerProductRegistration(props) {
                                     defaultValue={option.productColor}
                                     onChange={(e) =>
                                       handleInputChange(
-                                        index - 1,
+                                        index,
                                         "productColor",
                                         e.target.value
                                       )
@@ -764,7 +805,7 @@ export default function SellerProductRegistration(props) {
                                     defaultValue={option.productStock}
                                     onChange={(e) =>
                                       handleInputChange(
-                                        index - 1,
+                                        index,
                                         "productStock",
                                         e.target.value
                                       )
