@@ -21,6 +21,7 @@ public class ProductDTO {
     Long storeId;
     String productName;
     String productCategory;
+    @Nullable
     List<String> productUrls;
     @Nullable
     List<OptionDTO> options;

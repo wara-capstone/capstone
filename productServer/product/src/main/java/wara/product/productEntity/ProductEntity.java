@@ -58,6 +58,15 @@ public class ProductEntity {
         this.options.add(o);
     }
 
+    public ProductEntity(ProductEntity r, ProductEntity old)
+    {
+        this.productId = r.getProductId();
+        this.storeId = r.getStoreId();
+        this.productName = r.getProductName();
+        this.productCategory = r.getProductCategory();
+        this.productUrls = old.getProductUrls();
+        this.options = old.getOptions();
+    }
 
 
 

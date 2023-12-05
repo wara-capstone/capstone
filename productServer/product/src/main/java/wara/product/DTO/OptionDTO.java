@@ -1,9 +1,6 @@
 package wara.product.DTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import wara.product.productEntity.OptionEntity;
 import wara.product.productEntity.ProductEntity;
 
@@ -11,6 +8,7 @@ import javax.validation.constraints.Null;
 
 @Getter@Setter
 @AllArgsConstructor@NoArgsConstructor
+@ToString
 public class OptionDTO {
 
 

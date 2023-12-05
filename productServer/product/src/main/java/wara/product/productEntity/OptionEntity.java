@@ -71,6 +71,15 @@ public class OptionEntity {
         this.barcodeUrl = url;
     }
 
+    public OptionEntity(OptionEntity old, OptionEntity modify)
+    {
+        this.optionId = old.getOptionId();
+        this.productPrice = modify.getProductPrice();
+        this.productSize = modify.getProductSize();
+        this.productColor = modify.getProductColor();
+        this.productStock = modify.getProductStock();
+        this.barcodeUrl = old.getBarcodeUrl();
+    }
 
     public void stockModify(String stockModify)
     {

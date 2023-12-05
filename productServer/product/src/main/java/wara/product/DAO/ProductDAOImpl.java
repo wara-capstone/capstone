@@ -1,8 +1,11 @@
 package wara.product.DAO;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
+import wara.product.Controller.ProductController;
 import wara.product.Repository.OptionRepository;
 import wara.product.productEntity.OptionEntity;
 import wara.product.productEntity.ProductEntity;
@@ -16,6 +19,8 @@ public class ProductDAOImpl implements ProductDAO{
 
     private final ProductRepository productRepository;
     private final OptionRepository optionRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(ProductDAOImpl.class);
 
     public ProductDAOImpl(@Autowired ProductRepository productRepository,
                           @Autowired OptionRepository optionRepository) {
@@ -70,7 +75,13 @@ public class ProductDAOImpl implements ProductDAO{
     @Override
     public String modifyProduct(ProductEntity productEntity) {
         if(productRepository.existsByProductId(productEntity.getProductId())) {
-            productRepository.save(productEntity);
+            ProductEntity old = productRepository.getByProductId(productEntity.getProductId());
+
+            ProductEntity modifyEntity = new ProductEntity(productEntity, old);
+
+            productRepository.save(modifyEntity);
+            logger.info("\n[수정된 값]:" + modifyEntity+ "\n");
+
             return HttpStatus.OK.toString();
         }
         else return HttpStatus.NO_CONTENT.toString();
@@ -114,7 +125,12 @@ public class ProductDAOImpl implements ProductDAO{
     @Override
     public String modifyOption(Long productId, OptionEntity optionEntity) {
         optionEntity.setProduct(productRepository.getByProductId(productId));
-        optionRepository.save(optionEntity);
+        OptionEntity old = optionRepository.getByOptionId(optionEntity.getOptionId());
+
+        OptionEntity modify = new OptionEntity(old,optionEntity);
+
+        optionRepository.save(modify);
+
         return HttpStatus.OK.toString();
     }
 

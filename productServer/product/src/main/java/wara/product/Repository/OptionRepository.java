@@ -14,6 +14,7 @@ public interface OptionRepository extends JpaRepository<OptionEntity, Long> {
     void deleteByOptionId(Long optionId);
     OptionEntity findByProduct(ProductEntity product);
     List<OptionEntity> findAllByProduct(ProductEntity product);
+    OptionEntity getByOptionId(Long optionId);
 
     OptionEntity getByProductAndProductColorAndProductSize(ProductEntity productEntity,String color, String size);
 }
