@@ -8,9 +8,7 @@ import { useParams } from "react-router-dom";
 import ImageCellRenderer from "../../components/ImageCellRenderer";
 
 import CellRenderer from "./CellRenderer.jsx";
-import{
-  message
-}from "antd";
+import { message } from "antd";
 import React, {
   useState,
   useRef,
@@ -34,41 +32,66 @@ export default function SellerItemManagement() {
   const [loading, setLoading] = useState(true);
 
   const [rowData, setRowData] = useState();
-  var fetchData
-  useEffect(()=> {
+  var fetchData;
+
     fetchData = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        `/api/product/all/store/${storeId}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-        }
-      );
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `http://52.79.186.117:8000/api/product/all/store/${storeId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
+          }
+        );
+        // data의 옵션값 추출 코드
+        // // 데이터 변형
+        // const transformedData = response.data.flatMap((item) =>
+        //   item.options.map((option) => ({
+        //     ...item,
+        //     productSize: option.productSize,
+        //     productColor: option.productColor,
+        //     productStock: option.productStock,
+        //   }))
+        // );
 
-      // 데이터 변형
-      const transformedData = response.data.flatMap((item) =>
-        item.options.map((option) => ({
-          ...item,
-          productSize: option.productSize,
-          productColor: option.productColor,
-          productStock: option.productStock,
-        }))
-      );
+        // // 데이터 변형
+        // const transformedData = response.data.map((item) =>
+        // ({
+        //   productId: item.productId,
+        //   storeId: item.storeId,
+        //   productName: item.productName,
+        //   productCategory: item.productCategory,
+        //   productUrls: item.productUrls,
+        //   // options
+        // })
+        // );
 
-      setRowData(transformedData);
-      //setRowData(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.log("실패");
-      console.error(error);
-    } finally{
-      setLoading(false);
-    }
-  }}, [rowData]);
+        // const transformedData = response.data.map((item) => {
+        //   const options = item.options.map((option) => ({
+        //     productSize: [option.productSize],
+        //     productColor: [option.productColor],
+        //     productStock: [option.productStock],
+        //   }));
+
+      
+
+
+        // setRowData(transformedData);
+         setRowData(response.data);
+         console.log(response.data);
+      } catch (error) {
+        console.log("실패");
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    useEffect(() => {
+      fetchData();
+  }, []);
 
   // 삭제 버튼의 onClick 핸들러
   const handleDelete = async () => {
@@ -78,7 +101,7 @@ export default function SellerItemManagement() {
     for (let item of selectedData) {
       try {
         const response = await axios.delete(
-          `/api/product/seller/${storeId}/${item.productId}`,
+          `http://52.79.186.117:8000/api/product/seller/${storeId}/${item.productId}`,
           {
             headers: {
               Authorization: `${token}`,
@@ -100,7 +123,28 @@ export default function SellerItemManagement() {
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, []);
+
+  // const transformData = (data) => {
+  //   return data.reduce((acc, item) => {
+  //     item.options.forEach(option => {
+  //       acc.push({
+  //         ...item,
+  //         productSize: option.productSize,
+  //         productColor: option.productColor,
+  //         productStock: option.productStock
+  //       });
+  //     });
+  //     return acc;
+  //   }, []);
+  // };
+  
+  // // 사용 예:
+  // const response = await axios.get(`http://52.79.186.117:8000/api/product/all/store/${storeId}`, { ... });
+  // const transformedData = transformData(response.data);
+  // setRowData(transformedData);
+// 세로 줄바꿈 코드 
+
 
 
   const [columnDefs, setColumnDefs] = useState([
@@ -135,7 +179,8 @@ export default function SellerItemManagement() {
       headerClass: "center-header",
       editable: false,
       filter: true,
-    },
+      valueGetter: params => params.data.options ? params.data.options.map(option => option.productSize).join('\n') : ''
+},
     {
       headerName: "색상",
       field: "productColor",
@@ -143,15 +188,16 @@ export default function SellerItemManagement() {
       editable: false,
       minWidth: 150,
       filter: true,
-    },
+      valueGetter: params => params.data.options ? params.data.options.map(option => option.productColor).join('\n') : ''
+},
 
     {
       headerName: "재고 수량",
-      field: "productStock",
+    
       headerClass: "center-header",
       editable: false,
       filter: true,
-      // valueGetter: params => params.data.options.map(option => option.productStock).join(', ')},
+      valueGetter: params => params.data.options ? params.data.options.map(option => option.productStock).join('\n') : ''
     },
     {
       headerName: "관리",
@@ -169,7 +215,6 @@ export default function SellerItemManagement() {
       },
     },
   ]);
-
 
   const getRowId = useCallback((row) => {
     return row.id;
@@ -213,102 +258,103 @@ export default function SellerItemManagement() {
     console.log(allRowData); // 콘솔에 모든 행의 데이터를 출력
   }, []);
   const [newProduct, setNewProduct] = useState({
-      productId:"",
-      productUrls :[""]
-  })
+    productId: "",
+    productUrls: [""],
+  });
 
   const createProduct = async () => {
     var data = {
-      productId:"",
+      productId: "",
       storeId: storeId,
       productName: "",
       productCategory: "",
-      productUrls :[]
-    }
+      productUrls: [],
+    };
     var formData = new FormData();
-    formData.append("productDTO", new Blob([JSON.stringify(data)], { type: "application/json" }));
-    const response = await fetch("/api/product/seller", {
-      method: "POST",
-      headers: {
-        Authorization: `${token}`,
-        
-      },
-      body: formData,
-    })
+    formData.append(
+      "productDTO",
+      new Blob([JSON.stringify(data)], { type: "application/json" })
+    );
+    const response = await fetch(
+      "http://52.79.186.117:8000/api/product/seller",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `${token}`,
+        },
+        body: formData,
+      }
+    )
       .then((response) => {
         if (response.status == 200) {
-          message.success("새로운 상품을 등록하였습니다.")
+          message.success("새로운 상품을 등록하였습니다.");
           //setNewProduct(response.json()); // JSON 형식의 응답을 파싱
-          
-          
         }
       })
       .then((data) => {
-          fetchData();
+        fetchData();
       })
       .catch((error) => {
         message.error("새로운 상품 등록에 실패하였습니다.");
-        console.log("에러입니다. 에러에러")
+        console.log("에러입니다. 에러에러");
         console.log(error);
         return data;
       });
-  } 
+  };
 
-
-  if(loading){
-    <LoadingScreen> </LoadingScreen>
-  }else{
-
-  return (
-    <div style={containerStyle}>
-      <div className="seller-item-management">
-        <SellerHeader />
-        {/* <SellerItem /> */}
-        <div
-          style={{
-            marginBottom: "5px",
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <div>
-            <button
-              onClick={handleDelete}>
-              삭제
-            </button>
-            <button onClick={ () => {
-              createProduct();
-              const maxId = Math.max(...rowData.map(data => data.productId));
-              //setRowData([...rowData, 
-            //  {  productUrls: newProduct.productUrls[0] ,  productName: "",  productId: newProduct.productId,  productSize: "",  productColor: '',  productStock: '',}])
+  if (loading) {
+    <LoadingScreen> </LoadingScreen>;
+  } else {
+    return (
+      <div style={containerStyle}>
+        <div className="seller-item-management">
+          <SellerHeader />
+          {/* <SellerItem /> */}
+          <div
+            style={{
+              marginBottom: "5px",
+              display: "flex",
+              justifyContent: "space-between",
             }}
-              >추가</button>
-          </div>
+          >
+            <div>
+              <button onClick={handleDelete}>삭제</button>
+              <button
+                onClick={() => {
+                  createProduct();
 
-          {/* <div>
+                  //setRowData([...rowData,
+                  //  {  productUrls: newProduct.productUrls[0] ,  productName: "",  productId: newProduct.productId,  productSize: "",  productColor: '',  productStock: '',}])
+                }}
+              >
+                추가
+              </button>
+            </div>
+
+            {/* <div>
             <button onClick={onBtSave}>저장</button>
           </div> */}
-        </div>
-        <div className="grid-wrapper">
-          <div style={gridStyle} className="ag-theme-alpine">
-            <AgGridReact
-              ref={gridRef}
-              rowData={rowData}
-              columnDefs={columnDefs}
-              getRowNodeId={getRowId}
-              defaultColDef={defaultColDef}
-              suppressRowClickSelection={true}
-              rowSelection={"multiple"}
-              rowHeight={100}
-              frameworkComponents={{
-                imageCellRenderer: ImageCellRenderer, // 컴포넌트 등록
-                cellRenderer: CellRenderer,
-              }}
-            />
+          </div>
+          <div className="grid-wrapper">
+            <div style={gridStyle} className="ag-theme-alpine">
+              <AgGridReact
+                ref={gridRef}
+                rowData={rowData}
+                columnDefs={columnDefs}
+                getRowNodeId={getRowId}
+                defaultColDef={defaultColDef}
+                suppressRowClickSelection={true}
+                rowSelection={"multiple"}
+                rowHeight={100}
+                frameworkComponents={{
+                  imageCellRenderer: ImageCellRenderer, // 컴포넌트 등록
+                  cellRenderer: CellRenderer,
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 }

@@ -24,7 +24,7 @@ export default function Home() {
   // useEffect(() => {
   //     const fetchData = async () => {
   //     const response = await fetch(
-  //       '/api/user?',
+  //       'http://52.79.186.117:8000/api/user?',
   //       {
   //         method: "GET",
   //         headers: {
@@ -52,8 +52,8 @@ export default function Home() {
       </div>
       <Category
         //현재 메인화면에서 카테고리 선택을 하지 않을 시, store1의 상품을 보여주도록 설정함. 추후 수정 필요.
-        allUrl={`/api/product/all/store/51`}
-        categoryUrl="/api/product/all/category/"
+        allUrl={`http://52.79.186.117:8000/api/product/all/store/51`}
+        categoryUrl="http://52.79.186.117:8000/api/product/all/category/"
       />
       {/* <CardList /> */}
       <BottomNav />
