@@ -473,15 +473,37 @@ export default function SellerProductRegistration(props) {
     });
   };
 
+  // const handleInputChange = (index, field, value) => {
+  //   // 옵션 input필드에 입력한 값대로 option에 저장
+  //   setProductInfo((prevProductInfo) => {
+  //     const newOptions = prevProductInfo.options.map((option, i) =>
+  //       i === index ? { ...option, [field]: value } : option
+  //     );
+  //     return { ...prevProductInfo, options: newOptions };
+  //   });
+  // };
+
   const handleInputChange = (index, field, value) => {
-    // 옵션 input필드에 입력한 값대로 option에 저장
     setProductInfo((prevProductInfo) => {
-      const newOptions = prevProductInfo.options.map((option, i) =>
-        i === index ? { ...option, [field]: value } : option
-      );
+      const newOptions = [...prevProductInfo.options];
+  
+      // 옵션 배열 크기 조정
+      while (newOptions.length <= index) {
+        newOptions.push({});
+      }
+  
+      // 옵션 정보 업데이트
+      newOptions[index] = {
+        ...newOptions[index],
+        [field]: value,
+      };
+  
       return { ...prevProductInfo, options: newOptions };
     });
   };
+
+
+
 
   const [quillValue, setQuillValue] = useState("");
 
@@ -505,26 +527,54 @@ export default function SellerProductRegistration(props) {
   };
 
   // 상품의 옵션 추가
-  const addProductOption = (index) => {
-    // 서버로 데이터 전송하는 로직 작성
+const addProductOption = (index) => {
+  index -= 1;
 
-    index -= 1;
+  const optionData = {
+    productPrice: productInfo.options[index].productPrice,
+    productSize: productInfo.options[index].productSize,
+    productColor: productInfo.options[index].productColor,
+    productStock: productInfo.options[index].productStock,
+  };
 
-    //var formData = new FormData();
-    //formData.append('optionDTO', new Blob([JSON.stringify(optionDTO)], { type: "application/json" }));
-    console.log("문자열:" + productInfo.productId);
-    console.log(index);
-    console.log("담긴 옵션 정보" + productInfo.options[index].productPrice);
-    axios // 상품 등록
-      .put(
+  const productId = productInfo.options[index].productId;
+
+  if (!optionData.productSize) {
+    // 옵션 값이 없는 경우 새로운 옵션 등록
+    axios
+      .post(
         `http://52.79.186.117:8000/api/product/seller/option/add/product/${productInfo.productId}`,
-        // `https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app/product/seller/option/add?productId=19`,
+        optionData,
         {
-          productPrice: productInfo.options[index].productPrice,
-          productSize: productInfo.options[index].productSize,
-          productColor: productInfo.options[index].productColor,
-          productStock: productInfo.options[index].productStock,
-        },
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data); // 서버 응답 출력
+        message.success("새로운 옵션 등록 완료");
+
+        // 새로운 옵션 값을 업데이트
+        setProductInfo((prevProductInfo) => {
+          const newOptions = [...prevProductInfo.options];
+          newOptions[index] = {
+            ...newOptions[index],
+            productId: response.data.productId,
+          };
+          return { ...prevProductInfo, options: newOptions };
+        });
+      })
+      .catch((error) => {
+        console.error(error); // 오류 처리
+        message.error("옵션 등록 실패");
+      });
+  } else {
+    // 옵션 값이 있는 경우 옵션 수정
+    axios
+      .put(
+        `http://52.79.186.117:8000/api/product/seller/option/${productId}`,
+        optionData,
         {
           headers: {
             "Content-Type": "application/json",
@@ -534,13 +584,31 @@ export default function SellerProductRegistration(props) {
       )
       .then((response) => {
         console.log(response.data); // 서버 응답 출력
+        message.success("옵션 수정 완료");
+
+        // 수정된 옵션 값을 업데이트
+        setProductInfo((prevProductInfo) => {
+          const newOptions = [...prevProductInfo.options];
+          newOptions[index] = {
+            ...newOptions[index],
+            ...optionData,
+          };
+          return { ...prevProductInfo, options: newOptions };
+        });
       })
       .catch((error) => {
         console.error(error); // 오류 처리
+        message.error("옵션 수정 실패");
       });
+  }
+};
+  
 
-    message.success("저장되었습니다");
-  };
+  
+
+
+
+
 
   const LoadingScreen = () => {
     return (
