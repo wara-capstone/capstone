@@ -121,17 +121,14 @@ public class ProductController {
     public ResponseEntity<String> productIamgeRegistry(@PathVariable("productId") Long productId,
                                                        @RequestPart List<MultipartFile> images) throws URISyntaxException, IOException {
 
-        ProductDTO targetProduct= productService.readOne(productId);
         List<String> urls = transrationService.uploadImage(images);
         logger.info("[product images registry] 상품 사진 정보 수정");
         logger.info("[상품 id]:" + productId.toString());
         logger.info("[발급받은 URLs]" + urls.toString());
 
-        targetProduct.setProductUrls(urls);
 
-        productService.modifyProduct(targetProduct);
+        productService.modifyimage(productId, urls);
 
-        logger.info("[수정된 값]: " + targetProduct);
 
         return ResponseEntity.status(200).body("");
     }
@@ -175,7 +172,9 @@ public class ProductController {
         logger.info("[option modify] 옵션 수정");
         logger.info("productId : "  + productId);
         logger.info(optionDTO.toString());
+
         productService.modifyOption(productId, optionDTO);
+
         return ResponseEntity.status(200).body("");
     }
 

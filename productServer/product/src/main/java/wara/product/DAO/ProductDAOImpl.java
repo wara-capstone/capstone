@@ -75,13 +75,8 @@ public class ProductDAOImpl implements ProductDAO{
     @Override
     public String modifyProduct(ProductEntity productEntity) {
         if(productRepository.existsByProductId(productEntity.getProductId())) {
-            ProductEntity old = productRepository.getByProductId(productEntity.getProductId());
-
-            ProductEntity modifyEntity = new ProductEntity(productEntity, old);
-
-            productRepository.save(modifyEntity);
-            logger.info("\n[수정된 값]:" + modifyEntity+ "\n");
-
+            productRepository.save(productEntity);
+            logger.info("\n\n [수정된 값 ]" + productEntity);
             return HttpStatus.OK.toString();
         }
         else return HttpStatus.NO_CONTENT.toString();

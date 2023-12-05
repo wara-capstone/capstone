@@ -102,4 +102,15 @@ public class ProductEntity {
         return list;
     }
 
+    public void setProductUrls(@Nullable Urls productUrls) {
+        this.productUrls = productUrls;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public void setProductCategory(String productCategory) {
+        this.productCategory = productCategory;
+    }
 }

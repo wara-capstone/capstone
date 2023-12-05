@@ -10,6 +10,7 @@ import wara.product.DTO.OptionDTO;
 import wara.product.DTO.ProductDTO;
 import wara.product.productEntity.OptionEntity;
 import wara.product.productEntity.ProductEntity;
+import wara.product.productEntity.Urls;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -79,7 +80,20 @@ public class ProductService {
 
     public String modifyProduct(ProductDTO productDTO)
     {// 상품이 존재하는지 확인 할 것
-        return productDAO.modifyProduct(productDTO.toEntity());
+        ProductEntity productEntity = this.productDAO.readOneProduct(productDTO.getProductId());
+        productEntity.setProductName(productDTO.getProductName());
+        productEntity.setProductCategory(productDTO.getProductCategory());
+
+        return productDAO.modifyProduct(productEntity);
+    }
+
+    public String modifyimage(Long productId, List<String> urls)
+    {
+        ProductEntity productEntity = productDAO.readOneProduct(productId);
+        Urls a = new Urls(urls);
+        productEntity.setProductUrls(a);
+
+        return productDAO.modifyProduct(productEntity);
     }
 
 
