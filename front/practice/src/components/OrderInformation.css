@@ -5,7 +5,7 @@
     align-items: center;
     padding: 5px;
     box-sizing: border-box;
-    border: 1px solid skyblue;
+    /* border: 1px solid skyblue; */
     border-radius: 10px;
     width: 2rem; /* 원하는 크기로 조정하세요 */
     height: 2rem; /* 원하는 크기로 조정하세요 */
