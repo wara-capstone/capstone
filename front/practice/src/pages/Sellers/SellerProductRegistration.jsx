@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import "@toast-ui/editor/dist/i18n/ko-kr";
@@ -15,6 +15,7 @@ import "tui-color-picker/dist/tui-color-picker.css";
 import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+
 
 import ToastuiEditor, {
   EditorOptions,
@@ -48,6 +49,7 @@ import CellRenderer from "./CellRenderer";
 const { TextArea } = Input;
 
 const mainCategory = ["상의", "아우터", "하의", "신발", "잡화", "기타"];
+
 
 // const smallCategory = {
 //   상의: [
@@ -123,8 +125,11 @@ const beforeUpload = (file) => {
   return isJpgOrPng && isLt2M;
 };
 
+
 export default function SellerProductRegistration(props) {
-  const { storeId, productId } = useParams();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const { storeId, productId} = useParams();
   const [tableData, setTableData] = useState(initialData);
 
   // onChange로 관리할 문자열
@@ -243,10 +248,11 @@ export default function SellerProductRegistration(props) {
 
   const fileInputRef = useRef(null);
   const [previewImage, setPreviewImage] = useState(null);
+  const [file, setFile] = useState(false);
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
-
+    setFile(file);
     if (file) {
       const reader = new FileReader();
 
@@ -260,55 +266,80 @@ export default function SellerProductRegistration(props) {
     }
   };
 
+  const [saveData, setSaveData] = useState({
+    "":"",
+    "":"",
+    "":"",
+  });
+
   const handleSubmitButtonClick = async () => {
     try {
+      var data = {
+        "productId" : productId,
+        "storeId" : storeId,
+        "productCategory" : selectedCategory,
+        "productName" : productName
+      }
+
       const headers = {
         Authorization: `${token}`,
         // "content-type": "application/json",
       };
 
       let formData = new FormData();
+      
+      formData.append("productDTO", new Blob([JSON.stringify(data)], { type: "application/json" }))
+      fetch("http://52.79.186.117:8000/api/product/seller",
+        {
+          method : "PUT",
+          headers : headers,
+          body : formData
+        }
+        
+      ).then((response) => {
+        if(response.status === 200){
+          message.success("저장되었습니다.");
+        }else{
+          message.error("error");
+        }
 
-      console.log("이미지 파일 ", fileList);
-      fileList.forEach((file) => {
-        formData.append("images[]", file.originFileObj); // 수정: originFileObj 속성 사용
-      });
+      })
+      formData = new FormData();
 
-      // formData.append(
-      //   "productDTO",
-      //   JSON.stringify({
-      //     productName: productName,
-      //     productCategory: productCategory,
-      //   })
-      // );
+      if(file){
+      console.log("file : "+file);
+      formData.append("images", file);
+      message.error("adsda");
+      fetch("http://52.79.186.117:8000/api/product/seller/product/"+productId,
+        {
+          method : "PUT",
+          headers : headers,
+          body : formData
+        }
+        
+      ).then((response) => {
+        if(response.status === 200){
+          message.success("이미지 저장 완료");
+          navigate("/seller/item/management/select/"+storeId);
+          setFile(false);
+        }else{
+          message.error("error");
+          console.log(response);
+        }
 
-      // formData.append(
-      //   "optionDTO",
-      //   JSON.stringify({
-      //     productPrice: productPrice,
-      //     productSize: productSize,
-      //     productColor: productColor,
-      //     productStock: productStock,
-      //   })
-      // );
-
-      let response;
-
-      console.log("폼데이터 값", formData);
-      if (isTrue) {
-        // 상품 등록 (== 상품 수정)
-        response = await axios.put(
-          "http://52.79.186.117:8000/api/product/modify",
-          formData,
-          { headers }
-        );
-      }
-      message.success("등록되었습니다");
-      console.log(response.data); // 서버 응답 출력
-    } catch (error) {
-      console.error(error); // 오류 처리
+      }).catch((err) => {
+        console.log(err);
+      })
+    }else{
+      navigate("/seller/item/management/select/"+storeId);
     }
-  };
+
+   
+    
+  }catch(err){
+    message.error("잘못된 요청입니다.");
+    console.log(err);
+  };}
 
   const removeOption = async (index) => {
     try {
@@ -458,7 +489,6 @@ export default function SellerProductRegistration(props) {
     setQuillValue(editor.getContents());
   };
 
-  const [loading, setLoading] = useState(true);
   const [imageUrl, setImageUrl] = useState();
 
   const handleChange = (info) => {
@@ -651,7 +681,7 @@ export default function SellerProductRegistration(props) {
                   </td>
                 </tr> */}
 
-                <tr>
+                {/* <tr>
                   <td>해시태그</td>
                   <td>
                     <div className="HashWrap">
@@ -672,7 +702,7 @@ export default function SellerProductRegistration(props) {
                       />
                     </div>
                   </td>
-                </tr>
+                </tr> */}
 
                 <br />
               </table>
