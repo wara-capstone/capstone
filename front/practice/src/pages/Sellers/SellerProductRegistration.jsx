@@ -529,17 +529,20 @@ export default function SellerProductRegistration(props) {
     console.log("몇 번째 인덱스 입니까?", index);
     console.log("담긴 옵션 정보" + productInfo.options[index].productPrice);
     if (index > optionIndex) {
+      var data = {
+        "productPrice": productInfo.options[index].productPrice,
+          "productSize": productInfo.options[index].productSize,
+          "productColor": productInfo.options[index].productColor,
+          "productStock": productInfo.options[index].productStock,
+      }
+      data = JSON.stringify(data);
+      console.log("등록 으로");
       message.error("asdasd");
       axios // 등록
         .put(
           `http://52.79.186.117:8000/api/product/seller/option/add/product/${productInfo.productId}`,
           // `https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app/product/seller/option/add?productId=19`,
-          {
-            productPrice: productInfo.options[index].productPrice,
-            productSize: productInfo.options[index].productSize,
-            productColor: productInfo.options[index].productColor,
-            productStock: productInfo.options[index].productStock,
-          },
+          data,
           {
             headers: {
               "Content-Type": "application/json",
@@ -554,22 +557,23 @@ export default function SellerProductRegistration(props) {
           console.error(error); // 오류 처리
         });
     } else {
+      console.log("수정 으로");
       var data = {
-        optionId: productInfo.options[index].optionId,
-        productPrice: productInfo.options[index].productPrice,
-        productSize: productInfo.options[index].productSize,
-        productColor: productInfo.options[index].productColor,
-        productStock: productInfo.options[index].productStock,
+        "optionId": productInfo.options[index].optionId,
+        "productPrice": productInfo.options[index].productPrice,
+        "productSize": productInfo.options[index].productSize,
+        "productColor": productInfo.options[index].productColor,
+        "productStock": productInfo.options[index].productStock,
       }
+      data = JSON.stringify(data);
       //var formdata = new FormData();
       //formdata.append("optionDTO", new Blob([JSON.stringify(data)], { type: "application/json" }))
+      console.log(data);
       axios // 상품 등록
         .put(
           `http://52.79.186.117:8000/api/product/seller/option/`+productId,
           // `https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app/product/seller/option/add?productId=19`,
-          {
-            data
-          },
+          data,
           {
             headers: {
               "Content-Type": "application/json",
