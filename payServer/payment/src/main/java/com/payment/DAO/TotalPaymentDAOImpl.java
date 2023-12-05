@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Repository
@@ -27,7 +28,7 @@ public class TotalPaymentDAOImpl implements TotalPaymentDAO {
            return result;
         }
 
-        totalPaymentEntity.setDateTime(LocalDateTime.now());
+        totalPaymentEntity.setDateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         totalPaymentRepository.save(totalPaymentEntity);
 
         if(totalPaymentRepository.existsByTotalPaymentId(totalPaymentEntity.getTotalPaymentId())){
