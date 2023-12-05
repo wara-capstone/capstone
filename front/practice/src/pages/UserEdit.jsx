@@ -33,7 +33,7 @@ const UserEdit = ({ user }) => {
     console.log("위에꺼 토큰");
     const fetchData = async () => {
     const response = await fetch(
-      'http://52.79.186.117:8000/api/user?email='+email,
+      '/api/user?email='+email,
       {
         method: "GET",
         headers: {
@@ -84,7 +84,7 @@ const UserEdit = ({ user }) => {
 
     try {
       const response = await fetch(
-        "http://52.79.186.117:8000/api/user",
+        "/api/user",
         {
           method: "PUT",
           headers: {
@@ -126,7 +126,7 @@ const UserEdit = ({ user }) => {
                 console.log(value);
             }
         }
-        fetch('http://52.79.186.117:8000/api/user/image?email='+email, {
+        fetch('/api/user/image?email='+email, {
             method: 'POST',
             headers: {
                 "Authorization": `${token}`

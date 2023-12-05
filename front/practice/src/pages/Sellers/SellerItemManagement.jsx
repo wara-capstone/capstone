@@ -40,7 +40,7 @@ export default function SellerItemManagement() {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://52.79.186.117:8000/api/product/all/store/${storeId}`,
+        `/api/product/all/store/${storeId}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -78,7 +78,7 @@ export default function SellerItemManagement() {
     for (let item of selectedData) {
       try {
         const response = await axios.delete(
-          `http://52.79.186.117:8000/api/product/seller/${storeId}/${item.productId}`,
+          `/api/product/seller/${storeId}/${item.productId}`,
           {
             headers: {
               Authorization: `${token}`,
@@ -227,7 +227,7 @@ export default function SellerItemManagement() {
     }
     var formData = new FormData();
     formData.append("productDTO", new Blob([JSON.stringify(data)], { type: "application/json" }));
-    const response = await fetch("http://52.79.186.117:8000/api/product/seller", {
+    const response = await fetch("/api/product/seller", {
       method: "POST",
       headers: {
         Authorization: `${token}`,

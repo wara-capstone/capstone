@@ -86,7 +86,7 @@ useEffect(() => {
     // if(productId == null ){return}
     try {
       const response = await axios.get(
-        `http://52.79.186.117:8000/api/product/all/${productId}/option/${optionId}`,
+        `/api/product/all/${productId}/option/${optionId}`,
         {
           headers: {
             Authorization: `${token}`,

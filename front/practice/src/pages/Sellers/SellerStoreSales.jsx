@@ -46,7 +46,7 @@ export default function SellerStoreSales({ store }) {
     console.log(email);
     try {
       const response = await fetch(
-        `http://52.79.186.117:8000/api/store/read/seller/${email}`,
+        `/api/store/read/seller/${email}`,
         {
           method: "GET",
           headers: {
@@ -146,7 +146,7 @@ export default function SellerStoreSales({ store }) {
 
       try {
         const response = await fetch(
-          `http://52.79.186.117:8000/api/payment/read/store/${storeId}`,
+          `/api/payment/read/store/${storeId}`,
           {
             method: "GET",
             headers: {
