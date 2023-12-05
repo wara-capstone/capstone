@@ -8,7 +8,9 @@ import { useParams } from "react-router-dom";
 import ImageCellRenderer from "../../components/ImageCellRenderer";
 
 import CellRenderer from "./CellRenderer.jsx";
-
+import{
+  message
+}from "antd";
 import React, {
   useState,
   useRef,
@@ -31,11 +33,14 @@ export default function SellerItemManagement() {
   const [productInfo, setProductInfo] = useState({ result: "", data: [] });
   const [loading, setLoading] = useState(true);
 
-  const fetchData = useCallback(async () => {
+  const [rowData, setRowData] = useState();
+  var fetchData
+  useEffect(()=> {
+    fetchData = async () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        "/api/product/all/store/1",
+        `http://52.79.186.117:8000/api/product/all/store/${storeId}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -63,7 +68,7 @@ export default function SellerItemManagement() {
     } finally{
       setLoading(false);
     }
-  }, [token]);
+  }}, [rowData]);
 
   // 삭제 버튼의 onClick 핸들러
   const handleDelete = async () => {
@@ -73,7 +78,7 @@ export default function SellerItemManagement() {
     for (let item of selectedData) {
       try {
         const response = await axios.delete(
-          `/api/product/seller/${storeId}/${item.productId}`,
+          `http://52.79.186.117:8000/api/product/seller/${storeId}/${item.productId}`,
           {
             headers: {
               Authorization: `${token}`,
@@ -165,7 +170,6 @@ export default function SellerItemManagement() {
     },
   ]);
 
-  const [rowData, setRowData] = useState();
 
   const getRowId = useCallback((row) => {
     return row.id;
@@ -208,6 +212,48 @@ export default function SellerItemManagement() {
     setSavedRowData(allRowData);
     console.log(allRowData); // 콘솔에 모든 행의 데이터를 출력
   }, []);
+  const [newProduct, setNewProduct] = useState({
+      productId:"",
+      productUrls :[""]
+  })
+
+  const createProduct = async () => {
+    var data = {
+      productId:"",
+      storeId: storeId,
+      productName: "",
+      productCategory: "",
+      productUrls :[]
+    }
+    var formData = new FormData();
+    formData.append("productDTO", new Blob([JSON.stringify(data)], { type: "application/json" }));
+    const response = await fetch("http://52.79.186.117:8000/api/product/seller", {
+      method: "POST",
+      headers: {
+        Authorization: `${token}`,
+        
+      },
+      body: formData,
+    })
+      .then((response) => {
+        if (response.status == 200) {
+          message.success("새로운 상품을 등록하였습니다.")
+          //setNewProduct(response.json()); // JSON 형식의 응답을 파싱
+          
+          
+        }
+      })
+      .then((data) => {
+          fetchData();
+      })
+      .catch((error) => {
+        message.error("새로운 상품 등록에 실패하였습니다.");
+        console.log("에러입니다. 에러에러")
+        console.log(error);
+        return data;
+      });
+  } 
+
 
   if(loading){
     <LoadingScreen> </LoadingScreen>
@@ -230,13 +276,18 @@ export default function SellerItemManagement() {
               onClick={handleDelete}>
               삭제
             </button>
-            <button onClick={() => setRowData([...rowData, 
-              {  productUrls: '',  productName: '',  productId: '',  productSize: '',  productColor: '',  productStock: '',}])}>추가</button>
+            <button onClick={ () => {
+              createProduct();
+              const maxId = Math.max(...rowData.map(data => data.productId));
+              //setRowData([...rowData, 
+            //  {  productUrls: newProduct.productUrls[0] ,  productName: "",  productId: newProduct.productId,  productSize: "",  productColor: '',  productStock: '',}])
+            }}
+              >추가</button>
           </div>
 
-          <div>
+          {/* <div>
             <button onClick={onBtSave}>저장</button>
-          </div>
+          </div> */}
         </div>
         <div className="grid-wrapper">
           <div style={gridStyle} className="ag-theme-alpine">

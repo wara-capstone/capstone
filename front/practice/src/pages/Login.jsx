@@ -18,7 +18,7 @@ const Login = () => {
     await new Promise((r) => setTimeout(r, 1000));
     
     const response = await fetch(
-      "/api/auth/signin",
+      "http://52.79.186.117:8000/api/auth/signin",
       {
         method: "POST",
         headers: {

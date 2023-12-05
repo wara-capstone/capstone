@@ -23,7 +23,7 @@ const StoresListPage = () => {
     const fetchData = async () => {
       setLoading(true);
       const result = await axios.get(
-        "/api/store/read/seller/seller@naver.com", // 이 부분은 실제 서버 주소와 API 경로로 변경해야 합니다.
+        `http://52.79.186.117:8000/api/store/read/seller/${localStorage.getItem("email")}`, // 이 부분은 실제 서버 주소와 API 경로로 변경해야 합니다.
         {
           method: "GET",
           headers: {
@@ -55,7 +55,7 @@ else{
 
       <div className="card-link" style={{ zIndex: 100 }}>
         <div style={{display: "flex", justifyContent: "center"}}>
-        {storeInfo.data.map((store) => (
+        {storeInfo.data.map((store, index) => (
           <div style={{padding: 30}}>
           <Link to={`/seller/item/management/select/${store.storeId}`} key={store.storeId}>
             <Card
@@ -71,6 +71,10 @@ else{
               <p>전화번호 : {store.storePhone}</p>
               <p>{store.storeContents}</p>
             </Card>
+
+            <div>{
+            index === 3 ?
+              <br></br> : null}</div>
 
             {/* <Card
               title={store.storeName}

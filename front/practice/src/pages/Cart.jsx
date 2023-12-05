@@ -59,7 +59,7 @@ export default function Cart() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        'h/api/cart/items/?user_email=' + email,
+        '/api/cart/items/?user_email=' + email,
         {
           method: "GET",
           headers: {
@@ -121,7 +121,7 @@ export default function Cart() {
     console.log(deleteString);
     const fetchData = async () => {
       const response = await fetch(
-        '/api/cart/items/?user_email=' + email + deleteString,
+        'api/cart/items/?user_email=' + email + deleteString,
         {
           method: "DELETE",
           headers: {
