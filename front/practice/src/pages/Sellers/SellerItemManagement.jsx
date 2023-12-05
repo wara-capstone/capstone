@@ -287,9 +287,9 @@ export default function SellerItemManagement() {
               >추가</button>
           </div>
 
-          <div>
+          {/* <div>
             <button onClick={onBtSave}>저장</button>
-          </div>
+          </div> */}
         </div>
         <div className="grid-wrapper">
           <div style={gridStyle} className="ag-theme-alpine">
