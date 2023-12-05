@@ -55,7 +55,7 @@ else{
 
       <div className="card-link" style={{ zIndex: 100 }}>
         <div style={{display: "flex", justifyContent: "center"}}>
-        {storeInfo.data.map((store) => (
+        {storeInfo.data.map((store, index) => (
           <div style={{padding: 30}}>
           <Link to={`/seller/item/management/select/${store.storeId}`} key={store.storeId}>
             <Card
@@ -71,6 +71,10 @@ else{
               <p>전화번호 : {store.storePhone}</p>
               <p>{store.storeContents}</p>
             </Card>
+
+            <div>{
+            index === 3 ?
+              <br></br> : null}</div>
 
             {/* <Card
               title={store.storeName}
