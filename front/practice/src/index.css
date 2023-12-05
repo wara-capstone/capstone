@@ -24,7 +24,7 @@ code {
 .chatting,
 .cart-page,
 .store {
-  max-width: 400px;
+  max-width: 390px;
   /* top: 6vh; */
   height: 88vh; /* 높이를 100%로 설정 */
   margin-left: auto;
@@ -32,8 +32,12 @@ code {
   background-color: #f2f2f2;
 }
 
+.store {
+  height: 100vh;
+}
+
 .item {
-  max-width: 400px;
+  max-width: 390px;
   /* top: 6vh; */
   min-height: 120vh; /* 뷰포트 높이를 최소 높이로 설정 */
   height: 100%; /* 높이를 100%로 설정 */
@@ -59,7 +63,7 @@ code {
   /* margin-top: 20px; *
   /* border-radius: 20px; */
   height: 100%;
-  width: 400px;
+  width: 390px;
   object-fit: cover;
 }
 
@@ -73,13 +77,13 @@ code {
 .barcode-item-data {
   position: fixed;
   bottom: 50px;
-  max-width: 400px;
+  max-width: 390px;
   /* overflow: hidden;
   text-align: center; */
 }
 
 .ad-image {
-  width: 400px;
+  width: 390px;
   height: 100%;
   object-fit: cover;
 }

@@ -253,7 +253,7 @@ const SellerStoreRegister = ({ store }) => {
           <div className="store-register-map">
             <div
               id="storeMap"
-              style={{ width: "100%", height: "91vh", zIndex: "0" }}
+              style={{ width: "100%", height: "92vh", zIndex: "0" }}
             ></div>
           </div>
         </div>
