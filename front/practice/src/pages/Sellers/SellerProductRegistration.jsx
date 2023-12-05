@@ -1,12 +1,13 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import "@toast-ui/editor/dist/i18n/ko-kr";
 import { Editor } from "@toast-ui/react-editor";
 import axios from "axios";
+import { UploadFile } from "antd/es/upload/interface";
 
-import { UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined } from "@ant-design/icons";
 
 import "@toast-ui/editor/dist/toastui-editor.css";
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
@@ -46,46 +47,39 @@ import "./Seller.css";
 import CellRenderer from "./CellRenderer";
 const { TextArea } = Input;
 
-const mainCategory = [
-  "상의",
-  "아우터",
-  "바지",
-  "원피스/스커트",
-  "신발",
-  "가방",
-];
+const mainCategory = ["상의", "아우터", "하의", "신발", "잡화", "기타"];
 
-const smallCategory = {
-  상의: [
-    "맨투맨/스웨트셔츠",
-    "셔츠/블라우스",
-    "후드 티셔츠",
-    "니트/스웨터",
-    "긴소매 티셔츠",
-    "반소매 티셔츠",
-    "기타 상의",
-  ],
-  아우터: [
-    "후드 집업",
-    "카디건",
-    "플리스/뽀글이",
-    "코트",
-    "패딩",
-    "기타 아우터",
-  ],
-  바지: ["데님 팬츠", "코튼 팬츠", "트레이닝/조거 팬츠", "기타바지"],
-  원피스스커트: ["원피스", "스커트"],
-  신발: ["스니커즈", "샌들", "부츠", "로퍼", "기타 신발"],
-  가방: [
-    "백팩",
-    "메신저/크로스 백",
-    "숄더백",
-    "토트백",
-    "에코백",
-    "지갑/머니클립",
-    "기타 소품",
-  ],
-};
+// const smallCategory = {
+//   상의: [
+//     "맨투맨/스웨트셔츠",
+//     "셔츠/블라우스",
+//     "후드 티셔츠",
+//     "니트/스웨터",
+//     "긴소매 티셔츠",
+//     "반소매 티셔츠",
+//     "기타 상의",
+//   ],
+//   아우터: [
+//     "후드 집업",
+//     "카디건",
+//     "플리스/뽀글이",
+//     "코트",
+//     "패딩",
+//     "기타 아우터",
+//   ],
+//   바지: ["데님 팬츠", "코튼 팬츠", "트레이닝/조거 팬츠", "기타바지"],
+//   원피스스커트: ["원피스", "스커트"],
+//   신발: ["스니커즈", "샌들", "부츠", "로퍼", "기타 신발"],
+//   가방: [
+//     "백팩",
+//     "메신저/크로스 백",
+//     "숄더백",
+//     "토트백",
+//     "에코백",
+//     "지갑/머니클립",
+//     "기타 소품",
+//   ],
+// };
 
 const initialData = [
   {
@@ -132,28 +126,25 @@ const beforeUpload = (file) => {
 export default function SellerProductRegistration(props) {
   const { storeId, productId } = useParams();
   const [tableData, setTableData] = useState(initialData);
-  const [mainCategory, setMainCategory] = React.useState("상의");
-  const [secondCategory, setSecondCategory] =
-    React.useState("맨투맨/스웨트셔츠");
+
   // onChange로 관리할 문자열
   const [hashtag, setHashtag] = useState("");
   // 해시태그를 담을 배열
   const [hashArr, setHashArr] = useState([]);
 
+  const [mainCategory, setMainCategory] = useState(["상의", "아우터", "하의", "신발", "잡화", "기타"]);
+  const [selectedCategory, setSelectedCategory] = useState(""); // 선택한 카테고리를 저장하는 상태 변수
+
   const handleMainCategoryChange = (value) => {
-    setMainCategory(value);
-    setSecondCategory(smallCategory[value][0]);
+    setSelectedCategory(value);
   };
 
-  const onSecondCategoryChange = (value) => {
-    setSecondCategory(value);
-  };
-  
   const [itemOptions, setItemOption] = useState();
   const token = localStorage.getItem("token");
   const [productInfo, setProductInfo] = useState({});
   //  const { productId } = props.location?.state || {};
   const [isTrue, setIsTrue] = useState();
+  const [images, setImages] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -173,6 +164,8 @@ export default function SellerProductRegistration(props) {
         console.log(response.status);
         if (response.status == 200) {
           setProductInfo(response.data);
+          setImages(response.data.productUrls);
+          setProductName(response.data.productName || "");
           setIsTrue(true);
         } else {
           setProductInfo({ data: [] });
@@ -217,95 +210,141 @@ export default function SellerProductRegistration(props) {
   );
 
   // 서버로 보낼 변수들 이름 지정
-  const [productName, setProductName] = useState(productInfo ? productInfo.productName : '');
-  const [productCategory, setProductCategory] = useState(productInfo ? productInfo.productCategory : '');
-  
+  const [productName, setProductName] = useState(
+    productInfo ? productInfo.productName : ""
+  );
+  const [productCategory, setProductCategory] = useState(
+    productInfo ? productInfo.productCategory : ""
+  );
 
   const [editingKey, setEditingKey] = useState(null);
   const [options, setOptions] = useState([{ items: ["사이즈 (예시: s)"] }]);
 
-  const [productStock, setProductStock] = useState(productInfo && productInfo.options && productInfo.options[0] ? productInfo.options[0].productStock : '');
-  const [productPrice, setProductPrice] = useState(productInfo && productInfo.options && productInfo.options[0] ? productInfo.options[0].productPrice : '');
-  const [productSize, setProductSize] = useState(productInfo && productInfo.options && productInfo.options[0] ? productInfo.options[0].productSize : '');
-  const [productColor, setProductColor] = useState(productInfo && productInfo.options && productInfo.options[0] ? productInfo.options[0].productColor : '');
-  
-  
+  const [productStock, setProductStock] = useState(
+    productInfo && productInfo.options && productInfo.options[0]
+      ? productInfo.options[0].productStock
+      : ""
+  );
+  const [productPrice, setProductPrice] = useState(
+    productInfo && productInfo.options && productInfo.options[0]
+      ? productInfo.options[0].productPrice
+      : ""
+  );
+  const [productSize, setProductSize] = useState(
+    productInfo && productInfo.options && productInfo.options[0]
+      ? productInfo.options[0].productSize
+      : ""
+  );
+  const [productColor, setProductColor] = useState(
+    productInfo && productInfo.options && productInfo.options[0]
+      ? productInfo.options[0].productColor
+      : ""
+  );
+
+  const fileInputRef = useRef(null);
+  const [previewImage, setPreviewImage] = useState(null);
+
+  const handleFileInputChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      setPreviewImage(null);
+    }
+  };
+
   const handleSubmitButtonClick = async () => {
     try {
-      let response;
-      
       const headers = {
         Authorization: `${token}`,
+        // "content-type": "application/json",
       };
-      
-      const data = {
-        productDTO: {
-          productName: productName,
-          productCategory: productCategory,
-        },
-        optionDTO: {
-          productPrice: productPrice,
-          productSize: productSize,
-          productColor: productColor,
-          productStock: productStock,
-        },
-      };
-      
-      if (isTrue) { // 상품 수정
+
+      let formData = new FormData();
+
+      console.log("이미지 파일 ", fileList);
+      fileList.forEach((file) => {
+        formData.append("images[]", file.originFileObj); // 수정: originFileObj 속성 사용
+      });
+
+      // formData.append(
+      //   "productDTO",
+      //   JSON.stringify({
+      //     productName: productName,
+      //     productCategory: productCategory,
+      //   })
+      // );
+
+      // formData.append(
+      //   "optionDTO",
+      //   JSON.stringify({
+      //     productPrice: productPrice,
+      //     productSize: productSize,
+      //     productColor: productColor,
+      //     productStock: productStock,
+      //   })
+      // );
+
+      let response;
+
+      console.log("폼데이터 값", formData);
+      if (isTrue) {
+        // 상품 등록 (== 상품 수정)
         response = await axios.put(
           "http://52.79.186.117:8000/api/product/modify",
-          data,
-          { headers }
-        );
-      } else { // 상품 등록
-        response = await axios.post( //보낼 때 `` 이거랑 "" 이거 차이가 뭐지? `랑 $ 세트인가 
-          "http://52.79.186.117:8000/api/product/seller",
-          data,
+          formData,
           { headers }
         );
       }
-      
+      message.success("등록되었습니다");
       console.log(response.data); // 서버 응답 출력
     } catch (error) {
       console.error(error); // 오류 처리
     }
-    
-    message.success("등록되었습니다");
   };
- 
-
 
   const removeOption = async (index) => {
     try {
       // 1. 서버에 삭제 요청 보내기
-      const response = await axios.delete(`http://52.79.186.117:8000/api/product/seller/option/${productInfo.options[index-1].optionId}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${token}`,
-        }});
-        if (response.status === 200) {
-          console.log('Option deleted successfully');
-        } else {
-          console.log('Failed to delete option:', response.status);
+      const response = await axios.delete(
+        `http://52.79.186.117:8000/api/product/seller/option/${
+          productInfo.options[index - 1].optionId
+        }`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
         }
-  
+      );
+      if (response.status === 200) {
+        console.log("Option deleted successfully");
+      } else {
+        console.log("Failed to delete option:", response.status);
+      }
+
       // 2. 상태 업데이트하기
-      setProductInfo(prevProductInfo => {
+      setProductInfo((prevProductInfo) => {
         const newOptions = [...prevProductInfo.options];
-        newOptions.splice(index-1, 1);
-  
+        newOptions.splice(index - 1, 1);
+
         return {
           ...prevProductInfo,
-          options: newOptions
+          options: newOptions,
         };
       });
     } catch (error) {
       // 서버에서 오류 응답을 받았을 때 처리
-      console.error('Failed to delete option:', error);
+      console.error("Failed to delete option:", error);
     }
   };
-  
 
   const columns = [
     {
@@ -387,32 +426,31 @@ export default function SellerProductRegistration(props) {
     "background",
   ];
 
-  let plusOption = ()=>{
+  let plusOption = () => {
     const newOption = {
-      productPrice: '',
-      productSize: '',
-      productColor: '',
-      productStock: '',
+      productPrice: "",
+      productSize: "",
+      productColor: "",
+      productStock: "",
     };
 
-    setProductInfo(prevProductInfo => {
+    setProductInfo((prevProductInfo) => {
       return {
         ...prevProductInfo,
-        options: [...(prevProductInfo.options || []), newOption]
+        options: [...(prevProductInfo.options || []), newOption],
       };
-    });
-  }
-
-  const handleInputChange = (index, field, value) => {  // 옵션 input필드에 입력한 값대로 option에 저장
-    setProductInfo(prevProductInfo => {
-      const newOptions = prevProductInfo.options.map((option, i) => 
-        i === index ? {...option, [field]: value} : option
-      );
-      return {...prevProductInfo, options: newOptions};
     });
   };
 
-  
+  const handleInputChange = (index, field, value) => {
+    // 옵션 input필드에 입력한 값대로 option에 저장
+    setProductInfo((prevProductInfo) => {
+      const newOptions = prevProductInfo.options.map((option, i) =>
+        i === index ? { ...option, [field]: value } : option
+      );
+      return { ...prevProductInfo, options: newOptions };
+    });
+  };
 
   const [quillValue, setQuillValue] = useState("");
 
@@ -436,49 +474,43 @@ export default function SellerProductRegistration(props) {
     }
   };
 
-
-// 상품의 옵션 추가
-  const addProductOption = (index)=>{
+  // 상품의 옵션 추가
+  const addProductOption = (index) => {
     // 서버로 데이터 전송하는 로직 작성
-    
-    index-=1;
-   
+
+    index -= 1;
+
     //var formData = new FormData();
     //formData.append('optionDTO', new Blob([JSON.stringify(optionDTO)], { type: "application/json" }));
     console.log("문자열:" + productInfo.productId);
     console.log(index);
-    console.log("담긴 옵션 정보"+ productInfo.options[index].productPrice);
+    console.log("담긴 옵션 정보" + productInfo.options[index].productPrice);
     axios // 상품 등록
-    .put(
-     `http://52.79.186.117:8000/api/product/seller/option/add/product/${productInfo.productId}`,
-    // `https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app/product/seller/option/add?productId=19`,
-      { 
-   
-        "productPrice" :  productInfo.options[index].productPrice,
-        "productSize" : productInfo.options[index].productSize,
-        "productColor" : productInfo.options[index].productColor,
-        "productStock" :  productInfo.options[index].productStock,
-    
-      },
-      {
-      headers: {
-        "Content-Type" : "application/json",
-        Authorization: `${token}`,
-      },
-    },
-    )
-    .then((response) => {
-      console.log(response.data); // 서버 응답 출력
-    })
-    .catch((error) => {
-      console.error(error); // 오류 처리
-    });
+      .put(
+        `http://52.79.186.117:8000/api/product/seller/option/add/product/${productInfo.productId}`,
+        // `https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app/product/seller/option/add?productId=19`,
+        {
+          productPrice: productInfo.options[index].productPrice,
+          productSize: productInfo.options[index].productSize,
+          productColor: productInfo.options[index].productColor,
+          productStock: productInfo.options[index].productStock,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data); // 서버 응답 출력
+      })
+      .catch((error) => {
+        console.error(error); // 오류 처리
+      });
 
-  message.success("저장되었습니다");
-};
-  
-
-
+    message.success("저장되었습니다");
+  };
 
   const LoadingScreen = () => {
     return (
@@ -491,40 +523,50 @@ export default function SellerProductRegistration(props) {
 
   const styles = {
     container: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '100vh',
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      height: "100vh",
       margin: 0,
     },
     spinner: {
-      border: '4px solid rgba(0, 0, 0, 0.1)',
-      borderLeft: '4px solid #3498db',
-      borderRadius: '50%',
-      width: '40px',
-      height: '40px',
-      animation: 'spin 1s linear infinite',
+      border: "4px solid rgba(0, 0, 0, 0.1)",
+      borderLeft: "4px solid #3498db",
+      borderRadius: "50%",
+      width: "40px",
+      height: "40px",
+      animation: "spin 1s linear infinite",
     },
     message: {
-      marginLeft: '10px',
-      fontSize: '16px',
+      marginLeft: "10px",
+      fontSize: "16px",
     },
-    '@keyframes spin': {
-      '0%': { transform: 'rotate(0deg)' },
-      '100%': { transform: 'rotate(360deg)' },
+    "@keyframes spin": {
+      "0%": { transform: "rotate(0deg)" },
+      "100%": { transform: "rotate(360deg)" },
     },
   };
 
+  const imageHandler = (data) => {};
+  const [fileList, setFileList] = useState([]);
 
+  const uploadProps = {
+    // action: `http://52.79.186.117:8000/api/product/seller/option/add/product/${productInfo.productId}`,
+    // action:"http://52.79.186.117:8000/api/product/seller",
+    listType: "picture",
+    className: "upload-list-inline",
+    beforeUpload: (file) => {
+      setFileList([...fileList, file]);
+      return false; // 업로드 중단
+    },
+    fileList, // 수정: fileList 속성 사용
+  };
 
- 
   if (loading) {
-    return <LoadingScreen></LoadingScreen>
+    return <LoadingScreen></LoadingScreen>;
   } else {
-  return (
-
+    return (
       <div className="seller-product-registration">
-
         <SellerHeader />
         <h1>상품 등록</h1>
         <div className="outer-div">
@@ -567,7 +609,7 @@ export default function SellerProductRegistration(props) {
                 <tr>
                   <td>상품명&nbsp;</td>
                   <Input
-                    value={productInfo.productName}
+                    value={productName} // 수정: 값이 없는 경우 빈 문자열을 사용
                     onChange={(e) => setProductName(e.target.value)}
                     count={{
                       show: true,
@@ -585,19 +627,10 @@ export default function SellerProductRegistration(props) {
                   <td>카테고리&nbsp;</td>
                   <Space wrap>
                     <Select
-                      defaultValue={mainCategory}
+                      defaultValue={selectedCategory} // 선택한 카테고리 값으로 초기화
                       style={{ width: 120 }}
                       onChange={handleMainCategoryChange}
-                      options={Object.keys(smallCategory).map((category) => ({
-                        label: category,
-                        value: category,
-                      }))}
-                    />
-                    <Select
-                      style={{ width: 120 }}
-                      value={secondCategory}
-                      onChange={onSecondCategoryChange}
-                      options={smallCategory[mainCategory].map((category) => ({
+                      options={mainCategory.map((category) => ({
                         label: category,
                         value: category,
                       }))}
@@ -644,7 +677,7 @@ export default function SellerProductRegistration(props) {
                 <br />
               </table>
             </div>
-    
+
             <br />
 
             <div className="price">
@@ -652,60 +685,89 @@ export default function SellerProductRegistration(props) {
               <hr />
               <div id="option-table">
                 <table>
-                {productInfo && productInfo.options ? productInfo.options.map((option, index) => (
-                    <React.Fragment key={index}>
-                      <tr>
-                        <div className="option-small-box">
-                          <table>
-                              <div>
-                                <td rowSpan={4}>옵션{++index}</td>
-                                <Input
-                            placeholder="가격"
-                              style={{ color: "gray" }}
-                              defaultValue={option.productPrice}
-                              onChange={(e) => handleInputChange(index-1, "productPrice", e.target.value)}
-                            />
-                            <Input
-                            placeholder="사이즈"
-                              style={{ color: "gray" }}
-                              defaultValue={option.productSize}
-                              onChange={(e) => handleInputChange(index-1, "productSize", e.target.value)}
-                            />
-                            <Input
-                            placeholder="색상"
-                              style={{ color: "gray" }}
-                              defaultValue={option.productColor}
-                              onChange={(e) => handleInputChange(index-1, "productColor", e.target.value)}
-                            />
-                            <Input
-                            placeholder="수량"
-                              style={{ color: "gray" }}
-                              defaultValue={option.productStock}
-                              onChange={(e) => handleInputChange(index-1, "productStock", e.target.value)}
-                            />
-                            <Button onClick={()=>addProductOption(index)}>
-                              <EditOutlined />
-                            </Button>
-                            <Button
-                              type="primary"
-                              danger
-                              onClick={() => removeOption(index)}
-                            >
-                              <DeleteOutlined />
-                            </Button>
-                              </div>
-                            
-                          </table>
-                        </div>
-                      </tr>
-                    </React.Fragment>
-                  )):null}
-                      <div>
-                          <Button style={{backgroundColor:"#89CFF0", color:"white"}} onClick={plusOption}>
-                          <PlusCircleOutlined />
-                            </Button>
-                    </div>
-                    
+                  {productInfo && productInfo.options
+                    ? productInfo.options.map((option, index) => (
+                        <React.Fragment key={index}>
+                          <tr>
+                            <div className="option-small-box">
+                              <table>
+                                <div>
+                                  <td rowSpan={4}>옵션{++index}</td>
+                                  <Input
+                                    placeholder="가격"
+                                    style={{ color: "gray" }}
+                                    defaultValue={option.productPrice}
+                                    onChange={(e) =>
+                                      handleInputChange(
+                                        index - 1,
+                                        "productPrice",
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                  <Input
+                                    placeholder="사이즈"
+                                    style={{ color: "gray" }}
+                                    defaultValue={option.productSize}
+                                    onChange={(e) =>
+                                      handleInputChange(
+                                        index - 1,
+                                        "productSize",
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                  <Input
+                                    placeholder="색상"
+                                    style={{ color: "gray" }}
+                                    defaultValue={option.productColor}
+                                    onChange={(e) =>
+                                      handleInputChange(
+                                        index - 1,
+                                        "productColor",
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                  <Input
+                                    placeholder="수량"
+                                    style={{ color: "gray" }}
+                                    defaultValue={option.productStock}
+                                    onChange={(e) =>
+                                      handleInputChange(
+                                        index - 1,
+                                        "productStock",
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                  <Button
+                                    onClick={() => addProductOption(index)}
+                                  >
+                                    <EditOutlined />
+                                  </Button>
+                                  <Button
+                                    type="primary"
+                                    danger
+                                    onClick={() => removeOption(index)}
+                                  >
+                                    <DeleteOutlined />
+                                  </Button>
+                                </div>
+                              </table>
+                            </div>
+                          </tr>
+                        </React.Fragment>
+                      ))
+                    : null}
+                  <div>
+                    <Button
+                      style={{ backgroundColor: "#89CFF0", color: "white" }}
+                      onClick={plusOption}
+                    >
+                      <PlusCircleOutlined />
+                    </Button>
+                  </div>
                 </table>
               </div>
             </div>
@@ -725,29 +787,19 @@ export default function SellerProductRegistration(props) {
             <div className="abc">
               <Typography.Title level={4}>상품 이미지</Typography.Title>
               <hr />
-
-              <Upload
-                // action="http://52.79.186.117:8000/api/image/upload"
-                listType="picture"
-                defaultFileList={[[]]}
-                headers={{
-                  "Content-Type": "multipart/form-data",
-                  Authorization: `${token}`,
-                }}
+              <input
+                type="file"
+                style={{ display: "none" }}
+                onChange={handleFileInputChange}
+                ref={fileInputRef}
+              />
+              <Button
+                onClick={() => fileInputRef.current.click()}
+                icon={<UploadOutlined />}
               >
-                <Button icon={<UploadOutlined />}>Upload</Button>
-              </Upload>
-              { /*
-              <br />
-              <br />
-              <Upload
-                action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-                listType="picture"
-                defaultFileList={[]}
-                className="upload-list-inline"
-              >
-                <Button icon={<UploadOutlined />}>Upload</Button>
-              </Upload> */}
+                파일 선택
+              </Button>
+              {previewImage && <img src={previewImage} alt="미리 보기" />}
 
               <br />
             </div>
@@ -764,41 +816,41 @@ export default function SellerProductRegistration(props) {
                 hideModeSwitch={true}
                 plugins={[colorSyntax]}
                 language="ko-KR"
-              // hooks={{
-              //   addImageBlobHook: async (blob, callback) => {
-              //     try {
-              //       const imageData = new FormData();
+                // hooks={{
+                //   addImageBlobHook: async (blob, callback) => {
+                //     try {
+                //       const imageData = new FormData();
 
-              //       // OptionDTO 추가
-              //       imageData.append("OptionDTO", optionValue); // optionValue는 실제 OptionDTO의 값입니다.
+                //       // OptionDTO 추가
+                //       imageData.append("OptionDTO", optionValue); // optionValue는 실제 OptionDTO의 값입니다.
 
-              //       // ProductDTO 추가
-              //       imageData.append("ProductDTO", productValue); // productValue는 실제 ProductDTO의 값입니다.
+                //       // ProductDTO 추가
+                //       imageData.append("ProductDTO", productValue); // productValue는 실제 ProductDTO의 값입니다.
 
-              //       // 이미지 추가 (Images 키로 여러 이미지 추가)
-              //       for (let i = 0; i < blobs.length; i++) {
-              //         const blob = blobs[i]; // blobs는 실제 이미지 blob들의 배열입니다.
-              //         const file = new File([blob], encodeURI(blob.name), {
-              //           type: blob.type,
-              //         });
-              //         imageData.append("Images", file);
-              //       }
+                //       // 이미지 추가 (Images 키로 여러 이미지 추가)
+                //       for (let i = 0; i < blobs.length; i++) {
+                //         const blob = blobs[i]; // blobs는 실제 이미지 blob들의 배열입니다.
+                //         const file = new File([blob], encodeURI(blob.name), {
+                //           type: blob.type,
+                //         });
+                //         imageData.append("Images", file);
+                //       }
 
-              //       // 서버에 전송
-              //       const imageURI = await axios({
-              //         method: "POST",
-              //         headers: {
-              //           "Content-Type": "multipart/form-data",
-              //         },
-              //         url: `${"http://52.79.186.117:8000/api"}/product/seller`,
-              //         data: imageData,
-              //         withCredentials: true,
-              //       });
-              //     } catch (error) {
-              //       console.log(error);
-              //     }
-              //   },
-              // }}
+                //       // 서버에 전송
+                //       const imageURI = await axios({
+                //         method: "POST",
+                //         headers: {
+                //           "Content-Type": "multipart/form-data",
+                //         },
+                //         url: `${"http://52.79.186.117:8000/api"}/product/seller`,
+                //         data: imageData,
+                //         withCredentials: true,
+                //       });
+                //     } catch (error) {
+                //       console.log(error);
+                //     }
+                //   },
+                // }}
               />
 
               <br />
@@ -811,7 +863,7 @@ export default function SellerProductRegistration(props) {
               <br />
             </div>
 
-            <Button onClick={handleSubmitButtonClick}>확인</Button>
+            <Button onClick={handleSubmitButtonClick}>저장</Button>
           </Form>
         </div>
       </div>
