@@ -157,7 +157,7 @@ useEffect(() => {
 
   return (
     <div>
-      <button onClick={resetDecoding}>Reset</button>{" "}
+      {/* <button onClick={resetDecoding}>Reset</button>{" "} */}
       {/* 리셋 버튼, 클릭 시 디코딩 리셋 */}
       {videoInputDevices.length > 0 && ( // 비디오 입력 장치가 있으면
         <select // 장치 선택 셀렉트 박스
