@@ -18,7 +18,7 @@ return (
         <span className="dayOption">{selectedBread.product.color + ", " + selectedBread.product.size}</span> 
         <label>{quantity} 개</label>
     <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}} >
-        <label>{perPrice}원</label> 
+        <label>{perPrice.toLocaleString()}원</label> 
     </div>
         </div>
 </div>

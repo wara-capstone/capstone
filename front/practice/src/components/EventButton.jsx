@@ -1,5 +1,5 @@
 import "./Button.css";
 
-export default function EventButton({ buttonText, onClick }) {
-  return <button className="event-button" onClick={onClick} >{buttonText}</button>;
+export default function EventButton({ buttonText, onClick, style}) {
+  return <button className="event-button" onClick={onClick} style={style} >{buttonText}</button>;
 }
