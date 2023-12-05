@@ -212,13 +212,13 @@ export default function Item() {
             <div>
               <ImageSlider images={result.productUrls}></ImageSlider>
             </div>
-            <h3>{result.productName}</h3>
-            <p>가격: {parseInt(price).toLocaleString()}</p>
+            <h2>{result.productName}</h2>
+            <h3>가격: {parseInt(price).toLocaleString()}</h3>
             {/* <p>상세 정보: {"없음"}</p> */}
-            <p>재고: {result.options[0].productStock}</p>
+            <h3>재고: {result.options[0].productStock}</h3>
             <div>
-              색상
-              <select value={targetColor} onChange={handleColorChange}>
+            <span style={{ fontSize: "20px" }}>색상</span>
+              <select style={{ marginLeft: "1.3rem" }} value={targetColor} onChange={handleColorChange}>
                 {colorArray.map((color, index) => (
                   <option value={color} key={index}>
                     {color}
@@ -227,8 +227,8 @@ export default function Item() {
               </select>
             </div>
             <div>
-              사이즈
-              <select value={targetSize} onChange={handleSizeChange}>
+            <span style={{ fontSize: "20px" }}>사이즈</span>
+              <select style={{ marginLeft: "1.5rem" , width:"3rem",textAlignLast: "center"}} value={targetSize} onChange={handleSizeChange}>
                 {sizeArrayForColor.map((size, index) => (
                   <option value={size} key={index}>
                     {size}
@@ -238,9 +238,9 @@ export default function Item() {
             </div>
             <div
               className="quantityWrapper"
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: "center"}}
             >
-              개수
+              <span style={{ fontSize: "20px" }}>개수</span>
               <button className="quantityButton" onClick={quantityMinus}>
                 {" "}
                 -{" "}

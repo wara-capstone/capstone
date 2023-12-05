@@ -55,7 +55,7 @@ const UserProfile = () => {
           profileImage: result.profileImage,// profileImage 속성만 변경합니다.
           phoneNumber: result.phone
         });
-        console.log(result.profileImage);
+        console.log("받아온 사진 존재,",result.profileImage);
       } else if(response.status === 401){
         localStorage.removeItem("token");
         localStorage.removeItem("email");

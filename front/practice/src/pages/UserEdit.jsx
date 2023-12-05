@@ -99,11 +99,9 @@ const UserEdit = ({ user }) => {
         // Redirect to login.html
         console.log("성공!");
         message.success("수정이 완료되었습니다.");
-        navigate("/user");
       } else if (response.status === 400) {
         // Handle error
         message.error("수정에 실패하였습니다.");
-        navigate("/user");
       }
     } catch (error) {
       console.error("오류 발생:", error);
@@ -137,19 +135,24 @@ const UserEdit = ({ user }) => {
         })
             .then(response => {
                 if (response.ok) {
+                  setImageCheck(false);
+                  navigate("/user");  // 이미지 업로드 완료 후에 페이지 이동
                     return response.json(); // JSON 형식의 응답을 파싱
                 }
                 throw new Error('네트워크 응답이 실패했습니다.');
             })
-            .then(data => {
-                alert('성공!');
-            })
+            // .then(data => {
+            //     alert('서버로 이미지 전송 성공!');
+            //     setImageCheck(false);
+            //     navigate("/user");  // 이미지 업로드 완료 후에 페이지 이동
+            // })
             .catch(error => {
                 console.error(error);
             });
-            setImageCheck(false);
           }
-
+          else{
+            navigate("/user");
+          }
     console.log({nickname, phoneNumber, password, image });
   };
 
