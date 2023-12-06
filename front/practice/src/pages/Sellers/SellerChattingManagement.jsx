@@ -71,7 +71,7 @@ export default function SellerChattingManagement() {
     }
 
     try {
-      const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${CHATTING_URL}/chat/rooms/`, {
+      const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${CHATTING_URL}chat/rooms/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
