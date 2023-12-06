@@ -179,7 +179,9 @@ export default function SellerItemManagement() {
       headerClass: "center-header",
       editable: false,
       filter: true,
-      valueGetter: params => params.data.options ? params.data.options.map(option => option.productSize).join('\n') : ''
+      valueGetter: params => params.data.options ? params.data.options.map(option => option.productSize).join("\n") : ''
+    
+    
 },
     {
       headerName: "색상",
@@ -188,7 +190,12 @@ export default function SellerItemManagement() {
       editable: false,
       minWidth: 150,
       filter: true,
-      valueGetter: params => params.data.options ? params.data.options.map(option => option.productColor).join('\n') : ''
+  //  valueGetter: params => params.data.options ? params.data.options.map(option => option.productColor).join("\n") : ''
+    cellRendererFramework: (params) => {
+      return params.data.options 
+          ? params.data.options.map((option, index) => <div key={index}>{option.productSize}</div>)
+          : null;
+  }
 },
 
     {
@@ -197,7 +204,7 @@ export default function SellerItemManagement() {
       headerClass: "center-header",
       editable: false,
       filter: true,
-      valueGetter: params => params.data.options ? params.data.options.map(option => option.productStock).join('\n') : ''
+      valueGetter: params => params.data.options ? params.data.options.map(option => option.productStock).join("\n") : ''
     },
     {
       headerName: "관리",
