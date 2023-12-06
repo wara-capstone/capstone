@@ -365,6 +365,7 @@ export default function SellerProductRegistration(props) {
         console.log("Option deleted successfully");
       } else {
         console.log("Failed to delete option:", response.status);
+        
       }
 
       // 2. 상태 업데이트하기
@@ -377,9 +378,11 @@ export default function SellerProductRegistration(props) {
           options: newOptions,
         };
       });
+      message.error("삭제되었습니다.");
     } catch (error) {
       // 서버에서 오류 응답을 받았을 때 처리
       console.error("Failed to delete option:", error);
+      message.error("새로운 옵션 등록에 실패하였습니다.");
     }
   };
 
