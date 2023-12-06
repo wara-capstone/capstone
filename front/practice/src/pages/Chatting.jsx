@@ -105,7 +105,7 @@ export default function Chatting() {
   const setupWebSocket = (roomId, authToken) => {
     // 인증 토큰을 URL의 쿼리 파라미터로 추가
     const newSocket = new WebSocket(
-      `${process.env.NODE_ENV === 'development' ? 'ws://' : 'wss://'}${CHATTING_URL}ws/room/${roomId}/messages?token=${authToken}`
+      `${process.env.NODE_ENV === 'development' ? 'ws://' : 'wss://www.onoff.zone'}${CHATTING_URL}ws/room/${roomId}/messages?token=${authToken}`
     );
 
     console.log(newSocket.url);
