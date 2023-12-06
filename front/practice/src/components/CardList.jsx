@@ -28,19 +28,19 @@ function CardList({ category, url }) {
 
         setCategoryData(data); // 상태 업데이트
 
-        if (data && data[0] && data[0].productId) {
-          //console.log(data[0].productId);
-        } else {
-          console.log("등록된 상품이 없음.");
-        }
+        // if (data && data[0] && data[0].productId) {
+        //   console.log(data[0].productId);
+        // } else {
+        //   console.log("등록된 상품이 없음.");
+        // }
 
-        if (data && data[0]) {
-          //console.log(data[0].productId);
-        }
+        // if (data && data[0]) {
+        //   //console.log(data[0].productId);
+        // }
 
-        console.log(url);
-        //console.log(data);
-        console.log("성공");
+        // console.log(url);
+        // //console.log(data);
+        // console.log("성공");
       } else {
         console.log("실패");
       }
