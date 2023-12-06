@@ -190,12 +190,7 @@ export default function SellerItemManagement() {
       editable: false,
       minWidth: 150,
       filter: true,
-  //  valueGetter: params => params.data.options ? params.data.options.map(option => option.productColor).join("\n") : ''
-    cellRendererFramework: (params) => {
-      return params.data.options 
-          ? params.data.options.map((option, index) => <div key={index}>{option.productSize}</div>)
-          : null;
-  }
+     valueGetter: params => params.data.options ? params.data.options.map(option => option.productColor).join("\n") : ''
 },
 
     {
