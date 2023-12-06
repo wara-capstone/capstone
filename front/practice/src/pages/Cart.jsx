@@ -59,7 +59,7 @@ export default function Cart() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        '/api/cart/items/?user_email=' + email,
+        'http://52.79.186.117:8000/api/cart/items/?user_email=' + email,
         {
           method: "GET",
           headers: {

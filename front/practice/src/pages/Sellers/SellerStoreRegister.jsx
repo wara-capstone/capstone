@@ -84,7 +84,7 @@ const SellerStoreRegister = ({ store }) => {
           console.log(value);
         }
       }
-      fetch("/api/store/create", {
+      fetch("http://52.79.186.117:8000http://52.79.186.117:8000/api/store/create", {
         method: "POST",
         headers: {
           Authorization: `${token}`,
@@ -110,7 +110,7 @@ const SellerStoreRegister = ({ store }) => {
     } else {
       formData = JSON.stringify(data);
 
-      fetch("/api/store/create", {
+      fetch("http://52.79.186.117:8000/api/store/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -158,7 +158,7 @@ export default function SellerProductRegistration(props) {
         // 단일 상품 조회
         setLoading(true);
         const response = await axios.get(
-          `/api/product/all/${productId}`,
+          `http://52.79.186.117:8000/api/product/all/${productId}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -295,7 +295,7 @@ export default function SellerProductRegistration(props) {
       let formData = new FormData();
 
       formData.append("productDTO", new Blob([JSON.stringify(data)], { type: "application/json" }))
-      fetch("/api/product/seller",
+      fetch("http://52.79.186.117:8000/api/product/seller",
         {
           method: "PUT",
           headers: headers,
@@ -315,7 +315,7 @@ export default function SellerProductRegistration(props) {
       if (file) {
         console.log("file : " + file);
         formData.append("images", file);
-        fetch("/api/product/seller/product/" + productId,
+        fetch("http://52.79.186.117:8000/api/product/seller/product/" + productId,
           {
             method: "PUT",
             headers: headers,
@@ -351,7 +351,7 @@ export default function SellerProductRegistration(props) {
     try {
       // 1. 서버에 삭제 요청 보내기
       const response = await axios.delete(
-        `/api/product/seller/option/${productInfo.options[index - 1].optionId
+        `http://52.79.186.117:8000/api/product/seller/option/${productInfo.options[index - 1].optionId
         }`,
         {
           headers: {
@@ -540,7 +540,7 @@ export default function SellerProductRegistration(props) {
       message.error("asdasd");
       axios // 등록
         .put(
-          `/api/product/seller/option/add/product/${productInfo.productId}`,
+          `http://52.79.186.117:8000/api/product/seller/option/add/product/${productInfo.productId}`,
           // `https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app/product/seller/option/add?productId=19`,
           data,
           {
@@ -571,7 +571,7 @@ export default function SellerProductRegistration(props) {
       console.log(data);
       axios // 상품 등록
         .put(
-          `/api/product/seller/option/`+productId,
+          `http://52.79.186.117:8000/api/product/seller/option/`+productId,
           // `https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app/product/seller/option/add?productId=19`,
           data,
           {
@@ -631,8 +631,8 @@ export default function SellerProductRegistration(props) {
   const [fileList, setFileList] = useState([]);
 
   const uploadProps = {
-    // action: `/api/product/seller/option/add/product/${productInfo.productId}`,
-    // action:"/api/product/seller",
+    // action: `http://52.79.186.117:8000/api/product/seller/option/add/product/${productInfo.productId}`,
+    // action:"http://52.79.186.117:8000/api/product/seller",
     listType: "picture",
     className: "upload-list-inline",
     beforeUpload: (file) => {
@@ -922,7 +922,7 @@ export default function SellerProductRegistration(props) {
               //         headers: {
               //           "Content-Type": "multipart/form-data",
               //         },
-              //         url: `${"/api"}/product/seller`,
+              //         url: `${"http://52.79.186.117:8000/api"}/product/seller`,
               //         data: imageData,
               //         withCredentials: true,
               //       });

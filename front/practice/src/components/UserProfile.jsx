@@ -37,7 +37,7 @@ const UserProfile = () => {
       const fetchData = async () => {
       setLoading(true);
       const response = await fetch(
-        '/api/user?email='+email,
+        'http://52.79.186.117:8000/api/user?email='+email,
         {
           method: "GET",
           headers: {
