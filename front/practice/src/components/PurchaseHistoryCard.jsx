@@ -15,7 +15,7 @@ return (
         <label style={{fontSize:"1.2rem"}}>{data.productName}</label>
         <div style={{display: 'flex', justifyContent:"center"}} >
         <span className="dayOption">{data.options[0].productColor + ", " + data.options[0].productSize}</span> 
-        </div>
+    </div>
         <label style={{fontSize:"1.2rem"}}>{data.quantity} 개</label>
         </div>
     <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}} >
