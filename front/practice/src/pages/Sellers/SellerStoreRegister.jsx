@@ -84,7 +84,7 @@ const SellerStoreRegister = ({ store }) => {
           console.log(value);
         }
       }
-      fetch("/api/store/create", {
+      fetch(`${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}store/create`, {
         method: "POST",
         headers: {
           Authorization: `${token}`,
@@ -110,7 +110,7 @@ const SellerStoreRegister = ({ store }) => {
     } else {
       formData = JSON.stringify(data);
 
-      fetch("/api/store/create", {
+      fetch(`${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}store/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

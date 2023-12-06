@@ -9,7 +9,7 @@ export default function ChattingList() {
   const userId = localStorage.getItem("email"); // 실제 userId 값으로 대체
   const token = localStorage.getItem("token"); // 실제 token 값으로 대체
   const { id } = useParams();
-
+  const CHATTING_URL = process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DJANGO_CHATTING_URL : process.env.REACT_APP_API_URL;
   const [loading, setLoading] = useState(false);
   const [roundImage, setRoundImage] = useState(
     "https://via.placeholder.com/150x150"
@@ -20,7 +20,7 @@ export default function ChattingList() {
     async function fetchChattingList() {
       try {
         setLoading(true);
-        const response = await fetch(`/api/chat/rooms/?email=${userId}`, {
+        const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${CHATTING_URL}/chat/rooms/?email=${userId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -58,7 +58,7 @@ export default function ChattingList() {
   }, [userId]);
 
   const fetchImage = async (email) => {
-    const response = await fetch(`/api/user?email=${email}`, {
+    const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//{process.env.REACT_APP_API_URL}user?email=${email}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

@@ -32,7 +32,7 @@ export default function KakaoMap() {
 
     const email = localStorage.getItem("email");
     const token = localStorage.getItem("token");
-
+    const CART_URL = process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DJANGO_CART_URL : process.env.REACT_APP_API_URL;
     let [popupInfo, setPopupInfo] = useState(null); // 현재 열려있는 팝업 정보를 저장하는 변수, boolean
     let [searchText, setSearchText] = useState(""); // 검색창 값
 
@@ -58,7 +58,7 @@ export default function KakaoMap() {
     useEffect(() => {
         const fetchData = async () => {
             const response = await fetch(
-                '/api/cart/items/?user_email=' + email,
+                `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${CART_URL}cart/items/?user_email=` + email,
                 {
                     method: "GET",
                     headers: {
@@ -172,7 +172,7 @@ export default function KakaoMap() {
     const fetchData = async (BodyJson, latlng, initMarkers) => {
         try {
             const response = await fetch(
-                "/api/store/read/map/coordinate",
+                `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}store/read/map/coordinate`,
                 {
                     method: 'POST',
                     headers: {

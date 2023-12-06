@@ -15,7 +15,7 @@ export default function Item() {
 
   const email = localStorage.getItem("email");
   const token = localStorage.getItem("token");
-
+  const CART_URL = process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DJANGO_CART_URL : process.env.REACT_APP_API_URL;
   const [targetColor, setTargetColor] = useState(); //선택한 색상
   const [targetSize, setTargetSize] = useState(); //선택한 사이즈
   const [quantity, setQuantity] = useState(1); // 수량
@@ -71,7 +71,7 @@ export default function Item() {
     };
 
     try {
-      const response = await fetch("/api/cart/items/", {
+      const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${CART_URL}cart/items/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -171,7 +171,7 @@ export default function Item() {
     async function optionGet() {
       //옵션 가져오기
       console.log("가져온 상품아이디", id);
-      const response = await fetch(`/api/product/all/` + id, {
+      const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}product/all/` + id, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

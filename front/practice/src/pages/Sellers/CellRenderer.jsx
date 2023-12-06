@@ -11,7 +11,7 @@ const CellRenderer = (props) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `/api/store/read/seller/${localStorage.getItem("email")}`,
+          `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}store/read/seller/${localStorage.getItem("email")}`,
           {
             headers: {
               "Content-Type": "application/json",
