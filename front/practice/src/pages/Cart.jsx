@@ -16,7 +16,7 @@ export default function Cart() {
   const email = localStorage.getItem('email');
   const token = localStorage.getItem('token');
   const [modalIsOpen, setModalIsOpen] = useState(false); //팝업창
-
+  const CART_URL = process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DJANGO_CART_URL : process.env.REACT_APP_API_URL;
   let navigate = useNavigate();
 
   function purchaseFunc(e) {  //구매하기 기능
@@ -59,7 +59,7 @@ export default function Cart() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        '/api/cart/items/?user_email=' + email,
+        `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${CART_URL}cart/items/?user_email=` + email,
         {
           method: "GET",
           headers: {
@@ -121,7 +121,7 @@ export default function Cart() {
     console.log(deleteString);
     const fetchData = async () => {
       const response = await fetch(
-        '/api/cart/items/?user_email=' + email + deleteString,
+        `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${CART_URL}cart/items/?user_email=` + email + deleteString,
         {
           method: "DELETE",
           headers: {

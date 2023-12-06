@@ -30,7 +30,7 @@ export default function PurchaseHistory() {
   useEffect(() => {
       const fetchData = async () => {
         const response = await fetch(
-          `/api/payment/read/user/${email}`,
+          `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}payment/read/user/${email}`,
           {
             method: "GET",
             headers: {
@@ -56,7 +56,7 @@ export default function PurchaseHistory() {
 
 
               let response2 =  await fetch(
-                `/api/product/all/${productId}/option/${optionId}`,
+                `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}product/all/${productId}/option/${optionId}`,
                 {
                   method: "GET",
                   headers: {

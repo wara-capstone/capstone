@@ -23,7 +23,7 @@ const StoresListPage = () => {
     const fetchData = async () => {
       setLoading(true);
       const result = await axios.get(
-        `/api/store/read/seller/${localStorage.getItem("email")}`, // 이 부분은 실제 서버 주소와 API 경로로 변경해야 합니다.
+        `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}store/read/seller/${localStorage.getItem("email")}`, // 이 부분은 실제 서버 주소와 API 경로로 변경해야 합니다.
         {
           method: "GET",
           headers: {

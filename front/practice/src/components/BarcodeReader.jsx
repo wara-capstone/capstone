@@ -86,7 +86,7 @@ useEffect(() => {
     // if(productId == null ){return}
     try {
       const response = await axios.get(
-        `/api/product/all/${productId}/option/${optionId}`,
+        `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}product/all/${productId}/option/${optionId}`,
         {
           headers: {
             Authorization: `${token}`,
@@ -147,7 +147,6 @@ useEffect(() => {
           setResult(err.message); // 에러 메시지 설정
         }
         }else{
-          console.log("barcode detect error");
           //console.log(barcodeData);
         }
         }
