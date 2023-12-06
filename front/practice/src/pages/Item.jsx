@@ -247,7 +247,7 @@ export default function Item() {
             </div>
             <div>
             <span style={{ fontSize: "20px" }}>사이즈</span>
-              <select style={{ marginLeft: "1.5rem" , width:"3rem",textAlignLast: "center", fontSize:"20px"}} value={targetSize} onChange={handleSizeChange}>
+              <select style={{ marginLeft: "1rem" , width:"4rem",textAlignLast: "center", fontSize:"20px"}} value={targetSize} onChange={handleSizeChange}>
                 {sizeArrayForColor.map((size, index) => (
                   <option value={size} key={index}>
                     {size}

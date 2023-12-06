@@ -53,7 +53,7 @@ export default function Home() {
       <Category
         //현재 메인화면에서 카테고리 선택을 하지 않을 시, store1의 상품을 보여주도록 설정함. 추후 수정 필요.
         allUrl={`/api/product/all/store/51`}
-        categoryUrl="/api/product/all/category/"
+        categoryUrl="/api/product/all/category/" 
       />
       {/* <CardList /> */}
       <BottomNav />

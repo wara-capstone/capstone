@@ -7,16 +7,18 @@ export default function PurchaseProduct({ selectedBread, changeSingleBox, data, 
     const perPrice = parseInt (selectedBread.product.price); // Product당 가격 * 개수 값
 
 return (
-    <div className="orderProductList"> 
-    <div style={{display: 'flex', height:'3vh'}}>
-    <label>{selectedBread.product.p_name}</label>
-    </div>
+    <div className="orderProductList" style={{height:"8.1rem"}}> 
     <div style={{display:'flex',justifyContent:'space-around'}}>
      <div className="imageWrapper">
      <img src={selectedBread.product.p_image} alt="bread" className="breadImage" />
     </div>
+    <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+        <label style={{fontSize:"1.2rem"}}>{selectedBread.product.p_name}</label>
+        <div style={{display: 'flex', justifyContent:"center"}} >
         <span className="dayOption">{selectedBread.product.color + ", " + selectedBread.product.size}</span> 
-        <label>{quantity} 개</label>
+    </div>
+        <label style={{fontSize:"1.2rem"}}>{quantity}개</label>
+    </div>
     <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}} >
         <label>{perPrice.toLocaleString()}원</label> 
     </div>

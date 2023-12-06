@@ -31,6 +31,7 @@ export default function Purchase() {
       const pSize = item.product.size;
 
       const fetchData = async () => {
+        console.log("값들", productId, pColor, pSize);
         const response = await fetch(
           `/api/product/all/product/${productId}/${pColor}/${pSize}`,
           {
@@ -41,11 +42,12 @@ export default function Purchase() {
             },
           }
         );
-       const result = await response.json();
         if (response.status === 200) {
+          const result = await response.json();
           console.log("성공");
-          console.log(result);
+          console.log("받아온 옵션아이디",result);
           item.product.optionId = result;
+          console.log("받아온 옵션아이디", item.product.optionId);
 
         } else {
           console.log("실패");
