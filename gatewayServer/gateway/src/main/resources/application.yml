@@ -16,6 +16,7 @@ spring:
             allowed-origins:
               - 'https://www.onoff.zone'
               - 'http://127.0.0.1:3000'
+              - 'https://onoff.zone'
             allow-credentials: true
             allowedHeaders: '*'
             allowedMethods:
