@@ -538,8 +538,7 @@ export default function SellerProductRegistration(props) {
         productStock: productInfo.options[index].productStock,
       };
       data = JSON.stringify(data);
-      console.log("등록 으로");
-      message.error("asdasd");
+      console.log("등록 으로")
       axios // 등록
         .put(
           `/api/product/seller/option/add/product/${productInfo.productId}`,
