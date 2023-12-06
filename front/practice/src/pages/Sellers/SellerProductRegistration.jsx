@@ -16,7 +16,6 @@ import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-sy
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-
 import ToastuiEditor, {
   EditorOptions,
   ViewerOptions,
@@ -26,7 +25,7 @@ import ToastuiEditorViewer from "@toast-ui/editor/dist/toastui-editor-viewer";
 
 import {
   PlusCircleOutlined,
-  EditOutlined,
+  SaveOutlined,
   DeleteOutlined,
   PlusOutlined,
   LoadingOutlined,
@@ -49,7 +48,6 @@ import CellRenderer from "./CellRenderer";
 const { TextArea } = Input;
 
 const mainCategory = ["상의", "아우터", "하의", "신발", "잡화", "기타"];
-
 
 // const smallCategory = {
 //   상의: [
@@ -125,7 +123,6 @@ const beforeUpload = (file) => {
   return isJpgOrPng && isLt2M;
 };
 
-
 export default function SellerProductRegistration(props) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -138,7 +135,14 @@ export default function SellerProductRegistration(props) {
   // 해시태그를 담을 배열
   const [hashArr, setHashArr] = useState([]);
 
-  const [mainCategory, setMainCategory] = useState(["상의", "아우터", "하의", "신발", "잡화", "기타"]);
+  const [mainCategory, setMainCategory] = useState([
+    "상의",
+    "아우터",
+    "하의",
+    "신발",
+    "잡화",
+    "기타",
+  ]);
   const [selectedCategory, setSelectedCategory] = useState(""); // 선택한 카테고리를 저장하는 상태 변수
 
   const handleMainCategoryChange = (value) => {
@@ -279,13 +283,12 @@ export default function SellerProductRegistration(props) {
 
   const handleSubmitButtonClick = async () => {
     try {
-
       var data = {
-        "productId": productId,
-        "storeId": storeId,
-        "productCategory": selectedCategory,
-        "productName": productName
-      }
+        productId: productId,
+        storeId: storeId,
+        productCategory: selectedCategory,
+        productName: productName,
+      };
       console.log("data :            " + data);
       const headers = {
         Authorization: `${token}`,
@@ -294,64 +297,62 @@ export default function SellerProductRegistration(props) {
 
       let formData = new FormData();
 
-      formData.append("productDTO", new Blob([JSON.stringify(data)], { type: "application/json" }))
-      fetch("http://52.79.186.117:8000/api/product/seller",
-        {
-          method: "PUT",
-          headers: headers,
-          body: formData
-        }
-
-      ).then((response) => {
+      formData.append(
+        "productDTO",
+        new Blob([JSON.stringify(data)], { type: "application/json" })
+      );
+      fetch("http://52.79.186.117:8000/api/product/seller", {
+        method: "PUT",
+        headers: headers,
+        body: formData,
+      }).then((response) => {
         if (response.status === 200) {
           message.success("저장되었습니다.");
         } else {
           message.error("error");
         }
-
-      })
+      });
       formData = new FormData();
 
       if (file) {
         console.log("file : " + file);
         formData.append("images", file);
-        fetch("http://52.79.186.117:8000/api/product/seller/product/" + productId,
+        fetch(
+          "http://52.79.186.117:8000/api/product/seller/product/" + productId,
           {
             method: "PUT",
             headers: headers,
-            body: formData
+            body: formData,
           }
-
-        ).then((response) => {
-          if (response.status === 200) {
-            message.success("이미지 저장 완료");
-            navigate("/seller/item/management/select/" + storeId);
-            setFile(false);
-          } else {
-            message.error("error");
-            console.log(response);
-          }
-
-        }).catch((err) => {
-          console.log(err);
-        })
+        )
+          .then((response) => {
+            if (response.status === 200) {
+              message.success("이미지 저장 완료");
+              navigate("/seller/item/management/select/" + storeId);
+              setFile(false);
+            } else {
+              message.error("error");
+              console.log(response);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       } else {
         navigate("/seller/item/management/select/" + storeId);
       }
-
-
-
     } catch (err) {
       message.error("잘못된 요청입니다.");
       console.log(err);
-    };
-  }
+    }
+  };
 
   const removeOption = async (index) => {
     try {
       // 1. 서버에 삭제 요청 보내기
       const response = await axios.delete(
-        `http://52.79.186.117:8000/api/product/seller/option/${productInfo.options[index - 1].optionId
+        `http://52.79.186.117:8000/api/product/seller/option/${
+          productInfo.options[index - 1].optionId
         }`,
         {
           headers: {
@@ -498,7 +499,6 @@ export default function SellerProductRegistration(props) {
     });
   };
 
-
   const [quillValue, setQuillValue] = useState("");
 
   const handleQuillChange = (content, delta, source, editor) => {
@@ -530,11 +530,11 @@ export default function SellerProductRegistration(props) {
     console.log("담긴 옵션 정보" + productInfo.options[index].productPrice);
     if (index > optionIndex) {
       var data = {
-        "productPrice": productInfo.options[index].productPrice,
-          "productSize": productInfo.options[index].productSize,
-          "productColor": productInfo.options[index].productColor,
-          "productStock": productInfo.options[index].productStock,
-      }
+        productPrice: productInfo.options[index].productPrice,
+        productSize: productInfo.options[index].productSize,
+        productColor: productInfo.options[index].productColor,
+        productStock: productInfo.options[index].productStock,
+      };
       data = JSON.stringify(data);
       console.log("등록 으로");
       message.error("asdasd");
@@ -559,19 +559,19 @@ export default function SellerProductRegistration(props) {
     } else {
       console.log("수정 으로");
       var data = {
-        "optionId": productInfo.options[index].optionId,
-        "productPrice": productInfo.options[index].productPrice,
-        "productSize": productInfo.options[index].productSize,
-        "productColor": productInfo.options[index].productColor,
-        "productStock": productInfo.options[index].productStock,
-      }
+        optionId: productInfo.options[index].optionId,
+        productPrice: productInfo.options[index].productPrice,
+        productSize: productInfo.options[index].productSize,
+        productColor: productInfo.options[index].productColor,
+        productStock: productInfo.options[index].productStock,
+      };
       data = JSON.stringify(data);
       //var formdata = new FormData();
       //formdata.append("optionDTO", new Blob([JSON.stringify(data)], { type: "application/json" }))
       console.log(data);
       axios // 상품 등록
         .put(
-          `http://52.79.186.117:8000/api/product/seller/option/`+productId,
+          `http://52.79.186.117:8000/api/product/seller/option/` + productId,
           // `https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app/product/seller/option/add?productId=19`,
           data,
           {
@@ -589,7 +589,6 @@ export default function SellerProductRegistration(props) {
         });
     }
     message.success("저장되었습니다");
-
   };
 
   const LoadingScreen = () => {
@@ -627,7 +626,7 @@ export default function SellerProductRegistration(props) {
     },
   };
 
-  const imageHandler = (data) => { };
+  const imageHandler = (data) => {};
   const [fileList, setFileList] = useState([]);
 
   const uploadProps = {
@@ -655,18 +654,20 @@ export default function SellerProductRegistration(props) {
             {/* DropZone */}
             <br />
             <br />
-            <div className="abc">
-              <Typography.Title level={4}>표시여부</Typography.Title>
-              <hr />
-              <div>
-                {/* <table>
-                <tr>
-                  <td>진열상태<br/>
-                      품질처리<br/>
-                      
+            {/* <div className="abc">
+              <Typography.Title level={4}>표시여부</Typography.Title> */}
+
+            {/* <div>
+                <table>
+                  <tr>
+                    <td>
+                      진열상태
+                      <br />
+                      품질처리
+                      <br />
                     </td>
-                </tr>
-              </table> */}
+                  </tr>
+                </table>
                 <label>진열상태&nbsp;</label>
                 <Radio>진열</Radio>
                 <Radio>미진열</Radio>
@@ -679,7 +680,7 @@ export default function SellerProductRegistration(props) {
                 </dd>
               </div>
               <br />
-            </div>
+            </div> */}
             <br />
 
             <div className="productInfo">
@@ -767,82 +768,82 @@ export default function SellerProductRegistration(props) {
                 <table>
                   {productInfo && productInfo.options
                     ? productInfo.options.map((option, index) => (
-                      <React.Fragment key={index}>
-                        <tr>
-                          <div className="option-small-box">
-                            <table>
-                              <div>
-                                <td rowSpan={4}>옵션{index + 1}</td>
-                                <Input
-                                  placeholder="가격"
-                                  style={{ color: "gray" }}
-                                  defaultValue={option.productPrice}
-                                  onChange={(e) =>
-                                    handleInputChange(
-                                      index,
-                                      "productPrice",
-                                      e.target.value
-                                    )
-                                  }
-                                />
-                                <Input
-                                  placeholder="사이즈"
-                                  style={{ color: "gray" }}
-                                  defaultValue={option.productSize}
-                                  onChange={(e) =>
-                                    handleInputChange(
-                                      index,
-                                      "productSize",
-                                      e.target.value
-                                    )
-                                  }
-                                />
-                                <Input
-                                  placeholder="색상"
-                                  style={{ color: "gray" }}
-                                  defaultValue={option.productColor}
-                                  onChange={(e) =>
-                                    handleInputChange(
-                                      index,
-                                      "productColor",
-                                      e.target.value
-                                    )
-                                  }
-                                />
-                                <Input
-                                  placeholder="수량"
-                                  style={{ color: "gray" }}
-                                  defaultValue={option.productStock}
-                                  onChange={(e) =>
-                                    handleInputChange(
-                                      index,
-                                      "productStock",
-                                      e.target.value
-                                    )
-                                  }
-                                />
-                                <Button
-                                  onClick={() => addProductOption(index)}
-                                >
-                                  <EditOutlined />
-                                </Button>
-                                <Button
-                                  type="primary"
-                                  danger
-                                  onClick={() => removeOption(index)}
-                                >
-                                  <DeleteOutlined />
-                                </Button>
-                              </div>
-                            </table>
-                          </div>
-                        </tr>
-                      </React.Fragment>
-                    ))
+                        <React.Fragment key={index}>
+                          <tr>
+                            <div className="option-small-box">
+                              <table>
+                                <div>
+                                  <td rowSpan={4}>옵션{index + 1}</td>
+                                  <Input
+                                    placeholder="가격"
+                                    style={{ color: "gray" }}
+                                    defaultValue={option.productPrice}
+                                    onChange={(e) =>
+                                      handleInputChange(
+                                        index,
+                                        "productPrice",
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                  <Input
+                                    placeholder="사이즈"
+                                    style={{ color: "gray" }}
+                                    defaultValue={option.productSize}
+                                    onChange={(e) =>
+                                      handleInputChange(
+                                        index,
+                                        "productSize",
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                  <Input
+                                    placeholder="색상"
+                                    style={{ color: "gray" }}
+                                    defaultValue={option.productColor}
+                                    onChange={(e) =>
+                                      handleInputChange(
+                                        index,
+                                        "productColor",
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                  <Input
+                                    placeholder="수량"
+                                    style={{ color: "gray" }}
+                                    defaultValue={option.productStock}
+                                    onChange={(e) =>
+                                      handleInputChange(
+                                        index,
+                                        "productStock",
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                  <Button
+                                    onClick={() => addProductOption(index)}
+                                  >
+                                    <SaveOutlined />
+                                  </Button>
+                                  <Button
+                                    type="primary"
+                                    danger
+                                    onClick={() => removeOption(index)}
+                                  >
+                                    <DeleteOutlined />
+                                  </Button>
+                                </div>
+                              </table>
+                            </div>
+                          </tr>
+                        </React.Fragment>
+                      ))
                     : null}
-                  <div>
+                  <div className="big-box">
                     <Button
-                      style={{ backgroundColor: "#89CFF0", color: "white" }}
+                      style={{ backgroundColor: "black", color: "white" }}
                       onClick={plusOption}
                     >
                       <PlusCircleOutlined />
@@ -850,9 +851,10 @@ export default function SellerProductRegistration(props) {
                   </div>
                 </table>
               </div>
+              <br /><br />
             </div>
 
-            <div className="abc">
+            {/* <div className="abc">
               <Typography.Title level={4}>옵션 목록</Typography.Title>
               <hr />
               <Table
@@ -862,29 +864,33 @@ export default function SellerProductRegistration(props) {
               />
 
               <br />
-            </div>
+            </div> */}
 
-            <div className="abc">
-              <Typography.Title level={4}>상품 이미지</Typography.Title>
-              <hr />
-              <input
-                type="file"
-                style={{ display: "none" }}
-                onChange={handleFileInputChange}
-                ref={fileInputRef}
-              />
-              <Button
-                onClick={() => fileInputRef.current.click()}
-                icon={<UploadOutlined />}
-              >
-                파일 선택
-              </Button>
-              {previewImage && <img src={previewImage} alt="미리 보기" />}
+<div className="abc" style={{ display: 'flex', flexDirection: 'column' }}>
+  <div>
+    <Typography.Title level={4}>상품 이미지</Typography.Title>
+    <hr />
+    <input
+      type="file"
+      style={{ display: "none" }}
+      onChange={handleFileInputChange}
+      ref={fileInputRef}
+    />
+    <Button
+      onClick={() => fileInputRef.current.click()}
+      icon={<UploadOutlined />}
+    >
+      파일 선택
+    </Button>
+  </div>
+  <div>
+    {previewImage && <img src={previewImage} alt="미리 보기" style={{maxWidth: '100%', height: 'auto'}} />}
+  </div>
+  <br /><br />
+</div>
 
-              <br />
-            </div>
-
-            <div className="abc">
+            {/* 이미지 에디터 코드 */}
+            {/* <div className="abc">
               <Typography.Title level={4}>에디터</Typography.Title>
               <hr />
               <Editor
@@ -896,52 +902,52 @@ export default function SellerProductRegistration(props) {
                 hideModeSwitch={true}
                 plugins={[colorSyntax]}
                 language="ko-KR"
-              // hooks={{
-              //   addImageBlobHook: async (blob, callback) => {
-              //     try {
-              //       const imageData = new FormData();
+              hooks={{
+                addImageBlobHook: async (blob, callback) => {
+                  try {
+                    const imageData = new FormData();
 
-              //       // OptionDTO 추가
-              //       imageData.append("OptionDTO", optionValue); // optionValue는 실제 OptionDTO의 값입니다.
+                    // OptionDTO 추가
+                    imageData.append("OptionDTO", optionValue); // optionValue는 실제 OptionDTO의 값입니다.
 
-              //       // ProductDTO 추가
-              //       imageData.append("ProductDTO", productValue); // productValue는 실제 ProductDTO의 값입니다.
+                    // ProductDTO 추가
+                    imageData.append("ProductDTO", productValue); // productValue는 실제 ProductDTO의 값입니다.
 
-              //       // 이미지 추가 (Images 키로 여러 이미지 추가)
-              //       for (let i = 0; i < blobs.length; i++) {
-              //         const blob = blobs[i]; // blobs는 실제 이미지 blob들의 배열입니다.
-              //         const file = new File([blob], encodeURI(blob.name), {
-              //           type: blob.type,
-              //         });
-              //         imageData.append("Images", file);
-              //       }
+                    // 이미지 추가 (Images 키로 여러 이미지 추가)
+                    for (let i = 0; i < blobs.length; i++) {
+                      const blob = blobs[i]; // blobs는 실제 이미지 blob들의 배열입니다.
+                      const file = new File([blob], encodeURI(blob.name), {
+                        type: blob.type,
+                      });
+                      imageData.append("Images", file);
+                    }
 
-              //       // 서버에 전송
-              //       const imageURI = await axios({
-              //         method: "POST",
-              //         headers: {
-              //           "Content-Type": "multipart/form-data",
-              //         },
-              //         url: `${"http://52.79.186.117:8000/api"}/product/seller`,
-              //         data: imageData,
-              //         withCredentials: true,
-              //       });
-              //     } catch (error) {
-              //       console.log(error);
-              //     }
-              //   },
-              // }}
+                    // 서버에 전송
+                    const imageURI = await axios({
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "multipart/form-data",
+                      },
+                      url: `${"http://52.79.186.117:8000/api"}/product/seller`,
+                      data: imageData,
+                      withCredentials: true,
+                    });
+                  } catch (error) {
+                    console.log(error);
+                  }
+                },
+              }}
               />
 
               <br />
-            </div>
+            </div> */}
 
-            <div className="abc">
+            {/* <div className="abc">
               <Typography.Title level={4}>상품 정보 제공 공시</Typography.Title>
               <hr />
 
               <br />
-            </div>
+            </div> */}
 
             <Button onClick={handleSubmitButtonClick}>저장</Button>
           </Form>
