@@ -6,8 +6,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./build:/usr/share/nginx/html
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./practice/build:/usr/share/nginx/html
+      - ./practice/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
       - ./practice/data/certbot/conf:/etc/letsencrypt
       - ./practice/data/certbot/www:/var/www/certbot
   certbot:
