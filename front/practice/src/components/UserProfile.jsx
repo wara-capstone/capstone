@@ -37,7 +37,7 @@ const UserProfile = () => {
       const fetchData = async () => {
       setLoading(true);
       const response = await fetch(
-        `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}user?email=`+email,
+        `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}user?email=`+email,
         {
           method: "GET",
           headers: {

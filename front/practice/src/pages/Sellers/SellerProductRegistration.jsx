@@ -162,7 +162,7 @@ export default function SellerProductRegistration(props) {
         // 단일 상품 조회
         setLoading(true);
         const response = await axios.get(
-          `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}product/all/${productId}`,
+          `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/all/${productId}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -298,7 +298,7 @@ export default function SellerProductRegistration(props) {
       let formData = new FormData();
 
       formData.append("productDTO", new Blob([JSON.stringify(data)], { type: "application/json" }))
-      fetch(`${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}product/seller`,
+      fetch(`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/seller`,
         {
           method: "PUT",
           headers: headers,
@@ -317,7 +317,7 @@ export default function SellerProductRegistration(props) {
       if (file) {
         console.log("file : " + file);
         formData.append("images", file);
-        fetch(`${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}product/seller/product/` + productId,
+        fetch(`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/seller/product/` + productId,
           {
             method: "PUT",
             headers: headers,
@@ -350,7 +350,7 @@ export default function SellerProductRegistration(props) {
     try {
       // 1. 서버에 삭제 요청 보내기
       const response = await axios.delete(
-        `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}product/seller/option/${
+        `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/seller/option/${
           productInfo.options[index - 1].optionId
         }`,
         {
@@ -541,7 +541,7 @@ export default function SellerProductRegistration(props) {
       console.log("등록 으로")
       axios // 등록
         .put(
-          `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}product/seller/option/add/product/${productInfo.productId}`,
+          `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/seller/option/add/product/${productInfo.productId}`,
           // `https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app/product/seller/option/add?productId=19`,
           data,
           {
@@ -572,7 +572,7 @@ export default function SellerProductRegistration(props) {
       console.log(data);
       axios // 상품 등록
         .put(
-          `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}product/seller/option/`+productId,
+          `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/seller/option/`+productId,
           // `https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app/product/seller/option/add?productId=19`,
           data,
           {
@@ -631,8 +631,8 @@ export default function SellerProductRegistration(props) {
   const [fileList, setFileList] = useState([]);
 
   const uploadProps = {
-    // action: `$${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//{process.env.REACT_APP_API_URL}product/seller/option/add/product/${productInfo.productId}`,
-    // action:"$${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//{process.env.REACT_APP_API_URL}product/seller",
+    // action: `$${process.env.NODE_ENV === 'development' ? 'http://' : 'https:'}//{process.env.REACT_APP_API_URL}product/seller/option/add/product/${productInfo.productId}`,
+    // action:"$${process.env.NODE_ENV === 'development' ? 'http://' : 'https:'}//{process.env.REACT_APP_API_URL}product/seller",
     listType: "picture",
     className: "upload-list-inline",
     beforeUpload: (file) => {

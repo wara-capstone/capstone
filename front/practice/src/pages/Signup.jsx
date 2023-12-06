@@ -36,7 +36,7 @@ const Signup = () => {
 
     try {
       const response = await fetch(
-        `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}auth/signup`,
+        `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}auth/signup`,
         {
           method: "POST",
           headers: {

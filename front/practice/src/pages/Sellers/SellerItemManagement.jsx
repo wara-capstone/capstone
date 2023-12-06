@@ -38,7 +38,7 @@ export default function SellerItemManagement() {
       try {
         setLoading(true);
         const response = await axios.get(
-          `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}product/all/store/${storeId}`,
+          `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/all/store/${storeId}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -101,7 +101,7 @@ export default function SellerItemManagement() {
     for (let item of selectedData) {
       try {
         const response = await axios.delete(
-          `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}product/seller/${storeId}/${item.productId}`,
+          `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/seller/${storeId}/${item.productId}`,
           {
             headers: {
               Authorization: `${token}`,
@@ -140,7 +140,7 @@ export default function SellerItemManagement() {
   // };
   
   // // 사용 예:
-  // const response = await axios.get(`$${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//{process.env.REACT_APP_API_URL}product/all/store/${storeId}`, { ... });
+  // const response = await axios.get(`$${process.env.NODE_ENV === 'development' ? 'http://' : 'https:'}//{process.env.REACT_APP_API_URL}product/all/store/${storeId}`, { ... });
   // const transformedData = transformData(response.data);
   // setRowData(transformedData);
 // 세로 줄바꿈 코드 
@@ -278,7 +278,7 @@ export default function SellerItemManagement() {
       new Blob([JSON.stringify(data)], { type: "application/json" })
     );
     const response = await fetch(
-      `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}product/seller`,
+      `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/seller`,
       {
         method: "POST",
         headers: {

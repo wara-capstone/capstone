@@ -86,7 +86,7 @@ useEffect(() => {
     // if(productId == null ){return}
     try {
       const response = await axios.get(
-        `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}product/all/${productId}/option/${optionId}`,
+        `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/all/${productId}/option/${optionId}`,
         {
           headers: {
             Authorization: `${token}`,

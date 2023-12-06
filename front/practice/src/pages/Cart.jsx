@@ -59,7 +59,7 @@ export default function Cart() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${CART_URL}cart/items/?user_email=` + email,
+        `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${CART_URL}cart/items/?user_email=` + email,
         {
           method: "GET",
           headers: {
@@ -121,7 +121,7 @@ export default function Cart() {
     console.log(deleteString);
     const fetchData = async () => {
       const response = await fetch(
-        `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${CART_URL}cart/items/?user_email=` + email + deleteString,
+        `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${CART_URL}cart/items/?user_email=` + email + deleteString,
         {
           method: "DELETE",
           headers: {

@@ -46,7 +46,7 @@ export default function SellerStoreSales({ store }) {
     console.log(email);
     try {
       const response = await fetch(
-        `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}store/read/seller/${email}`,
+        `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}store/read/seller/${email}`,
         {
           method: "GET",
           headers: {
@@ -146,7 +146,7 @@ export default function SellerStoreSales({ store }) {
 
       try {
         const response = await fetch(
-          `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${process.env.REACT_APP_API_URL}payment/read/store/${storeId}`,
+          `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}payment/read/store/${storeId}`,
           {
             method: "GET",
             headers: {
