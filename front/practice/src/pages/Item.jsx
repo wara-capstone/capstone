@@ -237,7 +237,7 @@ export default function Item() {
             <h3>재고: {stock}</h3>
             <div>
             <span style={{ fontSize: "20px" }}>색상</span>
-              <select style={{ marginLeft: "1.3rem" }} value={targetColor} onChange={handleColorChange}>
+              <select style={{ marginLeft: "1.3rem", fontSize:"20px" }} value={targetColor} onChange={handleColorChange}>
                 {colorArray.map((color, index) => (
                   <option value={color} key={index}>
                     {color}
@@ -247,7 +247,7 @@ export default function Item() {
             </div>
             <div>
             <span style={{ fontSize: "20px" }}>사이즈</span>
-              <select style={{ marginLeft: "1.5rem" , width:"3rem",textAlignLast: "center"}} value={targetSize} onChange={handleSizeChange}>
+              <select style={{ marginLeft: "1.5rem" , width:"3rem",textAlignLast: "center", fontSize:"20px"}} value={targetSize} onChange={handleSizeChange}>
                 {sizeArrayForColor.map((size, index) => (
                   <option value={size} key={index}>
                     {size}
@@ -264,7 +264,7 @@ export default function Item() {
                 {" "}
                 -{" "}
               </button>
-              <h5>{quantity}</h5>
+              <h3>{quantity}</h3>
               <button className="quantityButton" onClick={quantityPlus}>
                 {" "}
                 +{" "}

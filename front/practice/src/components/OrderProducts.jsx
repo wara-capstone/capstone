@@ -114,7 +114,6 @@ async function optionEdit(){  //옵션 변경
             price: (perPrice * quantity),
         }
       };
-  
       try {
         const response = await fetch(
           "/api/cart/items/",
