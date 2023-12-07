@@ -64,6 +64,8 @@ useEffect(() => {
     setResult(""); // 결과 초기화
     setShowModal(false); // 모달 숨김
     setIsBarcodeDetected(false); // 바코드 인식 상태 리셋
+    // 바코드 리더를 리셋한 후에 다시 스캔 시작
+  startDecoding(selectedDeviceId);
   };
 
   const userId = localStorage.getItem("email"); // 세션 스토리지에서 이메일(사용자 ID) 가져오기
@@ -119,18 +121,10 @@ useEffect(() => {
       async (result, err) => {
         // 비디오 장치에서 바코드 디코딩
         if (result) {
-
-          console.log(result);
           // 결과가 있으면
           console.log(result); // 결과 로깅
           var data = result.text.split("A");
-
-          //const barcodeData = JSON.parse(result.text); // 바코드 데이터를 JSON 객체로 변환
-          if(true){
-         // console.log(barcodeData);
-          console.log(data);
-
-
+  
           fetchedProductInfo = await fetchProductInfo(
             data[0],
             data[1]
@@ -139,16 +133,16 @@ useEffect(() => {
           setResult(fetchedProductInfo); // 결과 설정
           setShowModal(true); // 모달 표시
           setIsBarcodeDetected(true); // 바코드 인식 상태 설정
-        
+  
+          // 스캔이 완료된 후에 바코드 리더를 리셋하고 다시 스캔 시작
+          codeReader.reset();
+          startDecoding(id);
+        }
         if (err && !(err instanceof NotFoundException)) {
           // 에러가 있고, NotFoundException이 아니면
           console.error(err); // 에러 로깅
           console.error(err.message); // 오류 메시지 출력
           setResult(err.message); // 에러 메시지 설정
-        }
-        }else{
-          //console.log(barcodeData);
-        }
         }
       }
     );
