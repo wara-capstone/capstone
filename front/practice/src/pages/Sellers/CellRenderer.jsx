@@ -45,7 +45,7 @@ const CellRenderer = (props) => {
         }}
       >
         <button class="w-btn-outline w-btn-indigo-outline" 
-        style={{height : '50%', alignItems: 'center'}}
+        style={{ alignItems: 'center', justifyContent: 'center', height : '100%'}}
         type="button">
         등록/수정
     </button>

@@ -216,9 +216,7 @@ export default function SellerItemManagement() {
       cellRenderer: (params) => {
         //const { storeId } = this.props; // storeId를 적절한 방법으로 가져옴
         const productId = params.data.productId; // productId를 params에서 추출
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-    
-          </div>
+         
         return (
           <CellRenderer storeId={storeId} productId={productId} {...params} />
         );
@@ -314,13 +312,7 @@ export default function SellerItemManagement() {
       });
   };
   
-  function CellsRenderer(props) {
-    return (
-      <div style={{ whiteSpace: 'pre-wrap' }}>
-      {props.value}
-    </div>
-    );
-  }
+
 
 
   if (loading) {
@@ -378,7 +370,7 @@ export default function SellerItemManagement() {
                 getRowNodeId={getRowId}
                 defaultColDef={{defaultColDef,
                   autoHeight: true,
-                  cellStyle: { whiteSpace: 'pre-wrap' },
+                  cellStyle: { whiteSpace: 'pre-wrap', textAlign: 'center',justifyContent: 'center' },
                 }}
                 suppressRowClickSelection={true}
                 rowSelection={"multiple"}
