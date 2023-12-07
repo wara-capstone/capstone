@@ -39,18 +39,32 @@ useEffect(() => {
     codeReader.listVideoInputDevices().then((devices) => {
       // 비디오 입력 장치 목록 조회
       setVideoInputDevices(devices); // 장치 목록 설정
-      setSelectedDeviceId(devices[0]?.deviceId || ""); // 첫 번째 장치를 선택
-      startDecoding(devices[0]?.deviceId || ""); // 첫 번째 장치로 디코딩 시작
-      setProducts([Data.cardData[0]]); // 제품 목록 설정
+  
+      // 후면 카메라 선택 (일반적으로 두 번째 장치가 후면 카메라입니다)
+      const rearCamera = devices.find(
+        (device) => device.label.toLowerCase().includes("back")
+      );
+  
+      if (rearCamera) {
+        // 후면 카메라가 있으면
+        setSelectedDeviceId(rearCamera.deviceId); // 후면 카메라를 선택
+        startDecoding(rearCamera.deviceId); // 후면 카메라로 디코딩 시작
+      } else {
+        // 후면 카메라가 없으면 첫 번째 장치를 선택
+        setSelectedDeviceId(devices[0]?.deviceId || "");
+        startDecoding(devices[0]?.deviceId || "");
+      }
+  
+      setProducts([Data.cardData[1]]); // 제품 목록 설정
     });
-
+  
     const handleUnload = () => {
       // 페이지가 언로드될 때 실행할 핸들러
       codeReader.reset(); // 바코드 리더 초기화
     };
-
+  
     window.addEventListener("unload", handleUnload); // 언로드 이벤트 리스너 등록
-
+  
     return () => {
       // 컴포넌트가 언마운트될 때 실행
       codeReader.reset(); // 바코드 리더 초기화
