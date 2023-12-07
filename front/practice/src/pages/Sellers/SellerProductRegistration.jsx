@@ -27,6 +27,7 @@ import {
   PlusCircleOutlined,
   SaveOutlined,
   DeleteOutlined,
+  BarcodeOutlined,
   PlusOutlined,
   LoadingOutlined,
 } from "@ant-design/icons";
@@ -155,6 +156,7 @@ export default function SellerProductRegistration(props) {
   //  const { productId } = props.location?.state || {};
   const [isTrue, setIsTrue] = useState();
   const [images, setImages] = useState([]);
+  const [barcodeUrl, setBarcodeUrl] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -385,6 +387,38 @@ export default function SellerProductRegistration(props) {
     }
   };
 
+  const barcodeDownload= async (index) => {
+     // 이미지의 URL을 설정
+     var imageUrl = `${productInfo.options[index].barcodeUrl}`;
+      console.log(imageUrl);
+     // 이미지 URL에 fetch 요청을 보냄
+     fetch(imageUrl)
+         // fetch의 응답을 Blob으로 변환
+         .then(response => response.blob())
+         // Blob 데이터를 처리
+         .then(blob => {
+             // Blob을 사용하여 새로운 URL을 생성
+             var a = document.createElement('a'); // a 요소를 생성
+             var url = window.URL.createObjectURL(blob); // Blob을 사용하여 URL 생성
+             a.href = url; // a 요소의 href 속성에 생성한 URL 할당
+             a.download = `${productName}_옵션${index+1}_barcode.png`; // 다운로드될 파일의 이름 설정
+
+             // a 요소를 클릭하여 다운로드를 시작
+             a.click();
+
+             // 다운로드가 완료되면 URL.createObjectURL로 생성한 URL 해제
+             window.URL.revokeObjectURL(url);
+         })
+         // 에러가 발생한 경우 처리
+         .catch(error => {
+             console.error('에러 발생:', error);
+         });
+
+
+  };
+
+
+
   const columns = [
     {
       title: "상품명",
@@ -471,6 +505,7 @@ export default function SellerProductRegistration(props) {
       productSize: "",
       productColor: "",
       productStock: "",
+      productUrls: "",
     };
 
     setProductInfo((prevProductInfo) => {
@@ -771,7 +806,7 @@ export default function SellerProductRegistration(props) {
                     ? productInfo.options.map((option, index) => (
                         <React.Fragment key={index}>
                           <tr>
-                            <div className="option-small-box">
+                            <div className="option-small-box-w-btn w-btn-indigo">
                               <table>
                                 <div>
                                   <td rowSpan={4}>옵션{index + 1}</td>
@@ -822,7 +857,9 @@ export default function SellerProductRegistration(props) {
                                         e.target.value
                                       )
                                     }
+                                  
                                   />
+                                  <br /> <br />
                                   <Button
                                     onClick={() => addProductOption(index)}
                                   >
@@ -835,16 +872,27 @@ export default function SellerProductRegistration(props) {
                                   >
                                     <DeleteOutlined />
                                   </Button>
-                                </div>
-                              </table>
+                                  <Button
+                                  style={{ backgroundColor: "black", color: "white" }}
+                                    type="primary"
+                                    danger
+                                    onClick={() => barcodeDownload(index)}
+                                  >
+                                    <BarcodeOutlined />
+                                  </Button>
+                                  
+
+                                </div>                             
+                              </table>                              
                             </div>
+                            <br /> <br />
                           </tr>
                         </React.Fragment>
                       ))
                     : null}
                   <div className="big-box">
                     <Button
-                      style={{ backgroundColor: "black", color: "white" }}
+                      style={{ backgroundColor: "#77C13D", color: "white" }}
                       onClick={plusOption}
                     >
                       <PlusCircleOutlined />
