@@ -472,13 +472,17 @@
 }
 #option-table {
   border: 0.1px solid #e2e2e2;
+  padding: 10px;
+  background-color: aliceblue;
+  color: #1e6b7b;
   border-radius: 10px;
 }
 
-.seller-product-registration .option-small-box {
+.seller-product-registration .option-small-box-w-btn w-btn-indigo {
   border: 0.1px solid #e2e2e2;
   padding: 10px;
-
+  background-color: aliceblue;
+  color: #1b5e6b;
   border-radius: 10px;
 }
 
