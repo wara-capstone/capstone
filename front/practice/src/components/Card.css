@@ -18,15 +18,15 @@
 }
 
 .card-title {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   margin-bottom: 12px;
-  margin-left: 0.5rem;
+  margin-left: 0.2rem;
 }
 
 .card-sub-title {
-  margin-right: 4rem;
+  margin-right: 1rem;
   font-size: 0.9rem;
-  color: gray;
+  color: grey;
 }
 
 .card-content {
@@ -40,7 +40,7 @@
 .card-count {
   font-size: 1rem;
   color: gray;
-  margin-right: 2rem;
+  /* margin-right: 2rem; */
 }
 
 .card-price {
@@ -50,13 +50,13 @@
 .card-count {
   /* font-size: 1rem;
   color: gray; */
-  margin-right: 2rem;
+  /* margin-right: 2rem; */
 }
 
 .card-contet3 {
   font-size: 1rem;
   color: gray;
-  margin-right: 2rem;
+  /* margin-right: 2rem; */
 }
 .card-image {
   border-radius: 16px;
