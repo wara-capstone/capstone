@@ -44,7 +44,9 @@ const CellRenderer = (props) => {
           // ,          state: { productId: productId },
         }}
       >
-        <button class="w-btn-outline w-btn-indigo-outline" type="button">
+        <button class="w-btn-outline w-btn-indigo-outline" 
+        style={{height : '50%', alignItems: 'center'}}
+        type="button">
         등록/수정
     </button>
       </Link>
