@@ -153,6 +153,13 @@ export default function SellerItemManagement() {
       checkboxSelection: true,
       editable: false,
       cellRenderer: ImageCellRenderer,
+      cellStyle: function(params) {
+        if (params.column.colId === 'productUrls') { // 체크박스가 있는 컬럼 ID
+          return { textAlign: 'center', justifyContent: 'center' }; // 체크박스에 적용할 스타일
+        } else {
+          return { whiteSpace: 'pre-wrap', textAlign: 'center', justifyContent: 'center' }; // 체크박스가 아닌 셀에 적용할 스타일
+        }
+      },
     },
     {
       headerName: "상품명",
@@ -362,10 +369,16 @@ export default function SellerItemManagement() {
                 rowData={rowData}
                 columnDefs={columnDefs}
                 getRowNodeId={getRowId}
-                defaultColDef={{defaultColDef,
-                  autoHeight: true,
-                  cellStyle: { whiteSpace: 'pre-wrap', textAlign: 'center',justifyContent: 'center' },
-                }}
+                defaultColDef={
+                  {defaultColDef,
+                    cellStyle: function(params) {
+                      if (params.column.colId !== 'productUrls') { // 체크박스 컬럼 ID로 변경
+                        return { whiteSpace: 'pre-wrap', textAlign: 'center', justifyContent: 'center' };
+                      } else {
+                        return { textAlign: 'center', justifyContent: 'center' };
+                      }
+                    },
+                  }}
                 suppressRowClickSelection={true}
                 rowSelection={"multiple"}
                 rowHeight={100}
