@@ -333,20 +333,28 @@
 .grid-wrapper {
   /* flex: 1 1 0px; */
   /* height:500px; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 80%;
 }
 
 .ag-theme-alpine {
+  align-items: center;
+  justify-content: center;
   height: 500px;
   width: 100%;
 }
 
 #myGrid {
+  align-items: center;
+  justify-content: center;
   height: 100%;
   width: 100%;
 }
 
 .ag-header-cell-label {
+  align-items: center;
   justify-content: center;
 }
 /* seller item, seller item management */
@@ -477,6 +485,45 @@
 .seller-product-registration .option-small-box {
   background-color: #f6eded;
 
+}
+
+.w-btn {
+    position: relative;
+    border: none;
+    display: inline-block;
+    padding: 15px 30px;
+    border-radius: 15px;
+    font-family: "paybooc-Light", sans-serif;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.25s;
+}
+
+.w-btn-outline {
+  position: relative;
+  padding: 15px 30px;
+  border-radius: 15px;
+  font-family: "paybooc-Light", sans-serif;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.w-btn-indigo {
+  background-color: aliceblue;
+  color: #1e6b7b;
+}
+
+.w-btn-indigo-outline {
+  border: 3px solid aliceblue;
+  color: #1e6b7b;
+}
+
+.w-btn-indigo-outline:hover {
+  color: #1e6b7b;
+  background: aliceblue;
 }
 
 

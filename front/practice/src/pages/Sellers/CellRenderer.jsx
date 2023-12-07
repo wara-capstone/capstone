@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-
+import "./Seller.css";
 const CellRenderer = (props) => {
   const token = localStorage.getItem("token");
   const [storeInfo, setStoreInfo] = useState({ result: "", data: [] });
@@ -44,7 +44,11 @@ const CellRenderer = (props) => {
           // ,          state: { productId: productId },
         }}
       >
-        <button>등록/수정</button>
+        <button class="w-btn-outline w-btn-indigo-outline" 
+        style={{ alignItems: 'center', justifyContent: 'center', height : '100%'}}
+        type="button">
+        등록/수정
+    </button>
       </Link>
     </span>
   );

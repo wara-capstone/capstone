@@ -57,40 +57,37 @@ export default function SellerItemManagement() {
         //   }))
         // );
 
-        // // 데이터 변형
-        // const transformedData = response.data.map((item) =>
-        // ({
-        //   productId: item.productId,
-        //   storeId: item.storeId,
-        //   productName: item.productName,
-        //   productCategory: item.productCategory,
-        //   productUrls: item.productUrls,
-        //   // options
-        // })
-        // );
+      // // 데이터 변형
+      // const transformedData = response.data.map((item) =>
+      // ({
+      //   productId: item.productId,
+      //   storeId: item.storeId,
+      //   productName: item.productName,
+      //   productCategory: item.productCategory,
+      //   productUrls: item.productUrls,
+      //   // options
+      // })
+      // );
 
-        // const transformedData = response.data.map((item) => {
-        //   const options = item.options.map((option) => ({
-        //     productSize: [option.productSize],
-        //     productColor: [option.productColor],
-        //     productStock: [option.productStock],
-        //   }));
+      // const transformedData = response.data.map((item) => {
+      //   const options = item.options.map((option) => ({
+      //     productSize: [option.productSize],
+      //     productColor: [option.productColor],
+      //     productStock: [option.productStock],
+      //   }));
 
-      
-
-
-        // setRowData(transformedData);
-         setRowData(response.data);
-         console.log(response.data);
-      } catch (error) {
-        console.log("실패");
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    useEffect(() => {
-      fetchData();
+      // setRowData(transformedData);
+      setRowData(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.log("실패");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchData();
   }, []);
 
   // 삭제 버튼의 onClick 핸들러
@@ -138,14 +135,12 @@ export default function SellerItemManagement() {
   //     return acc;
   //   }, []);
   // };
-  
+
   // // 사용 예:
   // const response = await axios.get(`$${process.env.NODE_ENV === 'development' ? 'http://' : 'https:'}//{process.env.REACT_APP_API_URL}product/all/store/${storeId}`, { ... });
   // const transformedData = transformData(response.data);
   // setRowData(transformedData);
-// 세로 줄바꿈 코드 
-
-
+  // 세로 줄바꿈 코드
 
   const [columnDefs, setColumnDefs] = useState([
     {
@@ -179,10 +174,11 @@ export default function SellerItemManagement() {
       headerClass: "center-header",
       editable: false,
       filter: true,
-      valueGetter: params => params.data.options ? params.data.options.map(option => option.productSize).join("\n") : ''
-    
-    
-},
+      valueGetter: (params) =>
+        params.data.options
+          ? params.data.options.map((option) => option.productSize).join("\n")
+          : "",
+    },
     {
       headerName: "색상",
       field: "productColor",
@@ -190,16 +186,22 @@ export default function SellerItemManagement() {
       editable: false,
       minWidth: 150,
       filter: true,
-     valueGetter: params => params.data.options ? params.data.options.map(option => option.productColor).join("\n") : ''
-},
+      valueGetter: (params) =>
+        params.data.options
+          ? params.data.options.map((option) => option.productColor).join("\n")
+          : "",
+    },
 
     {
       headerName: "재고 수량",
-    
+
       headerClass: "center-header",
       editable: false,
       filter: true,
-      valueGetter: params => params.data.options ? params.data.options.map(option => option.productStock).join("\n") : ''
+      valueGetter: (params) =>
+        params.data.options
+          ? params.data.options.map((option) => option.productStock).join("\n")
+          : "",
     },
     {
       headerName: "관리",
@@ -210,7 +212,7 @@ export default function SellerItemManagement() {
       cellRenderer: (params) => {
         //const { storeId } = this.props; // storeId를 적절한 방법으로 가져옴
         const productId = params.data.productId; // productId를 params에서 추출
-
+         
         return (
           <CellRenderer storeId={storeId} productId={productId} {...params} />
         );
@@ -303,6 +305,9 @@ export default function SellerItemManagement() {
         return data;
       });
   };
+  
+
+
 
   if (loading) {
     <LoadingScreen> </LoadingScreen>;
@@ -320,17 +325,30 @@ export default function SellerItemManagement() {
             }}
           >
             <div>
-              <button onClick={handleDelete}>삭제</button>
+            
               <button
+                class="w-btn w-btn-indigo"
+                type="button"
+                style={{ padding: '10px 20px', margin: '10px' }}
+            
                 onClick={() => {
                   createProduct();
-
                   //setRowData([...rowData,
                   //  {  productUrls: newProduct.productUrls[0] ,  productName: "",  productId: newProduct.productId,  productSize: "",  productColor: '',  productStock: '',}])
                 }}
               >
                 추가
               </button>
+                
+              <button
+                class="w-btn w-btn-indigo"
+                type="button"
+                onClick={handleDelete}
+                style={{ padding: '10px 20px' }}
+              >
+                삭제
+              </button>
+
             </div>
 
             {/* <div>
@@ -344,7 +362,10 @@ export default function SellerItemManagement() {
                 rowData={rowData}
                 columnDefs={columnDefs}
                 getRowNodeId={getRowId}
-                defaultColDef={defaultColDef}
+                defaultColDef={{defaultColDef,
+                  autoHeight: true,
+                  cellStyle: { whiteSpace: 'pre-wrap', textAlign: 'center',justifyContent: 'center' },
+                }}
                 suppressRowClickSelection={true}
                 rowSelection={"multiple"}
                 rowHeight={100}
