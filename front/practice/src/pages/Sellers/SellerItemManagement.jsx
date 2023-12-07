@@ -142,12 +142,14 @@ export default function SellerItemManagement() {
   // setRowData(transformedData);
   // 세로 줄바꿈 코드
 
-  const [columnDefs, setColumnDefs] = useState([
+  const [columnDefs, setColumnDefs] = useState([   
     {
       headerName: "상품사진",
       field: "productUrls",
       headerClass: "center-header", // 각 컬럼에 headerClass 추가
       minWidth: 180,
+      wrapText: true,
+      autoHeight: true,
       headerCheckboxSelection: true,
       headerCheckboxSelectionFilteredOnly: true,
       checkboxSelection: true,
@@ -155,9 +157,9 @@ export default function SellerItemManagement() {
       cellRenderer: ImageCellRenderer,
       cellStyle: function(params) {
         if (params.column.colId === 'productUrls') { // 체크박스가 있는 컬럼 ID
-          return { textAlign: 'center', justifyContent: 'center' }; // 체크박스에 적용할 스타일
+          return { textAlign: 'center', justifyContent: 'center'}; // 체크박스에 적용할 스타일
         } else {
-          return { whiteSpace: 'pre-wrap', textAlign: 'center', justifyContent: 'center' }; // 체크박스가 아닌 셀에 적용할 스타일
+          return { whiteSpace: 'pre-wrap', textAlign: 'center', justifyContent: 'center',  autoHeight: true }; // 체크박스가 아닌 셀에 적용할 스타일
         }
       },
     },
@@ -166,12 +168,16 @@ export default function SellerItemManagement() {
       field: "productName",
       headerClass: "center-header", // 각 컬럼에 headerClass 추가
       editable: false,
+      wrapText: true,
+      autoHeight: true,
       minWidth: 180,
     },
     {
       headerName: "상품코드",
       field: "productId",
       headerClass: "center-header",
+      wrapText: true,
+      autoHeight: true,
       editable: false,
       filter: true,
     },
@@ -179,6 +185,8 @@ export default function SellerItemManagement() {
       headerName: "사이즈",
       field: "productSize",
       headerClass: "center-header",
+      wrapText: true,
+      autoHeight: true,
       editable: false,
       filter: true,
       valueGetter: (params) =>
@@ -190,6 +198,8 @@ export default function SellerItemManagement() {
       headerName: "색상",
       field: "productColor",
       headerClass: "center-header",
+      wrapText: true,
+      autoHeight: true,
       editable: false,
       minWidth: 150,
       filter: true,
@@ -204,6 +214,8 @@ export default function SellerItemManagement() {
 
       headerClass: "center-header",
       editable: false,
+      wrapText: true,
+      autoHeight: true,
       filter: true,
       valueGetter: (params) =>
         params.data.options
@@ -213,7 +225,8 @@ export default function SellerItemManagement() {
     {
       headerName: "관리",
       headerClass: "center-header",
-
+      wrapText: true,
+      autoHeight: true,
       editable: false,
       minWidth: 150,
       cellRenderer: (params) => {
@@ -371,11 +384,15 @@ export default function SellerItemManagement() {
                 getRowNodeId={getRowId}
                 defaultColDef={
                   {defaultColDef,
+                   
                     cellStyle: function(params) {
                       if (params.column.colId !== 'productUrls') { // 체크박스 컬럼 ID로 변경
-                        return { whiteSpace: 'pre-wrap', textAlign: 'center', justifyContent: 'center' };
+                        return {  display: 'flex', whiteSpace: 'pre-wrap', textAlign: 'center',
+                        cellClass: 'ag-no-row-height-limit',lineHeight: '130%', wordSpacing: '10px',
+                        justifyContent: 'space-around', alignitems: 'center',margin:'px'};
                       } else {
-                        return { textAlign: 'center', justifyContent: 'center' };
+                        return {display:'flex', textAlign: 'center', justifyContent: 'space-around',  wordSpacing: '10px',
+                         cellClass: 'ag-no-row-height-limit',lineHeight: '1.5'};
                       }
                     },
                   }}

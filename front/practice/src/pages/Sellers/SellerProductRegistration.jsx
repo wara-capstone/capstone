@@ -353,7 +353,7 @@ export default function SellerProductRegistration(props) {
       // 1. 서버에 삭제 요청 보내기
       const response = await axios.delete(
         `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/seller/option/${
-          productInfo.options[index - 1].optionId
+          productInfo.options[index].optionId
         }`,
         {
           headers: {
@@ -372,7 +372,7 @@ export default function SellerProductRegistration(props) {
       // 2. 상태 업데이트하기
       setProductInfo((prevProductInfo) => {
         const newOptions = [...prevProductInfo.options];
-        newOptions.splice(index - 1, 1);
+        newOptions.splice(index, 1);
 
         return {
           ...prevProductInfo,
@@ -677,6 +677,16 @@ export default function SellerProductRegistration(props) {
     fileList, // 수정: fileList 속성 사용
   };
 
+
+  
+  const previewFile = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setPreviewImage(reader.result);
+    };
+  };
+
   if (loading) {
     return <LoadingScreen></LoadingScreen>;
   } else {
@@ -916,28 +926,32 @@ export default function SellerProductRegistration(props) {
             </div> */}
 
 <div className="abc" style={{ display: 'flex', flexDirection: 'column' }}>
-  <div>
-    <Typography.Title level={4}>상품 이미지</Typography.Title>
-    <hr />
-    <input
-      type="file"
-      style={{ display: "none" }}
-      onChange={handleFileInputChange}
-      ref={fileInputRef}
-    />
-    <Button
-      onClick={() => fileInputRef.current.click()}
-      icon={<UploadOutlined />}
-    >
-      파일 선택
-    </Button>
-  </div>
-  <div>
-    {previewImage && <img src={previewImage} alt="미리 보기" style={{maxWidth: '100%', height: 'auto'}} />}
-  </div>
-  <br /><br />
+<div>
+  <Typography.Title level={4}>상품 이미지</Typography.Title>
+  <hr />
+  <input
+    type="file"
+    style={{ display: "none" }}
+    onChange={handleFileInputChange}
+    ref={fileInputRef}
+  />
+  <Button
+    onClick={() => fileInputRef.current.click()}
+    icon={<UploadOutlined />}
+  >
+    파일 선택
+  </Button>
 </div>
-
+<div>
+  {previewImage ? (
+    <img src={previewImage} alt="미리 보기" style={{maxWidth: '100%', height: 'auto'}} />
+  ) : (
+    images && images.length > 0 && 
+    <img src={images[0]} alt="상품 이미지" style={{maxWidth: '100%', height: 'auto'}} />
+  )}
+</div>
+<br /><br />
+</div>
             {/* 이미지 에디터 코드 */}
             {/* <div className="abc">
               <Typography.Title level={4}>에디터</Typography.Title>
