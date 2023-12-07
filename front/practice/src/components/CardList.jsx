@@ -51,22 +51,26 @@ function CardList({ category, url }) {
   return (
     <div className="card-list">
       {categoryData &&
-        categoryData.map((result) => (
-          <Link
-            to={`/item/${result.productId}`}
-            key={result.productId}
-            className="card-link"
-          >
-            <Card
-              key={result.productId}
-              title={result.productName}
-              subTitle={result.productCategory}
-              price={result.options[0].productPrice}
-              mainImage={result.productUrls[0]}
-              count={result.options[0].productStock}
-            />
-          </Link>
-        ))}
+        categoryData.map((result) => {
+          if (result.options && result.options.length > 0) {
+            return (
+              <Link
+                to={`/item/${result.productId}`}
+                key={result.productId}
+                className="card-link"
+              >
+                <Card
+                  key={result.productId}
+                  title={result.productName}
+                  subTitle={result.productCategory}
+                  price={result.options[0].productPrice}
+                  mainImage={result.productUrls[0]}
+                  count={result.options[0].productStock}
+                />
+              </Link>
+            );
+          }
+        })}
     </div>
   );
 }
