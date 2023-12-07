@@ -157,7 +157,7 @@ export default function SellerProductRegistration(props) {
   const [isTrue, setIsTrue] = useState();
   const [images, setImages] = useState([]);
   const [barcodeUrl, setBarcodeUrl] = useState([]);
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -565,7 +565,7 @@ export default function SellerProductRegistration(props) {
     console.log("문자열:" + productInfo.productId);
     console.log("몇 번째 인덱스 입니까?", index);
     console.log("담긴 옵션 정보" + productInfo.options[index].productPrice);
-    if (index > optionIndex) {
+    if (index >= optionIndex) {
       var data = {
         productPrice: productInfo.options[index].productPrice,
         productSize: productInfo.options[index].productSize,
