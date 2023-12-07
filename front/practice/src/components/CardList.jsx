@@ -65,7 +65,7 @@ function CardList({ category, url }) {
                   subTitle={result.productCategory}
                   price={result.options[0].productPrice}
                   mainImage={result.productUrls[0]}
-                  count={result.options[0].productStock}
+                  // count={result.options[0].productStock}
                 />
               </Link>
             );

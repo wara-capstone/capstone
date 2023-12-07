@@ -28,9 +28,9 @@ function Card({
           {price ? "가격: " : null}
           {price} {price ? "₩" : null}
         </p>
-        <p className="card-count">
+        {/* <p className="card-count">
           {count ? "재고: " : null} {count}
-        </p>
+        </p> */}
         <p className="card-content3">{content3}</p>
       </div>
     </div>
