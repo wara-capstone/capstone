@@ -1,7 +1,8 @@
 .DS_Store
 .DS_Store
 
-
+package-lock.json
+package.json
 # 파이썬 관련
 __pycache__/
 *.py[cod]
