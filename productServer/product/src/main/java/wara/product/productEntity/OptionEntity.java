@@ -16,6 +16,29 @@ import javax.persistence.*;
 @ToString
 public class OptionEntity {
 
+    public void setOptionId(Long optionId) {
+        this.optionId = optionId;
+    }
+
+    public void setProductPrice(String productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    public void setProductSize(String productSize) {
+        this.productSize = productSize;
+    }
+
+    public void setProductColor(String productColor) {
+        this.productColor = productColor;
+    }
+
+    public void setProductStock(String productStock) {
+        this.productStock = productStock;
+    }
+
+    public void setBarcodeUrl(String barcodeUrl) {
+        this.barcodeUrl = barcodeUrl;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,6 +84,10 @@ public class OptionEntity {
         );
     }
 
+    /**
+     * @param optionEntity  id포함 모든 속성 값
+     * @param url url만 사용
+     */
     public OptionEntity(OptionEntity optionEntity, String url)
     {
         this.optionId = optionEntity.getOptionId();

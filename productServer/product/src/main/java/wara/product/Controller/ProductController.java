@@ -67,11 +67,11 @@ public class ProductController {
     public ResponseEntity<ProductDTO> productRegistry(@RequestPart ProductDTO productDTO,
                                                       @RequestPart@Nullable OptionDTO optionDTO,
                                                       @RequestPart@Nullable List<MultipartFile> images) throws URISyntaxException, IOException {
-        logger.info("[productRegistry] 상품 등록");
+        logger.info("\n[productRegistry] 상품 등록");
         logger.info("전달받은 productDTO: " + productDTO.toString());
 
         ProductDTO responseDTO = new ProductDTO();
-        List<String> imagesURLs =new ArrayList<>();
+        List<String> imagesURLs = new ArrayList<>();
 
         try {logger.info(optionDTO.toString());
         } catch (NullPointerException e) {logger.info("[optoinDTO없음]");}
@@ -85,8 +85,8 @@ public class ProductController {
         } catch (NullPointerException e)
         {
             logger.info("[사진등록]:실패 -> 사유:사진값을 수신하지 않았음");
-            productDTO.setProductUrls(Collections.singletonList("https://www.onoff.zone/api/image/download/43"));
-            responseDTO.setProductUrls(Collections.singletonList("https://www.onoff.zone/api/image/download/43"));
+            productDTO.setProductUrls(Collections.singletonList("https://www.onoff.zone/api/image/download/1"));
+            responseDTO.setProductUrls(Collections.singletonList("https://www.onoff.zone/api/image/download/1"));
         }
 
         //productDTO의 값으로 일단 저장 -> 해당 상품의 ID값 반환
@@ -122,12 +122,13 @@ public class ProductController {
                                                        @RequestPart List<MultipartFile> images) throws URISyntaxException, IOException {
 
         List<String> urls = transrationService.uploadImage(images);
-        logger.info("[product images registry] 상품 사진 정보 수정");
+        logger.info("\n[product images registry] 상품 사진 정보 수정");
         logger.info("[상품 id]:" + productId.toString());
         logger.info("[발급받은 URLs]" + urls.toString());
 
 
-        productService.modifyimage(productId, urls);
+        ProductDTO latest = productService.modifyimage(productId, urls);
+        logger.info("[저장된 값]" + latest);
 
 
         return ResponseEntity.status(200).body("");
@@ -140,36 +141,23 @@ public class ProductController {
 
     // 옵션 등록
     @PutMapping("/seller/option/add/product/{productId}") //TODO:바코드 삭제 로직 필요함
-    public ResponseEntity<String> optionRegistry(@PathVariable("productId") Long productId,
+    public ResponseEntity<Long> optionRegistry(@PathVariable("productId") Long productId,
                                  @RequestBody OptionDTO optionDTO) throws URISyntaxException, IOException {
-        logger.info("[option registry] 옵션 등록");
+        logger.info("\n[option registry] 옵션 등록");
         logger.info("productId : "+productId);
         logger.info(optionDTO.toString());
         productService.readOne(productId); //TODO: 상품이 존재하지 않는 경우 처리
-        productService.addOption(productId,optionDTO);
+        Long latestId = productService.addOption(productId,optionDTO);
 
-        return  ResponseEntity.status(200).body("");
-    }
-
-    // 상품 수정
-    //TODO: 사진 있는경우, 없는경우 분리
-    @PutMapping("/seller")
-    public ResponseEntity<String> productModify(@RequestPart ProductDTO productDTO)
-    {
-        logger.info("[product Modify] 상품정보 수정\n");
-        logger.info(productDTO.toString());
-        productService.modifyProduct(productDTO);
-
-        logger.info("[수정 전 값]"+ productDTO + "\n");
-
-        return  ResponseEntity.status(200).body("");
+        return  ResponseEntity.status(200).body(latestId);
     }
 
     //옵션수정
+    //TODO: op
     @PutMapping("/seller/option/{productId}")
     public ResponseEntity<String> optionModify(@PathVariable("productId") Long productId,
-                                               @RequestPart OptionDTO optionDTO){
-        logger.info("[option modify] 옵션 수정");
+                                               @RequestBody OptionDTO optionDTO) throws URISyntaxException, IOException {
+        logger.info("\n[option modify] 옵션 수정");
         logger.info("productId : "  + productId);
         logger.info(optionDTO.toString());
 
@@ -178,6 +166,24 @@ public class ProductController {
         return ResponseEntity.status(200).body("");
     }
 
+    // 상품 수정
+    //TODO: 사진 있는경우, 없는경우 분리
+
+    @PutMapping("/seller")
+    public ResponseEntity<String> productModify(@RequestPart ProductDTO productDTO)
+    {
+        logger.info("\n[product Modify] 상품정보 수정\n");
+        logger.info("\n[수정 전 값]" + productDTO.toString());
+
+        ProductDTO result = productService.modifyProduct(productDTO);
+
+        logger.info("\n[수정 후]" + result);
+
+        return  ResponseEntity.status(200).body("");
+    }
+
+
+
     @PutMapping("/user/product/{productId}/{optionId}/{stockModify}")
     public ResponseEntity<String> stockModify(
             @PathVariable("productId") Long productId,
@@ -185,11 +191,13 @@ public class ProductController {
             @PathVariable("stockModify") String stockModify)
     {
 
-        logger.info("[stock modify] 재고 수정");
+        logger.info("\n[stock modify] 재고 수정");
         logger.info("productId : " +productId);
         logger.info("optionId : "+optionId);
-        logger.info("update stock size : "+stockModify);
-        productService.stockModify(productId,optionId,stockModify);
+        logger.info("update stock size : "+ stockModify + "개");
+        OptionDTO latest = productService.stockModify(productId,optionId,stockModify);
+        logger.info("\n[수정된 값] " + latest);
+
         return  ResponseEntity.status(200).body("");
     }
 
@@ -202,7 +210,7 @@ public class ProductController {
             @PathVariable("storeId")Long storeId,
             @PathVariable("productId") Long productId)
             throws URISyntaxException, IOException {
-        logger.info("[single product remove] 단일상품 삭제 ");
+        logger.info("\n[single product remove] 단일상품 삭제 ");
         logger.info("storeId : "+storeId);
         logger.info("productId : "+ productId);
         transrationService.removeToStore(storeId, productId);
@@ -214,7 +222,7 @@ public class ProductController {
     @DeleteMapping("/seller/option/{optionId}")
     public ResponseEntity<String> optionRemove(@PathVariable("optionId") Long optionId)
     {
-        logger.info("[option remove] 단일 옵션 삭제");
+        logger.info("\n[option remove] 단일 옵션 삭제");
         logger.info("optionId : "+optionId);
         productService.removeOption(optionId);
         return ResponseEntity.status(200).body("");
@@ -224,7 +232,7 @@ public class ProductController {
     // store id 기준 모든 상품 삭제
     @DeleteMapping("/seller/store/{storeId}")
     public ResponseEntity<String> multiRemove(@PathVariable("storeId") Long storeId){
-        logger.info("[multi product remove] 상점아이디 기준 모든 상품 삭제");
+        logger.info("\n[multi product remove] 상점아이디 기준 모든 상품 삭제");
         logger.info("storeId : "+storeId);
         productService.removeManyproduct(storeId);
         return ResponseEntity.status(200).body("");
@@ -243,8 +251,9 @@ public class ProductController {
     @GetMapping("/all/{id}")
     public ResponseEntity<ProductDTO> singleRead(@PathVariable("id") Long productId)
     {
-        logger.info("[single product read] 단일 상품 모든 옵션 검색");
+        logger.info("\n[single product read] 단일 상품 모든 옵션 검색");
         logger.info("productId : "+productId);
+
         return ResponseEntity.status(200).body(productService.readOne(productId));
     }
 
@@ -259,10 +268,14 @@ public class ProductController {
             @PathVariable("productId") Long productId,
             @PathVariable("optionId") Long optionId)
     {
-        logger.info("[read target option] 상품 단일 옵션조회");
+        logger.info("\n[read target option] 상품 단일 옵션조회");
         logger.info("productId : "+productId);
         logger.info("optionId : "+optionId);
-        return ResponseEntity.status(200).body(productService.readTarget(productId,optionId));
+
+        ProductDTO target = productService.readTarget(productId,optionId);
+        logger.info("\n[조회한 값]" + target);
+
+        return ResponseEntity.status(200).body(target);
     }
 
 
@@ -272,8 +285,9 @@ public class ProductController {
      */
     @GetMapping("/all/store/{storeId}")
     public ResponseEntity<List<ProductDTO>> multiRead(@PathVariable("storeId") Long storeId){
-        logger.info("[multi read] 상점아이디 기준 모든 상품 검색");
+        logger.info("\n[multi read] 상점아이디 기준 모든 상품 검색");
         logger.info("storeId : "+storeId);
+
         return ResponseEntity.status(200).body(productService.readMany(storeId));
     }
 
@@ -286,7 +300,7 @@ public class ProductController {
     public ResponseEntity<List<ProductDTO>> categoryFilter(
             @PathVariable("category") String category)
     {
-        logger.info("[category filter] 카테고리기준 강품 검색");
+        logger.info("\n[category filter] 카테고리기준 상품 검색");
         logger.info("category : "+category);
        return ResponseEntity.status(200).body(productService.categoryFilter(category));
     }
@@ -301,7 +315,7 @@ public class ProductController {
             @PathVariable("storeId") Long storeId,
             @RequestParam String category)
     {
-        logger.info("[store category filter] 상점아이디 & 카테고리 기준 검색");
+        logger.info("\n[store category filter] 상점아이디 & 카테고리 기준 검색");
         logger.info("storeId : "+storeId);
         logger.info("category : "+category);
         return ResponseEntity.status(200).body(productService.storeCategoryFilter(storeId,category));
@@ -314,7 +328,7 @@ public class ProductController {
                                                     @PathVariable String color,
                                                     @PathVariable String size)
     {
-        logger.info("[target option specify] 컬러 사이즈 기반 옵션 아이디 조회 ");
+        logger.info("\n[target option specify] 컬러 사이즈 기반 옵션 아이디 조회 ");
         logger.info("productId : "+productId);
         logger.info("color : "+color);
         logger.info("size : "+size);

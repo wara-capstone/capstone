@@ -1,8 +1,8 @@
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    #url: jdbc:mariadb://maria:3306/products?createDatabaseIfNotExist=true
-    url: jdbc:mariadb://3.37.91.99:3306/products?createDatabaseIfNotExist=true
+    url: jdbc:mariadb://maria:3306/products?createDatabaseIfNotExist=true
+#    url: jdbc:mariadb://3.37.91.99:3306/products?createDatabaseIfNotExist=true
     username: root
     password: qwer1234
   application:

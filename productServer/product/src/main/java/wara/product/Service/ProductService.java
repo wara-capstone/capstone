@@ -1,10 +1,13 @@
 package wara.product.Service;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.JpaEvaluationContextExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import wara.product.Controller.ProductController;
 import wara.product.DAO.ProductDAO;
 import wara.product.DTO.OptionDTO;
 import wara.product.DTO.ProductDTO;
@@ -78,22 +81,22 @@ public class ProductService {
     }
 
 
-    public String modifyProduct(ProductDTO productDTO)
+    public ProductDTO modifyProduct(ProductDTO productDTO)
     {// 상품이 존재하는지 확인 할 것
         ProductEntity productEntity = this.productDAO.readOneProduct(productDTO.getProductId());
         productEntity.setProductName(productDTO.getProductName());
         productEntity.setProductCategory(productDTO.getProductCategory());
 
-        return productDAO.modifyProduct(productEntity);
+        return productDAO.modifyProduct(productEntity).toDTO();
     }
 
-    public String modifyimage(Long productId, List<String> urls)
+    public ProductDTO modifyimage(Long productId, List<String> urls)
     {
         ProductEntity productEntity = productDAO.readOneProduct(productId);
         Urls a = new Urls(urls);
         productEntity.setProductUrls(a);
 
-        return productDAO.modifyProduct(productEntity);
+        return productDAO.modifyProduct(productEntity).toDTO();
     }
 
 
@@ -113,17 +116,31 @@ public class ProductService {
 
 
     @Transactional
-    public String addOption(Long productId, OptionDTO optionDTO) throws URISyntaxException, IOException {
-        OptionEntity urlUpdate = productDAO.getOptionIdAfterSave(productId,optionDTO.toEntity());
-        String barcodeUrl = transrationService.toBarcode(productId, urlUpdate.getOptionId());
+    public Long addOption(Long productId, OptionDTO optionDTO) throws URISyntaxException, IOException {
+        OptionEntity optionIdAfterSave = productDAO.getOptionIdAfterSave(productId,optionDTO.toEntity());
+        String barcodeUrl = transrationService.toBarcode(productId, optionIdAfterSave.getOptionId());
 
-        return productDAO.addOption(productId,new OptionEntity(urlUpdate,barcodeUrl));
+        return productDAO.addOption(productId,new OptionEntity(optionIdAfterSave,barcodeUrl));
     }
 
 
-    public String modifyOption(Long productId, OptionDTO optionDTO)
-    {
-        return productDAO.modifyOption(productId,optionDTO.toEntity());
+    public String modifyOption(Long productId, OptionDTO optionDTO) throws URISyntaxException, IOException {
+        OptionEntity option = new OptionEntity();
+        ProductEntity product = productDAO.readOneProduct(productId);
+        option.setProduct(product);
+
+        option.setOptionId(optionDTO.getOptionId());
+        String barcodeUrl = transrationService.toBarcode(productId,optionDTO.getOptionId());
+
+        System.out.println(barcodeUrl);
+        option.setBarcodeUrl(barcodeUrl);
+        option.setProductColor(optionDTO.getProductColor());
+        option.setProductPrice(optionDTO.getProductPrice());
+        option.setProductSize(optionDTO.getProductSize());
+        option.setProductStock(optionDTO.getProductStock());
+
+
+        return productDAO.modifyOption(productId,option);
     }
 
 
@@ -154,9 +171,9 @@ public class ProductService {
     }
 
 
-    public String stockModify(Long productId, Long optionId, String stockModify)
+    public OptionDTO stockModify(Long productId, Long optionId, String stockModify)
     {
-        return productDAO.stockModify(optionId,stockModify);
+        return productDAO.stockModify(optionId,stockModify).toDTO();
     }
 
     public Long optionSpcify(Long productId,String color, String size)

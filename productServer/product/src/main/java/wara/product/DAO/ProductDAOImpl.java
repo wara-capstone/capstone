@@ -73,13 +73,13 @@ public class ProductDAOImpl implements ProductDAO{
      * @param productEntity
      */
     @Override
-    public String modifyProduct(ProductEntity productEntity) {
+    public ProductEntity modifyProduct(ProductEntity productEntity) {
         if(productRepository.existsByProductId(productEntity.getProductId())) {
-            productRepository.save(productEntity);
-            logger.info("\n\n [수정된 값 ]" + productEntity);
-            return HttpStatus.OK.toString();
+
+
+            return productRepository.save(productEntity);
         }
-        else return HttpStatus.NO_CONTENT.toString();
+        else return productRepository.save(productEntity);
     }
 
     /**
@@ -104,10 +104,11 @@ public class ProductDAOImpl implements ProductDAO{
 
 
     @Override
-    public String addOption(Long productId, OptionEntity optionEntity) {
+    public Long addOption(Long productId, OptionEntity optionEntity) {
         optionEntity.setProduct(productRepository.getByProductId(productId));
-        optionRepository.save(optionEntity);
-        return HttpStatus.CREATED.toString();
+        OptionEntity latest = optionRepository.save(optionEntity);
+
+        return latest.getOptionId();
     }
 
     @Override
@@ -119,12 +120,9 @@ public class ProductDAOImpl implements ProductDAO{
 
     @Override
     public String modifyOption(Long productId, OptionEntity optionEntity) {
-        optionEntity.setProduct(productRepository.getByProductId(productId));
-        OptionEntity old = optionRepository.getByOptionId(optionEntity.getOptionId());
+//        optionEntity.setProduct(productRepository.getByProductId(productId));
 
-        OptionEntity modify = new OptionEntity(old,optionEntity);
-
-        optionRepository.save(modify);
+        optionRepository.save(optionEntity);
 
         return HttpStatus.OK.toString();
     }
@@ -148,12 +146,11 @@ public class ProductDAOImpl implements ProductDAO{
 
 
     @Override
-    public String stockModify(Long optionId, String stockModify)
+    public OptionEntity stockModify(Long optionId, String stockModify)
     {
         OptionEntity oldEntity =  optionRepository.findByOptionId(optionId);
         oldEntity.stockModify(stockModify);
-        optionRepository.save(oldEntity);
-        return HttpStatus.OK.toString();
+        return optionRepository.save(oldEntity);
     }
 
     @Override
