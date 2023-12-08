@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/store")
+@RequestMapping("/api/store")
 public class StoreController {
     private final StoreService storeService;
     private final static Logger logger = LoggerFactory.getLogger(StoreController.class);
@@ -25,7 +25,11 @@ public class StoreController {
         logger.info("[Data]: " + storeDTO.toString());
         SimpleResponseDTO response = storeService.createStore(storeDTO);
         logger.info("[Response] : " + response.toString());
-        return ResponseEntity.status(201).body(response);
+
+        if(response.getResult().equals("success")){
+            return ResponseEntity.status(201).body(response);
+        }
+        return ResponseEntity.status(400).body(null);
     }
 
     @PostMapping(value = "/create", consumes = "multipart/form-data")
@@ -35,7 +39,11 @@ public class StoreController {
         logger.info("[Data]: " + storeDTO.toString());
         SimpleResponseDTO response = storeService.createStore(storeDTO, image);
         logger.info("[Response] : " + response.toString());
-        return ResponseEntity.status(201).body(response);
+
+        if(response.getResult().equals("success")){
+            return ResponseEntity.status(201).body(response);
+        }
+        return ResponseEntity.status(400).body(null);
     }
 
     @GetMapping(value = "/read/id/{storeId}")
@@ -44,7 +52,11 @@ public class StoreController {
         logger.info("[Data]: " + storeId);
         ResponseDTO response = storeService.readStoreById(storeId);
         logger.info("[Response] : " + response.toString());
-        return ResponseEntity.status(200).body(response);
+
+        if(response.getResult().equals("success")){
+            return ResponseEntity.status(200).body(response);
+        }
+        return ResponseEntity.status(400).body(null);
     }
 
     @GetMapping(value = "/read/name/{storeName}")
@@ -53,7 +65,11 @@ public class StoreController {
         logger.info("[Data]: " + storeName);
         ResponseDTO response = storeService.readStoreByName(storeName);
         logger.info("[Response] : " + response.toString());
-        return ResponseEntity.status(200).body(response);
+
+        if(response.getResult().equals("success")){
+            return ResponseEntity.status(200).body(response);
+        }
+        return ResponseEntity.status(400).body(null);
     }
 
     @GetMapping(value = "/read/seller/{storeSeller}")
@@ -62,7 +78,11 @@ public class StoreController {
         logger.info("[Data]: " + storeSeller);
         ResponseDTO response = storeService.readStoreBySeller(storeSeller);
         logger.info("[Response] : " + response.toString());
-        return ResponseEntity.status(200).body(response);
+
+        if(response.getResult().equals("success")){
+            return ResponseEntity.status(200).body(response);
+        }
+        return ResponseEntity.status(400).body(null);
     }
 
     @PostMapping(value = "/read/map/coordinate")
@@ -71,7 +91,11 @@ public class StoreController {
         logger.info("[Data]: " + coordinateDTO.toString());
         ResponseDTO response = storeService.readStoreByCoordinate(coordinateDTO);
         logger.info("[Response] : " + response.toString());
-        return ResponseEntity.status(200).body(response);
+
+        if(response.getResult().equals("success")){
+            return ResponseEntity.status(200).body(response);
+        }
+        return ResponseEntity.status(400).body(null);
     }
 
     @GetMapping(value = "/read/map/id/{storeId}")
@@ -80,7 +104,11 @@ public class StoreController {
         logger.info("[Data]: " + storeId);
         ResponseDTO response = storeService.readStoreByIdForMap(storeId);
         logger.info("[Response] : " + response.toString());
-        return ResponseEntity.status(200).body(response);
+
+        if(response.getResult().equals("success")){
+            return ResponseEntity.status(200).body(response);
+        }
+        return ResponseEntity.status(400).body(null);
     }
 
     @GetMapping(value = "/read/map/name/{storeName}")
@@ -89,7 +117,11 @@ public class StoreController {
         logger.info("[Data]: " + storeName);
         ResponseDTO response = storeService.readStoreByNameForMap(storeName);
         logger.info("[Response] : " + response.toString());
-        return ResponseEntity.status(200).body(response);
+
+        if(response.getResult().equals("success")){
+            return ResponseEntity.status(200).body(response);
+        }
+        return ResponseEntity.status(400).body(null);
     }
 
     @GetMapping(value = "/exist/id/{storeId}")
@@ -98,7 +130,11 @@ public class StoreController {
         logger.info("[Data]: " + storeId);
         SimpleResponseDTO response = storeService.existStoreById(storeId);
         logger.info("[Response] : " + response.toString());
-        return ResponseEntity.status(200).body(response);
+
+        if(response.getResult().equals("success")){
+            return ResponseEntity.status(200).body(response);
+        }
+        return ResponseEntity.status(400).body(null);
     }
 
     @GetMapping(value = "/exist/seller/{storeSeller}")
@@ -107,7 +143,11 @@ public class StoreController {
         logger.info("[Data]: " + storeSeller);
         SimpleResponseDTO response = storeService.existStoreBySeller(storeSeller);
         logger.info("[Response] : " + response.toString());
-        return ResponseEntity.status(200).body(response);
+
+        if(response.getResult().equals("success")){
+            return ResponseEntity.status(200).body(response);
+        }
+        return ResponseEntity.status(400).body(null);
     }
 
     @PutMapping(value = "/update", consumes = "application/json")
@@ -126,7 +166,11 @@ public class StoreController {
         logger.info("[Data]: " + storeDTO.toString());
         SimpleResponseDTO response = storeService.updateStoreByNameAndSeller(storeDTO, image);
         logger.info("[Response] : " + response.toString());
-        return ResponseEntity.status(200).body(response);
+
+        if(response.getResult().equals("success")){
+            return ResponseEntity.status(200).body(response);
+        }
+        return ResponseEntity.status(400).body(null);
     }
 
     @PutMapping(value = "/update/id", consumes = "application/json")
@@ -135,7 +179,11 @@ public class StoreController {
         logger.info("[Data]: " + storeDTO.toString());
         SimpleResponseDTO response = storeService.updateStoreById(storeDTO);
         logger.info("[Response] : " + response.toString());
-        return ResponseEntity.status(200).body(response);
+
+        if(response.getResult().equals("success")){
+            return ResponseEntity.status(200).body(response);
+        }
+        return ResponseEntity.status(400).body(null);
     }
 
     @PutMapping(value = "/update/id", consumes = "multipart/form-data")
@@ -145,7 +193,11 @@ public class StoreController {
         logger.info("[Data]: " + storeDTO.toString());
         SimpleResponseDTO response = storeService.updateStoreById(storeDTO, image);
         logger.info("[Response] : " + response.toString());
-        return ResponseEntity.status(200).body(response);
+
+        if(response.getResult().equals("success")){
+            return ResponseEntity.status(200).body(response);
+        }
+        return ResponseEntity.status(400).body(null);
     }
 
     @DeleteMapping(value = "/delete/id/{storeId}")
@@ -154,7 +206,11 @@ public class StoreController {
         logger.info("[Data]: " + storeId);
         SimpleResponseDTO response = storeService.deleteStore(storeId);
         logger.info("[Response] : " + response.toString());
-        return ResponseEntity.status(200).body(response);
+
+        if(response.getResult().equals("success")){
+            return ResponseEntity.status(200).body(response);
+        }
+        return ResponseEntity.status(400).body(null);
     }
 
     @DeleteMapping(value = "/delete/{storeId}/{productId}")
@@ -164,6 +220,10 @@ public class StoreController {
         logger.info("[Data]: " + storeId + " " + productId);
         SimpleResponseDTO response = storeService.deleteProduct(storeId, productId);
         logger.info("[Response] : " + response.toString());
-        return ResponseEntity.status(200).body(response);
+
+        if(response.getResult().equals("success")){
+            return ResponseEntity.status(200).body(response);
+        }
+        return ResponseEntity.status(400).body(null);
     }
 }

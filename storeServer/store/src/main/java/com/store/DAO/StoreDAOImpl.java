@@ -4,7 +4,6 @@ import com.store.Entity.StoreEntity;
 import com.store.Repository.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,7 @@ public class StoreDAOImpl implements StoreDAO {
     public Map<String, Object> createStore(StoreEntity storeEntity) {
         Map<String, Object> result = new HashMap<>();
 
-        if (storeRepository.existsByStoreNameAndStoreSeller(storeEntity.getStoreName(), storeEntity.getStoreSeller())) {
+        if (storeRepository.existsByStoreNameAndStoreSeller(storeEntity.getStoreName(), storeEntity.getStoreSeller()) || storeRepository.existsByStoreAddress(storeEntity.getStoreAddress())) {
             result.put("result", "fail");
             return result;
         }
@@ -231,8 +230,8 @@ public class StoreDAOImpl implements StoreDAO {
         if (storeEntity != null) {
             List<Long> productIds = storeEntity.getProductIds();
 
-            for(Long oldProductId : productIds){
-                if(productId.equals(oldProductId)) {
+            for (Long oldProductId : productIds) {
+                if (productId.equals(oldProductId)) {
                     productIds.remove(productId);
                     break;
                 }
