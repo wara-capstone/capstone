@@ -20,8 +20,8 @@ function myFunction(event) {
       <Header />
 
       <SearchBar searchText={searchText} setSearchText={setSearchText} onSubmit={myFunction}/>
-
-      <CardList />
+      <h2>준비 중인 서비스입니다.</h2>
+      {/* <CardList /> */}
 
       <BottomNav />
     </div>

@@ -333,20 +333,28 @@
 .grid-wrapper {
   /* flex: 1 1 0px; */
   /* height:500px; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 80%;
 }
 
 .ag-theme-alpine {
+  align-items: center;
+  justify-content: center;
   height: 500px;
   width: 100%;
 }
 
 #myGrid {
+  align-items: center;
+  justify-content: center;
   height: 100%;
   width: 100%;
 }
 
 .ag-header-cell-label {
+  align-items: center;
   justify-content: center;
 }
 /* seller item, seller item management */
@@ -464,14 +472,65 @@
 }
 #option-table {
   border: 0.1px solid #e2e2e2;
+  padding: 10px;
+  background-color: aliceblue;
+  color: #1e6b7b;
+  border-radius: 10px;
+}
+
+.seller-product-registration .option-small-box-w-btn w-btn-indigo {
+  border: 0.1px solid #e2e2e2;
+  padding: 10px;
+  background-color: aliceblue;
+  color: #1b5e6b;
   border-radius: 10px;
 }
 
 .seller-product-registration .option-small-box {
-  border: 0.1px solid #e2e2e2;
-  padding: 10px;
+  background-color: #f6eded;
 
-  border-radius: 10px;
 }
 
+.w-btn {
+    position: relative;
+    border: none;
+    display: inline-block;
+    padding: 15px 30px;
+    border-radius: 15px;
+    font-family: "paybooc-Light", sans-serif;
+    box-shadow: 0 0 0px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.25s;
+}
+
+.w-btn-outline {
+  position: relative;
+  padding: 15px 30px;
+  border-radius: 15px;
+  font-family: "paybooc-Light", sans-serif;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.w-btn-indigo {
+  background-color: aliceblue;
+  color: #1e6b7b;
+}
+
+.w-btn-indigo-outline {
+  border: 3px solid aliceblue;
+  color: #1e6b7b;
+}
+
+.w-btn-indigo-outline:hover {
+  color: #1e6b7b;
+  background: aliceblue;
+}
+
+.ag-no-row-height-limit {
+  max-height: none !important;
+}
 /* seller product registration */

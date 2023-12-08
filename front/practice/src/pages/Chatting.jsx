@@ -8,7 +8,7 @@ export default function Chatting() {
   const [socket, setSocket] = useState(null);
   const [messageInput, setMessageInput] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
-
+  const CHATTING_URL = process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DJANGO_CHATTING_URL : process.env.REACT_APP_API_URL;
   const location = useLocation(); // 채팅방으로 넘어온 값
 
   // location.state.seller를 통해 storeData.storeSeller 값 받아옴
@@ -53,7 +53,7 @@ export default function Chatting() {
     }
 
     try {
-      const response = await fetch("/api/chat/rooms/", {
+      const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${CHATTING_URL}chat/rooms/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -105,8 +105,7 @@ export default function Chatting() {
   const setupWebSocket = (roomId, authToken) => {
     // 인증 토큰을 URL의 쿼리 파라미터로 추가
     const newSocket = new WebSocket(
-      // `wss://52.79.186.117:8000/api/ws/room/${roomId}/messages?token=${authToken}`
-      `wss://www.onoff.zone/api/ws/room/${roomId}/messages?token=${authToken}`
+      `${process.env.NODE_ENV === 'development' ? 'ws://' : 'wss://www.onoff.zone'}${CHATTING_URL}ws/room/${roomId}/messages?token=${authToken}`
     );
 
     console.log(newSocket.url);

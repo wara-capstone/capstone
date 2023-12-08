@@ -21,6 +21,7 @@
 
 .breadImage {
     max-width: 100px;
+    max-height: 7.5rem;
     height: auto;
 
     border-radius: 16px;

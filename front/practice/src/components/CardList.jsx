@@ -28,19 +28,19 @@ function CardList({ category, url }) {
 
         setCategoryData(data); // 상태 업데이트
 
-        if (data && data[0] && data[0].productId) {
-          //console.log(data[0].productId);
-        } else {
-          console.log("등록된 상품이 없음.");
-        }
+        // if (data && data[0] && data[0].productId) {
+        //   console.log(data[0].productId);
+        // } else {
+        //   console.log("등록된 상품이 없음.");
+        // }
 
-        if (data && data[0]) {
-          //console.log(data[0].productId);
-        }
+        // if (data && data[0]) {
+        //   //console.log(data[0].productId);
+        // }
 
-        console.log(url);
-        //console.log(data);
-        console.log("성공");
+        // console.log(url);
+        // //console.log(data);
+        // console.log("성공");
       } else {
         console.log("실패");
       }
@@ -51,22 +51,26 @@ function CardList({ category, url }) {
   return (
     <div className="card-list">
       {categoryData &&
-        categoryData.map((result) => (
-          <Link
-            to={`/item/${result.productId}`}
-            key={result.productId}
-            className="card-link"
-          >
-            <Card
-              key={result.productId}
-              title={result.productName}
-              subTitle={result.productCategory}
-              price={result.options[0].productPrice}
-              mainImage={result.productUrls[0]}
-              count={result.options[0].productStock}
-            />
-          </Link>
-        ))}
+        categoryData.map((result) => {
+          if (result.options && result.options.length > 0) {
+            return (
+              <Link
+                to={`/item/${result.productId}`}
+                key={result.productId}
+                className="card-link"
+              >
+                <Card
+                  key={result.productId}
+                  title={result.productName}
+                  subTitle={result.productCategory}
+                  price={result.options[0].productPrice}
+                  mainImage={result.productUrls[0]}
+                  // count={result.options[0].productStock}
+                />
+              </Link>
+            );
+          }
+        })}
     </div>
   );
 }

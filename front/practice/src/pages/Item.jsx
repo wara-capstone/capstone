@@ -15,7 +15,7 @@ export default function Item() {
 
   const email = localStorage.getItem("email");
   const token = localStorage.getItem("token");
-
+  const CART_URL = process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DJANGO_CART_URL : process.env.REACT_APP_API_URL;
   const [targetColor, setTargetColor] = useState(); //선택한 색상
   const [targetSize, setTargetSize] = useState(); //선택한 사이즈
   const [quantity, setQuantity] = useState(1); // 수량
@@ -71,7 +71,7 @@ export default function Item() {
     };
 
     try {
-      const response = await fetch("/api/cart/items/", {
+      const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${CART_URL}cart/items/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -171,7 +171,7 @@ export default function Item() {
     async function optionGet() {
       //옵션 가져오기
       console.log("가져온 상품아이디", id);
-      const response = await fetch(`/api/product/all/` + id, {
+      const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/all/` + id, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -237,7 +237,7 @@ export default function Item() {
             <h3>재고: {stock}</h3>
             <div>
             <span style={{ fontSize: "20px" }}>색상</span>
-              <select style={{ marginLeft: "1.3rem" }} value={targetColor} onChange={handleColorChange}>
+              <select style={{ marginLeft: "1.3rem", fontSize:"20px" }} value={targetColor} onChange={handleColorChange}>
                 {colorArray.map((color, index) => (
                   <option value={color} key={index}>
                     {color}
@@ -247,7 +247,7 @@ export default function Item() {
             </div>
             <div>
             <span style={{ fontSize: "20px" }}>사이즈</span>
-              <select style={{ marginLeft: "1.5rem" , width:"3rem",textAlignLast: "center"}} value={targetSize} onChange={handleSizeChange}>
+              <select style={{ marginLeft: "1rem" , width:"4rem",textAlignLast: "center", fontSize:"20px"}} value={targetSize} onChange={handleSizeChange}>
                 {sizeArrayForColor.map((size, index) => (
                   <option value={size} key={index}>
                     {size}
@@ -264,7 +264,7 @@ export default function Item() {
                 {" "}
                 -{" "}
               </button>
-              <h5>{quantity}</h5>
+              <h3>{quantity}</h3>
               <button className="quantityButton" onClick={quantityPlus}>
                 {" "}
                 +{" "}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-
+import "./Seller.css";
 const CellRenderer = (props) => {
   const token = localStorage.getItem("token");
   const [storeInfo, setStoreInfo] = useState({ result: "", data: [] });
@@ -11,7 +11,7 @@ const CellRenderer = (props) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "/api/store/read/seller/seller@naver.com",
+          `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}store/read/seller/${localStorage.getItem("email")}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -44,7 +44,11 @@ const CellRenderer = (props) => {
           // ,          state: { productId: productId },
         }}
       >
-        <button>등록/수정</button>
+        <button class="w-btn w-btn-indigo" 
+        style={{ alignItems: 'center', justifyContent: 'center', height : '100%'}}
+        type="button">
+        등록/수정
+    </button>
       </Link>
     </span>
   );

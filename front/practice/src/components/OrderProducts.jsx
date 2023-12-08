@@ -18,7 +18,7 @@ export default function OrderProducts({ selectedBread, changeSingleBox, data, ch
 
     var email = localStorage.getItem('email');
     var token = localStorage.getItem('token');
-
+    const CART_URL = process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DJANGO_CART_URL : process.env.REACT_APP_API_URL;
     const handleColorChange = (e) => { // 선택한 색상 변경
         const newTargetColor = e.target.value;
         setTargetColor(newTargetColor);
@@ -57,7 +57,7 @@ function quantityMinus () { //수량 감소
 
 async function optionGet() { //옵션 가져오기
     const response = await fetch(
-        '/api/product/all/'+data.product.p_id,
+        `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/all/`+data.product.p_id,
         {
           method: "GET",
           headers: {    
@@ -114,10 +114,9 @@ async function optionEdit(){  //옵션 변경
             price: (perPrice * quantity),
         }
       };
-  
       try {
         const response = await fetch(
-          "/api/cart/items/",
+          `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${CART_URL}cart/items/`,
           {
             method: "PUT",
             headers: {

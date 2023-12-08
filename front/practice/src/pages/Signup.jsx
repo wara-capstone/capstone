@@ -36,7 +36,7 @@ const Signup = () => {
 
     try {
       const response = await fetch(
-        "/api/auth/signup",
+        `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}auth/signup`,
         {
           method: "POST",
           headers: {
@@ -51,6 +51,7 @@ const Signup = () => {
       if (response.status === 201) {
         // Redirect to login.html
         console.log("성공! 이메일주소: " + data.email);
+        message.success("회원가입 완료되었습니다.");
         navigate("/login"); // 로그인 성공시 홈으로 이동합니다.
       } else if (response.status === 400) {
         // Handle error

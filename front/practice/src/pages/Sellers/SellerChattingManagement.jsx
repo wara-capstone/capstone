@@ -12,7 +12,7 @@ export default function SellerChattingManagement() {
 
   const userId = localStorage.getItem("email");
   const token = localStorage.getItem("token"); // 실제 token 값으로 대체
-
+  const CHATTING_URL = process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DJANGO_CHATTING_URL : process.env.REACT_APP_API_URL;
   const [roundImage, setRoundImage] = useState(
     "https://via.placeholder.com/150x150"
   );
@@ -71,7 +71,7 @@ export default function SellerChattingManagement() {
     }
 
     try {
-      const response = await fetch("/api/chat/rooms/", {
+      const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${CHATTING_URL}chat/rooms/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -118,7 +118,7 @@ export default function SellerChattingManagement() {
   const setupWebSocket = (roomId, authToken) => {
     // 인증 토큰을 URL의 쿼리 파라미터로 추가
     const newSocket = new WebSocket(
-      `wss://www.onoff.zone/api/ws/room/${roomId}/messages?token=${authToken}`
+      `${process.env.NODE_ENV === 'development' ? 'ws://' : 'wss://www.onoff.zone'}${CHATTING_URL}ws/room/${roomId}/messages?token=${authToken}`
     );
 
     console.log(newSocket.url);
@@ -169,7 +169,7 @@ export default function SellerChattingManagement() {
     async function fetchChattingList() {
       setLoading(true);
       try {
-        const response = await fetch(`/api/chat/rooms/?email=${userId}`, {
+        const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${CHATTING_URL}chat/rooms/?email=${userId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -207,7 +207,7 @@ export default function SellerChattingManagement() {
   }, [userId]);
 
   const fetchImage = async (email) => {
-    const response = await fetch(`/api/user?email=${email}`, {
+    const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}user?email=${email}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

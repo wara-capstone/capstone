@@ -31,8 +31,9 @@ export default function Purchase() {
       const pSize = item.product.size;
 
       const fetchData = async () => {
+        console.log("값들", productId, pColor, pSize);
         const response = await fetch(
-          `/api/product/all/product/${productId}/${pColor}/${pSize}`,
+          `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/all/product/${productId}/${pColor}/${pSize}`,
           {
             method: "GET",
             headers: {
@@ -41,11 +42,12 @@ export default function Purchase() {
             },
           }
         );
-       const result = await response.json();
         if (response.status === 200) {
+          const result = await response.json();
           console.log("성공");
-          console.log(result);
+          console.log("받아온 옵션아이디",result);
           item.product.optionId = result;
+          console.log("받아온 옵션아이디", item.product.optionId);
 
         } else {
           console.log("실패");
@@ -82,7 +84,7 @@ async function clickPurchase(e) {
 
     try {
       const response = await fetch(
-        "/api/payment/create",
+        `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}payment/create`,
         {
           method: "POST",
           headers: {
@@ -106,7 +108,7 @@ async function clickPurchase(e) {
         console.log(deleteString);
           const fetchData = async () => {
            const response = await fetch(
-             '/api/cart/items/?user_email='+email+deleteString,
+             `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}cart/items/?user_email=`+email+deleteString,
              {
                method: "DELETE",
                headers: {

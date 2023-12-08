@@ -14,7 +14,7 @@ function SellerHeader() {
       <div className="seller-header-container">
         <Link to="/user" className="seller-header-link">
           <h2 className="seller-header-menu" style={{ color: "gray" }}>
-            {email}
+            마이페이지
           </h2>
         </Link>
 

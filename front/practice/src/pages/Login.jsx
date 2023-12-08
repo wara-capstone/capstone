@@ -18,7 +18,7 @@ const Login = () => {
     await new Promise((r) => setTimeout(r, 1000));
     
     const response = await fetch(
-      "/api/auth/signin",
+      `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}auth/signin`,
       {
         method: "POST",
         headers: {

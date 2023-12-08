@@ -39,18 +39,32 @@ useEffect(() => {
     codeReader.listVideoInputDevices().then((devices) => {
       // 비디오 입력 장치 목록 조회
       setVideoInputDevices(devices); // 장치 목록 설정
-      setSelectedDeviceId(devices[0]?.deviceId || ""); // 첫 번째 장치를 선택
-      startDecoding(devices[0]?.deviceId || ""); // 첫 번째 장치로 디코딩 시작
-      setProducts([Data.cardData[0]]); // 제품 목록 설정
+  
+      // 후면 카메라 선택 (일반적으로 두 번째 장치가 후면 카메라입니다)
+      const rearCamera = devices.find(
+        (device) => device.label.toLowerCase().includes("back")
+      );
+  
+      if (rearCamera) {
+        // 후면 카메라가 있으면
+        setSelectedDeviceId(rearCamera.deviceId); // 후면 카메라를 선택
+        startDecoding(rearCamera.deviceId); // 후면 카메라로 디코딩 시작
+      } else {
+        // 후면 카메라가 없으면 첫 번째 장치를 선택
+        setSelectedDeviceId(devices[0]?.deviceId || "");
+        startDecoding(devices[0]?.deviceId || "");
+      }
+  
+      setProducts([Data.cardData[1]]); // 제품 목록 설정
     });
-
+  
     const handleUnload = () => {
       // 페이지가 언로드될 때 실행할 핸들러
       codeReader.reset(); // 바코드 리더 초기화
     };
-
+  
     window.addEventListener("unload", handleUnload); // 언로드 이벤트 리스너 등록
-
+  
     return () => {
       // 컴포넌트가 언마운트될 때 실행
       codeReader.reset(); // 바코드 리더 초기화
@@ -64,6 +78,8 @@ useEffect(() => {
     setResult(""); // 결과 초기화
     setShowModal(false); // 모달 숨김
     setIsBarcodeDetected(false); // 바코드 인식 상태 리셋
+    // 바코드 리더를 리셋한 후에 다시 스캔 시작
+  startDecoding(selectedDeviceId);
   };
 
   const userId = localStorage.getItem("email"); // 세션 스토리지에서 이메일(사용자 ID) 가져오기
@@ -86,7 +102,7 @@ useEffect(() => {
     // if(productId == null ){return}
     try {
       const response = await axios.get(
-        `/api/product/all/${productId}/option/${optionId}`,
+        `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/all/${productId}/option/${optionId}`,
         {
           headers: {
             Authorization: `${token}`,
@@ -119,18 +135,10 @@ useEffect(() => {
       async (result, err) => {
         // 비디오 장치에서 바코드 디코딩
         if (result) {
-
-          console.log(result);
           // 결과가 있으면
           console.log(result); // 결과 로깅
           var data = result.text.split("A");
-
-          //const barcodeData = JSON.parse(result.text); // 바코드 데이터를 JSON 객체로 변환
-          if(true){
-         // console.log(barcodeData);
-          console.log(data);
-
-
+  
           fetchedProductInfo = await fetchProductInfo(
             data[0],
             data[1]
@@ -139,17 +147,16 @@ useEffect(() => {
           setResult(fetchedProductInfo); // 결과 설정
           setShowModal(true); // 모달 표시
           setIsBarcodeDetected(true); // 바코드 인식 상태 설정
-        
+  
+          // 스캔이 완료된 후에 바코드 리더를 리셋하고 다시 스캔 시작
+          codeReader.reset();
+          startDecoding(id);
+        }
         if (err && !(err instanceof NotFoundException)) {
           // 에러가 있고, NotFoundException이 아니면
           console.error(err); // 에러 로깅
           console.error(err.message); // 오류 메시지 출력
           setResult(err.message); // 에러 메시지 설정
-        }
-        }else{
-          console.log("barcode detect error");
-          //console.log(barcodeData);
-        }
         }
       }
     );
@@ -157,7 +164,7 @@ useEffect(() => {
 
   return (
     <div>
-      <button onClick={resetDecoding}>Reset</button>{" "}
+      {/* <button onClick={resetDecoding}>Reset</button>{" "} */}
       {/* 리셋 버튼, 클릭 시 디코딩 리셋 */}
       {videoInputDevices.length > 0 && ( // 비디오 입력 장치가 있으면
         <select // 장치 선택 셀렉트 박스
