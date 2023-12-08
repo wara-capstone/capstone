@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class PaymentDAOImpl implements PaymentDAO{
             return result;
         }
 
-        paymentEntity.setDateTime(LocalDateTime.now());
+        paymentEntity.setDateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         paymentRepository.save(paymentEntity);
 
         if(paymentRepository.existsByPaymentId(paymentEntity.getPaymentId())){
