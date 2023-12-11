@@ -21,10 +21,20 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 	implementation 'org.mariadb.jdbc:mariadb-java-client'
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
+ext {
+	set('springCloudVersion', "2021.0.8")
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
 tasks.named('test') {
 	useJUnitPlatform()
 }
