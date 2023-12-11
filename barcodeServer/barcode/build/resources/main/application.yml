@@ -1,0 +1,19 @@
+server:
+  port: 15000
+
+spring:
+  application:
+    name: Barcode-Service
+
+
+eureka:
+  instance:
+    instance-id: ${spring.cloud.client.hostname}:${spring.application.instance_id:${random.value}}
+    prefer-ip-address: true
+    ip-address: 3.37.91.99
+
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://52.79.186.117:8761/eureka
