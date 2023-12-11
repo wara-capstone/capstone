@@ -26,6 +26,7 @@ export default function Purchase() {
 
   useEffect(() => { // ProductId, pColor, pSize로 optionId 가져오기
     selectedItems.forEach(item => {
+      console.log("item", item);
       const productId = item.product.p_id;
       const pColor = item.product.color;
       const pSize = item.product.size;
@@ -45,10 +46,9 @@ export default function Purchase() {
         if (response.status === 200) {
           const result = await response.json();
           console.log("성공");
-          console.log("받아온 옵션아이디",result);
-          item.product.optionId = result;
-          console.log("받아온 옵션아이디", item.product.optionId);
-
+          // console.log("받아온 옵션 값",result);
+          item.product.optionId = result.optionId;
+          item.product.stock = result.productStock;
         } else {
           console.log("실패");
         }
@@ -61,6 +61,23 @@ export default function Purchase() {
 
 async function clickPurchase(e) {
     // Create payload
+
+  // selectedItems.forEach(item => {
+  //   if(item.product.stock < item.product.quantity){
+  //     message.error(`${item.product.p_name}의 재고가 부족합니다.`);
+  //     return;
+  //   }
+  // });
+
+  const insufficientItems = selectedItems.filter(item => item.product.stock < item.product.quantity);
+  if (insufficientItems.length > 0) {
+      insufficientItems.forEach(item => {
+          message.error(`${item.product.p_name}의 재고가 부족합니다.`);
+      });
+      return;
+  }
+
+
     const totoalPayment = {
       purchaser: email,
       totalPrice: totalPrice
