@@ -154,10 +154,10 @@ public class ProductDAOImpl implements ProductDAO{
     }
 
     @Override
-    public Long optionSpecify(Long productId, String color, String size) {
+    public OptionEntity optionSpecify(Long productId, String color, String size) {
         ProductEntity product = productRepository.getByProductId(productId);
-        OptionEntity option = optionRepository.getByProductAndProductColorAndProductSize(product,color,size);
-        return option.getOptionId();
+        return optionRepository.getByProductAndProductColorAndProductSize(product,color,size);
+
     }
 
 

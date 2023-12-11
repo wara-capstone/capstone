@@ -176,9 +176,9 @@ public class ProductService {
         return productDAO.stockModify(optionId,stockModify).toDTO();
     }
 
-    public Long optionSpcify(Long productId,String color, String size)
+    public OptionDTO optionSpcify(Long productId,String color, String size)
     {
-        return productDAO.optionSpecify(productId,color,size);
+        return productDAO.optionSpecify(productId,color,size).toDTO();
     }
 
 }

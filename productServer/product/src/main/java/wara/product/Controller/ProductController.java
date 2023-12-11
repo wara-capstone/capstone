@@ -324,7 +324,7 @@ public class ProductController {
 
 
     @GetMapping("/all/product/{productId}/{color}/{size}")
-    public ResponseEntity<Long> targetOptionSpecify(@PathVariable Long productId,
+    public ResponseEntity<OptionDTO> targetOptionSpecify(@PathVariable Long productId,
                                                     @PathVariable String color,
                                                     @PathVariable String size)
     {
@@ -332,7 +332,13 @@ public class ProductController {
         logger.info("productId : "+productId);
         logger.info("color : "+color);
         logger.info("size : "+size);
-        return ResponseEntity.status(200).body(productService.optionSpcify(productId, color,size));
+        OptionDTO response = productService.optionSpcify(productId, color,size);
+
+        logger.info("[반환값]");
+        logger.info("[option ID]: " + response.getOptionId());
+        logger.info("[Stock]: " + response.getProductStock());
+
+        return ResponseEntity.status(200).body(response);
     }
 
 

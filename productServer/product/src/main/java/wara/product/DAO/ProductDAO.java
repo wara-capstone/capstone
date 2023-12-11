@@ -29,7 +29,7 @@ public interface ProductDAO {
     List<ProductEntity> storeCategoryFilter(Long storeId, String category);
     OptionEntity stockModify(Long optionId, String stockModify);
 
-    Long optionSpecify(Long productId, String color, String size);
+    OptionEntity optionSpecify(Long productId, String color, String size);
 }
 
 
