@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -24,11 +25,13 @@ public class UserDAOImpl implements UserDAO {
 
 
     @Override
+    @Transactional
     public Optional<UserEntity> readUser(String email) {
         return this.userRepository.findByEmail(email);
     }
 
     @Override
+    @Transactional
     public UserEntity createUser(UserEntity userEntity) {
         return this.userRepository.save(userEntity);
     }

@@ -7,6 +7,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 class AuthApplicationTests {
 
 	@Test
+	public void UserDAO(){
+	}
+
+	@Test
 	void contextLoads() {
 	}
 
