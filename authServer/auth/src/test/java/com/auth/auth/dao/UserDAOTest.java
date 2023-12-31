@@ -1,6 +1,5 @@
-package com.auth.auth;
+package com.auth.auth.dao;
 
-import com.auth.auth.dao.UserDAO;
 import com.auth.auth.entity.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

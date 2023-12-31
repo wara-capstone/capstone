@@ -36,4 +36,24 @@ public class UserDAOImpl implements UserDAO {
         return this.userRepository.save(userEntity);
     }
 
+    @Override
+    public void deleteUser(String email) {
+        this.userRepository.deleteByEmail(email);
+    }
+
+    @Override
+    public Integer getCountUser() {
+        return this.userRepository.getCount();
+    }
+
+    @Override
+    public void deleteAllUser() {
+        this.userRepository.deleteAll();
+    }
+
+    @Override
+    public Boolean existUserByEmail(String email) {
+        return this.userRepository.existsByEmail(email);
+    }
+
 }

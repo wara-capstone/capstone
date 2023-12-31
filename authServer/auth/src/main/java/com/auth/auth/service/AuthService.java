@@ -13,11 +13,9 @@ import org.springframework.http.ResponseEntity;
 public interface AuthService {
 
     // 회원가입
-    public ResponseEntity<UserDTO> signUp(UserDTO userDTO);
+    public UserDTO signUp(UserDTO userDTO);
     // 로그인
-    public ResponseEntity<TokenDTO> signIn(UserDTO userDTO);
-    // 이메일 중복 체크
-    public boolean emailDuplicateCheck(String email);
+    public TokenDTO signIn(UserDTO userDTO);
     // 토큰 검증
     public boolean tokenValidCheck(String token);
 }

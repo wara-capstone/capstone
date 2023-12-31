@@ -3,6 +3,10 @@ package com.auth.auth.controller;
 
 import com.auth.auth.dto.TokenDTO;
 import com.auth.auth.dto.UserDTO;
+import com.auth.auth.except.EmailDuplicateException;
+import com.auth.auth.except.NotSignUpEmailException;
+import com.auth.auth.except.NullDTOException;
+import com.auth.auth.except.PasswordMismatchException;
 import com.auth.auth.service.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +36,11 @@ public class AuthController {
             @RequestBody UserDTO userDTO
     ){
         logger.info("[SignUp] 회원가입 요청 "+userDTO.toString());
-        return this.authService.signUp(userDTO);
+        try {
+            return ResponseEntity.status(201).body(this.authService.signUp(userDTO));
+        }catch (EmailDuplicateException | NullDTOException e){
+            return ResponseEntity.status(400).body(UserDTO.builder().email(e.getMessage()).build());
+        }
     }
 
     /**
@@ -42,9 +50,12 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<TokenDTO> signin(
             @RequestBody UserDTO userDTO
-    ){
-        logger.info("[SignIn] 로그인 요청 "+userDTO.toString());
-        return this.authService.signIn(userDTO);
+    ) {
+        logger.info("[SignIn] 로그인 요청 " + userDTO.toString());
+        try {
+            return ResponseEntity.status(200).body(this.authService.signIn(userDTO));
+        } catch (NotSignUpEmailException | PasswordMismatchException | NullDTOException e) {
+            return ResponseEntity.status(400).body(TokenDTO.builder().token(e.getMessage()).build());
+        }
     }
-
 }
