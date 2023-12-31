@@ -60,7 +60,7 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
-        return token;
+        return "Bearer "+token;
     }
 
 //    @Transactional
@@ -94,9 +94,11 @@ public class JwtTokenProvider {
         // 토큰의 유효기간이 지나지 않았는지를 체크한다.
         logger.info("[JwtTokenProvider] validateToken, 토큰 유효성 체크");
         try{
+            token = token.replace("Bearer ", "");
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e){
+            e.printStackTrace();
             logger.info("[JwtTokenProvider] validateToken, 토큰 유효성 체크 예외 발생");
             return false;
         }

@@ -1,11 +1,13 @@
 package com.auth.auth.entity;
 
+import com.auth.auth.dto.UserDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,6 +51,20 @@ public class UserEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
+
+    public static UserEntity dtoToEntity(UserDTO userDTO){
+        return UserEntity.builder()
+                .email(userDTO.getEmail())
+                .name(userDTO.getName())
+                .phone(userDTO.getPhone())
+                .nickname(userDTO.getNickname())
+                .password(userDTO.getPassword())
+                .profileImage(userDTO.getProfileImage())
+                .roles(Arrays.asList(userDTO.getRole()))
+                .build();
+    }
+
+
 
 //
 //    // 계정이 가지고 있는 권한을 리턴합니다.

@@ -18,6 +18,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 
@@ -27,9 +28,7 @@ import java.util.Collections;
 // 로그인 관련 서비스 구현체
 @Service
 public class AuthServiceImpl implements AuthService {
-
     private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
-
     private final UserDAO userDAO;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -72,64 +71,21 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public UserDTO signUp(UserDTO userDTO) {
-        logger.info("[getSignUpResult] 회원가입 정보 전달");
-        UserEntity userEntity;
+        this.emailDuplicateCheck(userDTO.getEmail());
+        UserEntity signUpUser = userDAO.createUser(this.initEntity(userDTO));
+        return UserDTO.builder().email(signUpUser.getEmail()).build();
+    }
 
-        // 이메일 중복 체크
-        try {
-            try {
-                this.emailDuplicateCheck(userDTO.getEmail());
-                // 규칙 설정
-                if (userDTO.getRole().equalsIgnoreCase("admin")) {
-                    userEntity = UserEntity.builder()
-                            .email(userDTO.getEmail())
-                            .password(userDTO.getPassword())
-                            .nickname(userDTO.getNickname())
-                            .name(userDTO.getName())
-                            .phone(userDTO.getPhone())
-                            .profileImage("https://www.onoff.zone/api/image/download/1")
-                            .roles(Collections.singletonList("ROLE_ADMIN"))
-                            .build();
-                } else if (userDTO.getRole().equalsIgnoreCase("seller")) {
-                    userEntity = UserEntity.builder()
-                            .email(userDTO.getEmail())
-                            .password(userDTO.getPassword())
-                            .nickname(userDTO.getNickname())
-                            .name(userDTO.getName())
-                            .phone(userDTO.getPhone())
-                            .profileImage("https://www.onoff.zone/api/image/download/1")
-                            .roles(Collections.singletonList("ROLE_SELLER"))
-                            .build();
-                } else {
-                    userEntity = UserEntity.builder()
-                            .email(userDTO.getEmail())
-                            .password(userDTO.getPassword())
-                            .nickname(userDTO.getNickname())
-                            .name(userDTO.getName())
-                            .phone(userDTO.getPhone())
-                            .profileImage("https://www.onoff.zone/api/image/download/1")
-                            .roles(Collections.singletonList("ROLE_USER"))
-                            .build();
-                }
-
-                // 생성한 유저 엔티티를 DB에 저장
-                UserEntity signUpUser = userDAO.createUser(userEntity);
-                return UserDTO.builder().email(signUpUser.getEmail()).build();
-//            logger.info("[getSignUpResult] userEntity 값이 들어왔는지 확인 후 결과 값 주입");
-//            if (!savedUser.getEmail().isEmpty()) {
-//                logger.info("[getSignUpResult] 정상 처리 완료");
-//                return ResponseEntity.status(201).body(UserDTO.builder().email(userDTO.getEmail()).build());
-//            } else {
-//                logger.info("[getSignUpResult]  실패 처리 완료");
-//                return ResponseEntity.badRequest().body(UserDTO.builder().email("email null").build());
-//            }
-                // DataIntegrityViolatingException은 email이 null일 경우 발생
-            }catch (NullPointerException | DataIntegrityViolationException e){
-                throw new NullDTOException();
-            }
-        }catch (EmailDuplicateException e){
-            throw e;
+    private UserEntity initEntity(UserDTO userDTO){
+        userDTO.setProfileImage("https://www.onoff.zone/api/image/download/1");
+        if(userDTO.getRole().equalsIgnoreCase("admin")){
+            userDTO.setRole("ROLE_ADMIN");
+        }else if(userDTO.getRole().equalsIgnoreCase("seller")){
+            userDTO.setRole("ROLE_SELLER");
+        }else{
+            userDTO.setRole("ROLE_USER");
         }
+        return UserEntity.dtoToEntity(userDTO);
     }
 
     /**
@@ -139,34 +95,28 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public TokenDTO signIn(UserDTO userDTO) {
-        logger.info("[getSignInResult] signDataHandler 로 회원 정보 요청");
-        if(!userDAO.existUserByEmail(userDTO.getEmail()))
+        this.existEmailCheck(userDTO.getEmail());
+        UserEntity userEntity = userDAO.readUser(userDTO.getEmail()).get();
+        this.passwordCheck(userDTO.getPassword(), userEntity.getPassword());
+        return this.makeToken(userEntity.getEmail(), userEntity.getRoles().get(0));
+    }
+
+
+    private TokenDTO makeToken(String email, String role){
+        return TokenDTO.builder()
+                .email(email)
+                .role(role)
+                .token(this.jwtTokenProvider.createToken(email, Arrays.asList(role))
+                ).build();
+    }
+    private void existEmailCheck(String email){
+        if(!userDAO.existUserByEmail(email))
             throw new NotSignUpEmailException();
-
-        try {
-            UserEntity userEntity = userDAO.readUser(userDTO.getEmail()).get();
-            logger.info("[getSignInResult] e-mail : {}", userDTO.getEmail());
-
-            TokenDTO tokenDTO = new TokenDTO();
-            tokenDTO.setEmail(userDTO.getEmail());
-
-            logger.info("[getSignInResult] 패스워드 비교 수행");
-            //try {// 패스워드 불일치
-                if (!(userDTO.getPassword().equals(userEntity.getPassword()))) {
-                    logger.info("패스워드 불일치");
-                    throw new PasswordMismatchException();
-                }
-//            } catch (IllegalArgumentException e) {
-//                tokenDTO.setToken("Email mismatch");
-//                return ResponseEntity.badRequest().body(tokenDTO);
-//            }
-
-            tokenDTO.setRole(userEntity.getRoles().get(0).equals("ROLE_USER") ? "user" : "seller");
-            logger.info("[getSignInResult] 패스워드 일치");
-            tokenDTO.setToken("Bearer " + jwtTokenProvider.createToken(String.valueOf(userEntity.getEmail()), userEntity.getRoles()));
-            return tokenDTO;
-        }catch (NullPointerException e){
-            throw new NullDTOException();
+    }
+    private void passwordCheck(String requestPassword, String entityPassword){
+        if (!requestPassword.equals(entityPassword)) {
+            logger.info("패스워드 불일치");
+            throw new PasswordMismatchException();
         }
     }
 

@@ -104,6 +104,13 @@ public class AuthServiceTest {
         }).isInstanceOf(NullDTOException.class);
     }
 
+    @DisplayName("token valid check")
+    @Test
+    public void tokenValidCheck(){
+        this.authService.signUp(user1);
+        TokenDTO tokenDTO = this.authService.signIn(user1);
+        assertThat(this.authService.tokenValidCheck(tokenDTO.getToken())).isTrue();
+    }
 
     @AfterEach
     public void initDB(){
