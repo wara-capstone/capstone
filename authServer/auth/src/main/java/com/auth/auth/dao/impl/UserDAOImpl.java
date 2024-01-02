@@ -26,7 +26,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     @Transactional
-    public Optional<UserEntity> readUser(String email) {
+    public UserEntity readUser(String email) {
         return this.userRepository.findByEmail(email);
     }
 

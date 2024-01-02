@@ -2,6 +2,8 @@ package com.auth.auth.controller;
 
 
 import com.auth.auth.dto.UserDTO;
+import com.auth.auth.except.NotSignUpEmailException;
+import com.auth.auth.except.NullDTOException;
 import com.auth.auth.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,8 +53,13 @@ public class UserController {
     public ResponseEntity<UserDTO> updateUser(
             @RequestBody UserDTO userDTO
             ){
-        logger.info("[update User] "+userDTO.toString());
-        return this.userService.updateUser(userDTO);
+        try {
+            logger.info("[update User] " + userDTO.toString());
+            return ResponseEntity.status(200).body(this.userService.updateUser(userDTO));
+        }catch (NotSignUpEmailException | NullDTOException e){
+            return ResponseEntity.status(400).body(null);
+
+        }
     }
 
     /**
@@ -64,8 +71,12 @@ public class UserController {
     public ResponseEntity<UserDTO> readUser(
             @RequestParam("email") String email
     ){
-        logger.info("[read User] " + email);
-        return this.userService.readUser(email);
+        try {
+            logger.info("[read User] " + email);
+            return ResponseEntity.status(200).body(this.userService.readUser(email));
+        }catch (NotSignUpEmailException e){
+            return ResponseEntity.status(400).body(null);
+        }
     }
 
 

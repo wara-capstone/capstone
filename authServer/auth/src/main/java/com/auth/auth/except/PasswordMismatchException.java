@@ -1,8 +1,14 @@
 package com.auth.auth.except;
 
 public class PasswordMismatchException extends RuntimeException{
+
+
     public PasswordMismatchException() {
         super();
+    }
+
+    public PasswordMismatchException(Throwable cause) {
+        super(cause);
     }
 
     @Override

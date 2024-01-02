@@ -42,29 +42,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /**
-     * 유저의 이메일이 데이터베이스에 존재하는지 체크
-     * @param email 체크하려는 이메일
-     * @return true 존재하는 이메일, false 존재하지 않는 이메일
-     *
-     */
-    private void emailDuplicateCheck(String email){
-        if(userDAO.existUserByEmail(email)){
-            throw new EmailDuplicateException();
-        }
-    }
-
-
-    /**
-     * 토큰의 유효성을 검증한다.
-     * @param token JWT 토큰
-     * @return true 유효 토큰, false 유효하지 않는 토큰
-     */
-    @Override
-    public boolean tokenValidCheck(String token) {
-        return this.jwtTokenProvider.validateToken(token);
-    }
-
-    /**
      * 회원가입 서비스
      * @param userDTO
      * @return 유저의 이메일을 담은 결과값 출력
@@ -74,6 +51,18 @@ public class AuthServiceImpl implements AuthService {
         this.emailDuplicateCheck(userDTO.getEmail());
         UserEntity signUpUser = userDAO.createUser(this.initEntity(userDTO));
         return UserDTO.builder().email(signUpUser.getEmail()).build();
+    }
+
+    /**
+     * 유저의 이메일이 데이터베이스에 존재하는지 체크
+     * @param email 체크하려는 이메일
+     * @return true 존재하는 이메일, false 존재하지 않는 이메일
+     *
+     */
+    private void emailDuplicateCheck(String email){
+        if(userDAO.existUserByEmail(email)){
+            throw new EmailDuplicateException();
+        }
     }
 
     private UserEntity initEntity(UserDTO userDTO){
@@ -96,7 +85,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokenDTO signIn(UserDTO userDTO) {
         this.existEmailCheck(userDTO.getEmail());
-        UserEntity userEntity = userDAO.readUser(userDTO.getEmail()).get();
+        UserEntity userEntity = userDAO.readUser(userDTO.getEmail());
         this.passwordCheck(userDTO.getPassword(), userEntity.getPassword());
         return this.makeToken(userEntity.getEmail(), userEntity.getRoles().get(0));
     }
@@ -120,4 +109,13 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    /**
+     * 토큰의 유효성을 검증한다.
+     * @param token JWT 토큰
+     * @return true 유효 토큰, false 유효하지 않는 토큰
+     */
+    @Override
+    public boolean tokenValidCheck(String token) {
+        return this.jwtTokenProvider.validateToken(token);
+    }
 }

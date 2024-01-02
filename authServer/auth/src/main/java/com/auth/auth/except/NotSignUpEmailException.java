@@ -1,8 +1,14 @@
 package com.auth.auth.except;
 
 public class NotSignUpEmailException extends RuntimeException{
+
+
     public NotSignUpEmailException() {
         super();
+    }
+
+    public NotSignUpEmailException(Throwable cause) {
+        super(cause);
     }
 
     @Override

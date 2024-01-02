@@ -6,7 +6,7 @@ import com.auth.auth.entity.UserEntity;
 import java.util.Optional;
 
 public interface UserDAO {
-    public Optional<UserEntity> readUser(String email);
+    public UserEntity readUser(String email);
     public UserEntity createUser(UserEntity userEntity);
     public void deleteUser(String email);
     public Integer getCountUser();

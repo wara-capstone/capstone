@@ -64,6 +64,16 @@ public class UserEntity {
                 .build();
     }
 
+    public static  UserDTO entityToDTO(UserEntity userEntity){
+        return UserDTO.builder()
+                .id(userEntity.getId())
+                .name(userEntity.getName())
+                .email(userEntity.getEmail())
+                .nickname(userEntity.getNickname())
+                .phone(userEntity.getPhone())
+                .profileImage(userEntity.getProfileImage())
+                .build();
+    }
 
 
 //

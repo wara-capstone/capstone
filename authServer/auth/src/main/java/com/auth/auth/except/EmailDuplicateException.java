@@ -2,8 +2,13 @@ package com.auth.auth.except;
 
 public class EmailDuplicateException extends RuntimeException{
 
+
     public EmailDuplicateException() {
         super();
+    }
+
+    public EmailDuplicateException(Throwable cause) {
+        super(cause);
     }
 
     @Override

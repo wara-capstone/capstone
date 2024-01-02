@@ -3,10 +3,10 @@ package com.auth.auth.except;
 
 public class NullDTOException extends RuntimeException{
 
-
-    public NullDTOException() {
-        super();
+    public NullDTOException(Throwable cause) {
+        super(cause);
     }
+
 
     @Override
     public String getMessage() {

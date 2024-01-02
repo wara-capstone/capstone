@@ -40,7 +40,7 @@ public class UserDAOTest {
         this.checkUser(this.user1, testUser);
 
         // Read
-        this.user1 = this.userDAO.readUser(this.user1.getEmail()).orElse(null);
+        this.user1 = this.userDAO.readUser(this.user1.getEmail());
         this.checkUser(this.user1, testUser);
 
         // Rollback
@@ -70,7 +70,7 @@ public class UserDAOTest {
     @Test
     @Transactional
     public void nullEmailRead(){
-        UserEntity userEntity = this.userDAO.readUser("asd").orElse(null);
+        UserEntity userEntity = this.userDAO.readUser("asd");
         assertThat(userEntity).isNull();
     }
 

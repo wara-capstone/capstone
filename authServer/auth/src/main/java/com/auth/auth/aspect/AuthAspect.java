@@ -21,7 +21,7 @@ public class AuthAspect {
             return joinPoint.proceed();
             // DataIntegrityViolatingException은 email이 null일 경우 발생
         }catch (NullPointerException | DataIntegrityViolationException e){
-            throw new NullDTOException();
+            throw new NullDTOException(e.getCause());
         }finally {
             logger.info("["+joinPoint.getSignature().toShortString()+"]이 종료되었습니다.");
         }
