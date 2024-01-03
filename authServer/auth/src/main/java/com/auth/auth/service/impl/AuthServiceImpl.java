@@ -47,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
      * @return 유저의 이메일을 담은 결과값 출력
      */
     @Override
-    public UserDTO signUp(UserDTO userDTO) {
+    public UserDTO signUp(UserDTO userDTO) throws EmailDuplicateException, NullDTOException {
         this.emailDuplicateCheck(userDTO.getEmail());
         UserEntity signUpUser = userDAO.createUser(this.initEntity(userDTO));
         return UserDTO.builder().email(signUpUser.getEmail()).build();
@@ -83,7 +83,7 @@ public class AuthServiceImpl implements AuthService {
      * @return 유저 이메일, 유저 권한, JWT token을 담은 Token DTO와 결괏값 반환
      */
     @Override
-    public TokenDTO signIn(UserDTO userDTO) {
+    public TokenDTO signIn(UserDTO userDTO) throws NullDTOException, NotSignUpEmailException, PasswordMismatchException{
         this.existEmailCheck(userDTO.getEmail());
         UserEntity userEntity = userDAO.readUser(userDTO.getEmail());
         this.passwordCheck(userDTO.getPassword(), userEntity.getPassword());
@@ -98,11 +98,11 @@ public class AuthServiceImpl implements AuthService {
                 .token(this.jwtTokenProvider.createToken(email, Arrays.asList(role))
                 ).build();
     }
-    private void existEmailCheck(String email){
+    private void existEmailCheck(String email) throws NotSignUpEmailException{
         if(!userDAO.existUserByEmail(email))
             throw new NotSignUpEmailException();
     }
-    private void passwordCheck(String requestPassword, String entityPassword){
+    private void passwordCheck(String requestPassword, String entityPassword) throws PasswordMismatchException{
         if (!requestPassword.equals(entityPassword)) {
             logger.info("패스워드 불일치");
             throw new PasswordMismatchException();

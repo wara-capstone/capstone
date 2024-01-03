@@ -4,6 +4,10 @@ package com.auth.auth.service;
 
 import com.auth.auth.dto.TokenDTO;
 import com.auth.auth.dto.UserDTO;
+import com.auth.auth.except.EmailDuplicateException;
+import com.auth.auth.except.NotSignUpEmailException;
+import com.auth.auth.except.NullDTOException;
+import com.auth.auth.except.PasswordMismatchException;
 import org.springframework.http.ResponseEntity;
 
 
@@ -13,9 +17,9 @@ import org.springframework.http.ResponseEntity;
 public interface AuthService {
 
     // 회원가입
-    public UserDTO signUp(UserDTO userDTO);
+    public UserDTO signUp(UserDTO userDTO) throws EmailDuplicateException;
     // 로그인
-    public TokenDTO signIn(UserDTO userDTO);
+    public TokenDTO signIn(UserDTO userDTO) throws NullDTOException, NotSignUpEmailException, PasswordMismatchException;
     // 토큰 검증
     public boolean tokenValidCheck(String token);
 }

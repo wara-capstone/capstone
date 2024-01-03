@@ -2,6 +2,8 @@ package com.auth.auth.service;
 
 
 import com.auth.auth.dto.UserDTO;
+import com.auth.auth.except.NotSignUpEmailException;
+import com.auth.auth.except.NullDTOException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,7 +15,7 @@ import java.net.URISyntaxException;
  */
 public interface UserService {
     public ResponseEntity<String> createImage(String email, MultipartFile image) throws URISyntaxException, IOException;
-    public UserDTO updateUser(UserDTO userDTO);
-    public UserDTO readUser(String email);
+    public UserDTO updateUser(UserDTO userDTO)  throws NotSignUpEmailException, NullDTOException;
+    public UserDTO readUser(String email)throws NotSignUpEmailException;
 
 }

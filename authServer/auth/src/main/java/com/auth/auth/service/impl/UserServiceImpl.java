@@ -119,24 +119,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO updateUser(UserDTO userDTO) throws NotSignUpEmailException, NullDTOException
     {
-        try {
-            this.existEmailCheck(userDTO.getEmail());
-            try {
-                UserEntity user = this.userDAO.readUser(userDTO.getEmail());
-                user.setNickname(userDTO.getNickname());
-                user.setPhone(userDTO.getPhone());
-                user.setPassword(userDTO.getPassword().equals("") ?
-                        user.getPassword() : userDTO.getPassword());
-
-                user = this.userDAO.createUser(user);
-                userDTO = UserEntity.entityToDTO(user);
-                return userDTO;
-            }catch (NullPointerException e){
-                throw new NullDTOException(e.getCause());
-            }
-        }catch (NotSignUpEmailException e){
-            throw e;
-        }
+        this.existEmailCheck(userDTO.getEmail());
+        UserEntity user = this.userDAO.readUser(userDTO.getEmail());
+        user.setNickname(userDTO.getNickname());
+        user.setPhone(userDTO.getPhone());
+        user.setPassword(userDTO.getPassword().equals("") ?
+                user.getPassword() : userDTO.getPassword());
+        user = this.userDAO.createUser(user);
+        userDTO = UserEntity.entityToDTO(user);
+        return userDTO;
     }
 
     /**
@@ -145,15 +136,11 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public UserDTO readUser(String email) {
-        try {
+    public UserDTO readUser(String email) throws NotSignUpEmailException{
             this.existEmailCheck(email);
             UserEntity user = this.userDAO.readUser(email);
             UserDTO userDTO = UserEntity.entityToDTO(user);
             return userDTO;
-        }catch (NotSignUpEmailException e) {
-            throw e;
-        }
     }
 
     public void existEmailCheck(String email) throws NotSignUpEmailException{
