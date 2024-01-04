@@ -9,6 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 @Component
 @Aspect
@@ -30,5 +34,15 @@ public class UserServiceAspect {
         }
     }
 
+    @Around("execution(* com.auth.auth.service.impl.UserServiceImpl.*(String,org.springframework.web.multipart.MultipartFile))")
+    public Object restTemplateExceptionAspect(ProceedingJoinPoint joinPoint) throws Throwable {
+        try {
+            return joinPoint.proceed();
+            // DataIntegrityViolatingException은 email이 null일 경우 발생
+        } catch (HttpClientErrorException | URISyntaxException | IOException e) {
+            logger.info(e.getMessage() + " 발생");
+            throw e;
+        }
+    }
 
 }

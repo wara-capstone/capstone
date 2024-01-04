@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -39,9 +40,17 @@ public class UserController {
     public ResponseEntity<String> createImage(
             @RequestPart("image") MultipartFile image,
             @RequestParam("email") String email
-    ) throws URISyntaxException, IOException {
+    ) {
         logger.info("[create Image] " + email);
-        return this.userService.createImage(email, image);
+        try {
+            try {
+                return ResponseEntity.status(200).body(this.userService.createImage(email, image));
+            } catch (URISyntaxException | IOException | HttpClientErrorException e){
+                return ResponseEntity.status(500).body("서버에 내부적인 오류가 발생하였습니다.");
+            }
+        }catch (NotSignUpEmailException e){
+                return ResponseEntity.status(400).body(null);
+        }
     }
 
 

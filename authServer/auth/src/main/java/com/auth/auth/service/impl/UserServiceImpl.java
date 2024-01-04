@@ -52,64 +52,43 @@ public class UserServiceImpl implements UserService {
      * @throws IOException
      */
     @Override
-    public ResponseEntity<String> createImage(String email, MultipartFile image) throws URISyntaxException, IOException {
-        try {
-            this.existEmailCheck(email);
-            UserEntity user = this.userDAO.readUser(email);
-            // 이미지를 RestTemplate로 전송하기 위해 ByteArray로 수정
-            ByteArrayResource body = imageToByteArrayResource(image);
+    public String createImage(String email, MultipartFile image) throws URISyntaxException, IOException, NotSignUpEmailException, HttpClientErrorException {
+        this.existEmailCheck(email);
+        UserEntity user = this.userDAO.readUser(email);
 
-            try {
-                // 이미지 서버의 주소를 디스커버리 서버로부터 받아온다.
-                ServiceInstance imageService = discoveryClient.getInstances("IMAGE-SERVICE").get(0);
-                RestTemplate restTemplate = new RestTemplate();
-                HttpHeaders headers = new HttpHeaders();
-                HttpEntity<?> http = new HttpEntity<>(headers);
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<?> http = new HttpEntity<>(headers);
 
-                String index = user.getProfileImage().replace("https://www.onoff.zone/api/image/download/", "");
-                if (!index.equals("1")) {
-                    URI deleteUri = new URI(imageService.getUri() + "/api/image/" + index);
-                    logger.info(deleteUri.toString());
-                    restTemplate.exchange(deleteUri, HttpMethod.DELETE, http, Boolean.class);
-                }
+        // 이미지 서버의 주소를 디스커버리 서버로부터 받아온다.
+        ServiceInstance imageService = discoveryClient.getInstances("IMAGE-SERVICE").get(0);
 
-                // 새로운 이미지를 저장한다.
-                MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
-                bodyMap.add("images", body);
-                headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-                http = new HttpEntity<>(bodyMap, headers);
+        this.deleteOriginImage(
+                user.getProfileImage().replace("https://www.onoff.zone/api/image/download/", ""),
+                imageService.getUri(),
+                http,
+                restTemplate);
 
-                URI uri = new URI(imageService.getUri() + "/api/image/upload");
-                ResponseEntity response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
-                logger.info(uri.toString());
+        // 이미지를 RestTemplate로 전송하기 위해 ByteArray로 수정
+        ByteArrayResource body = imageToByteArrayResource(image);
+        // 새로운 이미지를 저장한다.
+        MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
+        bodyMap.add("images", body);
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        http = new HttpEntity<>(bodyMap, headers);
 
-                if (response.getStatusCode().is2xxSuccessful()) {
-                    LinkedHashMap responseBody = (LinkedHashMap) response.getBody();
-                    List<String> images = (List) responseBody.get("images");
-                    String imageUri = (String) images.get(0);
-                    UserEntity userEntity = user;
-                    userEntity.setProfileImage(imageUri);
-                    this.userDAO.createUser(userEntity);
-                    return ResponseEntity.status(200).body(imageUri);
-                }
-            } catch (HttpClientErrorException e) {
-                return ResponseEntity.status(400).body(null);
-            }
+        URI uri = new URI(imageService.getUri() + "/api/image/upload");
+        ResponseEntity response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
+        logger.info(uri.toString());
 
-            return ResponseEntity.status(400).body(null);
-        }catch (NotSignUpEmailException e){
-            throw e;
-        }
+        LinkedHashMap responseBody = (LinkedHashMap) response.getBody();
+        List<String> images = (List) responseBody.get("images");
+        String imageUri = (String) images.get(0);
+        user.setProfileImage(imageUri);
+        this.userDAO.createUser(user);
+        return imageUri;
     }
 
-    private ByteArrayResource imageToByteArrayResource(MultipartFile image) throws IOException {
-        return new ByteArrayResource(image.getBytes()) {
-            @Override
-            public String getFilename() {
-                return image.getOriginalFilename();
-            }
-        };
-    }
 
     /**
      * 유저 정보를 수정
@@ -125,9 +104,7 @@ public class UserServiceImpl implements UserService {
         user.setPhone(userDTO.getPhone());
         user.setPassword(userDTO.getPassword().equals("") ?
                 user.getPassword() : userDTO.getPassword());
-        user = this.userDAO.createUser(user);
-        userDTO = UserEntity.entityToDTO(user);
-        return userDTO;
+        return UserEntity.entityToDTO(this.userDAO.createUser(user));
     }
 
     /**
@@ -137,11 +114,28 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDTO readUser(String email) throws NotSignUpEmailException{
-            this.existEmailCheck(email);
-            UserEntity user = this.userDAO.readUser(email);
-            UserDTO userDTO = UserEntity.entityToDTO(user);
-            return userDTO;
+        this.existEmailCheck(email);
+        return UserEntity.entityToDTO(this.userDAO.readUser(email));
     }
+
+    private ByteArrayResource imageToByteArrayResource(MultipartFile image) throws IOException {
+        return new ByteArrayResource(image.getBytes()) {
+            @Override
+            public String getFilename() {
+                return image.getOriginalFilename();
+            }
+        };
+    }
+
+    private void deleteOriginImage(String index, URI uri, HttpEntity<?> http, RestTemplate restTemplate) throws URISyntaxException {
+        if (!index.equals("1")) {
+            URI deleteUri = new URI(uri + "/api/image/" + index);
+            logger.info(deleteUri.toString());
+            restTemplate.exchange(deleteUri, HttpMethod.DELETE, http, Boolean.class);
+        }
+    }
+
+
 
     public void existEmailCheck(String email) throws NotSignUpEmailException{
         if(!this.userDAO.existUserByEmail(email))

@@ -54,6 +54,20 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /**
+     * 로그인 서비스
+     * @param userDTO
+     * @return 유저 이메일, 유저 권한, JWT token을 담은 Token DTO와 결괏값 반환
+     */
+    @Override
+    public TokenDTO signIn(UserDTO userDTO) throws NullDTOException, NotSignUpEmailException, PasswordMismatchException{
+        this.existEmailCheck(userDTO.getEmail());
+        UserEntity userEntity = userDAO.readUser(userDTO.getEmail());
+        this.passwordCheck(userDTO.getPassword(), userEntity.getPassword());
+        return this.makeToken(userEntity.getEmail(), userEntity.getRoles().get(0));
+    }
+
+
+    /**
      * 유저의 이메일이 데이터베이스에 존재하는지 체크
      * @param email 체크하려는 이메일
      * @return true 존재하는 이메일, false 존재하지 않는 이메일
@@ -77,18 +91,7 @@ public class AuthServiceImpl implements AuthService {
         return UserEntity.dtoToEntity(userDTO);
     }
 
-    /**
-     * 로그인 서비스
-     * @param userDTO
-     * @return 유저 이메일, 유저 권한, JWT token을 담은 Token DTO와 결괏값 반환
-     */
-    @Override
-    public TokenDTO signIn(UserDTO userDTO) throws NullDTOException, NotSignUpEmailException, PasswordMismatchException{
-        this.existEmailCheck(userDTO.getEmail());
-        UserEntity userEntity = userDAO.readUser(userDTO.getEmail());
-        this.passwordCheck(userDTO.getPassword(), userEntity.getPassword());
-        return this.makeToken(userEntity.getEmail(), userEntity.getRoles().get(0));
-    }
+
 
 
     private TokenDTO makeToken(String email, String role){
