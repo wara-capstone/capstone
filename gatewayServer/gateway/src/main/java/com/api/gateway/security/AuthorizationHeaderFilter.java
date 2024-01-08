@@ -55,7 +55,8 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             } catch (Exception e){
             }
             // Authorization 헤더 없다면 에러
-            if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION) && a == "null") return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
+            if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION) && a == "null")
+                return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
             //헤더값
             else if(a != "null"){
                 jwt = a.replace("Bearer ", "").replace("[", "").replace("]", "");

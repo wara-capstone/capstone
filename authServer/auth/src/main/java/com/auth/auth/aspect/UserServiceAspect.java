@@ -1,6 +1,5 @@
 package com.auth.auth.aspect;
 
-import com.auth.auth.except.NotSignUpEmailException;
 import com.auth.auth.except.NullDTOException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
