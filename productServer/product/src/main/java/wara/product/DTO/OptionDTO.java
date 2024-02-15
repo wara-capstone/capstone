@@ -7,7 +7,7 @@ import wara.product.productEntity.ProductEntity;
 import javax.validation.constraints.Null;
 
 @Getter@Setter
-@AllArgsConstructor@NoArgsConstructor
+@AllArgsConstructor @NoArgsConstructor
 @ToString
 public class OptionDTO {
 
@@ -32,4 +32,5 @@ public class OptionDTO {
                   this.barcodeUrl
         );
     }
+
 }

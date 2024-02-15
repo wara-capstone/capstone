@@ -20,10 +20,6 @@ public class Urls {
     @Column(name = "productUrls")
     List<String> urls = new ArrayList<>();
 
-    public List<String> urlsValue(){
-        return this.urls;
-    }
-
     public Urls(List<String> urls) {
         this.urls = urls;
     }

@@ -1,7 +1,5 @@
 package wara.product.Controller;
 
-
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,6 @@ import wara.product.Service.ProductService;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -28,10 +25,10 @@ import java.util.Objects;
 @RequestMapping("/api/product")
 public class ProductController {
 
-    private final ProductService productService;
+
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
     private final TransrationService transrationService;
-
+    private final ProductService productService;
 
     public ProductController(@Autowired ProductService productService,
                              @Autowired TransrationService transrationService) {
@@ -63,7 +60,7 @@ public class ProductController {
      * @throws URISyntaxException
      * @throws IOException
      */
-    @PostMapping("/seller") @Transactional
+    @PostMapping(value = "/seller") @Transactional
     public ResponseEntity<ProductDTO> productRegistry(@RequestPart ProductDTO productDTO,
                                                       @RequestPart@Nullable OptionDTO optionDTO,
                                                       @RequestPart@Nullable List<MultipartFile> images) throws URISyntaxException, IOException {
@@ -71,7 +68,7 @@ public class ProductController {
         logger.info("전달받은 productDTO: " + productDTO.toString());
 
         ProductDTO responseDTO = new ProductDTO();
-        List<String> imagesURLs = new ArrayList<>();
+        List<String> imagesURLs;
 
         try {logger.info(optionDTO.toString());
         } catch (NullPointerException e) {logger.info("[optoinDTO없음]");}
@@ -111,14 +108,17 @@ public class ProductController {
             return ResponseEntity.status(200).body(responseDTO);
         }
 
-
         logger.info("[반환된 값]: " + responseDTO);
 
         return ResponseEntity.status(200).body(responseDTO);
     }
 
+
+
+
+
     @PutMapping("/seller/product/{productId}")
-    public ResponseEntity<String> productIamgeRegistry(@PathVariable("productId") Long productId,
+    public ResponseEntity<String> productImageRegistry(@PathVariable("productId") Long productId,
                                                        @RequestPart List<MultipartFile> images) throws URISyntaxException, IOException {
 
         List<String> urls = transrationService.uploadImage(images);
@@ -126,10 +126,9 @@ public class ProductController {
         logger.info("[상품 id]:" + productId.toString());
         logger.info("[발급받은 URLs]" + urls.toString());
 
-
         ProductDTO latest = productService.modifyimage(productId, urls);
-        logger.info("[저장된 값]" + latest);
 
+        logger.info("[저장된 값]" + latest);
 
         return ResponseEntity.status(200).body("");
     }
@@ -147,6 +146,7 @@ public class ProductController {
         logger.info("productId : "+productId);
         logger.info(optionDTO.toString());
         productService.readOne(productId); //TODO: 상품이 존재하지 않는 경우 처리
+
         Long latestId = productService.addOption(productId,optionDTO);
 
         return  ResponseEntity.status(200).body(latestId);
@@ -195,7 +195,9 @@ public class ProductController {
         logger.info("productId : " +productId);
         logger.info("optionId : "+optionId);
         logger.info("update stock size : "+ stockModify + "개");
+
         OptionDTO latest = productService.stockModify(productId,optionId,stockModify);
+
         logger.info("\n[수정된 값] " + latest);
 
         return  ResponseEntity.status(200).body("");
@@ -213,8 +215,10 @@ public class ProductController {
         logger.info("\n[single product remove] 단일상품 삭제 ");
         logger.info("storeId : "+storeId);
         logger.info("productId : "+ productId);
+
         transrationService.removeToStore(storeId, productId);
         productService.removeOneProduct(productId);
+
         return ResponseEntity.status(200).body("");
     }
 
@@ -224,17 +228,22 @@ public class ProductController {
     {
         logger.info("\n[option remove] 단일 옵션 삭제");
         logger.info("optionId : "+optionId);
+
         productService.removeOption(optionId);
+
         return ResponseEntity.status(200).body("");
     }
 
 
     // store id 기준 모든 상품 삭제
     @DeleteMapping("/seller/store/{storeId}")
-    public ResponseEntity<String> multiRemove(@PathVariable("storeId") Long storeId){
+    public ResponseEntity<String> multiRemove(@PathVariable("storeId") Long storeId)
+    {
         logger.info("\n[multi product remove] 상점아이디 기준 모든 상품 삭제");
         logger.info("storeId : "+storeId);
+
         productService.removeManyproduct(storeId);
+
         return ResponseEntity.status(200).body("");
     }
 
@@ -273,6 +282,7 @@ public class ProductController {
         logger.info("optionId : "+optionId);
 
         ProductDTO target = productService.readTarget(productId,optionId);
+
         logger.info("\n[조회한 값]" + target);
 
         return ResponseEntity.status(200).body(target);
@@ -302,6 +312,7 @@ public class ProductController {
     {
         logger.info("\n[category filter] 카테고리기준 상품 검색");
         logger.info("category : "+category);
+
        return ResponseEntity.status(200).body(productService.categoryFilter(category));
     }
 
@@ -318,6 +329,7 @@ public class ProductController {
         logger.info("\n[store category filter] 상점아이디 & 카테고리 기준 검색");
         logger.info("storeId : "+storeId);
         logger.info("category : "+category);
+
         return ResponseEntity.status(200).body(productService.storeCategoryFilter(storeId,category));
     }
 
@@ -332,7 +344,8 @@ public class ProductController {
         logger.info("productId : "+productId);
         logger.info("color : "+color);
         logger.info("size : "+size);
-        OptionDTO response = productService.optionSpcify(productId, color,size);
+
+        OptionDTO response = productService.optionSpecify(productId, color,size);
 
         logger.info("[반환값]");
         logger.info("[option ID]: " + response.getOptionId());

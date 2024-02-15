@@ -79,7 +79,7 @@ public class ProductEntity {
                     this.productName,
                     this.productCategory,
                     this.productUrls.getUrls(),
-                    convert(this.options)
+                    convertToDTO(this.options)
             );
         }catch (NullPointerException e){ // DB에 저장된 URL이 없는경우
             return new ProductDTO(
@@ -92,7 +92,7 @@ public class ProductEntity {
         }
     }
 
-    public List<OptionDTO> convert(List<OptionEntity> options)
+    public List<OptionDTO> convertToDTO(List<OptionEntity> options)
     {
         List<OptionDTO> list = new ArrayList<>();
 

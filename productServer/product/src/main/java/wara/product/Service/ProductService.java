@@ -1,13 +1,9 @@
 package wara.product.Service;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.support.JpaEvaluationContextExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import wara.product.Controller.ProductController;
 import wara.product.DAO.ProductDAO;
 import wara.product.DTO.OptionDTO;
 import wara.product.DTO.ProductDTO;
@@ -61,7 +57,6 @@ public class ProductService {
      */
     public List<ProductDTO> readMany(Long storeId)
     {
-
         List<ProductEntity> productEntities = productDAO.readManyProduct(storeId);
         List<ProductDTO> productDTOS = new ArrayList<>();
         for(var item: productEntities) { productDTOS.add(item.toDTO()); }
@@ -95,7 +90,6 @@ public class ProductService {
         ProductEntity productEntity = productDAO.readOneProduct(productId);
         Urls a = new Urls(urls);
         productEntity.setProductUrls(a);
-
         return productDAO.modifyProduct(productEntity).toDTO();
     }
 
@@ -176,7 +170,7 @@ public class ProductService {
         return productDAO.stockModify(optionId,stockModify).toDTO();
     }
 
-    public OptionDTO optionSpcify(Long productId,String color, String size)
+    public OptionDTO optionSpecify(Long productId, String color, String size)
     {
         return productDAO.optionSpecify(productId,color,size).toDTO();
     }
