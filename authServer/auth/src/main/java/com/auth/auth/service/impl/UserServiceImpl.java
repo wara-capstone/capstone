@@ -1,5 +1,6 @@
 package com.auth.auth.service.impl;
 
+import com.auth.auth.componet.UpdateComponent;
 import com.auth.auth.dao.UserDAO;
 import com.auth.auth.dto.UserDTO;
 import com.auth.auth.entity.UserEntity;
@@ -35,12 +36,15 @@ public class UserServiceImpl implements UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private final DiscoveryClient discoveryClient;
     private final UserDAO userDAO;
+    private final UpdateComponent updateComponent;
     public UserServiceImpl(
             @Autowired UserDAO userDAO,
-            @Autowired DiscoveryClient discoveryClient
+            @Autowired DiscoveryClient discoveryClient,
+            @Autowired UpdateComponent updateComponent
             ){
         this.userDAO = userDAO;
         this.discoveryClient = discoveryClient;
+        this.updateComponent = updateComponent;
     }
 
     /**

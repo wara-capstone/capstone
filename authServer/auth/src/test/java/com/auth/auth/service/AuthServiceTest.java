@@ -1,7 +1,5 @@
 package com.auth.auth.service;
 
-
-import com.auth.auth.config.security.JwtTokenProvider;
 import com.auth.auth.dao.UserDAO;
 import com.auth.auth.dto.TokenDTO;
 import com.auth.auth.dto.UserDTO;
@@ -31,7 +29,6 @@ public class AuthServiceTest {
     private UserDTO user3;
     @MockBean
     private UserDAO userDAO;
-
     private final AuthService authService;
 
 

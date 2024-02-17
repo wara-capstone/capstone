@@ -32,7 +32,7 @@ eureka:
     fetch-registry: true
     service-url:
       # eureka 주소
-      defaultZone: http://52.79.186.117:8761/eureka
+      defaultZone: http://eureka:8761/eureka
 springboot:
   jwt:
     secret: secretKey123
