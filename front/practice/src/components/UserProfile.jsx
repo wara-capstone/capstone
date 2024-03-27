@@ -11,6 +11,7 @@ const UserProfile = () => {
   const userRole = localStorage.getItem("role");
   const storeId = localStorage.getItem("storeid");
   const token = localStorage.getItem("token");
+  const RefreshToken = localStorage.getItem("RefreshToken");
 
   let url;
 
@@ -45,7 +46,34 @@ const UserProfile = () => {
           },
         }
       );
-      if (response.status === 200) {
+      if (response.status === 401) {
+        const fetchToken = async () => {
+          const response = await fetch(
+            `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}auth/signin`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `${RefreshToken}`
+              },
+            }
+          );
+          console.log("AccessToken 재발급 요청중!!!!!!!!!!!!");
+          if (response.status === 201) {
+            const result = await response.json();
+
+            localStorage.setItem("token", result.accessToken);  // 여기서 AccessToken을 저장합니다.
+            localStorage.setItem("RefreshToken", result.refreshToken); // 여기서 RefreshToken을 저장.
+  
+            console.log("리프레시 토큰, 엑세스 토큰 재발급 완료!!!!!!!!!!!!");
+  
+          } else {
+            console.log("실패");
+            navigate("/login");
+          }
+        };
+        fetchToken();
+
+      } else if (response.status === 200) {
         const result = await response.json();
         setUser({
           ...user, // 기존 user 객체를 복사합니다.
@@ -55,13 +83,13 @@ const UserProfile = () => {
           phoneNumber: result.phone,
         });
         console.log("받아온 사진 존재,", result.profileImage);
-      } else if (response.status === 401) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("email");
-        localStorage.removeItem("role");
-        localStorage.removeItem("storeid");
-        setLoading(false);
-        navigate("/");
+
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("email");
+        // localStorage.removeItem("role");
+        // localStorage.removeItem("storeid");
+        // setLoading(false);
+        // navigate("/");
       } else {
         console.log("실패");
       }

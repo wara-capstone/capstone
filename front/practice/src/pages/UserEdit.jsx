@@ -28,7 +28,6 @@ const UserEdit = ({ user }) => {
   const [imageCheck, setImageCheck] = useState(false); // 이미지 체크
 
   useEffect( () => {
-    
     console.log(token);
     console.log("위에꺼 토큰");
     const fetchData = async () => {
@@ -43,14 +42,41 @@ const UserEdit = ({ user }) => {
       }
     );
     const result = await response.json();
-    if (response.status === 200) {
+    if (response.status === 401) {
+      const fetchData = async () => {
+        const response = await fetch(
+          `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}auth/signin`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${RefreshToken}`
+            },
+          }
+        );
+        console.log("AccessToken 재발급 요청중!!!!!!!!!!!!");
+        if (response.status === 201) {
+          const result = await response.json();
+          localStorage.setItem("token", result.accessToken);  // 여기서 AccessToken을 저장합니다.
+          localStorage.setItem("RefreshToken", result.refreshToken); // 여기서 RefreshToken을 저장.
+
+          console.log("리프레시 토큰, 엑세스 토큰 재발급 완료!!!!!!!!!!!!");
+
+        } else {
+          console.log("실패");
+          navigate("/login");
+        }
+      };
+      fetchData();
+    } 
+    else if (response.status === 200) {
       setNickname(result.nickname);
       setPhoneNumber(result.phone);
       setImage(result.profileImage);
       setPreviewImageSrc(result.profileImage);
       console.log(result.profileImage);
-      
-    } else {
+    }
+    else {
       console.log("실패");
       message.error("값을 불러오는데 실패하였습니다.");
       navigate("/user");
