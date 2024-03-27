@@ -24,6 +24,7 @@ spring:
     name: User-Service
 server:
   port: 11000
+# 다시 킬 것
 eureka:
   instance:
     instance-id: 52.79.186.117:${spring.application.instance_id:${random.value}}

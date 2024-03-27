@@ -1,6 +1,7 @@
 package com.auth.auth.config.security;
 
 
+import com.auth.auth.enums.TokenType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -42,7 +43,7 @@ public class JwtTokenProvider {
     }
 
 
-    public String createToken(String userUid, List<String> roles){
+    public String createToken(String userUid, List<String> roles, TokenType tokenType){
         logger.info("[JwtTokenProvider] createToken, 토큰 생성");
         // Jwt token의 값을 넣기 위한 claims, sub 속성(제목)에 유저의 ID 삽입
         Claims claims = Jwts.claims().setSubject(userUid);
@@ -55,7 +56,8 @@ public class JwtTokenProvider {
                 // 토큰 생성 시간
                 .setIssuedAt(now)
                 // 토큰의 만료 기간을 설정
-                .setExpiration(new Date(now.getTime() + tokenValidMillisecond))
+                .setExpiration(new Date(now.getTime() +
+                        (tokenType.equals(TokenType.ACCESS) ? tokenValidMillisecond/60 : tokenValidMillisecond * 24)))
                 // 암호화 알고리즘 및 암호화에 사용되는 키 설정
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
@@ -103,6 +105,12 @@ public class JwtTokenProvider {
             return false;
         }
 
+    }
+
+    public String getEmailByToken(String token){
+        token = token.replace("Bearer ", "");
+        Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+        return claims.getBody().getSubject();
     }
 
 

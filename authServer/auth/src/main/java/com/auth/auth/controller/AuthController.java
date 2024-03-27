@@ -3,10 +3,7 @@ package com.auth.auth.controller;
 
 import com.auth.auth.dto.TokenDTO;
 import com.auth.auth.dto.UserDTO;
-import com.auth.auth.except.EmailDuplicateException;
-import com.auth.auth.except.NotSignUpEmailException;
-import com.auth.auth.except.NullDTOException;
-import com.auth.auth.except.PasswordMismatchException;
+import com.auth.auth.except.*;
 import com.auth.auth.service.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -55,7 +53,22 @@ public class AuthController {
         try {
             return ResponseEntity.status(200).body(this.authService.signIn(userDTO));
         } catch (NotSignUpEmailException | PasswordMismatchException | NullDTOException e) {
-            return ResponseEntity.status(400).body(TokenDTO.builder().token(e.getMessage()).build());
+            return ResponseEntity.status(400).body(TokenDTO.builder().accessToken(e.getMessage()).build());
         }
     }
+
+    @GetMapping("/signin")
+    public ResponseEntity<TokenDTO> refreshToken(
+            @RequestHeader("Authorization") String refreshToken
+    ){
+        try {
+            logger.info(refreshToken);
+            logger.info("refreshToken으로 토큰 갱신");
+            return ResponseEntity.status(201).body(this.authService.refreshToken(refreshToken));
+        }catch (RefreshTokenNotValidException e){
+            return ResponseEntity.status(400).body(TokenDTO.builder().accessToken(e.getMessage()).build());
+        }
+    }
+
+
 }

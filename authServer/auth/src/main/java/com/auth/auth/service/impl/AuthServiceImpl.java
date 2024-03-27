@@ -5,10 +5,8 @@ import com.auth.auth.dao.UserDAO;
 import com.auth.auth.dto.TokenDTO;
 import com.auth.auth.dto.UserDTO;
 import com.auth.auth.entity.UserEntity;
-import com.auth.auth.except.EmailDuplicateException;
-import com.auth.auth.except.NotSignUpEmailException;
-import com.auth.auth.except.NullDTOException;
-import com.auth.auth.except.PasswordMismatchException;
+import com.auth.auth.enums.TokenType;
+import com.auth.auth.except.*;
 import com.auth.auth.repository.UserRepository;
 import com.auth.auth.service.AuthService;
 import org.slf4j.Logger;
@@ -66,6 +64,15 @@ public class AuthServiceImpl implements AuthService {
         return this.makeToken(userEntity.getEmail(), userEntity.getRoles().get(0));
     }
 
+    @Override
+    public TokenDTO refreshToken(String token) throws RefreshTokenNotValidException{
+        String email = this.jwtTokenProvider.getEmailByToken(token);
+        if(this.jwtTokenProvider.validateToken(token) && this.userDAO.existUserByEmail(email)){
+            UserEntity userEntity = this.userDAO.readUser(email);
+            return this.makeToken(userEntity.getEmail(), userEntity.getRoles().get(0));
+        }else throw new RefreshTokenNotValidException("refresh token not valid");
+    }
+
 
     /**
      * 유저의 이메일이 데이터베이스에 존재하는지 체크
@@ -98,7 +105,8 @@ public class AuthServiceImpl implements AuthService {
         return TokenDTO.builder()
                 .email(email)
                 .role(role)
-                .token(this.jwtTokenProvider.createToken(email, Arrays.asList(role))
+                .refreshToken(this.jwtTokenProvider.createToken(email, Arrays.asList(role), TokenType.REFRESH))
+                .accessToken(this.jwtTokenProvider.createToken(email, Arrays.asList(role), TokenType.ACCESS)
                 ).build();
     }
     private void existEmailCheck(String email) throws NotSignUpEmailException{

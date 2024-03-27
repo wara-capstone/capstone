@@ -20,6 +20,7 @@ public interface AuthService {
     public UserDTO signUp(UserDTO userDTO) throws EmailDuplicateException;
     // 로그인
     public TokenDTO signIn(UserDTO userDTO) throws NullDTOException, NotSignUpEmailException, PasswordMismatchException;
+    public TokenDTO refreshToken(String token);
     // 토큰 검증
     public boolean tokenValidCheck(String token);
 }

@@ -11,7 +11,8 @@ import lombok.*;
 @Setter
 @Builder
 public class TokenDTO {
-    private String token;
+    private String refreshToken;
+    private String accessToken;
     private String email;
     private String role;
 }
