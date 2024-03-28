@@ -12,18 +12,14 @@ import com.auth.auth.service.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 
 /**
  * 유저의 인증 처리를 하는 서비스 구현체
  */
-// 로그인 관련 서비스 구현체
 @Service
 public class AuthServiceImpl implements AuthService {
     private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
@@ -64,6 +60,11 @@ public class AuthServiceImpl implements AuthService {
         return this.makeToken(userEntity.getEmail(), userEntity.getRoles().get(0));
     }
 
+    /**
+     * token 갱신
+     * @param token Refresh Token
+     * @return 새로 만들어진 TokenDTO
+     */
     @Override
     public TokenDTO refreshToken(String token) throws RefreshTokenNotValidException{
         String email = this.jwtTokenProvider.getEmailByToken(token);
@@ -125,7 +126,6 @@ public class AuthServiceImpl implements AuthService {
      * @param token JWT 토큰
      * @return true 유효 토큰, false 유효하지 않는 토큰
      */
-    @Override
     public boolean tokenValidCheck(String token) {
         return this.jwtTokenProvider.validateToken(token);
     }

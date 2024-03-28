@@ -57,7 +57,7 @@ public class JwtTokenProvider {
                 .setIssuedAt(now)
                 // 토큰의 만료 기간을 설정
                 .setExpiration(new Date(now.getTime() +
-                        (tokenType.equals(TokenType.ACCESS) ? tokenValidMillisecond/60 : tokenValidMillisecond * 24)))
+                        (tokenType.equals(TokenType.ACCESS) ? tokenValidMillisecond : tokenValidMillisecond * 24)))
                 // 암호화 알고리즘 및 암호화에 사용되는 키 설정
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
