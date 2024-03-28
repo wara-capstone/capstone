@@ -36,7 +36,9 @@ const Login = () => {
       setLoginCheck(false);
       // Store token in local storage
       console.log("로그인 전"+ localStorage.getItem("email"), localStorage.getItem("role"), localStorage.getItem("storeid"), localStorage.getItem("token"));
-      localStorage.setItem("token", result.token);
+      localStorage.setItem("token", result.accessToken);  // 여기서 Access 토큰을 저장합니다.
+      localStorage.setItem("RefreshToken", result.refreshToken); // 여기서 RefreshToken을 저장.
+
       localStorage.setItem("email", result.email); // 여기서 userid를 저장합니다.
       localStorage.setItem("role", result.role); // 여기서 role를 저장합니다.
       localStorage.setItem("storeid", result.storeId); // 여기서 role를 저장합니다.
