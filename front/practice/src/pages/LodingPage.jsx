@@ -21,7 +21,7 @@ const LoadingPage = () => {
               }),
             }
           );
-          const result = response.json();
+          const result = await response.json();
       
           if (response.ok) {
             // Store token in local storage
