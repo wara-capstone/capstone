@@ -42,8 +42,8 @@ oauth:
     data_uri : https://kapi.kakao.com/v2/user/me
     grant_type : authorization_code
     client_id : 5d3f977e28b7baf6825e7f34c62fd79a
-    redirect_uri_signup : https://www.onoff.zone/signup
-    redirect_uri_signin : https://www.onoff.zone/loading
+    redirect_uri_signup : 'https://www.onoff.zone/signup'
+    redirect_uri_signin : 'https://www.onoff.zone/loading'
     client_secret : HoJsz8bFI7y2u0LEpMNWIGsjYTZV6Jjs
 
 springboot:
