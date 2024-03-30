@@ -1,5 +1,3 @@
-
-
 const LoadingScreen = () => {
     const styles = {
         container: {
@@ -34,9 +32,6 @@ const LoadingScreen = () => {
       </div>
     );
   };
-
-  
-
 
   export default LoadingScreen;
 

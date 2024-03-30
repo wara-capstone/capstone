@@ -12,11 +12,49 @@ const Signup = () => {
   const [role, setRole] = useState("");
 
   const navigate = useNavigate();
+  const code = new URL(window.location.href).searchParams.get("code");
+
 
   const handleSignup = async (event) => {
     event.preventDefault();
-
     // 회원가입 처리 로직을 구현합니다.
+
+    if(code !== null){  // 카카오 회원가입
+    // Create payload
+    const payload = {
+      code: code,
+      role: role,
+      name: username,
+      phone: phoneNumber,
+    };
+
+    try {
+      const response = await fetch(
+        `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}auth/kakao/signup`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.status === 201) {
+        // Redirect to login.html
+        message.success("회원가입 완료되었습니다.");
+        navigate("/login"); // 로그인 성공시 홈으로 이동합니다.
+      } else if (response.status === 400) {
+        // Handle error
+        message.error("회원가입에 실패하였습니다.");
+      }
+    } catch (error) {
+      console.error("오류 발생:", error);
+    }
+    }
+    else if(code === null){ // 일반 회원가입
 
     // Check if passwords match
     if (password !== confirmPassword) {
@@ -60,6 +98,13 @@ const Signup = () => {
     } catch (error) {
       console.error("오류 발생:", error);
     }
+
+  }
+  };
+
+  const handleLog = async (event) => {
+    event.preventDefault();
+    console.log(code);
   };
 
   return (
@@ -67,14 +112,7 @@ const Signup = () => {
       <form className="signup-form" onSubmit={handleSignup}>
         <h1>On&Off</h1>
 
-        <label htmlFor="email">이메일</label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
+    
         <label htmlFor="username">사용자명</label>
         <input
           type="text"
@@ -82,7 +120,8 @@ const Signup = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-
+{code === null && (
+  <>
         <label htmlFor="nickname">닉네임</label>
         <input
           type="text"
@@ -90,13 +129,23 @@ const Signup = () => {
           value={userNickname}
           onChange={(e) => setUserNickname(e.target.value)}
         />
-
+</>
+)}
         <label htmlFor="phone-number">전화번호</label>
         <input
           type="text"
           id="phone-number"
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
+        />
+{code === null && (
+  <>
+        <label htmlFor="email">이메일</label>
+        <input
+          type="email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
 
         <label htmlFor="password">비밀번호</label>
@@ -114,7 +163,8 @@ const Signup = () => {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
-
+</>
+        )}
         <div className="role-selection">
           <label>회원 유형</label>
           <div>
