@@ -14,7 +14,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loginCheck, setLoginCheck] = useState(false); // 로그인 상태 체크
 
-  const redirect_uri = "http://127.0.0.1:3000/loading";
+  const redirect_uri = `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}loading`;
   const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=5d3f977e28b7baf6825e7f34c62fd79a&redirect_uri=${redirect_uri}&response_type=code`;
 
   const navigate = useNavigate();
