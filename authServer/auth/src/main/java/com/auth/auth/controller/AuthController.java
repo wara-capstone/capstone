@@ -1,6 +1,7 @@
 package com.auth.auth.controller;
 
 
+import com.auth.auth.dto.KakaoDTO;
 import com.auth.auth.dto.TokenDTO;
 import com.auth.auth.dto.UserDTO;
 import com.auth.auth.except.*;
@@ -67,6 +68,30 @@ public class AuthController {
             return ResponseEntity.status(201).body(this.authService.refreshToken(refreshToken));
         }catch (RefreshTokenNotValidException e){
             return ResponseEntity.status(400).body(TokenDTO.builder().accessToken(e.getMessage()).build());
+        }
+    }
+
+    @PostMapping("/kakao/signup")
+    public ResponseEntity<UserDTO> kakaoSignUp(
+            @RequestBody KakaoDTO kakaoDTO
+            ){
+        try {
+            return ResponseEntity.status(201).body(this.authService.kakaoSignUp(kakaoDTO));
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(400).body(null);
+        }
+    }
+
+    @PostMapping("/kakao/signin")
+    public ResponseEntity<TokenDTO> kakaoSignin(
+            @RequestBody KakaoDTO kakaoDTO
+    ){
+        try {
+            return ResponseEntity.status(200).body(this.authService.kakaoSignIn(kakaoDTO));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(400).body(null);
         }
     }
 

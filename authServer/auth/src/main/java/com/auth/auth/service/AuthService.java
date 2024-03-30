@@ -2,13 +2,15 @@ package com.auth.auth.service;
 
 
 
+import com.auth.auth.dto.KakaoDTO;
 import com.auth.auth.dto.TokenDTO;
 import com.auth.auth.dto.UserDTO;
 import com.auth.auth.except.EmailDuplicateException;
 import com.auth.auth.except.NotSignUpEmailException;
 import com.auth.auth.except.NullDTOException;
 import com.auth.auth.except.PasswordMismatchException;
-import org.springframework.http.ResponseEntity;
+
+import java.net.URISyntaxException;
 
 
 /**
@@ -21,4 +23,6 @@ public interface AuthService {
     // 로그인
     public TokenDTO signIn(UserDTO userDTO) throws NullDTOException, NotSignUpEmailException, PasswordMismatchException;
     public TokenDTO refreshToken(String token);
+    public UserDTO kakaoSignUp(KakaoDTO kakaoDTO) throws URISyntaxException;
+    public TokenDTO kakaoSignIn(KakaoDTO kakaoDTO) throws URISyntaxException;
 }

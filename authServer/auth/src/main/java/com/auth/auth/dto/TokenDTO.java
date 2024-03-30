@@ -1,6 +1,7 @@
 package com.auth.auth.dto;
 
 
+import com.auth.auth.config.security.JwtTokenProvider;
 import lombok.*;
 
 // Token Data Transfer Object
