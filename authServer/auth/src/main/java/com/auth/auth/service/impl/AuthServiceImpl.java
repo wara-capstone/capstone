@@ -43,8 +43,10 @@ public class AuthServiceImpl implements AuthService {
     private String grant_type;
     @Value(value = "${oauth.kakao.client_id}")
     private String client_id;
-    @Value(value = "${oauth.kakao.redirect_uri}")
-    private String redirect_uri;
+    @Value(value = "${oauth.kakao.redirect_uri_signup}")
+    private String redirect_uri_signup;
+    @Value(value = "${oauth.kakao.redirect_uri_signin}")
+    private String redirect_uri_signin;
     @Value(value = "${oauth.kakao.client_secret}")
     private String client_secret;
 
@@ -100,7 +102,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public UserDTO kakaoSignUp(KakaoDTO kakaoDTO) throws URISyntaxException {
         // 1. code를 사용하여 카카오 서버에서 토큰을 발급받는다.
-        String kakaoAccessToken = this.fetchKakaoAccessToken(kakaoDTO.getCode());
+        String kakaoAccessToken = this.fetchKakaoAccessToken(kakaoDTO.getCode(), true);
 
         // 2. 토큰을 사용하여 카카오 서버에서 유저의 정보를 가져온다.
         LinkedHashMap<String, Object> value = this.fetchKakaoUserData(kakaoAccessToken);
@@ -118,7 +120,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokenDTO kakaoSignIn(KakaoDTO kakaoDTO) throws URISyntaxException {
         // 1. code를 사용하여 카카오 서버에서 토큰을 발급받는다.
-        String kakaoAccessToken = this.fetchKakaoAccessToken(kakaoDTO.getCode());
+        String kakaoAccessToken = this.fetchKakaoAccessToken(kakaoDTO.getCode(), false);
 
         // 2. 토큰을 사용하여 카카오 서버에서 유저의 정보를 가져온다.
         LinkedHashMap<String, Object> value = this.fetchKakaoUserData(kakaoAccessToken);
@@ -132,7 +134,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-    private String fetchKakaoAccessToken(String code) throws URISyntaxException {
+    private String fetchKakaoAccessToken(String code, boolean redirect) throws URISyntaxException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -140,7 +142,7 @@ public class AuthServiceImpl implements AuthService {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("grant_type", this.grant_type);
         parameters.add("client_id", this.client_id);
-        parameters.add("redirect_uri", this.redirect_uri);
+        parameters.add("redirect_uri", redirect ? redirect_uri_signup : redirect_uri_signin);
         parameters.add("code", code);
         parameters.add("client_secret", this.client_secret);
 
