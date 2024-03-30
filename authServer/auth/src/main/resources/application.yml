@@ -7,7 +7,7 @@ spring:
     show-sql: true
     ## database connect
   datasource:
-    url: jdbc:mariadb://127.0.0.1:3306/capstoneAuth?createDatabaseIfNotExist=true
+    url: jdbc:mariadb://mariadb:3306/capstoneAuth?createDatabaseIfNotExist=true
     username: root
     password: 1234
     driver-class-name: org.mariadb.jdbc.Driver
@@ -25,16 +25,16 @@ spring:
 server:
   port: 11000
 # 다시 킬 것
-#eureka:
-#  instance:
-#    instance-id: 52.79.186.117:${spring.application.instance_id:${random.value}}
-#    prefer-ip-address: true
-#    ip-address: 52.79.186.117
-#  client:
-#    register-with-eureka: true
-#    fetch-registry: true
-#    service-url:
-#      defaultZone: http://52.79.186.117:8761/eureka
+eureka:
+  instance:
+    instance-id: 54.180.3.47:${spring.application.instance_id:${random.value}}
+    prefer-ip-address: true
+    ip-address: 54.180.3.47
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://eureka:8761/eureka
 
 oauth:
   kakao:
