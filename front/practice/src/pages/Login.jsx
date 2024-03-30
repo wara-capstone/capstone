@@ -4,13 +4,27 @@ import { Link, useNavigate } from "react-router-dom";
 import{
   message
 } from "antd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// 아래 줄에서 faEnvelope 아이콘을 import합니다.
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import KakaoButtonImage from "../adImages/kakao_login.png";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginCheck, setLoginCheck] = useState(false); // 로그인 상태 체크
 
+  const redirect_uri = "http://127.0.0.1:3000/loading";
+  const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=5d3f977e28b7baf6825e7f34c62fd79a&redirect_uri=${redirect_uri}&response_type=code`;
+
   const navigate = useNavigate();
+
+  const handleKakaoLogin = async (event) => {
+    // 로그인 처리 로직을 구현합니다.
+    event.preventDefault();
+
+    window.location.href = kakaoURL;
+  };
 
   const handleLogin = async (event) => {
     // 로그인 처리 로직을 구현합니다.
@@ -73,10 +87,21 @@ const Login = () => {
          {loginCheck && (
         <label  style={{color: "red"}}>이메일 혹은 비밀번호가 틀렸습니다.</label>
         )}
-        <button onClick={handleLogin}>로그인</button>
-
+        <button onClick={handleLogin}>
+        <FontAwesomeIcon icon={faEnvelope} size="lg" style={{  marginLeft: '0.3rem'}} />
+      {/* 텍스트를 span 태그로 감싸고 스타일을 적용합니다. */}
+      <span style={{ flex: 1, textAlign: 'center' }}>로그인</span>
+      </button>
+        <img src={KakaoButtonImage}
+      style={{
+        cursor: "pointer",
+        height: "2.7rem",
+        width: "18.7rem",
+        marginTop: "0.3rem",
+      }}
+      onClick={handleKakaoLogin}></img>
         <p className="signup-link">
-          아직 회원이 아니신가요? <Link to="/signup">회원가입</Link>
+          아직 회원이 아니신가요? <Link to="/signup-choice">회원가입</Link>
         </p>
       </form>
     </div>

@@ -17,6 +17,8 @@ import UserEdit from "./pages/UserEdit";
 
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import SignupChoice from "./pages/SignupChoice";
+import LoadingPage from "./pages/LodingPage";
 
 import SellerChattingManagement from "./pages/Sellers/SellerChattingManagement";
 import SellerHome from "./pages/Sellers/SellerHome";
@@ -85,7 +87,10 @@ export default function Customer() {
           <Route path="/login" element={<Login />} />
 
           {/* 회원가입 페이지 */}
+          <Route path="/signup-choice" element={<SignupChoice />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/loading" element={<LoadingPage />} />
+
         </Routes>
       </div>
     </BrowserRouter>
