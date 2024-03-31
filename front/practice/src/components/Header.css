@@ -7,7 +7,7 @@
   background-color: white;
   color: white;
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: center;
   padding: 1px 20px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -26,24 +26,31 @@
   font-weight: bold;
 }
 
-.cart {
+.cart,
+.search {
   align-items: center;
   color: black;
 }
 
-.cart-icon {
+.cart-icon,
+.search-icon {
   font-size: 20px;
-  margin-right: 5px;
+  margin-right: 15px;
   color: rgba(128, 128, 128, 0.623);
 }
 
-.active-cart-icon {
+.search-icon {
+  margin-left: 80px;
+}
+
+.active-cart-icon,
+.active-search-icon {
   color: black;
 }
 
 .back-icon {
   font-size: 20px;
-  margin-right: 5px;
+  margin-right: 115px;
   color: rgba(128, 128, 128, 0.623);
 }
 

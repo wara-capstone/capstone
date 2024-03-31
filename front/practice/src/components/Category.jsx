@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import { FaTshirt } from "react-icons/fa";
-import { FiMoreHorizontal } from "react-icons/fi";
-import { GiBelt, GiConverseShoe, GiPirateCoat } from "react-icons/gi";
-import { PiPantsFill } from "react-icons/pi";
 import CardList from "./CardList";
 import "./Category.css";
+
+import belt from "../adImages/categoryIconImage/belt.png";
+import bottom from "../adImages/categoryIconImage/bottom.png";
+import etc from "../adImages/categoryIconImage/etc.png";
+import outer from "../adImages/categoryIconImage/outer.png";
+import shoes from "../adImages/categoryIconImage/shoes.png";
+import top from "../adImages/categoryIconImage/top.png";
 
 const Category = ({ allUrl, categoryUrl }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -22,42 +25,57 @@ const Category = ({ allUrl, categoryUrl }) => {
             className="category-item"
             onClick={() => handleCategoryClick("상의")}
           >
-            <FaTshirt size={20} /> <br /> 상의
+            <img src={top} style={{ width: "40px", height: "40px" }} />
+            <br />
+            <span style={{ fontSize: "12px", fontWeight: "bold" }}>상의</span>
+            {/* <FaTshirt size={20} /> <br /> 상의 */}
           </div>
           <div
             className="category-item"
             onClick={() => handleCategoryClick("하의")}
           >
-            <PiPantsFill size={20} /> <br /> 하의
+            <img src={bottom} style={{ width: "40px", height: "40px" }} />
+            <br />
+            <span style={{ fontSize: "12px", fontWeight: "bold" }}>하의</span>
+            {/* <PiPantsFill size={20} /> <br /> 하의 */}
           </div>
           <div
             className="category-item"
             onClick={() => handleCategoryClick("아우터")}
           >
-            <GiPirateCoat size={20} /> <br /> 아우터
+            <img src={outer} style={{ width: "40px", height: "40px" }} />
+            <br />
+            <span style={{ fontSize: "12px", fontWeight: "bold" }}>아우터</span>
+            {/* <GiPirateCoat size={20} /> <br /> 아우터 */}
           </div>
         </div>
-        <div
-          className="category-row"
-        >
-          
-          <div 
-          className="category-item"
-          onClick={() => handleCategoryClick("신발")}
-          >  
-            <GiConverseShoe size={20} /> <br /> 신발
+        <div className="category-row">
+          <div
+            className="category-item"
+            onClick={() => handleCategoryClick("신발")}
+          >
+            <img src={shoes} style={{ width: "40px", height: "40px" }} />
+            <br />
+            <span style={{ fontSize: "12px", fontWeight: "bold" }}>신발</span>
+            {/* <GiConverseShoe size={20} /> <br /> 신발 */}
           </div>
           <div
             className="category-item"
             onClick={() => handleCategoryClick("잡화")}
           >
-            <GiBelt size={20} /> <br /> 잡화
+            <img src={belt} style={{ width: "40px", height: "40px" }} />
+            <br />
+            <span style={{ fontSize: "12px", fontWeight: "bold" }}>잡화</span>
+            {/* <GiBelt size={20} /> <br /> 잡화 */}
           </div>
           <div
             className="category-item"
             onClick={() => handleCategoryClick("기타")}
           >
-            <FiMoreHorizontal size={20} /> <br /> 기타
+            <img src={etc} style={{ width: "40px", height: "40px" }} />
+            <br />
+            <span style={{ fontSize: "12px", fontWeight: "bold" }}>기타</span>
+            {/* <FiMoreHorizontal size={20} /> <br /> 기타 */}
           </div>
         </div>
       </div>

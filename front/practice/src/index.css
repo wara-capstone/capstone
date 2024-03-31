@@ -18,6 +18,7 @@ code {
 .barcode,
 .map,
 .search,
+.feed,
 .user,
 .user-edit,
 .chatting-list,
@@ -221,8 +222,8 @@ code {
   color: black;
   border: none;
   cursor: pointer;
-  border-radius: 5px; 
-  font-weight: bold; 
+  border-radius: 5px;
+  font-weight: bold;
 }
 
 .login-form button:active {
@@ -315,7 +316,7 @@ code {
   transform: scale(0.9);
 }
 
-.signup-choice{
+.signup-choice {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -511,4 +512,76 @@ code {
 .seller-chatting-management .card-separator {
   border-top: 1px solid #ccc;
   margin: 20px 0;
+}
+
+/* search page */
+.search-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.search-item-num,
+.search-item-sort {
+  display: flex;
+  align-items: center;
+}
+
+/* 모달 배경 스타일 */
+.modal-background {
+  position: fixed;
+  bottom: 0; /* 하단에 배치 */
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(148, 148, 148, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end; /* 하단 정렬 */
+  z-index: 1000;
+}
+
+/* 모달 내용 스타일 */
+.modal-content {
+  width: 340px; /* 너비 설정 */
+  padding: 25px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  margin-right: auto; /* 좌측 정렬을 위한 margin 설정 */
+  margin-left: auto; /* 우측 정렬을 위한 margin 설정 */
+  text-align: left; /* 텍스트를 좌측 정렬로 설정 */
+  transform: translateY(100%); /* 초기 상태: 아래에서 위로 이동 */
+  animation: modal-slide-up 0.3s ease forwards; /* 모달 슬라이드 인 애니메이션 적용 */
+}
+
+.no-result {
+  text-align: center; /* 텍스트를 가운데로 정렬합니다. */
+  color: #888; /* 연한 색으로 색상을 변경합니다. */
+  position: absolute; /* 위치를 절대적으로 설정합니다. */
+  top: 50%; /* 부모 요소의 상단을 기준으로 50% 위치로 이동합니다. */
+  left: 50%; /* 부모 요소의 왼쪽을 기준으로 50% 위치로 이동합니다. */
+  transform: translate(-50%, -100%); /* 요소의 가로 세로 중앙으로 이동합니다. */
+}
+
+/* 모달 슬라이드 업 애니메이션 */
+@keyframes modal-slide-up {
+  from {
+    transform: translateY(100%); /* 초기 상태: 아래에서 위로 이동 */
+  }
+  to {
+    transform: translateY(0); /* 최종 상태: 보이도록 위로 이동 */
+  }
+}
+
+/* 모달 슬라이드 다운 애니메이션 */
+@keyframes modal-slide-down {
+  from {
+    transform: translateY(0); /* 초기 상태: 보이도록 위로 이동 */
+  }
+  to {
+    transform: translateY(100%); /* 최종 상태: 아래로 이동 */
+  }
 }

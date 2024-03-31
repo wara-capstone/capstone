@@ -42,6 +42,19 @@ function Header() {
         <h1 className="title">On&Off</h1>
       </Link>
 
+      <Link to="/search" className="link">
+        <div>
+          <FontAwesomeIcon
+            icon="magnifying-glass"
+            className={
+              locationNow.pathname === "/search"
+                ? "search-icon active-search-icon"
+                : "search-icon"
+            }
+          />
+        </div>
+      </Link>
+
       <div to="/cart" className="link" onClick={handleConnectCart}>
         <div className="cart">
           <FontAwesomeIcon
