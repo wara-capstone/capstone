@@ -44,7 +44,9 @@ function Header() {
       </div>
 
       <Link to="/" className="link">
-        <h1 className="title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;On&Off</h1>
+        <h1 className="title">
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;On&Off
+        </h1>
       </Link>
 
       <div className="header-icon-container">
