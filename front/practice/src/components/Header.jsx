@@ -28,6 +28,11 @@ function Header() {
     }
   };
 
+  const handleConnectSearch = () => {
+    // 검색아이콘 클릭 시 검색 페이지로 이동
+    navigate("/search");
+  };
+
   return (
     <header className="header">
       <div className="back">
@@ -39,11 +44,11 @@ function Header() {
       </div>
 
       <Link to="/" className="link">
-        <h1 className="title">On&Off</h1>
+        <h1 className="title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;On&Off</h1>
       </Link>
 
-      <Link to="/search" className="link">
-        <div>
+      <div className="header-icon-container">
+        <div className="header-search-icon" onClick={handleConnectSearch}>
           <FontAwesomeIcon
             icon="magnifying-glass"
             className={
@@ -53,10 +58,8 @@ function Header() {
             }
           />
         </div>
-      </Link>
 
-      <div to="/cart" className="link" onClick={handleConnectCart}>
-        <div className="cart">
+        <div className="header-cart-icon" onClick={handleConnectCart}>
           <FontAwesomeIcon
             icon={faCartShopping}
             className={

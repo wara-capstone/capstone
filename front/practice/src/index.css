@@ -515,7 +515,7 @@ code {
 }
 
 /* search page */
-.search-item {
+.search .search-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -523,14 +523,14 @@ code {
   margin-right: 15px;
 }
 
-.search-item-num,
-.search-item-sort {
+.search .search-item-num,
+.search .search-item-sort {
   display: flex;
   align-items: center;
 }
 
 /* 모달 배경 스타일 */
-.modal-background {
+.search .modal-background {
   position: fixed;
   bottom: 0; /* 하단에 배치 */
   left: 0;
@@ -544,7 +544,7 @@ code {
 }
 
 /* 모달 내용 스타일 */
-.modal-content {
+.search .modal-content {
   width: 340px; /* 너비 설정 */
   padding: 25px;
   background-color: #fff;
@@ -557,7 +557,7 @@ code {
   animation: modal-slide-up 0.3s ease forwards; /* 모달 슬라이드 인 애니메이션 적용 */
 }
 
-.no-result {
+.search .no-result {
   text-align: center; /* 텍스트를 가운데로 정렬합니다. */
   color: #888; /* 연한 색으로 색상을 변경합니다. */
   position: absolute; /* 위치를 절대적으로 설정합니다. */

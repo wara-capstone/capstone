@@ -7,7 +7,7 @@
   background-color: white;
   color: white;
   display: flex;
-  /* justify-content: space-between; */
+  justify-content: space-between;
   align-items: center;
   padding: 1px 20px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -35,12 +35,8 @@
 .cart-icon,
 .search-icon {
   font-size: 20px;
-  margin-right: 15px;
+  /* margin-right: 15px; */
   color: rgba(128, 128, 128, 0.623);
-}
-
-.search-icon {
-  margin-left: 80px;
 }
 
 .active-cart-icon,
@@ -48,9 +44,19 @@
   color: black;
 }
 
+.header-icon-container {
+  display: flex;
+  gap: 15px; /* 각 아이콘 사이의 간격 */
+}
+
+.header-search-icon,
+.header-cart-icon {
+  cursor: pointer;
+}
+
 .back-icon {
   font-size: 20px;
-  margin-right: 115px;
+  /* margin-right: 115px; */
   color: rgba(128, 128, 128, 0.623);
 }
 
