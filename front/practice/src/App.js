@@ -4,7 +4,8 @@ import Barcode from "./pages/Barcode";
 import Cart from "./pages/Cart";
 import Home from "./pages/Home";
 import Map from "./pages/Map";
-import Search from "./pages/Search";
+// import Search from "./pages/Search";
+import MainClothSharedFeed from "./pages/MainClothSharedFeed";
 import User from "./pages/User";
 
 import Chatting from "./pages/Chatting";
@@ -39,7 +40,8 @@ export default function Customer() {
           <Route path="/" element={<Home />} />
           <Route path="/map" element={<Map />} />
           <Route path="/barcode" element={<Barcode />} />
-          <Route path="/search" element={<Search />} />
+          {/* <Route path="/search" element={<Search />} /> */}
+          <Route path="/MainClothSharedFeed" element={<MainClothSharedFeed />} />
           <Route path="/user" element={<User />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/item/:id" element={<Item />} />
