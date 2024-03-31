@@ -7,7 +7,9 @@ const LoadingPage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const response = fetch(
+      const fetchData = async () => {
+        try {
+        const response = await fetch(
             `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}auth/kakao/signin`,
             {
               method: "POST",
@@ -19,9 +21,9 @@ const LoadingPage = () => {
               }),
             }
           );
-          const result = response.json();
+          const result = await response.json();
       
-          if (response.status === 200) {
+          if (response.ok) {
             // Store token in local storage
             console.log("로그인 전"+ localStorage.getItem("email"), localStorage.getItem("role"), localStorage.getItem("storeid"), localStorage.getItem("token"));
             localStorage.setItem("token", result.accessToken);  // 여기서 Access 토큰을 저장합니다.
@@ -38,8 +40,13 @@ const LoadingPage = () => {
             console.log("로그인실패");
             navigate("/login"); // 로그인 실패시 로그인 페이지로 이동합니다.
           }
-
-    }, []);
+        } catch (error) {
+          console.error("로그인 중 에러 발생:", error);
+          navigate("/login"); // 에러 발생시 로그인 페이지로 이동
+        }
+      };
+      fetchData();
+    }, [navigate, code]);
 
     const styles = {
         container: {

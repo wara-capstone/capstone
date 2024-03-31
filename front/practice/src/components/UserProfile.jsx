@@ -107,6 +107,8 @@ const UserProfile = () => {
     localStorage.removeItem("email");
     localStorage.removeItem("role");
     localStorage.removeItem("storeid");
+    localStorage.removeItem("RefreshToken");
+
     // 페이지 이동
     navigate("/");
   };
