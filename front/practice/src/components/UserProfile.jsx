@@ -23,7 +23,7 @@ const UserProfile = () => {
     profileImage: "https://via.placeholder.com/150x150",
     email: email,
     nickname: userRole,
-    phoneNumber: "010-1234-5678",
+    phoneNumber: "010-1234-5678", 
   });
 
   useEffect(() => {
@@ -109,7 +109,8 @@ const UserProfile = () => {
             "Authorization": `KakaoAK 5d3f977e28b7baf6825e7f34c62fd79a`
           },
           body: JSON.stringify({
-            id: 123.123,
+            target_id_type: "user_id",
+            target_id: localStorage.getItem("kakaoUserId"),
           }),
         }
       );

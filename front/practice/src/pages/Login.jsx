@@ -55,7 +55,9 @@ const Login = () => {
 
       localStorage.setItem("email", result.email); // 여기서 userid를 저장합니다.
       localStorage.setItem("role", result.role); // 여기서 role를 저장합니다.
-      localStorage.setItem("storeid", result.storeId); // 여기서 role를 저장합니다.
+      localStorage.setItem("storeid", result.storeId); // 여기서 storeId를 저장합니다.
+      localStorage.setItem("kakaoUserId", result.kakaoUserId); // 여기서 kakaoUserId를 저장합니다.
+
       console.log("로그인성공, 이메일주소:" + result.email);
       console.log("로그인 후"+ localStorage.getItem("email"), localStorage.getItem("role"), localStorage.getItem("storeid"), localStorage.getItem("token"));
       message.success("로그인되었습니다.", 2);
