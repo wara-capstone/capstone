@@ -107,13 +107,13 @@ public class AuthServiceImpl implements AuthService {
         // 2. 토큰을 사용하여 카카오 서버에서 유저의 정보를 가져온다.
         LinkedHashMap<String, Object> value = this.fetchKakaoUserData(kakaoAccessToken);
         String email = (String) value.get("email");
-        Long id = Long.parseLong((String) value.get("id"));
+        Long id = (Long) value.get("id");
         value = (LinkedHashMap<String, Object>) value.get("profile");
 
         // 3. 카카오에서 받아온 유저 정보와 회원가입으로 얻은 정보를 취합하여 회원가입을 진행한다.
         UserDTO userDTO = UserDTO.builder()
                 .name(kakaoDTO.getName()).role(kakaoDTO.getRole()).phone(kakaoDTO.getPhone())
-                .email(email).nickname((String) value.get("nickname")).password("KAKAO"+id).build();
+                .email(email).nickname((String) value.get("nickname")).password("KAKAO"+id.toString()).build();
 
         return this.signUp(userDTO);
     }
@@ -126,7 +126,7 @@ public class AuthServiceImpl implements AuthService {
         // 2. 토큰을 사용하여 카카오 서버에서 유저의 정보를 가져온다.
         LinkedHashMap<String, Object> value = this.fetchKakaoUserData(kakaoAccessToken);
         String email = (String) value.get("email");
-        Long id = Long.parseLong((String) value.get("id"));
+        Long id = (Long) value.get("id");
         // 3. 카카오에서 받아온 유저 이메일이 서버에 존재하는지 확인하고 비밀번호가 KAKAO인지 체크하여 토큰을 발급한다.
         this.existEmailCheck(email);
         UserEntity userEntity = userDAO.readUser(email);
@@ -163,7 +163,7 @@ public class AuthServiceImpl implements AuthService {
         URI uri = new URI(this.kakaoDataUri);
 
         ResponseEntity<LinkedHashMap> response = restTemplate.exchange(uri, HttpMethod.GET, http, LinkedHashMap.class);
-        Long id = Long.parseLong((String) response.getBody().get("id"));
+        Long id = (Long) response.getBody().get("id");
         LinkedHashMap<String, Object> value = (LinkedHashMap<String, Object>) response.getBody().get("kakao_account");
         value.put("id", id);
         return value;
