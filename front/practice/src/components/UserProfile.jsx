@@ -106,7 +106,6 @@ const UserProfile = () => {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
             "Authorization": `${token}`
           },
         }
@@ -120,7 +119,6 @@ const UserProfile = () => {
         console.log(response.status);
       }
     };
-
     KakaoLogout();
 
     // 로그아웃 처리 로직을 구현합니다.
