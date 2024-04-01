@@ -106,8 +106,11 @@ const UserProfile = () => {
         {
           method: "POST",
           headers: {
-            "Authorization": `${token}`
+            "Authorization": `KakaoAK 5d3f977e28b7baf6825e7f34c62fd79a`
           },
+          body: JSON.stringify({
+            id: 123.123,
+          }),
         }
       );
         const result = await response.json();
