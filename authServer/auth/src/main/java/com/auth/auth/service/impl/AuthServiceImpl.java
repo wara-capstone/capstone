@@ -82,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
         UserEntity userEntity = userDAO.readUser(userDTO.getEmail());
         if(userEntity.getPassword().startsWith("KAKAO")) throw new PasswordMismatchException();
         this.passwordCheck(userDTO.getPassword(), userEntity.getPassword());
-        return this.makeToken(userEntity.getEmail(), userEntity.getRoles().get(0), Long.MAX_VALUE);
+        return this.makeToken(userEntity.getEmail(), userEntity.getRoles().get(0), 0L);
     }
 
     /**
