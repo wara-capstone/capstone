@@ -102,7 +102,7 @@ const UserProfile = () => {
   const handleLogout = () => {
     const KakaoLogout = async () => {
       const response = await fetch(
-        `https://kapi.kakao.com/v1/user/logout`,
+        `https://kapi.kakao.com/v1/user/logout?target_id_type=user_id&target_id=${localStorage.getItem("kakaoUserId")}`,
         {
           method: "POST",
           headers: {
