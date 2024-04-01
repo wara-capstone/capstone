@@ -80,9 +80,9 @@ public class AuthServiceImpl implements AuthService {
     public TokenDTO signIn(UserDTO userDTO) throws NullDTOException, NotSignUpEmailException, PasswordMismatchException{
         this.existEmailCheck(userDTO.getEmail());
         UserEntity userEntity = userDAO.readUser(userDTO.getEmail());
-        if(userEntity.getPassword().equals("KAKAO")) throw new PasswordMismatchException();
+        if(userEntity.getPassword().startsWith("KAKAO")) throw new PasswordMismatchException();
         this.passwordCheck(userDTO.getPassword(), userEntity.getPassword());
-        return this.makeToken(userEntity.getEmail(), userEntity.getRoles().get(0));
+        return this.makeToken(userEntity.getEmail(), userEntity.getRoles().get(0), Long.MAX_VALUE);
     }
 
     /**
@@ -95,7 +95,7 @@ public class AuthServiceImpl implements AuthService {
         String email = this.jwtTokenProvider.getEmailByToken(token);
         if(this.jwtTokenProvider.validateToken(token) && this.userDAO.existUserByEmail(email)){
             UserEntity userEntity = this.userDAO.readUser(email);
-            return this.makeToken(userEntity.getEmail(), userEntity.getRoles().get(0));
+            return this.makeToken(userEntity.getEmail(), userEntity.getRoles().get(0), 0L);
         }else throw new RefreshTokenNotValidException("refresh token not valid");
     }
 
@@ -107,12 +107,13 @@ public class AuthServiceImpl implements AuthService {
         // 2. 토큰을 사용하여 카카오 서버에서 유저의 정보를 가져온다.
         LinkedHashMap<String, Object> value = this.fetchKakaoUserData(kakaoAccessToken);
         String email = (String) value.get("email");
+        Long id = Long.parseLong((String) value.get("id"));
         value = (LinkedHashMap<String, Object>) value.get("profile");
 
         // 3. 카카오에서 받아온 유저 정보와 회원가입으로 얻은 정보를 취합하여 회원가입을 진행한다.
         UserDTO userDTO = UserDTO.builder()
                 .name(kakaoDTO.getName()).role(kakaoDTO.getRole()).phone(kakaoDTO.getPhone())
-                .email(email).nickname((String) value.get("nickname")).password("KAKAO").build();
+                .email(email).nickname((String) value.get("nickname")).password("KAKAO"+id).build();
 
         return this.signUp(userDTO);
     }
@@ -125,12 +126,12 @@ public class AuthServiceImpl implements AuthService {
         // 2. 토큰을 사용하여 카카오 서버에서 유저의 정보를 가져온다.
         LinkedHashMap<String, Object> value = this.fetchKakaoUserData(kakaoAccessToken);
         String email = (String) value.get("email");
-
+        Long id = Long.parseLong((String) value.get("id"));
         // 3. 카카오에서 받아온 유저 이메일이 서버에 존재하는지 확인하고 비밀번호가 KAKAO인지 체크하여 토큰을 발급한다.
         this.existEmailCheck(email);
         UserEntity userEntity = userDAO.readUser(email);
-        this.passwordCheck("KAKAO", userEntity.getPassword());
-        return this.makeToken(userEntity.getEmail(), userEntity.getRoles().get(0));
+        if(!userEntity.getPassword().startsWith("KAKAO")) throw new PasswordMismatchException();
+        return this.makeToken(userEntity.getEmail(), userEntity.getRoles().get(0), id);
     }
 
 
@@ -162,7 +163,10 @@ public class AuthServiceImpl implements AuthService {
         URI uri = new URI(this.kakaoDataUri);
 
         ResponseEntity<LinkedHashMap> response = restTemplate.exchange(uri, HttpMethod.GET, http, LinkedHashMap.class);
-        return (LinkedHashMap<String, Object>) response.getBody().get("kakao_account");
+        Long id = Long.parseLong((String) response.getBody().get("id"));
+        LinkedHashMap<String, Object> value = (LinkedHashMap<String, Object>) response.getBody().get("kakao_account");
+        value.put("id", id);
+        return value;
     }
 
     /**
@@ -190,9 +194,10 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-    private TokenDTO makeToken(String email, String role){
+    private TokenDTO makeToken(String email, String role, Long id){
         return TokenDTO.builder()
                 .email(email)
+                .kakao(id)
                 .role(role.equals("ROLE_USER") ? "user" : "seller")
                 .refreshToken(this.jwtTokenProvider.createToken(email, Arrays.asList(role), TokenType.REFRESH))
                 .accessToken(this.jwtTokenProvider.createToken(email, Arrays.asList(role), TokenType.ACCESS)
