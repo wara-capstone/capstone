@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Card from "./Card"; // Card 컴포넌트 임포트
 import "./Card.css";
-import { fetchToken } from "../utils/authUtil";
+import { fetchRefreshToken } from "../utils/authUtil";
 
 function CardList({ category, url }) {
   const { id } = useParams();
@@ -26,7 +26,7 @@ function CardList({ category, url }) {
         },
       });
       if (response.status === 401) {
-        fetchToken(RefreshToken,);
+        fetchRefreshToken(RefreshToken);
       }
 
 
