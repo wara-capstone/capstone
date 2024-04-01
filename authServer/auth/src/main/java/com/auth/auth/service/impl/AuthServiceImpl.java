@@ -193,7 +193,7 @@ public class AuthServiceImpl implements AuthService {
     private TokenDTO makeToken(String email, String role){
         return TokenDTO.builder()
                 .email(email)
-                .role(role)
+                .role(role.equals("ROLE_USER") ? "user" : "seller")
                 .refreshToken(this.jwtTokenProvider.createToken(email, Arrays.asList(role), TokenType.REFRESH))
                 .accessToken(this.jwtTokenProvider.createToken(email, Arrays.asList(role), TokenType.ACCESS)
                 ).build();
