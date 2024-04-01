@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Card from "./Card"; // Card 컴포넌트 임포트
 import "./Card.css";
+import { fetchRefreshToken } from "../utils/authUtil";
 
 function CardList({ category, url }) {
   const { id } = useParams();
@@ -10,6 +11,7 @@ function CardList({ category, url }) {
   const userRole = localStorage.getItem("role");
   const storeId = localStorage.getItem("storeid");
   const token = localStorage.getItem("token");
+  const RefreshToken = localStorage.getItem("RefreshToken");
 
   const [categoryData, setCategoryData] = useState(null); // 상태 추가
   var result;
@@ -23,6 +25,11 @@ function CardList({ category, url }) {
           Authorization: `${token}`,
         },
       });
+      if (response.status === 401) {
+        fetchRefreshToken(RefreshToken);
+      }
+
+
       if (response.status === 200) {
         const data = await response.json(); // response.json()이 완료될 때까지 기다림
 

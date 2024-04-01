@@ -23,7 +23,7 @@ const UserProfile = () => {
     profileImage: "https://via.placeholder.com/150x150",
     email: email,
     nickname: userRole,
-    phoneNumber: "010-1234-5678",
+    phoneNumber: "010-1234-5678", 
   });
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const UserProfile = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `${token}`,
+            Authorization: localStorage.getItem("token"),
           },
         }
       );
@@ -53,7 +53,7 @@ const UserProfile = () => {
             {
               method: "GET",
               headers: {
-                Authorization: `${RefreshToken}`
+                Authorization: localStorage.getItem("RefreshToken"),
               },
             }
           );
@@ -61,10 +61,9 @@ const UserProfile = () => {
           if (response.status === 201) {
             const result = await response.json();
 
-            localStorage.setItem("token", result.accessToken);  // 여기서 AccessToken을 저장합니다.
             localStorage.setItem("RefreshToken", result.refreshToken); // 여기서 RefreshToken을 저장.
-  
-            console.log("리프레시 토큰, 엑세스 토큰 재발급 완료!!!!!!!!!!!!");
+            console.log("리프레시 토큰 재발급 완료!");
+            localStorage.setItem("token", result.accessToken);  // 여기서 AccessToken을 저장합니다.
   
           } else {
             console.log("실패");
@@ -96,17 +95,44 @@ const UserProfile = () => {
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [token]);
 
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    const KakaoLogout = async () => {
+      const response = await fetch(
+        `https://kapi.kakao.com/v1/user/logout?target_id_type=user_id&target_id=${localStorage.getItem("kakaoUserId")}`,
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `KakaoAK b2077c53d402d3e5755993907e3cc0e9`
+          },
+          body: JSON.stringify({
+            target_id_type: "user_id",
+            target_id: localStorage.getItem("kakaoUserId"),
+          }),
+        }
+      );
+        const result = await response.json();
+      if (response.ok) {
+        console.log("로그아웃한 아이디"+ result.id);
+      }
+      else {
+        console.log("실패");
+        console.log(response.status);
+      }
+    };
+    KakaoLogout();
+
     // 로그아웃 처리 로직을 구현합니다.
     message.success("로그아웃 되었습니다.");
     localStorage.removeItem("token");
     localStorage.removeItem("email");
     localStorage.removeItem("role");
     localStorage.removeItem("storeid");
+    localStorage.removeItem("RefreshToken");
+
     // 페이지 이동
     navigate("/");
   };

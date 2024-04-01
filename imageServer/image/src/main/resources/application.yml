@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mariadb://changuii_maria:3306/imageService?createDatabaseIfNotExist=true
+    url: jdbc:mariadb://mariadb:3306/imageService?createDatabaseIfNotExist=true
     username: root
     password: 1234
     driver-class-name: org.mariadb.jdbc.Driver

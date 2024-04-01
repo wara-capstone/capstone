@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Barcode from "./pages/Barcode";
 import Cart from "./pages/Cart";
+import Feed from "./pages/Feed";
 import Home from "./pages/Home";
 import Map from "./pages/Map";
 // import Search from "./pages/Search";
@@ -16,8 +17,10 @@ import PurchaseHistory from "./pages/PurchaseHistory";
 import Store from "./pages/Store";
 import UserEdit from "./pages/UserEdit";
 
+import LoadingPage from "./pages/LodingPage";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import SignupChoice from "./pages/SignupChoice";
 
 import SellerChattingManagement from "./pages/Sellers/SellerChattingManagement";
 import SellerHome from "./pages/Sellers/SellerHome";
@@ -27,7 +30,6 @@ import SellerStoreRegister from "./pages/Sellers/SellerStoreRegister";
 // import SellerStoreManagement from "./pages/Sellers/SellerStoreManagement";
 import SellerProductRegistration from "./pages/Sellers/SellerProductRegistration";
 import SellerStoresList from "./pages/Sellers/SellerStoresList";
-
 
 import "./App.css";
 import SellerStoreSales from "./pages/Sellers/SellerStoreSales";
@@ -40,8 +42,8 @@ export default function Customer() {
           <Route path="/" element={<Home />} />
           <Route path="/map" element={<Map />} />
           <Route path="/barcode" element={<Barcode />} />
-          {/* <Route path="/search" element={<Search />} /> */}
-          <Route path="/MainClothSharedFeed" element={<MainClothSharedFeed />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/feed" element={<Feed />} />
           <Route path="/user" element={<User />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/item/:id" element={<Item />} />
@@ -70,11 +72,11 @@ export default function Customer() {
 
           <Route path="/seller/store/sales" element={<SellerStoreSales />} />
 
-        {/* <Route
+          {/* <Route
             path="/seller/store/management"
             element={<SellerStoreManagement />}
           /> */}
-          
+
           <Route
             path="/seller/item/management/select/:storeId"
             element={<SellerItemManagement />}
@@ -87,7 +89,9 @@ export default function Customer() {
           <Route path="/login" element={<Login />} />
 
           {/* 회원가입 페이지 */}
+          <Route path="/signup-choice" element={<SignupChoice />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/loading" element={<LoadingPage />} />
         </Routes>
       </div>
     </BrowserRouter>

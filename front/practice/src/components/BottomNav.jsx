@@ -31,8 +31,12 @@ const BottomNav = () => {
 
   if (
     locationNow.pathname === "/" ||
+<<<<<<< HEAD
     // locationNow.pathname === "/search" ||
     locationNow.pathname === "/mainClothSharedFeed" ||
+=======
+    locationNow.pathname === "/feed" ||
+>>>>>>> develop
     locationNow.pathname === "/user" ||
     locationNow.pathname === "/map" ||
     locationNow.pathname === "/barcode"
@@ -77,12 +81,21 @@ const BottomNav = () => {
             />
           </div>
         </Link>
+<<<<<<< HEAD
         <Link to="/mainClothSharedFeed" className="nav-link">
+=======
+
+        <Link to="/feed" className="nav-link">
+>>>>>>> develop
           <div>
             <FontAwesomeIcon
-              icon="magnifying-glass"
+              icon="hashtag"
               className={
+<<<<<<< HEAD
                 locationNow.pathname === "/mainClothSharedFeed"
+=======
+                locationNow.pathname === "/feed"
+>>>>>>> develop
                   ? "nav-item active-nav-item"
                   : "nav-item"
               }

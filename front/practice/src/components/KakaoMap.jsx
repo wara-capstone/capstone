@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { fetchRefreshToken } from '../utils/authUtil.jsx';
 
 import imageSrc4 from "../adImages/iconImage/iconBlue.png";
 import imageSrc3 from "../adImages/iconImage/iconRed.png";
@@ -29,6 +30,7 @@ var choiceImageSize = new kakao.maps.Size(44, 58); // 선택한 마커의 크기
 export default function KakaoMap() {
   const email = localStorage.getItem("email");
   const token = localStorage.getItem("token");
+  const RefreshToken = localStorage.getItem("RefreshToken");
   const CART_URL =
     process.env.NODE_ENV === "development"
       ? process.env.REACT_APP_DJANGO_CART_URL
@@ -65,12 +67,18 @@ export default function KakaoMap() {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `${token}`,
+            Authorization: localStorage.getItem("token"),
           },
         }
       );
       const result = await response.json();
 
+      if (response.status === 401) {
+        RefreshToken = localStorage.getItem("RefreshToken");
+        fetchRefreshToken(RefreshToken);
+        token = localStorage.getItem("token");
+      }
+      
       if (response.status === 200) {
         console.log("성공");
         console.log(result);
@@ -144,7 +152,7 @@ export default function KakaoMap() {
     );
     // 컴포넌트가 unmount될 때 위치 추적을 중지
     return () => navigator.geolocation.clearWatch(watchId);
-  }, []);
+  }, [token]);
 
   // MakrerImage 객체를 생성하여 반환하는 함수입니다
   function createMarkerImage(markerScr, markerSize) {
