@@ -47,7 +47,7 @@ const LoadingPage = () => {
         }
       };
       fetchData();
-    }, [navigate, code]);
+    }, []);
 
     const styles = {
         container: {
