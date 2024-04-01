@@ -15,6 +15,6 @@ public class TokenDTO {
     private String refreshToken;
     private String accessToken;
     private String email;
-    private Long kakao;
+    private Long kakaoUserId;
     private String role;
 }
