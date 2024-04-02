@@ -1,13 +1,20 @@
 import React from "react";
 import BottomNav from "../components/BottomNav";
 import Header from "../components/Header";
+import ClothFeedList from "../components/ClothFeedList";
+import Box from '@mui/material/Box';
 
 export default function Feed() {
   return (
     <div className="feed">
       <Header />
 
-      <h2>준비 중인 서비스입니다.</h2>
+     
+
+    {/* <Box component="section" sx={{gridColumn: '1/3'}}>
+      <ClothFeedList />
+      </Box> */}
+    <ClothFeedList />
 
       <BottomNav />
     </div>

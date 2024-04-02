@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
+
 import MiniProfile from "../components/MiniProfile.jsx";
 
 
-export default function ViewClothSharedFeed() {
+export default function ViewClothSharedFeed({id, userName, img, caption}) {
     return (
-        <MiniProfile/>
+        <div>
+          <MiniProfile/>  
+        </div>
+       
     );
 }

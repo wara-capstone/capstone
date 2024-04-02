@@ -5,8 +5,7 @@ import Cart from "./pages/Cart";
 import Feed from "./pages/Feed";
 import Home from "./pages/Home";
 import Map from "./pages/Map";
-// import Search from "./pages/Search";
-import MainClothSharedFeed from "./pages/MainClothSharedFeed";
+ import Search from "./pages/Search";
 import User from "./pages/User";
 
 import Chatting from "./pages/Chatting";
@@ -28,7 +27,7 @@ import SellerItemManagement from "./pages/Sellers/SellerItemManagement";
 import SellerStoreEdit from "./pages/Sellers/SellerStoreEdit";
 import SellerStoreRegister from "./pages/Sellers/SellerStoreRegister";
 // import SellerStoreManagement from "./pages/Sellers/SellerStoreManagement";
-import SellerProductRegistration from "./pages/Sellers/SellerProductRegistration";
+// import SellerProductRegistration from "./pages/Sellers/SellerProductRegistration";
 import SellerStoresList from "./pages/Sellers/SellerStoresList";
 
 import "./App.css";
@@ -81,10 +80,10 @@ export default function Customer() {
             path="/seller/item/management/select/:storeId"
             element={<SellerItemManagement />}
           />
-          <Route
+          {/* <Route
             path="/seller/item/management/select/:storeId/:productId"
             element={<SellerProductRegistration />}
-          />
+          /> */}
           {/* 로그인 페이지 */}
           <Route path="/login" element={<Login />} />
 

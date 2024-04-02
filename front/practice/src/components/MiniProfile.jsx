@@ -25,3 +25,4 @@ function MiniProfile() {
     
   );  
 }
+export default MiniProfile;

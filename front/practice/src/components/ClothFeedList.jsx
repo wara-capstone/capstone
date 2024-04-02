@@ -1,37 +1,44 @@
 import React from "react";
 import styled from "styled-components";
+import { faker } from '@faker-js/faker';
+import {useEffect, useState} from 'react';
+import CardMedia from '@mui/material/CardMedia';
+import CardHeader from '@mui/material/CardHeader';
+import Avatar from '@mui/material/Avatar';
+import Typography from '@mui/material/Typography';
+import { PostConstruct } from "ag-grid-community";
 import ClothFeedListItem from "./ClothFeedListItem";
 
-const Wrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
 
-    :not(:last-child) {
-        margin-bottom: 16px;
-    }
-`;
+function ClothFeedList() {
+    const [posts, setPosts] = useState([]);
 
-function ClothFeedList(props){
-    const {posts, onClickItem } = props;
+    useEffect(() => {
+        const mockPosts = [...Array(20)].map((_, i) => ({
+            userName: faker.person.fullName(),
+            userImg: faker.image.avatar(),
+            img: faker.image.url(),
+            caption: faker.lorem.text(),
+            id: i,
+    }));
 
-    return (
-        <Wrapper>
-            {posts.map((post, index) => {
-                return (
-                    <ClothFeedListItem
-                        key={post.id}
-                        post={post}
-                        onClick={() => {
-                            onClickItem(post);
-                        }}
-                    />
-                );
-            })}
-        </Wrapper>
+    setPosts(mockPosts);
+}, []);
 
-    );
+return(
+    <div>
+        {posts.map((post) => (
+            <ClothFeedListItem 
+                key={post.id}
+                id={post.id}
+                userName={post.userName}
+                userImg={post.userImg}
+                img={post.img}
+                caption={post.caption}
+            />
+        ))}
+    </div>
+);
 }
 
 export default ClothFeedList;

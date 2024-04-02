@@ -1,50 +1,39 @@
-import React from "react";
-import styled from "styled-components";
-import CarMedia from '@mui/material/CarMedia';
-import CardHeader from '@mui/material/CardHeader';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
+import React from 'react';
+import { Card, CardHeader, Avatar, IconButton, Typography, CardMedia, CardActions } from '@mui/material';
+//import MoreVertIcon from '@mui/material/MoreVert';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-const Wrapper = styled.div`
-    width: calc(100%-32px);
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    border: 1px solid grey;
-    border-radius: 8px;
-    cursor: pointer;
-    background: white;
-    :hover {
-        background: lightgrey;
-        }
-    `;
+// props 객체를 인자로 받아 구조 분해 할당을 통해 필요한 속성을 추출합니다.
+function ClothFeedListItem({ id, userName, userImg, img, caption }) {
+    console.log(userName); // 이제 userName은 문자열로 콘솔에 출력됩니다.
 
-const TitleImage = styled.p`
-        <CarMedia component ="img" image={img} alt={caption} />
-    `;
-
-function ClothFeedListItem(props, {Id, userName, userImg, caption}){
-    const { post, onClick} = props;
-        
-    return(
-        <Wrapper onClick={onClick}>
-            {/* <TitleImage>{post.image}</TitleImage> */}
-            <CarMedia component ="img"  />
-            <CardHeader 
+    return (
+        <Card>
+            {/* Media */}
+            <CardMedia component="img" image={img} alt={caption} />
+            {/* Header */}
+            <CardHeader
                 avatar={
                     <Avatar src={userImg} aria-label={userName}>
-                        {userName.charAt(0)}
+                        {userName.charAt(0)} {/* Avatar에 userName의 첫 글자를 표시 */}
                     </Avatar>
                 }
-                action
+                action={
+                    <>
+                    <IconButton aria-label="like">
+                            <FavoriteBorderIcon />
+                        </IconButton>
+                        <IconButton aria-label="settings">
+                            <MoreVertIcon />
+                        </IconButton>
+                    </>
+                    
+                }
+                title={<Typography fontWeight="bold">{userName}</Typography>  
+            }    
             />
-            title={<Typography fontWeight="bold">{userName}</Typography>}
-
-        </Wrapper>
-            
-
+        </Card>
     );
 }
 
