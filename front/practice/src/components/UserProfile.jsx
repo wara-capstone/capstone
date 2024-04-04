@@ -102,11 +102,11 @@ const UserProfile = () => {
   const handleLogout = () => {
     const KakaoLogout = async () => {
       const response = await fetch(
-        `https://kapi.kakao.com/v1/user/logout`,
+        `https://kapi.kakao.com/v1/user/logout?target_id_type=user_id&target_id=${localStorage.getItem("kakaoUserId")}`,
         {
           method: "POST",
           headers: {
-            "Authorization": `KakaoAK 5d3f977e28b7baf6825e7f34c62fd79a`
+            "Authorization": `KakaoAK b2077c53d402d3e5755993907e3cc0e9`
           },
           body: JSON.stringify({
             target_id_type: "user_id",
