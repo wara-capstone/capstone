@@ -1,59 +1,105 @@
 
+# default
 spring:
+    profiles:
+      active: dev
+    application:
+      name: User-Service
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
   jpa:
     ## spring jpa hibernate
     hibernate:
       ddl-auto: update
     show-sql: true
-    ## database connect
   datasource:
-    url: jdbc:mariadb://mariadb:3306/capstoneAuth?createDatabaseIfNotExist=true
-    username: root
-    password: 1234
+    url: ${MY_DATA_SOURCE}
+    username: ${MY_DATA_USERNAME}
+    password: ${MY_DATA_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
   servlet:
     multipart:
       max-file-size: 30MB
       max-request-size: 30MB
-    # Spring boot 2.6버전 이후에 spring.mvc.pathmatch.matching-strategy 값이 ant_apth_matcher에서 path_pattern_parser로 변경되면서 몇몇 라이브러리에서 오류가 발생하고 있다!
-    # https://goyunji.tistory.com/137
-#  mvc:
-#    pathmatch:
-#      matching-strategy: ant_path_matcher
-  application:
-    name: User-Service
+
+# 서버 실행 포트
 server:
-  port: 11000
-# 다시 킬 것
+  port: ${MY_INSTANCE_PORT}
+
+# eureka
 eureka:
   instance:
-    instance-id: 54.180.3.47:${spring.application.instance_id:${random.value}}
+    instance-id: ${MY_EUREKA_CLIENT_HOST_IP}:${spring.application.instance_id:${random.value}}
     prefer-ip-address: true
-    ip-address: 54.180.3.47
+    ip-address: ${MY_EUREKA_CLIENT_HOST_IP}
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://eureka:8761/eureka
+      defaultZone: ${MY_EUREKA_CLIENT_DEFAULT_ZONE}
 
+# oauth
 oauth:
   kakao:
-    oauth_uri : https://kauth.kakao.com/oauth/token
-    data_uri : https://kapi.kakao.com/v2/user/me
-    grant_type : authorization_code
-    client_id : 5d3f977e28b7baf6825e7f34c62fd79a
-    redirect_uri_signup : 'https://www.onoff.zone/signup'
-    redirect_uri_signin : 'https://www.onoff.zone/loading'
-    client_secret : HoJsz8bFI7y2u0LEpMNWIGsjYTZV6Jjs
-
+    oauth_uri : ${MY_OAUTH_KAKAO_OAUTH_URI}
+    data_uri : ${MY_OAUTH_KAKAO_DATA_URI}
+    grant_type : ${MY_OAUTH_KAKAO_GRANT_TYPE}
+    client_id : ${MY_OAUTH_KAKAO_CLIENT_ID}
+    redirect_uri_signup : ${MY_OAUTH_KAKAO_REDIRECT_URI_SIGNUP}
+    redirect_uri_signin : ${MY_OAUTH_KAKAO_REDIRECT_URI_SIGNIN}
+    client_secret : ${MY_OAUTH_KAKAO_CLIENT_SECRET}
 springboot:
   jwt:
-    secret: secretKey123
-management:
-  endpoints:
-    web:
-      exposure:
-        include: prometheus
-  endpoint:
-    prometheus:
-      enabled: true
+    secret: ${MY_JWT_SECRET}
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  jpa:
+    ## spring jpa hibernate
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  datasource:
+    url: ${MY_DATA_SOURCE}
+    username: ${MY_DATA_USERNAME}
+    password: ${MY_DATA_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
+
+# 서버 실행 포트
+server:
+  port: ${MY_INSTANCE_PORT}
+
+# eureka
+eureka:
+  instance:
+    instance-id: ${MY_EUREKA_CLIENT_HOST_IP}:${spring.application.instance_id:${random.value}}
+    prefer-ip-address: true
+    ip-address: ${MY_EUREKA_CLIENT_HOST_IP}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${MY_EUREKA_CLIENT_DEFAULT_ZONE}
+
+# oauth
+oauth:
+  kakao:
+    oauth_uri : ${MY_OAUTH_KAKAO_OAUTH_URI}
+    data_uri : ${MY_OAUTH_KAKAO_DATA_URI}
+    grant_type : ${MY_OAUTH_KAKAO_GRANT_TYPE}
+    client_id : ${MY_OAUTH_KAKAO_CLIENT_ID}
+    redirect_uri_signup : ${MY_OAUTH_KAKAO_REDIRECT_URI_SIGNUP}
+    redirect_uri_signin : ${MY_OAUTH_KAKAO_REDIRECT_URI_SIGNIN}
+    client_secret : ${MY_OAUTH_KAKAO_CLIENT_SECRET}
+springboot:
+  jwt:
+    secret: ${MY_JWT_SECRET}
