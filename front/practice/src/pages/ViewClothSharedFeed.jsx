@@ -2,14 +2,17 @@
 //import MiniProfile from "../components/MiniProfile.jsx";
 import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
-import { Card, CardHeader, Avatar, IconButton, Typography, CardMedia, CardActions } from '@mui/material';
+import { Card, CardHeader, Avatar, IconButton, Typography, CardMedia, Box, CardActions } from '@mui/material';
 //import MoreVertIcon from '@mui/material/MoreVert';
 import {faker} from '@faker-js/faker';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import IosShareIcon from '@mui/icons-material/IosShare';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import {styled} from '@mui/system';
-import { useNavigate } from 'react-router-dom';
-
+import Header from "../components/Header";
+import BottomNav from "../components/BottomNav";
+import ProductTagListItem from '../components/ProductTagListItem';
 const StyledCardHeader = styled(CardHeader)(({ theme }) => ({
     // 스타일 커스터마이징 추가
   }));
@@ -37,6 +40,8 @@ export default function ViewClothSharedFeed(props) {
 
 
   return (
+    <div className="ViewClothSharedFeed">
+        <Header />
         <Card>
           {/* Header */}
           <StyledCardHeader
@@ -46,25 +51,50 @@ export default function ViewClothSharedFeed(props) {
                     {itemData.userName.charAt(0)}
                     </Avatar>
                 }
-                title={
-                    <TitleTypography variant="body2" fontWeight="bold">
-                      {itemData.userName}
-                    </TitleTypography>
-                  }
+                
                 action={
                     <>
-                    <IconButton aria-label="like">
-                            <FavoriteBorderIcon />
-                        </IconButton>
                         <IconButton aria-label="settings">
                             <MoreVertIcon />
                         </IconButton>
                     </>                
-                }            
+                }
+                title={
+                    <TitleTypography variant="body2" fontWeight="bold">
+                      {itemData.userName}
+                    </TitleTypography>
+                  }            
             />
             {/* Media */}
-            <CardMedia component="img" image={itemData.img} alt={itemData.caption}/>
+            <CardMedia component="img" image={itemData.img} 
+             sx = {{width: 400, height:500}} alt={itemData.caption}/>
         </Card>
-       
+        <ProductTagListItem />
+        <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between', // 좌우 여백을 최대로 하여 아이콘들을 양쪽 끝으로 분리
+        alignItems: 'center', // 아이콘들을 상하 중앙 정렬
+        width: '100%', // 박스의 너비를 부모 컴포넌트에 맞춤
+      }}
+    >
+      {/* 왼쪽 아이콘 */}
+      <IconButton aria-label="share">
+        <IosShareIcon />
+      </IconButton>
+
+      {/* 오른쪽 아이콘들을 감싸는 박스 */}
+      <Box>
+        <IconButton aria-label="like">
+          <FavoriteBorderIcon />
+        </IconButton>
+        <IconButton aria-label="bookMark">
+          <BookmarkBorderIcon />
+        </IconButton>
+      </Box>
+    </Box>              
+
+        <BottomNav />
+    </div>
     );
 }
