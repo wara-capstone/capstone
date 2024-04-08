@@ -11,6 +11,8 @@ import "../components/CartComponents.css";
 import{
   message
 } from "antd";
+import { fetchRefreshToken } from "../utils/authUtil";
+
 
 export default function Purchase() {
   const navigate = useNavigate();
@@ -43,6 +45,13 @@ export default function Purchase() {
             },
           }
         );
+
+        if (response.status === 401) {
+          const RefreshToken = localStorage.getItem("RefreshToken");
+          fetchRefreshToken(RefreshToken);
+          token = localStorage.getItem("token");
+        }
+  
         if (response.status === 200) {
           const result = await response.json();
           console.log("성공");
@@ -55,11 +64,11 @@ export default function Purchase() {
       };
       fetchData();
     });
-  }, []);
+  }, [token]);
 
 
 
-async function clickPurchase(e) {
+async function clickPurchase(tryAgain = true) {
     // Create payload
 
   // selectedItems.forEach(item => {
@@ -111,6 +120,15 @@ async function clickPurchase(e) {
         }
       );
       console.log(response);
+
+      if (response.status === 401 && tryAgain) {
+        const RefreshToken = localStorage.getItem("RefreshToken");
+        fetchRefreshToken(RefreshToken);
+        token = localStorage.getItem("token");
+        return clickPurchase(false);
+      }
+
+
       if (response.status === 201) {
         
         message.success("구매가 완료되었습니다.", 2);

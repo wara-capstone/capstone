@@ -12,6 +12,7 @@ import PurchaseHistoryCard from "../components/PurchaseHistoryCard";
 import {
   message
 }from "antd";
+import { fetchRefreshToken } from "../utils/authUtil";
 
 export default function PurchaseHistory() {
 
@@ -39,6 +40,13 @@ export default function PurchaseHistory() {
             },
           }
         );
+
+        if (response.status === 401) {
+          const RefreshToken = localStorage.getItem("RefreshToken");
+          fetchRefreshToken(RefreshToken);
+          token = localStorage.getItem("token");
+        }
+  
         if (response.status === 200) {
           const result = await response.json();
           console.log("구매 내역 조회 요청은 성공");
@@ -87,7 +95,7 @@ export default function PurchaseHistory() {
         console.log("구매내역", purchaseItems);
       };
       fetchData();
-  }, []);
+  }, [token]);
 
 
 

@@ -10,6 +10,8 @@ import Modal from 'react-modal';
 import {
   message
 } from "antd";
+import { fetchRefreshToken } from "../utils/authUtil";
+
 
 export default function Cart() {
 
@@ -70,6 +72,13 @@ export default function Cart() {
       );
       const result = await response.json();
 
+      if (response.status === 401) {
+        const RefreshToken = localStorage.getItem("RefreshToken");
+        fetchRefreshToken(RefreshToken);
+        token = localStorage.getItem("token");
+      }
+
+
       if (response.status === 200) {
         console.log("성공");
         setSelectedBread(result);
@@ -95,7 +104,7 @@ export default function Cart() {
     return () => window.removeEventListener('optionChanged', handleOptionChange);
 
 
-  }, [reload]);
+  }, [reload, token]);
 
 
   useEffect(() => {
@@ -111,7 +120,7 @@ export default function Cart() {
 
 
 
-  function deleteFunc() {  //삭제 버튼 기능
+  function deleteFunc(tryAgain = true) {  //삭제 버튼 기능
 
     var deleteString = '';
     checkList.forEach(id => {
@@ -130,6 +139,13 @@ export default function Cart() {
           },
         }
       );
+      if (response.status === 401 && tryAgain) {
+        const RefreshToken = localStorage.getItem("RefreshToken");
+        await fetchRefreshToken(RefreshToken); // fetchRefreshToken이 프로미스를 반환하고, 새로운 토큰을 localStorage에 저장한다고 가정
+        token = localStorage.getItem("token"); // 새로운 토큰으로 업데이트
+        return deleteFunc(false); // 재귀 호출하지만, 무한 루프 방지를 위해 tryAgain을 false로 설정
+      }  
+
       if (response.status === 204) {
         console.log("성공");
         setModalIsOpen(false);

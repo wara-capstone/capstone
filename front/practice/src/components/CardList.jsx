@@ -25,8 +25,11 @@ function CardList({ category, url }) {
           Authorization: `${token}`,
         },
       });
+
       if (response.status === 401) {
+        RefreshToken = localStorage.getItem("RefreshToken");
         fetchRefreshToken(RefreshToken);
+        token = localStorage.getItem("token");
       }
 
 
@@ -53,7 +56,7 @@ function CardList({ category, url }) {
       }
     };
     fetchData();
-  }, [category]);
+  }, [category, token]);
 
   return (
     <div className="card-list">

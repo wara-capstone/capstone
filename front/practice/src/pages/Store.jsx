@@ -5,6 +5,8 @@ import BottomNav from "../components/BottomNav";
 import Category from "../components/Category";
 import EventButton from "../components/EventButton";
 import Header from "../components/Header";
+import { fetchRefreshToken } from "../utils/authUtil";
+
 
 export default function Store() {
   const { id } = useParams();
@@ -44,6 +46,12 @@ export default function Store() {
         },
       });
       result = await response.json();
+      if (response.status === 401) {
+        const RefreshToken = localStorage.getItem("RefreshToken");
+        fetchRefreshToken(RefreshToken);
+        token = localStorage.getItem("token");
+      }
+
       if (response.status === 200) {
         setStoreData(result.data); // 상태 업데이트
         //console.log(result.storeId);
@@ -55,7 +63,7 @@ export default function Store() {
       }
     };
     fetchData();
-  }, []);
+  }, [token]);
 
   return (
     <div className="store">

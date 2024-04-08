@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import BottomNav from "../components/BottomNav";
 import Header from "../components/Header";
 import LoadingScreen from "../components/LoadingScreen";
+import { fetchRefreshToken } from "../utils/authUtil";
 
 export default function ChattingList() {
   const [visitorUserEmails, setVisitorUserEmails] = useState([]);
@@ -27,6 +28,12 @@ export default function ChattingList() {
             Authorization: `${token}`,
           },
         });
+
+        if (response.status === 401) {
+          const refreshToken = localStorage.getItem("RefreshToken");
+          await fetchRefreshToken(refreshToken); // fetchRefreshToken이 프로미스를 반환하고, 새로운 토큰을 localStorage에 저장한다고 가정
+          token = localStorage.getItem("token"); // 새로운 토큰으로 업데이트
+        }
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -55,9 +62,9 @@ export default function ChattingList() {
       }
     }
     fetchChattingList();
-  }, [userId]);
+  }, [userId, token]);
 
-  const fetchImage = async (email) => {
+  const fetchImage = async (email, tryAgain = true) => {
     const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}user?email=${email}`, {
       method: "GET",
       headers: {
@@ -72,7 +79,16 @@ export default function ChattingList() {
       console.log(result.email);
       console.log(result.profileImage);
       return result.profileImage;
-    } else {
+    }else if (response.status === 401 && tryAgain) {
+      // 토큰 갱신 로직 (예시)
+      const refreshToken = localStorage.getItem("RefreshToken");
+      // fetchRefreshToken은 새로운 토큰을 발급받는 함수라고 가정합니다.
+      await fetchRefreshToken(refreshToken);
+      token = localStorage.getItem("token"); // 새로운 토큰으로 업데이트
+      // 재시도하지만, 무한 루프 방지를 위해 tryAgain을 false로 설정
+      return fetchImage(email, false);
+    }   
+    else {
       console.log("실패");
     }
   };

@@ -9,6 +9,8 @@ import ImageSlider from "../components/ImageSlider";
 import {
   message
 } from "antd";
+import { fetchRefreshToken } from "../utils/authUtil";
+
 
 export default function Item() {
   const { id } = useParams();
@@ -54,7 +56,7 @@ export default function Item() {
     }
   }
 
-  async function clickAddCart(e) {
+  async function clickAddCart(tryAgain = true) {
     // Create payload
     const payload = {
       user_email: email,
@@ -79,16 +81,18 @@ export default function Item() {
         },
         body: JSON.stringify(payload),
       });
-      
+
+      if (response.status === 401) {
+        const RefreshToken = localStorage.getItem("RefreshToken");
+        fetchRefreshToken(RefreshToken);
+        token = localStorage.getItem("token");
+      }
+
       if (response.status === 201) {
         console.log("성공!");
 
         message.success("장바구니에 성공적으로 담겼습니다.");
-      } else if (response.status !== 200) {
-        
-        const errorData = await response.json();
-        console.log(errorData);
-      } else if (response.status === 400) {
+      }else if (response.status === 400) {
 
         message.error("장바구니에 담기지 않았습니다. 재시도 해주세요");
         // Handle error

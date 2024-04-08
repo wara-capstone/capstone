@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import BottomNav from "../components/BottomNav";
 import Header from "../components/Header";
+import { fetchRefreshToken } from "../utils/authUtil";
+
 
 export default function Chatting() {
   const [currentRoomId, setCurrentRoomId] = useState(null);
@@ -47,7 +49,7 @@ export default function Chatting() {
     setMessageInput(event.target.value);
   };
 
-  const openOrCreateRoom = async () => {
+  const openOrCreateRoom = async (tryAgain = true) => {
     if (socket) {
       socket.close();
     }
@@ -64,6 +66,13 @@ export default function Chatting() {
           visitor_user_email: userId,
         }),
       });
+
+      if (response.status === 401 && tryAgain) {
+        const refreshToken = localStorage.getItem("RefreshToken");
+        await fetchRefreshToken(refreshToken); // fetchRefreshToken이 프로미스를 반환하고, 새로운 토큰을 localStorage에 저장한다고 가정
+        token = localStorage.getItem("token"); // 새로운 토큰으로 업데이트
+        return openOrCreateRoom(false); // 재귀 호출하지만, 무한 루프 방지를 위해 tryAgain을 false로 설정
+      }
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import '../components/OrderProducts.css';
 import Modal from 'react-modal';
+import { fetchRefreshToken } from "../utils/authUtil";
+
 
 export default function OrderProducts({ selectedBread, changeSingleBox, data, checkList }) {
 
@@ -55,7 +57,7 @@ function quantityMinus () { //수량 감소
     }
 }
 
-async function optionGet() { //옵션 가져오기
+async function optionGet(tryAgain = true) { //옵션 가져오기
     const response = await fetch(
         `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/all/`+data.product.p_id,
         {
@@ -67,6 +69,13 @@ async function optionGet() { //옵션 가져오기
         }
       );
       const resultData = await response.json();
+
+      if (response.status === 401 && tryAgain) {
+        const RefreshToken = localStorage.getItem("RefreshToken");
+        fetchRefreshToken(RefreshToken);
+        token = localStorage.getItem("token");
+        return optionGet(false); // 재귀 호출하지만, 무한 루프 방지를 위해 tryAgain을 false로 설정
+      }
 
       if (response.status === 200) {
         console.log("성공");
@@ -98,7 +107,7 @@ async function optionGet() { //옵션 가져오기
 }
 
 
-async function optionEdit(){  //옵션 변경
+async function optionEdit(tryAgain = true){  //옵션 변경
     // Create payload
     const payload = {
         user_email: email,
@@ -127,6 +136,14 @@ async function optionEdit(){  //옵션 변경
           }
         );
         console.log(payload);
+
+        if (response.status === 401 && tryAgain) {
+          const RefreshToken = localStorage.getItem("RefreshToken");
+          fetchRefreshToken(RefreshToken);
+          token = localStorage.getItem("token");
+          return optionEdit(false); // 재귀 호출하지만, 무한 루프 방지를 위해 tryAgain을 false로 설정
+        }  
+
         if (response.status === 200) {
           // Redirect to login.html
           console.log("성공!");
