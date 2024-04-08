@@ -1,12 +1,7 @@
 import React from "react";
-import styled from "styled-components";
 import { faker } from '@faker-js/faker';
 import {useEffect, useState} from 'react';
-import CardMedia from '@mui/material/CardMedia';
-import CardHeader from '@mui/material/CardHeader';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
-import { PostConstruct } from "ag-grid-community";
+import { Grid } from '@mui/material';
 import ClothFeedListItem from "./ClothFeedListItem";
 
 
@@ -26,18 +21,19 @@ function ClothFeedList() {
 }, []);
 
 return(
-    <div>
-        {posts.map((post) => (
-            <ClothFeedListItem 
-                key={post.id}
-                id={post.id}
-                userName={post.userName}
-                userImg={post.userImg}
-                img={post.img}
-                caption={post.caption}
-            />
-        ))}
-    </div>
+    <Grid container spacing={2}> {/* 컨테이너 설정, 카드 사이의 간격은 2로 설정 */}
+            {posts.map((post) => (
+                <Grid item xs={12} sm={6} key={post.id}> {/* 반응형으로 설정: 작은 화면에서는 한 줄에 하나, 중간 크기 화면에서는 한 줄에 두 개 */}
+                    <ClothFeedListItem 
+                        id={post.id}
+                        userName={post.userName}
+                        userImg={post.userImg}
+                        img={post.img}
+                        caption={post.caption}
+                    />
+                </Grid>
+            ))}
+        </Grid>
 );
 }
 
