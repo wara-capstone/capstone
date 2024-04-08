@@ -15,6 +15,7 @@ import Purchase from "./pages/Purchase";
 import PurchaseHistory from "./pages/PurchaseHistory";
 import Store from "./pages/Store";
 import UserEdit from "./pages/UserEdit";
+import ViewClothSharedFeed from "./pages/ViewClothSharedFeed.jsx";
 
 import LoadingPage from "./pages/LodingPage";
 import Login from "./pages/Login";
@@ -52,6 +53,7 @@ export default function Customer() {
           <Route path="/user/chattingList" element={<ChattingList />} />
           <Route path="/user/purchase" element={<Purchase />} />
           <Route path="/user/purchaseHistory" element={<PurchaseHistory />} />
+          <Route path="/ViewClothSharedFeed/:id" element={<ViewClothSharedFeed />} />
 
           {/* 사장님 페이지 */}
           <Route path="/seller" element={<SellerHome />} />
