@@ -52,7 +52,7 @@ export default function Purchase() {
 
     if (success) {
 
-      async function processPayment(tryAgain = true) {
+      async function paymentVerification(tryAgain = true) {  // 결제 검증하기
       try {
         const paymentResponse = await fetch(`URL`, {
         method: "POST",
@@ -69,7 +69,7 @@ export default function Purchase() {
             const RefreshToken = localStorage.getItem("RefreshToken");
             await fetchRefreshToken(RefreshToken);
             token = localStorage.getItem("token");
-            return processPayment(false);
+            return paymentVerification(false);
 
           } else if (paymentResponse.status === 201) {
             alert("결제 성공");
@@ -82,7 +82,7 @@ export default function Purchase() {
     }
   }
 
-  processPayment();
+  paymentVerification();
 }
 else{
   alert(`결제 실패: ${error_msg}`);
