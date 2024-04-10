@@ -84,7 +84,7 @@ export default function Item() {
 
       if (response.status === 401) {
         const RefreshToken = localStorage.getItem("RefreshToken");
-        fetchRefreshToken(RefreshToken);
+        await fetchRefreshToken(RefreshToken);
         token = localStorage.getItem("token");
       }
 

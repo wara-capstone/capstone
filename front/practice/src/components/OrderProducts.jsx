@@ -72,7 +72,7 @@ async function optionGet(tryAgain = true) { //옵션 가져오기
 
       if (response.status === 401 && tryAgain) {
         const RefreshToken = localStorage.getItem("RefreshToken");
-        fetchRefreshToken(RefreshToken);
+        await fetchRefreshToken(RefreshToken);
         token = localStorage.getItem("token");
         return optionGet(false); // 재귀 호출하지만, 무한 루프 방지를 위해 tryAgain을 false로 설정
       }
@@ -139,7 +139,7 @@ async function optionEdit(tryAgain = true){  //옵션 변경
 
         if (response.status === 401 && tryAgain) {
           const RefreshToken = localStorage.getItem("RefreshToken");
-          fetchRefreshToken(RefreshToken);
+          await fetchRefreshToken(RefreshToken);
           token = localStorage.getItem("token");
           return optionEdit(false); // 재귀 호출하지만, 무한 루프 방지를 위해 tryAgain을 false로 설정
         }  

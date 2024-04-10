@@ -75,7 +75,7 @@ export default function KakaoMap() {
 
       if (response.status === 401) {
         RefreshToken = localStorage.getItem("RefreshToken");
-        fetchRefreshToken(RefreshToken);
+        await fetchRefreshToken(RefreshToken);
         token = localStorage.getItem("token");
       }
       

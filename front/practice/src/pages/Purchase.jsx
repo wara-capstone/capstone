@@ -14,6 +14,7 @@ import{
 import { fetchRefreshToken } from "../utils/authUtil";
 
 
+
 export default function Purchase() {
   const navigate = useNavigate();
     const email = localStorage.getItem("email");
@@ -25,6 +26,73 @@ export default function Purchase() {
     // 총 금액
   const totalPrice = selectedItems.reduce((acc, item) => acc + (item.product.price), 0);
 
+
+// 포트원 모의결제 시작
+  const { IMP } = window; 
+  IMP.init(`고객사 식별코드`); // 아임포트 모듈 초기화
+
+// 백엔드로부터 주문 정보를 가져온 후 data에 넣기
+  const data = {
+    pg: `kcp.{상점ID}`, // PG사
+    pay_method: "card", // 결제수단
+    merchant_uid: `mid_${new Date().getTime()}`, // 주문번호
+    amount: totalPrice, // 결제금액
+    name: formatName(cartItems), // 주문명
+    buyer_name: user.name, // 구매자 이름
+    buyer_tel: user.phone, // 구매자 전화번호
+    buyer_email: user.email, // 구매자 이메일
+    buyer_addr: user.address, // 구매자 주소
+    buyer_postcode: user.postcode, // 구매자 우편번호
+    m_redirect_url: "{리디렉션 될 URL}", // 결제 완료 후 이동할 주소
+  };
+  IMP.request_pay(data, callback);
+
+  const callback = (response) => {
+    const { success, error_msg } = response;
+
+    if (success) {
+
+      async function processPayment(tryAgain = true) {
+      try {
+        const paymentResponse = await fetch(`URL`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:  token,
+        },
+        body: JSON.stringify({
+          imp_uid: response.imp_uid,  // 결제고유번호
+          merchant_uid: response.merchant_uid, // 고객사 주문번호
+        }),
+      })
+          if (paymentResponse.status === 401 && tryAgain) {
+            const RefreshToken = localStorage.getItem("RefreshToken");
+            await fetchRefreshToken(RefreshToken);
+            token = localStorage.getItem("token");
+            return processPayment(false);
+
+          } else if (paymentResponse.status === 201) {
+            alert("결제 성공");
+          }
+          else {
+            alert("결제 실패");
+          }
+    } catch (error){
+      alert(`결제 실패: ${error_msg}`);
+    }
+  }
+
+  processPayment();
+}
+else{
+  alert(`결제 실패: ${error_msg}`);
+}
+    
+  };
+
+
+
+// 모의결제 사용할 함수 끝 
 
   useEffect(() => { // ProductId, pColor, pSize로 optionId 가져오기
     selectedItems.forEach(item => {
@@ -48,7 +116,7 @@ export default function Purchase() {
 
         if (response.status === 401) {
           const RefreshToken = localStorage.getItem("RefreshToken");
-          fetchRefreshToken(RefreshToken);
+          await fetchRefreshToken(RefreshToken);
           token = localStorage.getItem("token");
         }
   
@@ -68,8 +136,7 @@ export default function Purchase() {
 
 
 
-async function clickPurchase(tryAgain = true) {
-    // Create payload
+async function clickPurchase(tryAgain = true) { // 구매하기 버튼 클릭시 실행되는 함수
 
   // selectedItems.forEach(item => {
   //   if(item.product.stock < item.product.quantity){
@@ -123,7 +190,7 @@ async function clickPurchase(tryAgain = true) {
 
       if (response.status === 401 && tryAgain) {
         const RefreshToken = localStorage.getItem("RefreshToken");
-        fetchRefreshToken(RefreshToken);
+        await fetchRefreshToken(RefreshToken);
         token = localStorage.getItem("token");
         return clickPurchase(false);
       }
