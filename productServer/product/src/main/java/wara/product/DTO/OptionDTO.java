@@ -13,10 +13,10 @@ public class OptionDTO {
 
 
     Long optionId;
-    String productPrice;
+    Long productPrice;
     String productSize;
     String productColor;
-    String productStock;
+    Long productStock;
     String barcodeUrl;
 
 

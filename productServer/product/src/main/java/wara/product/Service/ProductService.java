@@ -1,24 +1,25 @@
 package wara.product.Service;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.support.JpaEvaluationContextExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import wara.product.Controller.ProductController;
+import org.springframework.web.multipart.MultipartFile;
 import wara.product.DAO.ProductDAO;
 import wara.product.DTO.OptionDTO;
 import wara.product.DTO.ProductDTO;
+import wara.product.DTO.SortDTO;
+import wara.product.DTO.UrlDTO;
 import wara.product.productEntity.OptionEntity;
 import wara.product.productEntity.ProductEntity;
-import wara.product.productEntity.Urls;
+import wara.product.productEntity.UrlEntity;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -26,27 +27,29 @@ import java.util.List;
 public class ProductService {
 
     private final ProductDAO productDAO;
-    private final TransrationService transrationService;
+    private final TranslationService translationService;
+    private final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
     public ProductService(@Autowired ProductDAO productDAO,
-                          @Autowired TransrationService transrationService) {
+                          @Autowired TranslationService translationService) {
         this.productDAO = productDAO;
-        this.transrationService = transrationService;
+        this.translationService = translationService;
     }
+
 
 
     /**
      * @param productId
      * @return 단일상품과 해당 상품의 모든 옵션
      */
-    public ProductDTO readOne(Long productId){
+    public ProductDTO getProductAndOptions(Long productId){
         ProductEntity productEntity = productDAO.readOneProduct(productId);
         List<OptionEntity> optionEntityList =  productDAO.readOptions(productEntity);
 
         return new ProductDTO(productEntity, optionEntityList);
     }
 
-    public ProductDTO readTarget(Long productId, Long optionId)
+    public ProductDTO getProductAndOption(Long productId, Long optionId)
     {
         ProductEntity productEntity =  productDAO.readOneProduct(productId);
         OptionEntity optionEntity = productDAO.readTargetoption(optionId);
@@ -59,7 +62,7 @@ public class ProductService {
      *
      * @return
      */
-    public List<ProductDTO> readMany(Long storeId)
+    public List<ProductDTO> getProductsAndOptionsByStoreId(Long storeId)
     {
 
         List<ProductEntity> productEntities = productDAO.readManyProduct(storeId);
@@ -71,43 +74,114 @@ public class ProductService {
 
 
     /**
-     * 최초 상품 등록에 대한 비즈니스 로직
-     * @param dto
+     * 상품 최초 등록
+     * @param
      * @return productID
      */
-    public Long initProduct(ProductDTO dto)
-    {
-        return productDAO.initProduct(dto.toEntity());
+    @Transactional
+    public ProductDTO initProduct(ProductDTO productDTO,
+                            OptionDTO optionDTO,
+                            List<MultipartFile> images) throws URISyntaxException, IOException {
+
+
+        List<UrlDTO> urls = new ArrayList<>();
+        try {logger.info(optionDTO.toString());
+        } catch (NullPointerException e) {logger.info("[optoinDTO없음]");}
+
+
+        Long productId = productDAO.initProduct(productDTO.toEntity());
+        ProductEntity productEntity = productDAO.readOneProduct(productId);
+
+        try {
+            for(String url:translationService.uploadImage(images))
+            {
+                urls.add(new UrlDTO(0L, url));
+            }
+            productDTO.setProductUrls(urls);
+        } catch (NullPointerException | URISyntaxException | IOException e)
+        {
+            logger.info("사진 업로드 실패");
+            // 첨부된 사진이 없으면 기본 사진으로 대체
+            urls.add(new UrlDTO("https://www.onoff.zone/api/image/download/1"));
+            productDTO.setProductUrls(urls);
+        }
+
+        List<UrlEntity> urlEntities = new ArrayList<>();
+
+        for(var item:urls)
+        {
+            urlEntities.add(new UrlEntity(productEntity, item.getUrl()));
+        }
+        productEntity.setImageUrls(urlEntities);
+
+        logger.info(urlEntities.toString());
+        logger.info(productEntity.getImageUrls().toString());
+
+        productDAO.initProduct(productEntity);
+
+        //productDTO의 값으로 일단 저장 -> 해당 상품의 ID값 반환
+
+
+
+        // STORE서버에 해당 상점이 존재하는지 검사
+//        String storeValid = transrationService.initToStore(productDTO.getStoreId(), Collections.singletonList(productId));
+//
+//        if(!storeValid.equals("success"))
+//        {//상점이 존재하지 않는 경우 -> 삭제
+//            logger.info("존재하지 않는 상점");
+//            productDAO.removeOneProduct(productId);
+//        }else if(Objects.nonNull(optionDTO)){
+//            // 옵션, 바코드 URL 추가 후 저장
+//            OptionEntity optionIdAfterSave = productDAO.getOptionIdAfterSave(productId,optionDTO.toEntity());
+//            String barcodeUrl = transrationService.toBarcode(productId, optionIdAfterSave.getOptionId());
+//            productDAO.addOption(productId,new OptionEntity(optionIdAfterSave,barcodeUrl));
+//        }
+
+        //TODO: 테스트 후 삭제
+        OptionEntity optionIdAfterSave = productDAO.getOptionIdAfterSave(productId,optionDTO.toEntity());
+//        String barcodeUrl = transrationService.toBarcode(productId, optionIdAfterSave.getOptionId());
+        String barcodeUrl = "https://www.onoff.zone/api/image/download/1";
+        productDAO.addOption(productId,new OptionEntity(optionIdAfterSave,barcodeUrl));
+
+        return productDAO.readOneProduct(productId).toDTO();
     }
+
 
 
     public ProductDTO modifyProduct(ProductDTO productDTO)
     {// 상품이 존재하는지 확인 할 것
         ProductEntity productEntity = this.productDAO.readOneProduct(productDTO.getProductId());
-        productEntity.setProductName(productDTO.getProductName());
-        productEntity.setProductCategory(productDTO.getProductCategory());
+        productEntity.setName(productDTO.getProductName());
+        productEntity.setCategory(productDTO.getProductCategory());
 
         return productDAO.modifyProduct(productEntity).toDTO();
     }
 
-    public ProductDTO modifyimage(Long productId, List<String> urls)
+    public ProductDTO modifyImage(Long productId, List<String> urls)
     {
         ProductEntity productEntity = productDAO.readOneProduct(productId);
-        Urls a = new Urls(urls);
-        productEntity.setProductUrls(a);
+
+        List<UrlEntity> urlEntities = new ArrayList<>();
+
+        for(String url:urls)
+        {
+            urlEntities.add(new UrlEntity(productEntity, url));
+        }
+        productEntity.setImageUrls(urlEntities);
+
 
         return productDAO.modifyProduct(productEntity).toDTO();
     }
 
 
     @Transactional
-    public String removeOneProduct(Long productId)
+    public String deleteProduct(Long productId)
     {
         return productDAO.removeOneProduct(productId);
     }
 
     @Transactional
-    public String removeManyproduct(Long storeId)
+    public String deleteAllProductByStoreId(Long storeId)
     {
         return productDAO.removeManyProduct(storeId);
     }
@@ -118,34 +192,27 @@ public class ProductService {
     @Transactional
     public Long addOption(Long productId, OptionDTO optionDTO) throws URISyntaxException, IOException {
         OptionEntity optionIdAfterSave = productDAO.getOptionIdAfterSave(productId,optionDTO.toEntity());
-        String barcodeUrl = transrationService.toBarcode(productId, optionIdAfterSave.getOptionId());
-
+        //TODO: 테스트 후 원상복구
+        //        String barcodeUrl = transrationService.toBarcode(productId, optionIdAfterSave.getOptionId());
+        String barcodeUrl = "testURL";
         return productDAO.addOption(productId,new OptionEntity(optionIdAfterSave,barcodeUrl));
     }
 
 
-    public String modifyOption(Long productId, OptionDTO optionDTO) throws URISyntaxException, IOException {
-        OptionEntity option = new OptionEntity();
-        ProductEntity product = productDAO.readOneProduct(productId);
-        option.setProduct(product);
+    public String modifyOption(OptionDTO newOption) throws URISyntaxException, IOException {
+        OptionEntity old = productDAO.getOption(newOption.getOptionId());
+        logger.info("옵션 수정 전: " + old);
+        old.modify(newOption.toEntity());
 
-        option.setOptionId(optionDTO.getOptionId());
-        String barcodeUrl = transrationService.toBarcode(productId,optionDTO.getOptionId());
+//        String barcodeUrl = transrationService.toBarcode(productId,oldOption.getOptionId());
+        return productDAO.modifyOption(old);
 
-        System.out.println(barcodeUrl);
-        option.setBarcodeUrl(barcodeUrl);
-        option.setProductColor(optionDTO.getProductColor());
-        option.setProductPrice(optionDTO.getProductPrice());
-        option.setProductSize(optionDTO.getProductSize());
-        option.setProductStock(optionDTO.getProductStock());
-
-
-        return productDAO.modifyOption(productId,option);
     }
 
 
+    //TODO: 삭제 성공, 실패 구분
     @Transactional
-    public String removeOption(Long optionId)
+    public String deleteOption(Long optionId)
     {
         productDAO.removeOption(optionId);
         return HttpStatus.OK.toString();
@@ -153,7 +220,7 @@ public class ProductService {
 
 
 
-    public List<ProductDTO> categoryFilter(String category)
+    public List<ProductDTO> findAllProductsByCategory(String category)
     {
         List<ProductEntity> productEntities =  productDAO.categoryFilter(category);
         List<ProductDTO> productDTOS = new ArrayList<>();
@@ -162,7 +229,7 @@ public class ProductService {
     }
 
 
-    public List<ProductDTO> storeCategoryFilter(Long storeId, String category)
+    public List<ProductDTO> findAllProductsByStoreIdAndCategory(Long storeId, String category)
     {
         List<ProductEntity> productEntities =  productDAO.storeCategoryFilter(storeId, category);
         List<ProductDTO> productDTOS = new ArrayList<>();
@@ -171,14 +238,21 @@ public class ProductService {
     }
 
 
-    public OptionDTO stockModify(Long productId, Long optionId, String stockModify)
+    public OptionDTO modifyStock(Long productId, Long optionId, String stockModify)
     {
         return productDAO.stockModify(optionId,stockModify).toDTO();
     }
 
-    public OptionDTO optionSpcify(Long productId,String color, String size)
+    public OptionDTO findOptionByProductIdAndColorAndSize(Long productId, String color, String size)
     {
         return productDAO.optionSpecify(productId,color,size).toDTO();
     }
+
+    // 검색 & 정렬
+    public List<SortDTO> sortTest(String condition, String type, String keyword)
+    {
+        return productDAO.sortTest(condition, type, keyword);
+    }
+
 
 }

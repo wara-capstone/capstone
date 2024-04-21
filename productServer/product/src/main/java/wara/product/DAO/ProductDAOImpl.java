@@ -1,11 +1,13 @@
 package wara.product.DAO;
 
+import com.querydsl.core.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
-import wara.product.Controller.ProductController;
+import wara.product.DTO.SortDTO;
 import wara.product.Repository.OptionRepository;
 import wara.product.productEntity.OptionEntity;
 import wara.product.productEntity.ProductEntity;
@@ -64,6 +66,7 @@ public class ProductDAOImpl implements ProductDAO{
 
     @Override
     public Long initProduct(ProductEntity productEntity) {
+        logger.info("전달받은 엔티티" + productEntity.toString());
         ProductEntity product = productRepository.save(productEntity);
         return product.getProductId();
     }
@@ -113,17 +116,21 @@ public class ProductDAOImpl implements ProductDAO{
 
     @Override
     public OptionEntity getOptionIdAfterSave(Long productId, OptionEntity optionEntity) {
+        logger.info("PID: " + productId);
+        logger.info("option entity: " + optionEntity.toString());
         optionEntity.setProduct(productRepository.getByProductId(productId));
         return optionRepository.save(optionEntity);
     }
 
 
     @Override
-    public String modifyOption(Long productId, OptionEntity optionEntity) {
-//        optionEntity.setProduct(productRepository.getByProductId(productId));
-
+    public String modifyOption(OptionEntity optionEntity) {
         optionRepository.save(optionEntity);
+        logger.info("수정 후" + optionEntity);
 
+
+        logger.info("DB저장 값 체크 option기준" + optionRepository.getByOptionId(optionEntity.getOptionId()));
+        logger.info("DB저장 값 체크 product기준" + productRepository.getByProductId(optionEntity.getProduct().getProductId()));
         return HttpStatus.OK.toString();
     }
 
@@ -134,14 +141,19 @@ public class ProductDAOImpl implements ProductDAO{
     }
 
     @Override
+    public OptionEntity getOption(Long optionId) {
+        return optionRepository.getByOptionId(optionId);
+    }
+
+    @Override
     public List<ProductEntity> categoryFilter(String category) {
-        return productRepository.getAllByProductCategory(category);
+        return productRepository.getAllByCategory(category);
     }
 
     @Override
     public List<ProductEntity> storeCategoryFilter(Long storeId, String category) {
 //        return productRepository.getAllByStoreIdAndProductCategory(storeId, category);
-        return productRepository.findByStoreIdAndAndProductCategory(storeId, category);
+        return productRepository.findByStoreIdAndCategory(storeId, category);
     }
 
 
@@ -156,9 +168,13 @@ public class ProductDAOImpl implements ProductDAO{
     @Override
     public OptionEntity optionSpecify(Long productId, String color, String size) {
         ProductEntity product = productRepository.getByProductId(productId);
-        return optionRepository.getByProductAndProductColorAndProductSize(product,color,size);
+        return optionRepository.getByProductAndColorAndSize(product,color,size);
 
     }
 
 
+    @Override
+    public List<SortDTO> sortTest(String condition, String type, String keyword) {
+        return productRepository.sortTest(condition, type, keyword);
+    }
 }

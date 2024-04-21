@@ -1,88 +1,61 @@
 package wara.product.productEntity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import reactor.util.annotation.Nullable;
+import lombok.*;
 import wara.product.DTO.OptionDTO;
 
 import javax.persistence.*;
 
 
-@Entity @Getter
+@Entity @Table(name = "OPTIONS")
+@SequenceGenerator(
+        name = "OPTION_SEQ_GENERATOR",
+        sequenceName = "OPTION_SEQ"
+)
+@Getter @Setter @ ToString
 @AllArgsConstructor @NoArgsConstructor
-@ToString
 public class OptionEntity {
 
-    public void setOptionId(Long optionId) {
-        this.optionId = optionId;
-    }
-
-    public void setProductPrice(String productPrice) {
-        this.productPrice = productPrice;
-    }
-
-    public void setProductSize(String productSize) {
-        this.productSize = productSize;
-    }
-
-    public void setProductColor(String productColor) {
-        this.productColor = productColor;
-    }
-
-    public void setProductStock(String productStock) {
-        this.productStock = productStock;
-    }
-
-    public void setBarcodeUrl(String barcodeUrl) {
-        this.barcodeUrl = barcodeUrl;
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "option_id")
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE,
+                        generator = "OPTION_SEQ_GENERATOR")
+    @Column(name = "OPTION_ID")
     private Long optionId;
 
-    @ManyToOne
-    @JoinColumn(name = "product_entity_product_id")
+    @ManyToOne(fetch = FetchType.LAZY) @ToString.Exclude
+    @JoinColumn(name = "productId")
     private ProductEntity product;
 
-    @Column(name = "price")
-    private String productPrice;
+    @Column(name = "PRICE")
+    private Long price;
 
-    @Column(name = "size")
-    private String productSize;
+    @Column(name = "SIZE")
+    private String size;
 
-    @Column(name = "color")
-    private String productColor;
+    @Column(name = "COLOR")
+    private String color;
 
-    @Column(name = "stock")
-    private String productStock;
+    @Column(name = "STOCK")
+    private Long stock;
 
-    @Column(name = "barcode_url")
+    @Column(name = "BARCODE_URL")
     private String barcodeUrl;
 
-
-
-
-    public void setProduct(ProductEntity product){
-        this.product = product;
-    }
 
 
     public OptionDTO toDTO()
     {
         return new OptionDTO(
                 this.optionId,
-                this.productPrice,
-                this.productSize,
-                this.productColor,
-                this.productStock,
+                this.price,
+                this.size,
+                this.color,
+                this.stock,
                 this.barcodeUrl
         );
     }
+
+
+
 
     /**
      * @param optionEntity  id포함 모든 속성 값
@@ -91,31 +64,30 @@ public class OptionEntity {
     public OptionEntity(OptionEntity optionEntity, String url)
     {
         this.optionId = optionEntity.getOptionId();
-        this.productPrice = optionEntity.getProductPrice();
-        this.productSize = optionEntity.getProductSize();
-        this.productColor = optionEntity.getProductColor();
-        this.productStock = optionEntity.getProductStock();
+        this.price = optionEntity.getPrice();
+        this.size = optionEntity.getSize();
+        this.color = optionEntity.getColor();
+        this.stock = optionEntity.getStock();
         this.barcodeUrl = url;
     }
 
-    public OptionEntity(OptionEntity old, OptionEntity modify)
-    {
-        this.optionId = old.getOptionId();
-        this.productPrice = modify.getProductPrice();
-        this.productSize = modify.getProductSize();
-        this.productColor = modify.getProductColor();
-        this.productStock = modify.getProductStock();
-        this.barcodeUrl = old.getBarcodeUrl();
+    @Builder
+    public void modify(OptionEntity latest){
+
+        this.setColor(latest.getColor());
+        this.setPrice(latest.getPrice());
+        this.setStock(latest.getStock());
+        this.setColor(latest.getColor());
+        this.setSize(latest.getSize());
+
     }
+
 
     public void stockModify(String stockModify)
     {
-        int a = Integer.parseInt(this.productStock);
-        int b = Integer.parseInt(stockModify);
-        this.productStock = String.valueOf(a + b);
+        Long a = this.stock;
+        Long b = Long.parseLong(stockModify);
+        this.stock = a + b;
     }
-
-
-
 
 }

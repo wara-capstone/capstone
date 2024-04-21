@@ -1,7 +1,5 @@
 package wara.product.Service;
 
-
-import com.ctc.wstx.shaded.msv_core.util.Uri;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.cloud.client.ServiceInstance;
@@ -26,14 +24,15 @@ import org.slf4j.LoggerFactory;
 
 
 @Service
-public class TransrationService {
+public class TranslationService {
 
-    private static final Logger logger = LoggerFactory.getLogger(TransrationService.class);
+    private static final Logger logger = LoggerFactory.getLogger(TranslationService.class);
     private final DiscoveryClient discoveryClient;
     private final RestTemplate restTemplate;
 
     @Autowired
-    public TransrationService(RestTemplate restTemplate, DiscoveryClient discoveryClient) {
+    public TranslationService(@Autowired RestTemplate restTemplate,
+                              @Autowired DiscoveryClient discoveryClient) {
         this.restTemplate = restTemplate;
         this.discoveryClient = discoveryClient;
     }

@@ -8,7 +8,7 @@ import wara.product.productEntity.ProductEntity;
 import java.util.List;
 
 @Repository
-public interface OptionRepository extends JpaRepository<OptionEntity, Long> {
+public interface OptionRepository extends JpaRepository<OptionEntity, Long>, OptionCustomRepository {
 
     OptionEntity findByOptionId(Long optionId);
     void deleteByOptionId(Long optionId);
@@ -16,5 +16,5 @@ public interface OptionRepository extends JpaRepository<OptionEntity, Long> {
     List<OptionEntity> findAllByProduct(ProductEntity product);
     OptionEntity getByOptionId(Long optionId);
 
-    OptionEntity getByProductAndProductColorAndProductSize(ProductEntity productEntity,String color, String size);
+    OptionEntity getByProductAndColorAndSize(ProductEntity productEntity, String color, String size);
 }

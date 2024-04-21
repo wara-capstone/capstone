@@ -1,98 +1,93 @@
 package wara.product.productEntity;
 
+
 import lombok.*;
-import reactor.util.annotation.Nullable;
 import wara.product.DTO.OptionDTO;
 import wara.product.DTO.ProductDTO;
+import wara.product.DTO.UrlDTO;
 
 import javax.persistence.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@Entity @Table(name = "products")
+@Entity @Table(name = "PRODUCTS")
+@SequenceGenerator(
+        name = "PRODUCT_SEQ_GENERATOR",
+        sequenceName = "PRODUCT_SEQ" //alloc-size default 50
+)
 @AllArgsConstructor @NoArgsConstructor
-@Getter @ToString
+@Getter @Setter @ToString @Builder
 public class ProductEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id")
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE ,
+                        generator = "PRODUCT_SEQ_GENERATOR")
+    @Column(name = "PRODUCT_ID")
     Long productId;
 
-    @Column(name = "store_id")
+    @Column(name = "STORE_ID")
     Long storeId;
 
-    @Column(name= "name")
-    String productName;
+    @Column(name= "NAME")
+    String name;
 
-    @Column(name = "category")
-    String productCategory;
+    @Column(name = "CATEGORY")
+    String category;
 
-    @Embedded @Nullable
-    Urls productUrls;
 
-    @OneToMany(cascade = CascadeType.ALL) @JoinColumn(name = "product_entity_product_id", referencedColumnName = "product_id")
+    @ToString.Exclude @Column(name ="IMAGE_URLS")
+    @OneToMany(cascade = CascadeType.ALL,
+                fetch = FetchType.LAZY,
+                mappedBy = "productEntity")
+    List<UrlEntity> imageUrls;
+
+    @ToString.Exclude  @Column(name = "OPTIONS")
+    @OneToMany(cascade = CascadeType.ALL,
+                fetch = FetchType.LAZY,
+                mappedBy = "product")
     List<OptionEntity> options;
 
 
-    public ProductEntity(Long productId, Long storeId,String productname, String productCategory,
-                         @Nullable List<String> productUrls, OptionEntity options) {
-        this.productId = productId;
-        this.storeId = storeId;
-        this.productName = productname;
-        this.productCategory = productCategory;
-        this.productUrls = new Urls(productUrls);
-        this.options.add(options);
-    }
 
 
-    public ProductEntity(ProductEntity r, OptionEntity o)
+
+    public List<String> urlToDto(List<UrlEntity> urls)
     {
-        this.productId = r.getProductId();
-        this.storeId = r.getStoreId();
-        this.productName = r.getProductName();
-        this.productCategory = r.getProductCategory();
-        this.productUrls = r.getProductUrls();
-        this.options = new ArrayList<>();
-        this.options.add(o);
+        List<String> strings = new ArrayList<>();
+        for(UrlEntity url:urls)
+        {
+            strings.add(url.toString());
+        }
+        return strings;
     }
-
-    public ProductEntity(ProductEntity r, ProductEntity old)
-    {
-        this.productId = r.getProductId();
-        this.storeId = r.getStoreId();
-        this.productName = r.getProductName();
-        this.productCategory = r.getProductCategory();
-        this.productUrls = old.getProductUrls();
-        this.options = old.getOptions();
-    }
-
-
 
 
     public ProductDTO toDTO(){
-        try {
+        if(options.isEmpty()){
             return new ProductDTO(
                     this.productId,
                     this.storeId,
-                    this.productName,
-                    this.productCategory,
-                    this.productUrls.getUrls(),
-                    convert(this.options)
+                    this.name,
+                    this.category,
+                    urlEntitiesToDtos(this.imageUrls), // null pointer 처리안했음
+                    Collections.emptyList()
             );
-        }catch (NullPointerException e){ // DB에 저장된 URL이 없는경우
+        }
+        else
             return new ProductDTO(
                     this.productId,
                     this.storeId,
-                    this.productName,
-                    this.productCategory,
-                    Collections.emptyList(),
-                    Collections.emptyList());
-        }
+                    this.name,
+                    this.category,
+                    urlEntitiesToDtos(this.imageUrls),
+                    optionEntitiesToDtos(this.options)
+            );
     }
 
-    public List<OptionDTO> convert(List<OptionEntity> options)
+
+    public List<OptionDTO> optionEntitiesToDtos(List<OptionEntity> options)
     {
         List<OptionDTO> list = new ArrayList<>();
 
@@ -102,15 +97,32 @@ public class ProductEntity {
         return list;
     }
 
-    public void setProductUrls(@Nullable Urls productUrls) {
-        this.productUrls = productUrls;
+    public List<UrlDTO> urlEntitiesToDtos(List<UrlEntity> urls)
+    {
+        List<UrlDTO> list = new ArrayList<>();
+        for(UrlEntity item:urls)
+        {
+            list.add(item.toDto());
+        }
+        return list;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public static List<ProductDTO> toFlatDTOs(List<ProductEntity> entities){
+        List<ProductDTO> productDTOS = new ArrayList<>();
+        for(ProductEntity product : entities){
+            for(OptionEntity option: product.getOptions() ){
+                productDTOS.add(
+                        ProductEntity.builder()
+                        .category(product.getCategory())
+                        .productId(product.getProductId())
+                        .storeId(product.getStoreId())
+                        .imageUrls(product.getImageUrls())
+                        .name(product.getName())
+                        .options(Arrays.asList(option))
+                        .build().toDTO());
+            }
+        }
+        return productDTOS;
     }
 
-    public void setProductCategory(String productCategory) {
-        this.productCategory = productCategory;
-    }
 }
