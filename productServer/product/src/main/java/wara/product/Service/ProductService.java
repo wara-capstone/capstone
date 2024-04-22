@@ -16,6 +16,7 @@ import wara.product.productEntity.ProductEntity;
 import wara.product.productEntity.UrlEntity;
 
 import javax.transaction.Transactional;
+import org.springframework.data.domain.Pageable;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -249,9 +250,9 @@ public class ProductService {
     }
 
     // 검색 & 정렬
-    public List<SortDTO> sortTest(String condition, String type, String keyword)
+    public List<SortDTO> sortTest(String condition, String type, String keyword, Pageable pageable)
     {
-        return productDAO.sortTest(condition, type, keyword);
+        return productDAO.sortTest(condition, type, keyword, pageable);
     }
 
 

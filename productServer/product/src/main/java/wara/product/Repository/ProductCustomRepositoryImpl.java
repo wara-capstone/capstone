@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import wara.product.DTO.SortDTO;
+
+import org.springframework.data.domain.Pageable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Arrays;
@@ -26,7 +28,7 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
 
 
     @Override
-    public List<SortDTO> sortTest(String condition, String type, String keyword) {
+    public List<SortDTO> sortTest(String condition, String type, String keyword, Pageable pageable) {
         List<SortDTO> sorted =
                 jpaQueryFactory
                 .select(
@@ -45,9 +47,12 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
                 .join(productEntity.options, optionEntity)
                 .where(WhereStateEnum.of(condition).handle(keyword))
                 .distinct()
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .orderBy(OrderStateEnum.of(condition).handle(type, keyword))
                 .fetch();
 
+        logger.info(sorted.toString());
 
         // Extract all product IDs
         List<Long> productIds = sorted.stream()

@@ -3,6 +3,8 @@ package wara.product.Controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +17,7 @@ import wara.product.Service.ProductService;
 
 
 import javax.transaction.Transactional;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -315,17 +318,23 @@ public class ProductController {
 
 
 
-    @GetMapping("/all/{condition}/{keyword}")
-    public ResponseEntity<List<SortDTO>> searchTargetByType(@PathVariable(value = "condition") String condition,
-                                                              @PathVariable(value = "keyword") String keyword)
+    static int SIZE = 10;
+
+    @GetMapping("/all/{condition}/{keyword}/{page}")
+    public ResponseEntity<List<SortDTO>> searchTargetByType(@PathVariable("condition") String condition,
+                                                            @PathVariable("keyword") String keyword,
+                                                            @PathVariable("page") int page)
     {
-        return ResponseEntity.status(200).body(productService.sortTest(condition, "search", keyword));
+        Pageable pageable = PageRequest.of(page, SIZE);
+        return ResponseEntity.status(200).body(productService.sortTest(condition, "search", keyword, pageable));
     }
 
-    @GetMapping("/all/sort/{condition}/{type}/{keyword}")
-    public ResponseEntity<List<SortDTO>> sortByCondition(@PathVariable("condition") String condition,
-                                                         @PathVariable("type") String type,
-                                                         @PathVariable("keyword") String keyword){
-        return ResponseEntity.status(200).body(productService.sortTest(condition, type, keyword));
+    @GetMapping("/all/sort/{condition}/{type}/{keyword}/{page}")
+    public ResponseEntity<List<SortDTO>> sortByCondition(@PathVariable(value = "condition") String condition,
+                                                         @PathVariable(value = "type") String type,
+                                                         @PathVariable(value = "keyword") String keyword,
+                                                         @PathVariable(value = "page") int page){
+        Pageable pageable = PageRequest.of(page,SIZE);
+        return ResponseEntity.status(200).body(productService.sortTest(condition, type, keyword, pageable));
     }
 }

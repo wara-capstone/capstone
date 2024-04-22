@@ -4,7 +4,6 @@ import com.querydsl.core.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import wara.product.DTO.SortDTO;
@@ -13,6 +12,7 @@ import wara.product.productEntity.OptionEntity;
 import wara.product.productEntity.ProductEntity;
 import wara.product.Repository.ProductRepository;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 
@@ -174,7 +174,7 @@ public class ProductDAOImpl implements ProductDAO{
 
 
     @Override
-    public List<SortDTO> sortTest(String condition, String type, String keyword) {
-        return productRepository.sortTest(condition, type, keyword);
+    public List<SortDTO> sortTest(String condition, String type, String keyword, Pageable pageable) {
+        return productRepository.sortTest(condition, type, keyword, pageable);
     }
 }
