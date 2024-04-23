@@ -20,6 +20,14 @@ function ProductTagList(){
     setPosts(mockPosts);
 }, []);
 
+    // 클릭 이벤트 핸들러 함수
+    const handleItemClick = (post) => {
+        console.log("Selected Item:", post);
+        // 여기에서 클릭된 아이템 처리 로직을 구현하세요.
+    };
+
+
+
     return(
         <Grid container spacing={2}> {/* 컨테이너 설정, 카드 사이의 간격은 2로 설정 */}
             {posts.map((post) => (
@@ -30,6 +38,9 @@ function ProductTagList(){
                         userImg={post.userImg}
                         img={post.img}
                         caption={post.caption}
+
+                        {...post} // 모든 post 프로퍼티를 ProductTagListItem에 전달
+                        onClick={() => handleItemClick(post)} // 클릭 이벤트 핸들러를 ProductTagListItem에 전달
                     />
                 </Grid>
             ))}

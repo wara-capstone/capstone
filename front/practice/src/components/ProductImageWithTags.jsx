@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './ProductImageWithTags.css';
-
-function ProductImageWithTags({ imageUrl }) {
+import { Box }from '@mui/material';
+function ProductImageWithTags({ imageUrl, onImageClick }) {
   const [tags, setTags] = useState([]);
 
   const handleImageClick = (e) => {
@@ -16,7 +16,20 @@ function ProductImageWithTags({ imageUrl }) {
 
   return (
     <div className="image-container" onClick={handleImageClick}>
+      <Box
+      sx={{
+        width: 300, // 박스의 너비
+        height: 300, // 박스의 높이
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        overflow: 'hidden',
+        margin: 'auto' // 중앙 정렬
+      }}
+      onClick={onImageClick} // 이미지 클릭 이벤트 핸들러 추가
+    >
       <img src={imageUrl} alt="Product" style={{ width: '100%' }} />
+      </Box>
       {tags.map(tag => (
         <div key={tag.id} className="product-tag" style={{ left: tag.x, top: tag.y }}>
           태그 {tag.id}

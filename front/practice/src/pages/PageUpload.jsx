@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Box }from '@mui/material';
+import { Button, Box, Dialog, DialogTitle, DialogContent }from '@mui/material';
 //import ProductTagListItem from '../components/ProductTagListItem';
 import ProductImageWithTags from '../components/ProductImageWithTags';
 import ProductTagList from '../components/ProductTagList';
@@ -8,8 +8,10 @@ import ProductTagList from '../components/ProductTagList';
 function PageUpload() {
     const [imagePreviewUrl, setImagePreviewUrl] = useState('');
     //const [showTags, setShowTags] = useState(false); // 상품태그를 표시할지 여부를 결정하는 state
-    const [showProductList, setShowProductList] = useState(false); // 상품 목록을 표시할지 여부를 결정하는 상태
     const [openModal, setOpenModal] = useState(false); // 모달 상태 관리
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [tagPosition, setTagPosition] = useState(null);
+
 
     const handleImageChange = (e) => {
       e.preventDefault();
@@ -26,11 +28,6 @@ function PageUpload() {
         reader.readAsDataURL(file);
       }
     };
-  
-    const handleAddTagClick = () => {
-        //setShowTags(true); // 상품태그 추가 버튼 클릭 시 상품태그를 표시합니다.
-        setShowProductList(true);
-    };
 
     const handleOpenModal = () => {
       setOpenModal(true); // 모달 열기
@@ -38,6 +35,18 @@ function PageUpload() {
   
     const handleCloseModal = () => {
       setOpenModal(false); // 모달 닫기
+    };
+
+    const handleProductSelect = (product) => {
+      setSelectedProduct(product);
+      handleCloseModal();
+    };
+  
+    const handleImageClick = (e) => {
+      const rect = e.target.getBoundingClientRect();
+      const x = e.clientX - rect.left; // x position within the element.
+      const y = e.clientY - rect.top;  // y position within the element.
+      setTagPosition({ x, y });
     };
 
     return (
@@ -60,31 +69,18 @@ function PageUpload() {
       )}
       
       {/* 이미지 미리보기 박스를 ProductImageWithTags 컴포넌트로 변경합니다. */}
-      {imagePreviewUrl  && (
-        <ProductImageWithTags imageUrl={imagePreviewUrl} />
-      )}
-      {imagePreviewUrl  && (
-        <Box
-          sx={{
-            width: 300, // 박스의 너비
-            height: 300, // 박스의 높이
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            overflow: 'hidden',
-            margin: 'auto' // 중앙 정렬
-          }}
-        >
-          <img src={imagePreviewUrl} alt="Preview" style={{ width: '100%', height: 'auto' }} />
-        </Box>
-        
-      )}
+      
+      
       {/* 이미지 업로드 후 보이는 버튼 */}
       {imagePreviewUrl && (
-  <div>
+  <>
+  <Button style={{border: '1px solid #ccc', position: 'relative', top: 10, left: 100  }}>
+    등록
+  </Button>
+  <ProductImageWithTags imageUrl={imagePreviewUrl} onImageClick={handleImageClick} selectedProduct={selectedProduct} tagPosition={tagPosition} />
     <Button 
-      variant="contained" 
-      onClick={handleAddTagClick} // 상품태그 추가 버튼 클릭 이벤트 핸들러
+      variant="outlined" 
+      onClick={handleOpenModal} // 상품태그 추가 버튼 클릭 이벤트 핸들러
       style={{ 
           marginBottom: 20, 
           backgroundColor: 'white', // 버튼 배경색을 하얀색으로 설정
@@ -94,12 +90,22 @@ function PageUpload() {
       }}>
       상품태그 추가
     </Button>
-    {/* 여기에 ProductTagListItem 컴포넌트 추가 */}
-    {showProductList && <ProductTagList />}
-    
-    </div>
-    )}
-    </div>
+      {/* 선택된 상품 태그 정보 표시 */}
+      {selectedProduct && (
+                        <Box style={{ marginTop: '20px', padding: '10px', border: '1px solid #ccc', backgroundColor: '#f0f0f0' }}>
+                            <p>선택된 상품: {selectedProduct.name}</p>
+                            {/* 필요한 경우 추가적인 상품 정보 표시 */}
+                        </Box>
+                    )}
+                </>
+      )}
+    <Dialog open={openModal} onClose={handleCloseModal}>
+                <DialogTitle>상품 선택</DialogTitle>
+                <DialogContent>
+                    <ProductTagList onProductSelect={handleProductSelect} />
+                </DialogContent>
+            </Dialog>
+        </div>
   );
 }
   
