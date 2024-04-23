@@ -34,6 +34,8 @@ import SellerStoresList from "./pages/Sellers/SellerStoresList";
 import "./App.css";
 import SellerStoreSales from "./pages/Sellers/SellerStoreSales";
 
+import PageUpload from "./pages/PageUpload";
+
 export default function Customer() {
   return (
     <BrowserRouter>
@@ -54,7 +56,7 @@ export default function Customer() {
           <Route path="/user/purchase" element={<Purchase />} />
           <Route path="/user/purchaseHistory" element={<PurchaseHistory />} />
           <Route path="/ViewClothSharedFeed/:id" element={<ViewClothSharedFeed />} />
-
+          <Route path="/user/pageUpload" element={<PageUpload />} />
           {/* 사장님 페이지 */}
           <Route path="/seller" element={<SellerHome />} />
           <Route

@@ -25,6 +25,7 @@ code {
 .chatting,
 .cart-page,
 .ViewClothSharedFeed,
+.PageUpload,
 .store {
   max-width: 390px;
   /* top: 6vh; */
@@ -57,6 +58,7 @@ code {
 .barcode,
 .chatting,
 .chatting-list,
+.PageUpload,
 .search {
   height: 100vh;
 }
@@ -566,6 +568,11 @@ code {
   left: 50%; /* 부모 요소의 왼쪽을 기준으로 50% 위치로 이동합니다. */
   transform: translate(-50%, -100%); /* 요소의 가로 세로 중앙으로 이동합니다. */
 }
+
+.PageUpload {
+  text-align: center;
+}
+
 
 /* 모달 슬라이드 업 애니메이션 */
 @keyframes modal-slide-up {

@@ -185,6 +185,7 @@ const UserProfile = () => {
               </div>
             </button>
           </Link>
+
           {!isSeller && (
             <Link to="/user/purchaseHistory" className="user-link">
               <button className="chattingList-btn">
@@ -195,9 +196,19 @@ const UserProfile = () => {
                 <div className="move-page-icon">
                   <FontAwesomeIcon icon={faChevronRight} />
                 </div>
+                
               </button>
-            </Link>
+            </Link> 
           )}
+          <Link to="/user/upload" className="user-link">
+            <button className="upload-btn">
+              <span role="img" aria-label="upload">📤</span> 글 업로드
+                <div className="move-page-icon">
+                  <FontAwesomeIcon icon={faChevronRight} />
+                </div>
+            </button>
+          </Link>
+        
         </div>
 
         <div className="move-seller-page-btn-container">
