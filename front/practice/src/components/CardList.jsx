@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { fetchRefreshToken } from "../utils/authUtil";
 import Card from "./Card"; // Card 컴포넌트 임포트
 import "./Card.css";
-import { fetchRefreshToken } from "../utils/authUtil";
 
 function CardList({ category, url }) {
   const { id } = useParams();
@@ -29,11 +29,12 @@ function CardList({ category, url }) {
         fetchRefreshToken(RefreshToken);
       }
 
-
       if (response.status === 200) {
         const data = await response.json(); // response.json()이 완료될 때까지 기다림
 
         setCategoryData(data); // 상태 업데이트
+
+        console.log(data);
 
         // if (data && data[0] && data[0].productId) {
         //   console.log(data[0].productId);

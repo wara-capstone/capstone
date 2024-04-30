@@ -1,27 +1,80 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import BottomNav from "../components/BottomNav";
+import Card from "../components/Card";
 import Header from "../components/Header";
 import SearchBar from "../components/SearchBar";
+import { fetchRefreshToken } from "../utils/authUtil";
 
 import { BiSort } from "react-icons/bi";
 import { FaCheck } from "react-icons/fa";
 
 export default function Search() {
   const [searchText, setSearchText] = useState(""); // 검색창 값
+  const token = localStorage.getItem("token");
+  const RefreshToken = localStorage.getItem("RefreshToken");
+  const [searchData, setSearchData] = useState(null); // 상태 추가
+  const [searchResultCount, setSearchResultCount] = useState(0); // 검색 결과 개수 상태
+  const [sortText, setSortText] = useState("낮은가격순"); // 정렬 텍스트 상태
+  const [sortType, setSortType] = useState("ASC"); // 정렬 타입 상태
 
   function myFunction(event) {
     event.preventDefault();
     console.log(searchText);
+
+    setSearchText(searchText);
+
+    const encodedSearchText = encodeURIComponent(searchText);
+
+    // API 요청 URL을 구성
+    const url = `${process.env.NODE_ENV === "development" ? "http://" : ""}${
+      process.env.REACT_APP_API_URL
+    }product/all/SEARCH/${encodedSearchText}/0`;
+
+    const sortUrl = `${
+      process.env.NODE_ENV === "development" ? "http://" : ""
+    }${
+      process.env.REACT_APP_API_URL
+    }product/all/sort/PRICE/${sortType}/${encodedSearchText}/0`;
+
+    // API 요청
+    const fetchData = async () => {
+      const response = await fetch(sortUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      });
+      if (response.status === 401) {
+        fetchRefreshToken(RefreshToken);
+      }
+
+      if (response.status === 404) {
+        console.log("검색 결과가 없습니다.");
+        setSearchData(null);
+        setSearchResultCount(0);
+      }
+
+      if (response.status === 200) {
+        const data = await response.json(); // response.json()이 완료될 때까지 기다림
+
+        setSearchData(data); // 상태 업데이트
+
+        console.log(data);
+
+        if (data != null) {
+          setSearchResultCount(data.length);
+        } else {
+          setSearchResultCount(0);
+        }
+      } else {
+        console.log("실패");
+      }
+    };
+    fetchData();
   }
 
-  const [searchResultCount, setSearchResultCount] = useState(0); // 검색 결과 개수 상태
-
-  // 검색 결과를 받아올 때마다 검색 결과 개수 업데이트
-  const updateSearchResultCount = (resultCount) => {
-    setSearchResultCount(resultCount);
-  };
-
-  const [sortText, setSortText] = useState("낮은가격순"); // 정렬 텍스트 상태
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열기/닫기 상태
 
   // 모달 밖을 클릭했을 때 모달을 닫는 기능 추가
@@ -48,6 +101,16 @@ export default function Search() {
     setSortText(selectedOption);
     setIsModalOpen(false); // 모달 닫기
   };
+
+  useEffect(() => {
+    console.log("정렬기준이 변경되었습니다:", sortText);
+
+    if (sortText === "낮은가격순") {
+      setSortType("ASC");
+    } else if (sortText === "높은가격순") {
+      setSortType("DESC");
+    }
+  }, [sortText]);
 
   return (
     <div className="search" onClick={handleOutsideClick}>
@@ -134,12 +197,29 @@ export default function Search() {
       )}
 
       <div className="search-result">
-        {searchResultCount === 0 && (
+        {searchResultCount === 0 && ( // 검색 결과가 없는 경우에만 결과 메시지를 표시
           <h3 className="no-result">
             검색 결과가 없습니다. <br />
             다른 검색어로 검색해보세요.
           </h3>
         )}
+
+        {searchResultCount !== 0 &&
+          searchData.map((result, index) => (
+            <Link
+              to={`/item/${result.productId}`}
+              key={`${result.productId}-${index}`} // `productId`와 `index`를 결합하여 고유한 키 생성
+              className="card-link"
+            >
+              <Card
+                key={`${result.productId}-${index}`} // `productId`와 `index`를 결합하여 고유한 키 생성
+                title={result.name}
+                subTitle={result.category}
+                price={result.price}
+                mainImage={result.imageUrl[0]}
+              />
+            </Link>
+          ))}
       </div>
 
       <BottomNav />
