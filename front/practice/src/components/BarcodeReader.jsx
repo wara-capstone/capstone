@@ -40,10 +40,10 @@ function BarcodeReader() {
 
       if (rearCamera) {
         setSelectedDeviceId(rearCamera.deviceId); // 후면 카메라를 선택
-        await startDecoding(rearCamera.deviceId); // 후면 카메라로 디코딩 시작
+        startDecoding(rearCamera.deviceId); // 후면 카메라로 디코딩 시작
       } else if (devices[0]) {
         setSelectedDeviceId(devices[0].deviceId); // 첫 번째 장치를 선택
-        await startDecoding(devices[0].deviceId); // 첫 번째 장치로 디코딩 시작
+        startDecoding(devices[0].deviceId); // 첫 번째 장치로 디코딩 시작
       }
 
       setProducts([Data.cardData[1]]); // 제품 목록 설정
@@ -126,7 +126,7 @@ function BarcodeReader() {
           setIsBarcodeDetected(true); // 바코드 인식 상태 설정
 
           codeReader.reset(); // 스캔이 완료된 후 바코드 리더를 리셋
-          await startDecoding(id); // 디코딩 다시 시작
+          startDecoding(id); // 디코딩 다시 시작
         }
         if (err && !(err instanceof NotFoundException)) {
           console.error(err);
@@ -138,7 +138,7 @@ function BarcodeReader() {
   };
 
   return (
-    <div style={{ width: "100%", height: "100vh", position: "relative" }}>
+    <div style={{ width: "100%", height: "88vh", position: "relative" }}>
       <video
         ref={videoRef}
         style={{
