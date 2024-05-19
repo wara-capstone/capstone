@@ -28,8 +28,6 @@ const PurchaseRedirect = () => {
 
 
     useEffect(async () => {
-        // 결제 성공일 때
-        if (imp_success === "true") {
             async function paymentVerification(tryVerificationAgain = true) {  // 결제 검증하기
               try {
                 const paymentResponse = await fetch(`URL`, {
@@ -41,6 +39,7 @@ const PurchaseRedirect = () => {
                 body: JSON.stringify({
                   imp_uid: imp_uid,  // 결제고유번호
                   merchant_uid: merchant_uid, // 고객사 주문번호
+                  // imp_success: imp_success, // 아임포트에서 결제 승인된 경우만 가지고 있는 값
                 }),
               })
                   if (paymentResponse.status === 401 && tryVerificationAgain) {
@@ -59,7 +58,6 @@ const PurchaseRedirect = () => {
                         checkList = []; // 또는 적절한 기본값 설정
                         console.log("장바구니 정보가 없습니다.");
                     }
-                  
 
                     if (checkList.length > 0) {
                       let deleteString = '';
@@ -104,11 +102,8 @@ const PurchaseRedirect = () => {
             }
           }
             paymentVerification();
-
             navigate("/");
-        } else {
-            console.log("결제 실패");
-        }
+
     
 
     }, []);

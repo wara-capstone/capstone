@@ -138,7 +138,7 @@ if (PurchaseInformation.status === 200) {
     localStorage.setItem('checkList', JSON.stringify(checkList));
   }
 
-  const result = await PurchaseInformation.json();
+  const result = await PurchaseInformation.json();  // 값
   console.log("성공");
 
   // 포트원 모의결제 시작
