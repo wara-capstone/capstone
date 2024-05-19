@@ -10,8 +10,8 @@ import Data from "../DB/Data.json"; // 로컬 JSON 데이터
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom"; // React Router의 Navigate, useParams 사용
 import BarcodeModal from "../components/BarcodeModal"; // 바코드 모달 컴포넌트
+
 function BarcodeReader() {
-  const [videoInputDevices, setVideoInputDevices] = useState([]); // 비디오 입력 장치 목록
   const [selectedDeviceId, setSelectedDeviceId] = useState(""); // 선택된 비디오 입력 장치 ID
   const [result, setResult] = useState(""); // 바코드 결과
   const [showModal, setShowModal] = useState(false); // 모달 표시 여부
@@ -32,14 +32,8 @@ function BarcodeReader() {
   }, [productInfo]);
 
   useEffect(() => {
-    startDecoding(selectedDeviceId);
-  }, [selectedDeviceId]);
-
-  useEffect(() => {
     codeReader.listVideoInputDevices().then((devices) => {
       // 비디오 입력 장치 목록 조회
-      setVideoInputDevices(devices); // 장치 목록 설정
-
       // 후면 카메라 선택 (일반적으로 두 번째 장치가 후면 카메라입니다)
       const rearCamera = devices.find((device) =>
         device.label.toLowerCase().includes("back")
@@ -48,11 +42,9 @@ function BarcodeReader() {
       if (rearCamera) {
         // 후면 카메라가 있으면
         setSelectedDeviceId(rearCamera.deviceId); // 후면 카메라를 선택
-        startDecoding(rearCamera.deviceId); // 후면 카메라로 디코딩 시작
       } else {
         // 후면 카메라가 없으면 첫 번째 장치를 선택
         setSelectedDeviceId(devices[0]?.deviceId || "");
-        startDecoding(devices[0]?.deviceId || "");
       }
 
       setProducts([Data.cardData[1]]); // 제품 목록 설정
@@ -71,6 +63,12 @@ function BarcodeReader() {
       window.removeEventListener("unload", handleUnload); // 언로드 이벤트 리스너 제거
     };
   }, [codeReader]); // codeReader가 바뀔 때마다 효과를 재실행
+
+  useEffect(() => {
+    if (selectedDeviceId) {
+      startDecoding(selectedDeviceId); // 선택된 장치 ID가 변경될 때 디코딩 시작
+    }
+  }, [selectedDeviceId]);
 
   const resetDecoding = () => {
     // 디코딩 리셋 함수
@@ -161,26 +159,7 @@ function BarcodeReader() {
   };
 
   return (
-    <div style={{ width: "100%", height: "100vh", position: "relative" }}>
-      {videoInputDevices.length > 0 && (
-        <select
-          value={selectedDeviceId}
-          onChange={(e) => setSelectedDeviceId(e.target.value)}
-          style={{
-            position: "absolute",
-            top: "10px",
-            left: "10px",
-            zIndex: 10,
-          }}
-        >
-          {videoInputDevices.map((device) => (
-            <option key={device.deviceId} value={device.deviceId}>
-              {device.label}
-            </option>
-          ))}
-        </select>
-      )}
-
+    <div style={{ width: "100%", height: "88vh", position: "relative" }}>
       <video
         ref={videoRef}
         style={{
@@ -197,4 +176,4 @@ function BarcodeReader() {
   );
 }
 
-export default BarcodeReader; // 바코드 리더 컴포넌트 내보내기
+export default BarcodeReader;
