@@ -12,7 +12,6 @@ import { useNavigate, useParams } from "react-router-dom"; // React Router의 Na
 import BarcodeModal from "../components/BarcodeModal"; // 바코드 모달 컴포넌트
 
 function BarcodeReader() {
-  const [selectedDeviceId, setSelectedDeviceId] = useState(""); // 선택된 비디오 입력 장치 ID
   const [result, setResult] = useState(""); // 바코드 결과
   const [showModal, setShowModal] = useState(false); // 모달 표시 여부
   const videoRef = useRef(); // 비디오 요소 참조
@@ -33,20 +32,22 @@ function BarcodeReader() {
 
   useEffect(() => {
     const initializeCamera = async () => {
-      const devices = await codeReader.listVideoInputDevices(); // 비디오 입력 장치 목록 조회
-      const rearCamera = devices.find((device) =>
-        device.label.toLowerCase().includes("back")
-      );
+      try {
+        const devices = await codeReader.listVideoInputDevices(); // 비디오 입력 장치 목록 조회
+        const rearCamera = devices.find((device) =>
+          device.label.toLowerCase().includes("back")
+        );
 
-      if (rearCamera) {
-        setSelectedDeviceId(rearCamera.deviceId); // 후면 카메라를 선택
-        startDecoding(rearCamera.deviceId); // 후면 카메라로 디코딩 시작
-      } else if (devices[0]) {
-        setSelectedDeviceId(devices[0].deviceId); // 첫 번째 장치를 선택
-        startDecoding(devices[0].deviceId); // 첫 번째 장치로 디코딩 시작
+        if (rearCamera) {
+          startDecoding(rearCamera.deviceId); // 후면 카메라로 디코딩 시작
+        } else if (devices[0]) {
+          startDecoding(devices[0].deviceId); // 첫 번째 장치로 디코딩 시작
+        }
+
+        setProducts([Data.cardData[1]]); // 제품 목록 설정
+      } catch (error) {
+        console.error("카메라 초기화 중 오류 발생:", error);
       }
-
-      setProducts([Data.cardData[1]]); // 제품 목록 설정
     };
 
     initializeCamera(); // 초기화 함수 호출
@@ -68,7 +69,7 @@ function BarcodeReader() {
     setResult(""); // 결과 초기화
     setShowModal(false); // 모달 숨김
     setIsBarcodeDetected(false); // 바코드 인식 상태 리셋
-    startDecoding(selectedDeviceId); // 디코딩 다시 시작
+    startDecoding(); // 디코딩 다시 시작
   };
 
   const userId = localStorage.getItem("email"); // 세션 스토리지에서 이메일(사용자 ID) 가져오기
