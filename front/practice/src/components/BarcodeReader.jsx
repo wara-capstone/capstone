@@ -1,30 +1,29 @@
-import {
-  BarcodeFormat,
-  BrowserMultiFormatReader,
-  DecodeHintType,
-  NotFoundException,
-} from "@zxing/library"; // ZXing 라이브러리 (바코드 및 QR 코드 리더)
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import Data from "../DB/Data.json"; // 로컬 JSON 데이터
-
+import { BrowserMultiFormatReader, NotFoundException } from "@zxing/library";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom"; // React Router의 Navigate, useParams 사용
-import BarcodeModal from "../components/BarcodeModal"; // 바코드 모달 컴포넌트
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import Data from "../DB/Data.json";
+import BarcodeModal from "../components/BarcodeModal";
 
 function BarcodeReader() {
-  const [result, setResult] = useState(""); // 바코드 결과
-  const [showModal, setShowModal] = useState(false); // 모달 표시 여부
-  const videoRef = useRef(); // 비디오 요소 참조
-  const codeReader = useMemo(() => new BrowserMultiFormatReader(), []); // 바코드 리더 인스턴스
-  const [products, setProducts] = useState([]); // 제품 목록
-  const [isBarcodeDetected, setIsBarcodeDetected] = useState(false); // 바코드 인식 여부
-  const { id } = useParams(); // URL 파라미터에서 ID 가져오기
+  const [result, setResult] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const videoRef = useRef();
+  const codeReader = useMemo(() => new BrowserMultiFormatReader(), []);
+  const [products, setProducts] = useState([]);
+  const [isBarcodeDetected, setIsBarcodeDetected] = useState(false);
+  const { id } = useParams();
   const [productInfo, setProductInfo] = useState();
-  const hints = new Map();
-  const formats = [BarcodeFormat.CODE_128];
-  hints.set(DecodeHintType.POSSIBLE_FORMATS, formats);
-  var fetchedProductInfo;
   const token = localStorage.getItem("token");
+
+  // 페이지 새로고침 여부 확인 및 처리
+  useEffect(() => {
+    const hasRefreshed = localStorage.getItem("hasRefreshed");
+    if (!hasRefreshed) {
+      localStorage.setItem("hasRefreshed", "true");
+      window.location.reload();
+    }
+  }, []);
 
   useEffect(() => {
     console.log(productInfo);
@@ -33,27 +32,27 @@ function BarcodeReader() {
   useEffect(() => {
     const initializeCamera = async () => {
       try {
-        const devices = await codeReader.listVideoInputDevices(); // 비디오 입력 장치 목록 조회
+        const devices = await codeReader.listVideoInputDevices();
         const rearCamera = devices.find((device) =>
           device.label.toLowerCase().includes("back")
         );
 
         if (rearCamera) {
-          startDecoding(rearCamera.deviceId); // 후면 카메라로 디코딩 시작
+          startDecoding(rearCamera.deviceId);
         } else if (devices[0]) {
-          startDecoding(devices[0].deviceId); // 첫 번째 장치로 디코딩 시작
+          startDecoding(devices[0].deviceId);
         }
 
-        setProducts([Data.cardData[1]]); // 제품 목록 설정
+        setProducts([Data.cardData[1]]);
       } catch (error) {
         console.error("카메라 초기화 중 오류 발생:", error);
       }
     };
 
-    initializeCamera(); // 초기화 함수 호출
+    initializeCamera();
 
     const handleUnload = () => {
-      codeReader.reset(); // 페이지가 언로드될 때 바코드 리더 초기화
+      codeReader.reset();
     };
 
     window.addEventListener("unload", handleUnload);
@@ -62,18 +61,18 @@ function BarcodeReader() {
       codeReader.reset();
       window.removeEventListener("unload", handleUnload);
     };
-  }, [codeReader]); // codeReader가 바뀔 때마다 효과를 재실행
+  }, [codeReader]);
 
   const resetDecoding = () => {
-    codeReader.reset(); // 바코드 리더 초기화
-    setResult(""); // 결과 초기화
-    setShowModal(false); // 모달 숨김
-    setIsBarcodeDetected(false); // 바코드 인식 상태 리셋
-    startDecoding(); // 디코딩 다시 시작
+    codeReader.reset();
+    setResult("");
+    setShowModal(false);
+    setIsBarcodeDetected(false);
+    startDecoding();
   };
 
-  const userId = localStorage.getItem("email"); // 세션 스토리지에서 이메일(사용자 ID) 가져오기
-  const navigate = useNavigate(); // navigate 함수 사용
+  const userId = localStorage.getItem("email");
+  const navigate = useNavigate();
   const handleAddCart = () => {
     if (userId === null) {
       navigate("/login");
@@ -103,7 +102,7 @@ function BarcodeReader() {
         response.data = { result: "실패!" };
       }
 
-      console.log("받아온 값:" + JSON.stringify(response.data)); // 서버로부터 받아온 데이터를 JSON 문자열로 변환하여 출력
+      console.log("받아온 값:" + JSON.stringify(response.data));
 
       return response.data;
     } catch (error) {
@@ -111,8 +110,8 @@ function BarcodeReader() {
     }
   };
 
-  const startDecoding = async (id) => {
-    await codeReader.decodeFromVideoDevice(
+  const startDecoding = (id) => {
+    codeReader.decodeFromVideoDevice(
       id,
       videoRef.current,
       async (result, err) => {
@@ -120,14 +119,14 @@ function BarcodeReader() {
           console.log(result);
           var data = result.text.split("A");
 
-          fetchedProductInfo = await fetchProductInfo(data[0], data[1]); // 서버에서 바코드에 해당하는 제품 정보 가져오기
-          setProductInfo(fetchedProductInfo); // 제품 정보를 productInfo 상태 변수에 저장
-          setResult(fetchedProductInfo); // 결과 설정
-          setShowModal(true); // 모달 표시
-          setIsBarcodeDetected(true); // 바코드 인식 상태 설정
+          const fetchedProductInfo = await fetchProductInfo(data[0], data[1]);
+          setProductInfo(fetchedProductInfo);
+          setResult(fetchedProductInfo);
+          setShowModal(true);
+          setIsBarcodeDetected(true);
 
-          codeReader.reset(); // 스캔이 완료된 후 바코드 리더를 리셋
-          startDecoding(id); // 디코딩 다시 시작
+          codeReader.reset();
+          startDecoding(id);
         }
         if (err && !(err instanceof NotFoundException)) {
           console.error(err);
