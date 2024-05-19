@@ -1,12 +1,15 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
-import { BrowserMultiFormatReader, NotFoundException, BarcodeFormat, DecodeHintType } from "@zxing/library"; // ZXing 라이브러리 (바코드 및 QR 코드 리더)
+import {
+  BarcodeFormat,
+  BrowserMultiFormatReader,
+  DecodeHintType,
+  NotFoundException,
+} from "@zxing/library"; // ZXing 라이브러리 (바코드 및 QR 코드 리더)
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Data from "../DB/Data.json"; // 로컬 JSON 데이터
-import { MultiFormatReader } from '@zxing/library';
 
-import BarcodeModal from "../components/BarcodeModal"; // 바코드 모달 컴포넌트
-import ImageSlider from "../components/ImageSlider"; // 이미지 슬라이더 컴포넌트
-import { useNavigate, useParams } from "react-router-dom"; // React Router의 Navigate, useParams 사용
 import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom"; // React Router의 Navigate, useParams 사용
+import BarcodeModal from "../components/BarcodeModal"; // 바코드 모달 컴포넌트
 function BarcodeReader() {
   const [videoInputDevices, setVideoInputDevices] = useState([]); // 비디오 입력 장치 목록
   const [selectedDeviceId, setSelectedDeviceId] = useState(""); // 선택된 비디오 입력 장치 ID
@@ -20,31 +23,28 @@ function BarcodeReader() {
   const [productInfo, setProductInfo] = useState();
   const hints = new Map();
   const formats = [BarcodeFormat.CODE_128];
-hints.set(DecodeHintType.POSSIBLE_FORMATS, formats);
+  hints.set(DecodeHintType.POSSIBLE_FORMATS, formats);
   var fetchedProductInfo;
   const token = localStorage.getItem("token");
 
-
-
-useEffect(() => {
-    console.log(productInfo)
+  useEffect(() => {
+    console.log(productInfo);
   }, [productInfo]);
-  
+
   useEffect(() => {
     startDecoding(selectedDeviceId);
   }, [selectedDeviceId]);
-
 
   useEffect(() => {
     codeReader.listVideoInputDevices().then((devices) => {
       // 비디오 입력 장치 목록 조회
       setVideoInputDevices(devices); // 장치 목록 설정
-  
+
       // 후면 카메라 선택 (일반적으로 두 번째 장치가 후면 카메라입니다)
-      const rearCamera = devices.find(
-        (device) => device.label.toLowerCase().includes("back")
+      const rearCamera = devices.find((device) =>
+        device.label.toLowerCase().includes("back")
       );
-  
+
       if (rearCamera) {
         // 후면 카메라가 있으면
         setSelectedDeviceId(rearCamera.deviceId); // 후면 카메라를 선택
@@ -54,17 +54,17 @@ useEffect(() => {
         setSelectedDeviceId(devices[0]?.deviceId || "");
         startDecoding(devices[0]?.deviceId || "");
       }
-  
+
       setProducts([Data.cardData[1]]); // 제품 목록 설정
     });
-  
+
     const handleUnload = () => {
       // 페이지가 언로드될 때 실행할 핸들러
       codeReader.reset(); // 바코드 리더 초기화
     };
-  
+
     window.addEventListener("unload", handleUnload); // 언로드 이벤트 리스너 등록
-  
+
     return () => {
       // 컴포넌트가 언마운트될 때 실행
       codeReader.reset(); // 바코드 리더 초기화
@@ -79,7 +79,7 @@ useEffect(() => {
     setShowModal(false); // 모달 숨김
     setIsBarcodeDetected(false); // 바코드 인식 상태 리셋
     // 바코드 리더를 리셋한 후에 다시 스캔 시작
-  startDecoding(selectedDeviceId);
+    startDecoding(selectedDeviceId);
   };
 
   const userId = localStorage.getItem("email"); // 세션 스토리지에서 이메일(사용자 ID) 가져오기
@@ -102,19 +102,20 @@ useEffect(() => {
     // if(productId == null ){return}
     try {
       const response = await axios.get(
-        `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/all/${productId}/option/${optionId}`,
+        `${process.env.NODE_ENV === "development" ? "http://" : ""}${
+          process.env.REACT_APP_API_URL
+        }product/all/${productId}/option/${optionId}`,
         {
           headers: {
             Authorization: `${token}`,
           },
         }
-              );
-      if(response.status == 200){
+      );
+      if (response.status == 200) {
         console.log(response.data);
-      }else{
-        console.log("잘못된 요청")
-        response.data={"result":
-      "실패!"}
+      } else {
+        console.log("잘못된 요청");
+        response.data = { result: "실패!" };
       }
 
       console.log("받아온 값:" + JSON.stringify(response.data)); // 서버로부터 받아온 데이터를 JSON 문자열로 변환하여 출력
@@ -138,16 +139,13 @@ useEffect(() => {
           // 결과가 있으면
           console.log(result); // 결과 로깅
           var data = result.text.split("A");
-  
-          fetchedProductInfo = await fetchProductInfo(
-            data[0],
-            data[1]
-          ); // 서버에서 바코드에 해당하는 제품 정보 가져오기
+
+          fetchedProductInfo = await fetchProductInfo(data[0], data[1]); // 서버에서 바코드에 해당하는 제품 정보 가져오기
           setProductInfo(fetchedProductInfo); // 제품 정보를 productInfo 상태 변수에 저장
           setResult(fetchedProductInfo); // 결과 설정
           setShowModal(true); // 모달 표시
           setIsBarcodeDetected(true); // 바코드 인식 상태 설정
-  
+
           // 스캔이 완료된 후에 바코드 리더를 리셋하고 다시 스캔 시작
           codeReader.reset();
           startDecoding(id);
@@ -163,58 +161,38 @@ useEffect(() => {
   };
 
   return (
-    <div>
-      {/* <button onClick={resetDecoding}>Reset</button>{" "} */}
-      {/* 리셋 버튼, 클릭 시 디코딩 리셋 */}
-      {videoInputDevices.length > 0 && ( // 비디오 입력 장치가 있으면
-        <select // 장치 선택 셀렉트 박스
-          value={selectedDeviceId} // 현재 선택된 장치 ID
-          onChange={(e) => setSelectedDeviceId(e.target.value)} // 변경 시 장치 ID 설정
+    <div style={{ width: "100%", height: "100vh", position: "relative" }}>
+      {videoInputDevices.length > 0 && (
+        <select
+          value={selectedDeviceId}
+          onChange={(e) => setSelectedDeviceId(e.target.value)}
+          style={{
+            position: "absolute",
+            top: "10px",
+            left: "10px",
+            zIndex: 10,
+          }}
         >
-          {videoInputDevices.map(
-            (
-              device // 각 장치에 대해 옵션 생성
-            ) => (
-              <option key={device.deviceId} value={device.deviceId}>
-                {device.label}
-              </option>
-            )
-          )}
+          {videoInputDevices.map((device) => (
+            <option key={device.deviceId} value={device.deviceId}>
+              {device.label}
+            </option>
+          ))}
         </select>
       )}
 
-
-      <div
+      <video
+        ref={videoRef}
         style={{
-          // 비디오 요소 스타일
           width: "100%",
           height: "100%",
-          paddingBottom: "100%",
-          position: "relative",
-          overflow: "hidden",
-          //border: "1px solid gray",
+          objectFit: "cover",
         }}
-      >
-        <video // 비디오 요소
-          ref={videoRef} // 비디오 참조 설정
-          style={{
-            // 비디오 요소 스타일
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-          }}
-        ></video>
-      </div>
+      ></video>
 
-
-      
-      <div>
-        {isBarcodeDetected && products.length > 0 && (
-          <BarcodeModal productInfo={productInfo}></BarcodeModal>
-        )}
-      </div>
+      {isBarcodeDetected && products.length > 0 && (
+        <BarcodeModal productInfo={productInfo}></BarcodeModal>
+      )}
     </div>
   );
 }
