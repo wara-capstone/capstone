@@ -238,7 +238,7 @@ export default function Cart() {
           </div>
         </div>
       ) : (
-        <h3 className="no-result">장바구니가 비어있습니다.</h3> // 상품이 없을 때 표시할 메시지 또는 컴포넌트
+        <h3 className="no-cart">장바구니가 비어있습니다.</h3> // 상품이 없을 때 표시할 메시지 또는 컴포넌트
       )}
       <div
         style={{

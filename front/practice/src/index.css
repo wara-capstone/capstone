@@ -561,6 +561,7 @@ code {
   animation: modal-slide-up 0.3s ease forwards; /* 모달 슬라이드 인 애니메이션 적용 */
 }
 
+.cart-page .no-cart,
 .search .no-result {
   text-align: center; /* 텍스트를 가운데로 정렬합니다. */
   color: #888; /* 연한 색으로 색상을 변경합니다. */
