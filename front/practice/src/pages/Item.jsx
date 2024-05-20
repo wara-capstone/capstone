@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { message } from "antd";
 import BottomNav from "../components/BottomNav";
 import "../components/Button.css";
 import EventButton from "../components/EventButton";
 import Header from "../components/Header";
 import ImageSlider from "../components/ImageSlider";
-import {
-  message
-} from "antd";
 import { fetchRefreshToken } from "../utils/authUtil";
-
 
 export default function Item() {
   const { id } = useParams();
 
   const email = localStorage.getItem("email");
   const token = localStorage.getItem("token");
-  const CART_URL = process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DJANGO_CART_URL : process.env.REACT_APP_API_URL;
+  const CART_URL =
+    process.env.NODE_ENV === "development"
+      ? process.env.REACT_APP_DJANGO_CART_URL
+      : process.env.REACT_APP_API_URL;
   const [targetColor, setTargetColor] = useState(); //선택한 색상
   const [targetSize, setTargetSize] = useState(); //선택한 사이즈
   const [quantity, setQuantity] = useState(1); // 수량
@@ -27,7 +27,6 @@ export default function Item() {
   const [colorArray, setColorArray] = useState([]); //색상 배열 [
   const [sizeArrayForColor, setSizeArrayForColor] = useState([]); //선택한 색상에 따른 사이즈 배열
   const [result, setResult] = useState(null); // 옵션 가져오기 결과
-
 
   const [stock, setStock] = useState(0); // 재고
 
@@ -73,14 +72,19 @@ export default function Item() {
     };
 
     try {
-      const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${CART_URL}cart/items/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        `${
+          process.env.NODE_ENV === "development" ? "http://" : ""
+        }${CART_URL}cart/items/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
       if (response.status === 401) {
         const RefreshToken = localStorage.getItem("RefreshToken");
@@ -92,13 +96,11 @@ export default function Item() {
         console.log("성공!");
 
         message.success("장바구니에 성공적으로 담겼습니다.");
-      }else if (response.status === 400) {
-
+      } else if (response.status === 400) {
         message.error("장바구니에 담기지 않았습니다. 재시도 해주세요");
         // Handle error
       }
     } catch (error) {
-
       console.error("오류 발생:", error);
       message.error("오류가 발생했습니다. 재시도 해주세요");
     }
@@ -125,15 +127,16 @@ export default function Item() {
   }
 
   useEffect(() => {
-    if(result){
-    const targetOption = result.options.find(
-      (option) =>
-        option.productColor === targetColor && option.productSize === targetSize
-    );
-    if (targetOption) {
-      setStock(targetOption.productStock);
+    if (result) {
+      const targetOption = result.options.find(
+        (option) =>
+          option.productColor === targetColor &&
+          option.productSize === targetSize
+      );
+      if (targetOption) {
+        setStock(targetOption.productStock);
+      }
     }
-  }
   }, [targetColor, targetSize, result]);
 
   useEffect(() => {
@@ -149,7 +152,6 @@ export default function Item() {
         }
         return acc;
       }, []);
-      
 
       setSizeArrayForColor(newSizeArray);
       setTargetSize(newSizeArray[0]);
@@ -160,28 +162,32 @@ export default function Item() {
   const handleColorChange = (e) => {
     // 선택한 색상 변경
     const newTargetColor = e.target.value;
-    setTargetColor(color => color = newTargetColor);
+    setTargetColor((color) => (color = newTargetColor));
     console.log("Color changed to: " + e.target.value);
   };
 
   const handleSizeChange = (e) => {
     // 선택한 사이즈 변경
-    setTargetSize(size => size = e.target.value);
+    setTargetSize((size) => (size = e.target.value));
     console.log("Size changed to: " + e.target.value);
-
   };
 
   useEffect(() => {
     async function optionGet() {
       //옵션 가져오기
       console.log("가져온 상품아이디", id);
-      const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/all/` + id, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${token}`,
-        },
-      });
+      const response = await fetch(
+        `${process.env.NODE_ENV === "development" ? "http://" : ""}${
+          process.env.REACT_APP_API_URL
+        }product/all/` + id,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        }
+      );
       const resultData = await response.json();
 
       if (response.status === 200) {
@@ -199,7 +205,7 @@ export default function Item() {
         setColorArray(newColorArray);
         setTargetColor(newColorArray[0]); // 초기 색상 설정
         setPrice(resultData.options[0].productPrice); // 초기 가격 설정
-        setStock(resultData.options[0].productStock); // 초기 재고 설정  
+        setStock(resultData.options[0].productStock); // 초기 재고 설정
 
         console.log("색깔" + colorArray);
 
@@ -223,6 +229,9 @@ export default function Item() {
     optionGet();
   }, []);
 
+  // productUrls에서 url만 추출하여 이미지 배열 생성
+  const imageUrls = result?.productUrls?.map((item) => item.url) || [];
+
   return (
     <div className="item">
       <Header />
@@ -233,15 +242,20 @@ export default function Item() {
         {result && (
           <div>
             <div>
-              <ImageSlider images={result.productUrls}></ImageSlider>
+              {/* <ImageSlider images={result.productUrls}></ImageSlider> */}
+              {imageUrls.length > 0 && <ImageSlider images={imageUrls} />}
             </div>
             <h2>{result.productName}</h2>
             <h3>가격: {parseInt(price).toLocaleString()}</h3>
             {/* <p>상세 정보: {"없음"}</p> */}
             <h3>재고: {stock}</h3>
             <div>
-            <span style={{ fontSize: "20px" }}>색상</span>
-              <select style={{ marginLeft: "1.3rem", fontSize:"20px" }} value={targetColor} onChange={handleColorChange}>
+              <span style={{ fontSize: "20px" }}>색상</span>
+              <select
+                style={{ marginLeft: "1.3rem", fontSize: "20px" }}
+                value={targetColor}
+                onChange={handleColorChange}
+              >
                 {colorArray.map((color, index) => (
                   <option value={color} key={index}>
                     {color}
@@ -250,8 +264,17 @@ export default function Item() {
               </select>
             </div>
             <div>
-            <span style={{ fontSize: "20px" }}>사이즈</span>
-              <select style={{ marginLeft: "1rem" , width:"4rem",textAlignLast: "center", fontSize:"20px"}} value={targetSize} onChange={handleSizeChange}>
+              <span style={{ fontSize: "20px" }}>사이즈</span>
+              <select
+                style={{
+                  marginLeft: "1rem",
+                  width: "4rem",
+                  textAlignLast: "center",
+                  fontSize: "20px",
+                }}
+                value={targetSize}
+                onChange={handleSizeChange}
+              >
                 {sizeArrayForColor.map((size, index) => (
                   <option value={size} key={index}>
                     {size}
@@ -261,7 +284,7 @@ export default function Item() {
             </div>
             <div
               className="quantityWrapper"
-              style={{ justifyContent: "center"}}
+              style={{ justifyContent: "center" }}
             >
               <span style={{ fontSize: "20px" }}>개수</span>
               <button className="quantityButton" onClick={quantityMinus}>

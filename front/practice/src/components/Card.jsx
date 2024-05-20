@@ -17,15 +17,14 @@ function Card({
       <div className="card-image-container">
         <img src={mainImage} alt={title} className="card-image" />
       </div>
-      <div>
+      <div className="card-content-container">
         {/* <div style={{ display: "flex", alignItems: "center" }}> */}
-        <h1 className="card-title">{title}</h1>
-        <span className="card-sub-title">{subTitle}</span>
+        <p className="card-title">{title}</p>
+        <p className="card-sub-title">{subTitle}</p>
         {/* </div> */}
         <p className="card-content">{content}</p>
         <p className="card-content2"> {content2}</p>
         <p className="card-price">
-          {price ? "가격: " : null}
           {price} {price ? "₩" : null}
         </p>
         {/* <p className="card-count">

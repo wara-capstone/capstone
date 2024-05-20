@@ -1,16 +1,20 @@
 .card {
   display: flex;
+
+  flex-direction: row;
+  align-items: flex-start; /* 전체 카드 내용물 왼쪽 정렬 */
+
   border: 1px solid #cccccc58;
-  border-radius: 10px;
+  border-radius: 5px;
   /* padding: 5px; */
   margin: 5px;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.098);
+  /* box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.098); */
   overflow: hidden;
   background-color: white;
   min-width: 350px;
   max-width: 380px;
   /* width: 350px; */
-  height: 140px;
+  height: 125px;
 }
 
 .card-list {
@@ -18,59 +22,43 @@
   padding-bottom: 6vh;
 }
 
+.card-content-container {
+  margin-left: 0.7rem;
+}
+
 .card-title {
-  font-size: 1.4rem;
-  margin-bottom: 12px;
-  margin-left: 0.2rem;
+  font-size: 0.99rem;
+  text-align: left; /* 텍스트 왼쪽 정렬 */
+  font-weight: bold;
 }
 
 .card-sub-title {
-  margin-right: 1rem;
-  font-size: 0.9rem;
+  font-size: 0.77rem;
   color: grey;
+  text-align: left; /* 텍스트 왼쪽 정렬 */
 }
 
-.card-content {
-  font-size: 1rem;
-  color: gray;
-  /* margin-left: 16px; */
-}
-
+.card-content,
 .card-content2,
+.card-contet3,
 .card-price,
 .card-count {
-  font-size: 1rem;
+  font-size: 0.88rem;
   color: gray;
-  /* margin-right: 2rem; */
+  text-align: left; /* 텍스트 왼쪽 정렬 */
+  font-weight: bold;
 }
 
-.card-price {
-  margin-left: 2rem;
-}
-
-.card-count {
-  /* font-size: 1rem;
-  color: gray; */
-  /* margin-right: 2rem; */
-}
-
-.card-contet3 {
-  font-size: 1rem;
-  color: gray;
-  /* margin-right: 2rem; */
-}
 .card-image {
-  border-radius: 16px;
   height: 100%;
   width: 100%;
   object-fit: cover;
 }
 
 .card-image-container {
-  width: 130px;
-  height: 130px;
+  width: 125px;
+  height: 125px;
   overflow: hidden;
-  margin: 5px;
 }
 
 .card-link {

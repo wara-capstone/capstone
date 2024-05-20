@@ -216,7 +216,7 @@ export default function Search() {
                 title={result.name}
                 subTitle={result.category}
                 price={result.price}
-                mainImage={result.imageUrl[0]}
+                mainImage={result.productUrls[0]}
               />
             </Link>
           ))}
