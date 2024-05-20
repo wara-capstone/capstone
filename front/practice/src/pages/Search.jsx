@@ -200,7 +200,9 @@ export default function Search() {
         {searchResultCount === 0 && ( // 검색 결과가 없는 경우에만 결과 메시지를 표시
           <h3 className="no-result">
             검색 결과가 없습니다. <br />
-            다른 검색어로 검색해보세요.
+            다른 검색어로 &nbsp;
+            <br />
+            검색해보세요. <br />
           </h3>
         )}
 

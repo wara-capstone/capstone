@@ -81,10 +81,10 @@ code {
 .map-store-data,
 .barcode-item-data {
   position: fixed;
-  bottom: 50px;
+  bottom: 7vh;
+  width: 100%;
+  min-width: 350px;
   max-width: 390px;
-  /* overflow: hidden;
-  text-align: center; */
 }
 
 .ad-image {

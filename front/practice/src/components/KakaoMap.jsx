@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { fetchRefreshToken } from '../utils/authUtil.jsx';
+import { fetchRefreshToken } from "../utils/authUtil.jsx";
 
 import imageSrc4 from "../adImages/iconImage/iconBlue.png";
 import imageSrc3 from "../adImages/iconImage/iconRed.png";
@@ -78,7 +78,7 @@ export default function KakaoMap() {
         fetchRefreshToken(RefreshToken);
         token = localStorage.getItem("token");
       }
-      
+
       if (response.status === 200) {
         console.log("성공");
         console.log(result);
