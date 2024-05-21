@@ -1,19 +1,51 @@
 package teamwara.userfeed.controller;
 
-import lombok.NoArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import teamwara.userfeed.dto.UserFeedDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import teamwara.userfeed.dto.UserFeedAllResponseDto;
+import teamwara.userfeed.dto.UserFeedDetailResponseDto;
+import teamwara.userfeed.dto.UserFeedRequestDto;
 import teamwara.userfeed.service.UserFeedService;
 
-@RestController
-@RequestMapping("api/user-feed")
-@RequiredArgsConstructor
-public class UserFeedGetController {
-    private final UserFeedService userFeedService;
-    @GetMapping(value = "/")
-    public List<UserFeedDto> getUserFeeds(){
+import java.util.List;
 
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("api/user-feed")
+public class UserFeedController {
+    private final UserFeedService userFeedService;
+
+    @GetMapping()
+    public ResponseEntity<?> getUserFeeds() {
+        try {
+            return ResponseEntity.ok(userFeedService.getUserFeeds());
+        }catch (Exception e){
+            e.printStackTrace(); // 로그에 에러 스택 트레이스 출력
+            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        }
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<?> getDetailUserFeed(@PathVariable("id") Long id){
+        try {
+            return ResponseEntity.ok(userFeedService.getDetailUserFeed(id));
+        }catch (Exception e){
+            e.printStackTrace(); // 로그에 에러 스택 트레이스 출력
+            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        }
+    }
+    @PostMapping(consumes = {"multipart/form-data"})
+    public ResponseEntity<?> createUserFeed(
+            @RequestPart("image") MultipartFile imageFile,
+            @RequestPart("userFeed") UserFeedRequestDto userFeedRequestDto) {
+        try {
+            UserFeedDetailResponseDto response = userFeedService.createUserFeed(userFeedRequestDto, imageFile);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            e.printStackTrace(); // 로그에 에러 스택 트레이스 출력
+            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        }
     }
 }

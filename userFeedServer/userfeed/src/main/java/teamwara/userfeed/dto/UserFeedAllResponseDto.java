@@ -4,15 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserFeedResponseDto {
+public class UserFeedAllResponseDto {
     private Long id;
     private String userFeedImage;
-    private MemberDto memberDto;
-    
+    private UserDto user;
     private String createdAt;
     private String modifiedAt;
+
 
 }

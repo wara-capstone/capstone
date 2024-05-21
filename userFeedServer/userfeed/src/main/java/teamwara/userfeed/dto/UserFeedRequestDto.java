@@ -1,11 +1,15 @@
 package teamwara.userfeed.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Getter
-public class UserFeedDto {
-    private Long id;
-    private String userFeedImage;
-    private String member;
-
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserFeedRequestDto {
+    private MemberDto user;
+    private List<ProductDto> product;
 }

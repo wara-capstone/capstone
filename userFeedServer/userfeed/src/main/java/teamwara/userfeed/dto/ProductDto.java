@@ -1,2 +1,14 @@
-package teamwara.userfeed.dto;public class ProductDto {
+package teamwara.userfeed.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ProductDto {
+    private String productImage;
+    private String productName;
+    private String productPrice;
 }
