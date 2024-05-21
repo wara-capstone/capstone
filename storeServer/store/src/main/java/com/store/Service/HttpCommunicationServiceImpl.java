@@ -37,8 +37,8 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
             HttpHeaders headers = new HttpHeaders();
             HttpEntity<?> http = new HttpEntity<>(headers);
 
-//            URI uri = new URI(productService.getUri() + "/product/seller/store/" + storeId);
-            URI uri = new URI("https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app" + "/product/seller/store/" + storeId);
+            URI uri = new URI(productService.getUri() + "/api/product/seller/store/" + storeId);
+//            URI uri = new URI("https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app" + "/product/seller/store/" + storeId);
 
             ResponseEntity response = restTemplate.exchange(uri, HttpMethod.DELETE, http, String.class);
 
@@ -74,8 +74,8 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
             http = new HttpEntity<>(bodyMap, headers);
 
-//            URI uri = new URI(imageService.getUri() + "/image/upload");
-            URI uri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/upload");
+            URI uri = new URI(imageService.getUri() + "/api/image/upload");
+//            URI uri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/upload");
             ResponseEntity response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
 
 
@@ -116,7 +116,8 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
                 bodyMap.add("image", body);
                 headers.setContentType(MediaType.MULTIPART_FORM_DATA);
                 http = new HttpEntity<>(bodyMap, headers);
-                URI uri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/" + imageKey);
+                URI uri = new URI(imageService.getUri() + "/api/image/" + imageKey);
+//                URI uri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/" + imageKey);
                 response = restTemplate.exchange(uri, HttpMethod.PUT, http, String.class);
                 logger.info("ImageServer PUT Method");
 
@@ -129,7 +130,8 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
                 bodyMap.add("images", body);
                 headers.setContentType(MediaType.MULTIPART_FORM_DATA);
                 http = new HttpEntity<>(bodyMap, headers);
-                URI uri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/upload");
+                URI uri = new URI(imageService.getUri() + "/api/image/upload");
+//                URI uri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/upload");
                 response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
                 logger.info("ImageServer POST method");
 
@@ -160,9 +162,9 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
             http = new HttpEntity<>(headers);
             ResponseEntity response;
 
-//            URI uri = new URI(imageService.getUri() + "/image/upload");
             if (imageKey != null) {
-                URI uri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/" + imageKey);
+                URI uri = new URI(imageService.getUri() + "/api/image/" + imageKey);
+//                URI uri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/" + imageKey);
                 response = restTemplate.exchange(uri, HttpMethod.DELETE, http, Boolean.class);
                 logger.info("ImageServer DELETE Method");
                 return (Boolean) response.getBody();
