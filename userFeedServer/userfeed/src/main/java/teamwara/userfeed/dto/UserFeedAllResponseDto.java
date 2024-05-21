@@ -1,0 +1,20 @@
+package teamwara.userfeed.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserFeedAllResponseDto {
+    private Long id;
+    private String userFeedImage;
+    private UserDto user;
+    private String createdAt;
+    private String modifiedAt;
+
+
+}
