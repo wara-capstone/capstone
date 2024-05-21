@@ -5,7 +5,7 @@ import Cart from "./pages/Cart";
 import Feed from "./pages/Feed";
 import Home from "./pages/Home";
 import Map from "./pages/Map";
-import Search from "./pages/Search";
+ import Search from "./pages/Search";
 import User from "./pages/User";
 
 import Chatting from "./pages/Chatting";
@@ -15,6 +15,7 @@ import Purchase from "./pages/Purchase";
 import PurchaseHistory from "./pages/PurchaseHistory";
 import Store from "./pages/Store";
 import UserEdit from "./pages/UserEdit";
+import ViewClothSharedFeed from "./pages/ViewClothSharedFeed.jsx";
 
 import LoadingPage from "./pages/LodingPage";
 import Login from "./pages/Login";
@@ -27,11 +28,13 @@ import SellerItemManagement from "./pages/Sellers/SellerItemManagement";
 import SellerStoreEdit from "./pages/Sellers/SellerStoreEdit";
 import SellerStoreRegister from "./pages/Sellers/SellerStoreRegister";
 // import SellerStoreManagement from "./pages/Sellers/SellerStoreManagement";
-import SellerProductRegistration from "./pages/Sellers/SellerProductRegistration";
+// import SellerProductRegistration from "./pages/Sellers/SellerProductRegistration";
 import SellerStoresList from "./pages/Sellers/SellerStoresList";
 
 import "./App.css";
 import SellerStoreSales from "./pages/Sellers/SellerStoreSales";
+
+import PageUpload from "./pages/PageUpload";
 
 export default function Customer() {
   return (
@@ -52,7 +55,8 @@ export default function Customer() {
           <Route path="/user/chattingList" element={<ChattingList />} />
           <Route path="/user/purchase" element={<Purchase />} />
           <Route path="/user/purchaseHistory" element={<PurchaseHistory />} />
-
+          <Route path="/ViewClothSharedFeed/:id" element={<ViewClothSharedFeed />} />
+          <Route path="/user/pageUpload" element={<PageUpload />} />
           {/* 사장님 페이지 */}
           <Route path="/seller" element={<SellerHome />} />
           <Route
@@ -80,10 +84,10 @@ export default function Customer() {
             path="/seller/item/management/select/:storeId"
             element={<SellerItemManagement />}
           />
-          <Route
+          {/* <Route
             path="/seller/item/management/select/:storeId/:productId"
             element={<SellerProductRegistration />}
-          />
+          /> */}
           {/* 로그인 페이지 */}
           <Route path="/login" element={<Login />} />
 

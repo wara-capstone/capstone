@@ -23,7 +23,7 @@ const UserProfile = () => {
     profileImage: "https://via.placeholder.com/150x150",
     email: email,
     nickname: userRole,
-    phoneNumber: "010-1234-5678", 
+    phoneNumber: "010-1234-5678",
   });
 
   useEffect(() => {
@@ -49,7 +49,9 @@ const UserProfile = () => {
       if (response.status === 401) {
         const fetchToken = async () => {
           const response = await fetch(
-            `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}auth/signin`,
+            `${process.env.NODE_ENV === "development" ? "http://" : ""}${
+              process.env.REACT_APP_API_URL
+            }auth/signin`,
             {
               method: "GET",
               headers: {
@@ -63,15 +65,13 @@ const UserProfile = () => {
 
             localStorage.setItem("RefreshToken", result.refreshToken); // 여기서 RefreshToken을 저장.
             console.log("리프레시 토큰 재발급 완료!");
-            localStorage.setItem("token", result.accessToken);  // 여기서 AccessToken을 저장합니다.
-  
+            localStorage.setItem("token", result.accessToken); // 여기서 AccessToken을 저장합니다.
           } else {
             console.log("실패");
             navigate("/login");
           }
         };
         fetchToken();
-
       } else if (response.status === 200) {
         const result = await response.json();
         setUser({
@@ -102,11 +102,13 @@ const UserProfile = () => {
   const handleLogout = () => {
     const KakaoLogout = async () => {
       const response = await fetch(
-        `https://kapi.kakao.com/v1/user/logout?target_id_type=user_id&target_id=${localStorage.getItem("kakaoUserId")}`,
+        `https://kapi.kakao.com/v1/user/logout?target_id_type=user_id&target_id=${localStorage.getItem(
+          "kakaoUserId"
+        )}`,
         {
           method: "POST",
           headers: {
-            "Authorization": `KakaoAK b2077c53d402d3e5755993907e3cc0e9`
+            Authorization: `KakaoAK b2077c53d402d3e5755993907e3cc0e9`,
           },
           body: JSON.stringify({
             target_id_type: "user_id",
@@ -114,11 +116,10 @@ const UserProfile = () => {
           }),
         }
       );
-        const result = await response.json();
+      const result = await response.json();
       if (response.ok) {
-        console.log("로그아웃한 아이디"+ result.id);
-      }
-      else {
+        console.log("로그아웃한 아이디" + result.id);
+      } else {
         console.log("실패");
         console.log(response.status);
       }
@@ -185,6 +186,7 @@ const UserProfile = () => {
               </div>
             </button>
           </Link>
+
           {!isSeller && (
             <Link to="/user/purchaseHistory" className="user-link">
               <button className="chattingList-btn">
@@ -198,6 +200,17 @@ const UserProfile = () => {
               </button>
             </Link>
           )}
+          <Link to="/user/upload" className="user-link">
+            <button className="chattingList-btn">
+              <span role="img" aria-label="upload">
+                📤
+              </span>{" "}
+              글 업로드
+              <div className="move-page-icon">
+                <FontAwesomeIcon icon={faChevronRight} />
+              </div>
+            </button>
+          </Link>
         </div>
 
         <div className="move-seller-page-btn-container">
