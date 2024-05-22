@@ -3,6 +3,7 @@ package teamwara.userfeed.service;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -25,6 +26,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserFeedService {
     private final UserFeedRepository userFeedRepository;
     private final MemberRepository memberRepository;
@@ -36,6 +38,8 @@ public class UserFeedService {
                 .map(this::convertToDto)
                 .toList();
     }
+
+    @Transactional
     public UserFeedDetailResponseDto createUserFeed(UserFeedRequestDto userFeedRequestDto, MultipartFile imageFile) throws IOException {
         // 파일 이름 생성
         String imageFilename = UUID.randomUUID().toString() + "-" + imageFile.getOriginalFilename();
