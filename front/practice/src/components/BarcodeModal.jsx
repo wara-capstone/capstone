@@ -50,7 +50,7 @@ function BarcodeModal(props) {
                 subTitle={productInfo.productCategory}
                 content={productInfo.options.productPrice}
                 content2={productInfo.options.productStock}
-                mainImage={productInfo.productUrls[0]}
+                mainImage={productInfo.productUrls[0].url}
               />
             </Link>
           </div>
