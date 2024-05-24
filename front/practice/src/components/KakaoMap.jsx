@@ -233,10 +233,10 @@ export default function KakaoMap() {
       // 원을 생성합니다
       var circle = new kakao.maps.Circle({
         center: options.center,
-        radius: 10000,
+        radius: 1000,
         strokeWeight: 5, // 선의 두께입니다
         strokeColor: "#75B8FA", // 선의 색깔입니다
-        strokeOpacity: 0, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+        strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
         strokeStyle: "dashed", // 선의 스타일 입니다
         fillOpacity: 0, // 채우기 불투명도 입니다
       });
@@ -307,6 +307,8 @@ export default function KakaoMap() {
         // markers 배열 초기화
         markers = [];
 
+        console.log("지도크기");
+        console.log(circleXY);
         var BodyJson = JSON.stringify(circleXY);
         fetchData(BodyJson, latlng, initMarkers);
       });

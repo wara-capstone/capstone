@@ -14,7 +14,9 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loginCheck, setLoginCheck] = useState(false); // 로그인 상태 체크
 
-  const redirect_uri = `https://www.onoff.zone/loading`;
+  // const redirect_uri = `https://www.onoff.zone/loading`;
+  const redirect_uri = `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_REDIRECT_URL}loading`
+
   const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=5d3f977e28b7baf6825e7f34c62fd79a&redirect_uri=${redirect_uri}&response_type=code&prompt=select_account`;
 
   const navigate = useNavigate();
@@ -22,7 +24,6 @@ const Login = () => {
   const handleKakaoLogin = async (event) => {
     // 로그인 처리 로직을 구현합니다.
     event.preventDefault();
-
     window.location.href = kakaoURL;
   };
 
@@ -30,7 +31,7 @@ const Login = () => {
     // 로그인 처리 로직을 구현합니다.
     event.preventDefault();
     await new Promise((r) => setTimeout(r, 1000));
-    
+
     const response = await fetch(
       `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}auth/signin`,
       {
