@@ -9,7 +9,7 @@ return (
     <div className="orderProductList" style={{height:"7.5rem"}}> 
     <div style={{display:'flex',justifyContent:'space-around'}}>
      <div className="imageWrapper">
-     <img src={data.productUrls[0]} alt="bread" className="breadImage" />
+     <img src={data.productUrls[0].url} alt="bread" className="breadImage" />
     </div>
     <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
         <label style={{fontSize:"1.2rem"}}>{data.productName}</label>
