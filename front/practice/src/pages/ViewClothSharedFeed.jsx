@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import React from "react";
 //import MoreVertIcon from '@mui/material/MoreVert';
-<<<<<<< HEAD
 
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -17,12 +16,7 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import {styled} from '@mui/system';
 import Header from "../components/Header";
-=======
-import { faker } from "@faker-js/faker";
-import { styled } from "@mui/system";
->>>>>>> 7aa8397f45c7dc018ddf7b3f79129bc84adb081e
 import BottomNav from "../components/BottomNav";
-import Header from "../components/Header";
 import ProductTagListItem from "../components/ProductTagListItem";
 const StyledCardHeader = styled(CardHeader)(({ theme }) => ({
   // 스타일 커스터마이징 추가
@@ -36,39 +30,9 @@ const TitleTypography = styled(Typography)(({ theme }) => ({
 }));
 
 export default function ViewClothSharedFeed(props) {
-<<<<<<< HEAD
-    //const {id, userName, userImg, img, caption} = props;
-    const {id} = useParams();
-    const [itemData, setItemData] = useState(null); //서버에서 데이터 받아올 때
-
-    useEffect(() => {
-      // 서버에서 데이터를 비동기적으로 가져오는 함수
-      const fetchItemData = async () => {
-        try {
-          // 서버 URL을 적절히 변경하세요
-          const response = await fetch(`https://example.com/api/posts/${id}`);
-          if (!response.ok) {
-            throw new Error("Something went wrong");
-          }
-          const data = await response.json();
-          setItemData(data); // 가져온 데이터를 상태로 설정
-        } catch (error) {
-          console.error("Failed to fetch item data:", error);
-        }
-      };
-  
-      fetchItemData();
-    }, [id]);
-  
-    if (!itemData) {
-      // 데이터를 가져오는 동안 로딩 상태 표시
-      return <div>Loading...</div>;
-    }
-=======
   const { id, userName, userImg, img, caption } = props;
   //const {id} = useParams();
   //const [itemData, setItemData] = useState(null); 서버에서 데이터 받아올 때
->>>>>>> 7aa8397f45c7dc018ddf7b3f79129bc84adb081e
 
   const itemData = {
     userName: faker.person.fullName(),
