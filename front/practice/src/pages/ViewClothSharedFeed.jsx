@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import { Card, CardHeader, Avatar, IconButton, Typography, CardMedia, Box, CardActions } from '@mui/material';
 //import MoreVertIcon from '@mui/material/MoreVert';
-import {faker} from '@faker-js/faker';
+
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import IosShareIcon from '@mui/icons-material/IosShare';
@@ -26,17 +26,33 @@ const StyledCardHeader = styled(CardHeader)(({ theme }) => ({
 
 
 export default function ViewClothSharedFeed(props) {
-    const {id, userName, userImg, img, caption} = props;
-    //const {id} = useParams();
-    //const [itemData, setItemData] = useState(null); 서버에서 데이터 받아올 때
+    //const {id, userName, userImg, img, caption} = props;
+    const {id} = useParams();
+    const [itemData, setItemData] = useState(null); //서버에서 데이터 받아올 때
 
-    const itemData = {
-        userName: faker.person.fullName(),
-        userImg: faker.image.avatar(),
-        img: faker.image.url(),
-        caption: faker.lorem.text(),
-        
-    };
+    useEffect(() => {
+      // 서버에서 데이터를 비동기적으로 가져오는 함수
+      const fetchItemData = async () => {
+        try {
+          // 서버 URL을 적절히 변경하세요
+          const response = await fetch(`https://example.com/api/posts/${id}`);
+          if (!response.ok) {
+            throw new Error("Something went wrong");
+          }
+          const data = await response.json();
+          setItemData(data); // 가져온 데이터를 상태로 설정
+        } catch (error) {
+          console.error("Failed to fetch item data:", error);
+        }
+      };
+  
+      fetchItemData();
+    }, [id]);
+  
+    if (!itemData) {
+      // 데이터를 가져오는 동안 로딩 상태 표시
+      return <div>Loading...</div>;
+    }
 
 
   return (
