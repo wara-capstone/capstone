@@ -25,7 +25,7 @@ const Login = () => {
     // 로그인 처리 로직을 구현합니다.
     event.preventDefault();
     console.log(process.env.REACT_APP_API_URL);
-    // window.location.href = kakaoURL;
+    window.location.href = kakaoURL;
   };
 
   const handleLogin = async (event) => {
