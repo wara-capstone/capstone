@@ -10,9 +10,13 @@ import {
 import React from "react";
 //import MoreVertIcon from '@mui/material/MoreVert';
 import { faker } from "@faker-js/faker";
-import { styled } from "@mui/system";
-import BottomNav from "../components/BottomNav";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import IosShareIcon from '@mui/icons-material/IosShare';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import {styled} from '@mui/system';
 import Header from "../components/Header";
+import BottomNav from "../components/BottomNav";
 import ProductTagListItem from "../components/ProductTagListItem";
 const StyledCardHeader = styled(CardHeader)(({ theme }) => ({
   // 스타일 커스터마이징 추가
