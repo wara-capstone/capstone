@@ -1,20 +1,19 @@
 import React from "react";
 import BottomNav from "../components/BottomNav";
-import Header from "../components/Header";
 import ClothFeedList from "../components/ClothFeedList";
-import Box from '@mui/material/Box';
+import Header from "../components/Header";
 
 export default function Feed() {
   return (
     <div className="feed">
       <Header />
 
-     
-
-    {/* <Box component="section" sx={{gridColumn: '1/3'}}>
+      {/* <Box component="section" sx={{gridColumn: '1/3'}}>
       <ClothFeedList />
       </Box> */}
-    <ClothFeedList />
+      <div className="ClothFeedList-in-feed">
+        <ClothFeedList />
+      </div>
 
       <BottomNav />
     </div>

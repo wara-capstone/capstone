@@ -55,8 +55,8 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
-    "@mui/icons-material": "^5.15.14",
-    "@mui/material": "^5.15.14",
+    "@mui/icons-material": "^5.15.18",
+    "@mui/material": "^5.15.18",
     "styled-components": "^6.1.8"
   }
 }
