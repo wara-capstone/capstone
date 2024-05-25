@@ -74,7 +74,7 @@ export default function Item() {
     try {
       const response = await fetch(
         `${
-          process.env.NODE_ENV === "development" ? "http://" : ""
+          process.env.NODE_ENV === "development" ? "" : ""
         }${CART_URL}cart/items/`,
         {
           method: "POST",
@@ -177,7 +177,7 @@ export default function Item() {
       //옵션 가져오기
       console.log("가져온 상품아이디", id);
       const response = await fetch(
-        `${process.env.NODE_ENV === "development" ? "http://" : ""}${
+        `${process.env.NODE_ENV === "development" ? "" : ""}${
           process.env.REACT_APP_API_URL
         }product/all/` + id,
         {

@@ -33,7 +33,7 @@ const UserEdit = ({ user }) => {
     console.log("위에꺼 토큰");
     const fetchData = async () => {
     const response = await fetch(
-      `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}user?email=`+email,
+      `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}user?email=`+email,
       {
         method: "GET",
         headers: {
@@ -46,7 +46,7 @@ const UserEdit = ({ user }) => {
     if (response.status === 401) {
       const fetchData = async () => {
         const response = await fetch(
-          `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}auth/signin`,
+          `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}auth/signin`,
           {
             method: "GET",
             headers: {
@@ -111,7 +111,7 @@ const UserEdit = ({ user }) => {
 
     try {
       const response = await fetch(
-        `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}user`,
+        `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}user`,
         {
           method: "PUT",
           headers: {
@@ -153,7 +153,7 @@ const UserEdit = ({ user }) => {
                 console.log(value);
             }
         }
-        fetch(`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}user/image?email=`+email, {
+        fetch(`${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}user/image?email=`+email, {
             method: 'POST',
             headers: {
                 "Authorization": `${token}`

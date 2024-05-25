@@ -87,7 +87,7 @@ const SellerStoreRegister = ({ store }) => {
         }
       }
       fetch(
-        `${process.env.NODE_ENV === "development" ? "http://" : ""}${
+        `${process.env.NODE_ENV === "development" ? "" : ""}${
           process.env.REACT_APP_API_URL
         }store/create`,
         {
@@ -118,7 +118,7 @@ const SellerStoreRegister = ({ store }) => {
       formData = JSON.stringify(data);
 
       fetch(
-        `${process.env.NODE_ENV === "development" ? "http://" : ""}${
+        `${process.env.NODE_ENV === "development" ? "" : ""}${
           process.env.REACT_APP_API_URL
         }store/create`,
         {

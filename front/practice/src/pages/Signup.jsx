@@ -30,7 +30,7 @@ const Signup = () => {
 
     try {
       const response = await fetch(
-        `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}auth/kakao/signup`,
+        `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}auth/kakao/signup`,
         {
           method: "POST",
           headers: {
@@ -74,7 +74,7 @@ const Signup = () => {
 
     try {
       const response = await fetch(
-        `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}auth/signup`,
+        `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}auth/signup`,
         {
           method: "POST",
           headers: {

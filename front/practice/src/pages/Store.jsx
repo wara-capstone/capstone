@@ -38,7 +38,7 @@ export default function Store() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}store/read/id/` + id, {
+      const response = await fetch(`${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}store/read/id/` + id, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -93,8 +93,8 @@ export default function Store() {
       )}
 
       <Category
-        allUrl={`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/all/store/${id}`}
-        categoryUrl={`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/all/store/${id}/category?category=`}
+        allUrl={`${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}product/all/store/${id}`}
+        categoryUrl={`${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}product/all/store/${id}/category?category=`}
       />
 
       <BottomNav />

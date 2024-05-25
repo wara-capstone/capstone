@@ -27,12 +27,12 @@ export default function Search() {
     const encodedSearchText = encodeURIComponent(searchText);
 
     // API 요청 URL을 구성
-    const url = `${process.env.NODE_ENV === "development" ? "http://" : ""}${
+    const url = `${process.env.NODE_ENV === "development" ? "" : ""}${
       process.env.REACT_APP_API_URL
     }product/all/SEARCH/${encodedSearchText}/0`;
 
     const sortUrl = `${
-      process.env.NODE_ENV === "development" ? "http://" : ""
+      process.env.NODE_ENV === "development" ? "" : ""
     }${
       process.env.REACT_APP_API_URL
     }product/all/sort/PRICE/${sortType}/${encodedSearchText}/0`;

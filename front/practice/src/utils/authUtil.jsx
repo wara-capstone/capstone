@@ -3,7 +3,7 @@
 export const fetchRefreshToken = async (RefreshToken) => {
     console.log("AccessToken 재발급 요청중!!!!!!!!!!!!");
     const response = await fetch(
-      `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}auth/signin`,
+      `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}auth/signin`,
       {
         method: "GET",
         headers: {

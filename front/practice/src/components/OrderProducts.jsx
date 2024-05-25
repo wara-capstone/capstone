@@ -59,7 +59,7 @@ function quantityMinus () { //수량 감소
 
 async function optionGet(tryAgain = true) { //옵션 가져오기
     const response = await fetch(
-        `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/all/`+data.product.p_id,
+        `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}product/all/`+data.product.p_id,
         {
           method: "GET",
           headers: {    
@@ -125,7 +125,7 @@ async function optionEdit(tryAgain = true){  //옵션 변경
       };
       try {
         const response = await fetch(
-          `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${CART_URL}cart/items/`,
+          `${process.env.NODE_ENV === 'development' ? '' : ''}${CART_URL}cart/items/`,
           {
             method: "PUT",
             headers: {

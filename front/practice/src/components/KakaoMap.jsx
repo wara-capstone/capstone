@@ -61,7 +61,7 @@ export default function KakaoMap() {
     const fetchData = async () => {
       const response = await fetch(
         `${
-          process.env.NODE_ENV === "development" ? "http://" : ""
+          process.env.NODE_ENV === "development" ? "" : ""
         }${CART_URL}cart/items/?user_email=` + email,
         {
           method: "GET",
@@ -185,7 +185,7 @@ export default function KakaoMap() {
   const fetchData = async (BodyJson, latlng, initMarkers) => {
     try {
       const response = await fetch(
-        `${process.env.NODE_ENV === "development" ? "http://" : ""}${
+        `${process.env.NODE_ENV === "development" ? "" : ""}${
           process.env.REACT_APP_API_URL
         }store/read/map/coordinate`,
         {

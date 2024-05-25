@@ -102,7 +102,7 @@ function BarcodeReader() {
     // if(productId == null ){return}
     try {
       const response = await axios.get(
-        `${process.env.NODE_ENV === "development" ? "http://" : ""}${
+        `${process.env.NODE_ENV === "development" ? "" : ""}${
           process.env.REACT_APP_API_URL
         }product/all/${productId}/option/${optionId}`,
         {

@@ -18,7 +18,7 @@ function ProductTagListItem({ onClick }) {
       const fetchData = async () => {
         try {
           const response = await fetch(
-            `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}/payment/read/user/${userEmail}`,
+            `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}/payment/read/user/${userEmail}`,
             {
               method: "GET",
               headers: {

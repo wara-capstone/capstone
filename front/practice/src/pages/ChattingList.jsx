@@ -21,7 +21,7 @@ export default function ChattingList() {
     async function fetchChattingList() {
       try {
         setLoading(true);
-        const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${CHATTING_URL}chat/rooms/?email=${userId}`, {
+        const response = await fetch(`${process.env.NODE_ENV === 'development' ? '' : ''}${CHATTING_URL}chat/rooms/?email=${userId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -65,7 +65,7 @@ export default function ChattingList() {
   }, [userId, token]);
 
   const fetchImage = async (email, tryAgain = true) => {
-    const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}user?email=${email}`, {
+    const response = await fetch(`${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}user?email=${email}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

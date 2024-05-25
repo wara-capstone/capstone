@@ -65,7 +65,7 @@ export default function Cart() {
     const fetchData = async () => {
       const response = await fetch(
         `${
-          process.env.NODE_ENV === "development" ? "http://" : ""
+          process.env.NODE_ENV === "development" ? "" : ""
         }${CART_URL}cart/items/?user_email=` + email,
         {
           method: "GET",
@@ -132,7 +132,7 @@ export default function Cart() {
     const fetchData = async () => {
       const response = await fetch(
         `${
-          process.env.NODE_ENV === "development" ? "http://" : ""
+          process.env.NODE_ENV === "development" ? "" : ""
         }${CART_URL}cart/items/?user_email=` +
           email +
           deleteString,

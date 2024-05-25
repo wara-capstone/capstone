@@ -35,7 +35,7 @@ const UserProfile = () => {
     const fetchData = async () => {
       setLoading(true);
       const response = await fetch(
-        `${process.env.NODE_ENV === "development" ? "http://" : ""}${
+        `${process.env.NODE_ENV === "development" ? "" : ""}${
           process.env.REACT_APP_API_URL
         }user?email=` + email,
         {
@@ -49,7 +49,7 @@ const UserProfile = () => {
       if (response.status === 401) {
         const fetchToken = async () => {
           const response = await fetch(
-            `${process.env.NODE_ENV === "development" ? "http://" : ""}${
+            `${process.env.NODE_ENV === "development" ? "" : ""}${
               process.env.REACT_APP_API_URL
             }auth/signin`,
             {
