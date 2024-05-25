@@ -10,7 +10,7 @@ const LoadingPage = () => {
       const fetchData = async () => {
         try {
         const response = await fetch(
-            `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}auth/kakao/signin`,
+            `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_LOGIN_URL}auth/kakao/signin`,
             {
               method: "POST",
               headers: {
