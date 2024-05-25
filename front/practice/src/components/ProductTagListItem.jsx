@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from "react";
 import { Box, Card, CardHeader, Avatar, CardContent, Typography } from "@mui/material";
 import { styled } from '@mui/system';
+import { fetchRefreshToken } from "../utils/authUtil";
+import { message }from "antd";
 import { faker } from "@faker-js/faker";
   // Title 스타일을 위한 컴포넌트
   const TitleTypography = styled(Typography)(({ theme }) => ({
@@ -9,12 +11,13 @@ import { faker } from "@faker-js/faker";
   }));
   
 function ProductTagListItem({ onClick }) {
-    const [itemData, setItemData] = useState(null);
+    const [itemData, setItemData] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(0);
+    const [purchaseItems, setPurchaseItems] = useState([]);
     const token = localStorage.getItem("token");
     const userEmail = localStorage.getItem("userEmail");
 
     useEffect(() => {
-      // 서버에서 데이터를 가져오는 함수
       const fetchData = async () => {
         try {
           const response = await fetch(
@@ -22,32 +25,84 @@ function ProductTagListItem({ onClick }) {
             {
               method: "GET",
               headers: {
-                "Content-type": "application/json",
-                Authorization: `${token}`,
+                "Content-Type": "application/json",
+                "Authorization": `${token}`
               },
             }
           );
-          if (!response.ok) {
-            throw new Error('데이터를 불러오는데 실패했습니다.');
+  
+          if (response.status === 401) {
+            const RefreshToken = localStorage.getItem("RefreshToken");
+            await fetchRefreshToken(RefreshToken);
+            const newToken = localStorage.getItem("token");
+            // 토큰 갱신 후 재요청
+            const retryResponse = await fetch(
+              `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}/payment/read/user/${userEmail}`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": `${newToken}`
+                },
+              }
+            );
+            if (!retryResponse.ok) {
+              throw new Error('데이터를 불러오는데 실패했습니다.');
+            }
+            const result = await retryResponse.json();
+            handleResponse(result);
+          } else if (response.status === 200) {
+            const result = await response.json();
+            handleResponse(result);
+          } else {
+            message.error("구매 내역을 불러오는데 실패하였습니다.", 1);
           }
-          const data = await response.json();
-          setItemData({
-            userName: data.userName,
-            productName: data.productName,
-            productPrice: data.productPrice,
-            userImg: data.userImg,
-            img: data.img,
-            caption: data.caption,
-          });
         } catch (error) {
           console.error("Error fetching data: ", error);
+          message.error("데이터를 불러오는데 실패했습니다.", 1);
+        }
+      };
+  
+      const handleResponse = async (result) => {
+        if (result.result === "success") {
+          console.log("구매 내역이 존재합니다.");
+          result.data.forEach(data => {
+            setTotalPrice(totalPrice => totalPrice += data.totalPrice);
+  
+            data.paymentDTOS.forEach(async payment => {
+              const productId = payment.productId;
+              const optionId = payment.optionId;
+  
+              const response2 = await fetch(
+                `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}/product/all/${productId}/option/${optionId}`,
+                {
+                  method: "GET",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `${token}`
+                  },
+                }
+              );
+  
+              if (response2.status === 200) {
+                const productResult = await response2.json();
+                productResult["quantity"] = payment.quantity;
+                productResult["price"] = payment.price;
+                setPurchaseItems(prevItems => [...prevItems, productResult]);
+              } else {
+                console.log("상품 정보를 불러오는데 실패했습니다.");
+              }
+            });
+          });
+        } else {
+          message.success("구매 내역이 존재하지 않습니다!");
         }
       };
   
       fetchData();
-    }, []); // 의존성 배열이 비어있으므로, 컴포넌트 마운트 시에만 fetchData가 실행됩니다.
+    }, [token, userEmail]);
   
-    if (!itemData) {
+    if (purchaseItems.length === 0) {
       return <div>데이터 로딩중...</div>;
     }
   

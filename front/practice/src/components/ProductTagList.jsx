@@ -4,46 +4,34 @@ import { Grid } from '@mui/material';
 import ProductTagListItem from './ProductTagListItem';
 
 
-function ProductTagList(){
-    const [posts, setPosts] = useState([]);
+function ProductTagList({ posts, handleItemClick}){
+    // const [posts, setPosts] = useState([]);
 
-     useEffect(() => {
-       //         const mockPosts = [...Array(20)].map((_, i) => ({
-       //             userName: faker.person.fullName(),
-       //             userImg: faker.image.avatar(),
-       //             img: faker.image.url(),
-       //             caption: faker.lorem.text(),
-       //             id: i,
-       //     }));
+    // //  useEffect(() => {
 
-       //     setPosts(mockPosts);
-       // }, []);
+    // //    const fetchPosts = async () => {
+    // //      try {
+    // //        // API 요청을 보낸다고 가정, 여기서 'https://example.com/api/posts'는 예시 URL입니다.
+    // //        // 실제 요청할 서버의 URL로 교체해주세요.
+    // //        const response = await fetch("https://example.com/api/posts");
+    // //        if (!response.ok) {
+    // //          throw new Error("Something went wrong");
+    // //        }
+    // //        const data = await response.json(); // 응답 데이터를 JSON 형식으로 파싱
+    // //        setPosts(data); // 상태 업데이트
+    // //      } catch (error) {
+    // //        console.error("Failed to fetch posts:", error);
+    // //      }
+    // //    };
 
-       const fetchPosts = async () => {
-         try {
-           // API 요청을 보낸다고 가정, 여기서 'https://example.com/api/posts'는 예시 URL입니다.
-           // 실제 요청할 서버의 URL로 교체해주세요.
-           const response = await fetch("https://example.com/api/posts");
-           if (!response.ok) {
-             throw new Error("Something went wrong");
-           }
-           const data = await response.json(); // 응답 데이터를 JSON 형식으로 파싱
-           setPosts(data); // 상태 업데이트
-         } catch (error) {
-           console.error("Failed to fetch posts:", error);
-         }
-       };
+    // //    fetchPosts(); // 데이터를 가져오는 함수 호출
+    // //  }, []);
 
-       fetchPosts(); // 데이터를 가져오는 함수 호출
-     }, []);
-
-    // 클릭 이벤트 핸들러 함수
-    const handleItemClick = (post) => {
-        console.log("Selected Item:", post);
-        // 여기에서 클릭된 아이템 처리 로직을 구현하세요.
-    };
-
-
+    // // 클릭 이벤트 핸들러 함수
+    // const handleItemClick = (post) => {
+    //     console.log("Selected Item:", post);
+    //     // 여기에서 클릭된 아이템 처리 로직을 구현하세요.
+    // };
 
     return(
         <Grid container spacing={2}> {/* 컨테이너 설정, 카드 사이의 간격은 2로 설정 */}
