@@ -10,6 +10,7 @@ import Data from "../DB/Data.json"; // 로컬 JSON 데이터
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom"; // React Router의 Navigate, useParams 사용
 import BarcodeModal from "../components/BarcodeModal"; // 바코드 모달 컴포넌트
+
 function BarcodeReader() {
   const [videoInputDevices, setVideoInputDevices] = useState([]); // 비디오 입력 장치 목록
   const [selectedDeviceId, setSelectedDeviceId] = useState(""); // 선택된 비디오 입력 장치 ID
@@ -130,34 +131,50 @@ function BarcodeReader() {
 
   const startDecoding = (id) => {
     // 디코딩 시작 함수
-    codeReader.decodeFromVideoDevice(
-      id,
-      videoRef.current,
-      async (result, err) => {
-        // 비디오 장치에서 바코드 디코딩
-        if (result) {
-          // 결과가 있으면
-          console.log(result); // 결과 로깅
-          var data = result.text.split("A");
+    const videoConstraints = {
+      width: { ideal: 1920 },
+      height: { ideal: 1080 },
+      facingMode: "environment",
+      deviceId: id ? { exact: id } : undefined,
+    };
 
-          fetchedProductInfo = await fetchProductInfo(data[0], data[1]); // 서버에서 바코드에 해당하는 제품 정보 가져오기
-          setProductInfo(fetchedProductInfo); // 제품 정보를 productInfo 상태 변수에 저장
-          setResult(fetchedProductInfo); // 결과 설정
-          setShowModal(true); // 모달 표시
-          setIsBarcodeDetected(true); // 바코드 인식 상태 설정
+    navigator.mediaDevices
+      .getUserMedia({ video: videoConstraints })
+      .then((stream) => {
+        videoRef.current.srcObject = stream;
+        videoRef.current.play();
 
-          // 스캔이 완료된 후에 바코드 리더를 리셋하고 다시 스캔 시작
-          codeReader.reset();
-          startDecoding(id);
-        }
-        if (err && !(err instanceof NotFoundException)) {
-          // 에러가 있고, NotFoundException이 아니면
-          console.error(err); // 에러 로깅
-          console.error(err.message); // 오류 메시지 출력
-          setResult(err.message); // 에러 메시지 설정
-        }
-      }
-    );
+        codeReader.decodeFromStream(
+          stream,
+          videoRef.current,
+          async (result, err) => {
+            if (result) {
+              // 결과가 있으면
+              console.log(result); // 결과 로깅
+              var data = result.text.split("A");
+
+              fetchedProductInfo = await fetchProductInfo(data[0], data[1]); // 서버에서 바코드에 해당하는 제품 정보 가져오기
+              setProductInfo(fetchedProductInfo); // 제품 정보를 productInfo 상태 변수에 저장
+              setResult(fetchedProductInfo); // 결과 설정
+              setShowModal(true); // 모달 표시
+              setIsBarcodeDetected(true); // 바코드 인식 상태 설정
+
+              // 스캔이 완료된 후에 바코드 리더를 리셋하고 다시 스캔 시작
+              codeReader.reset();
+              startDecoding(id);
+            }
+            if (err && !(err instanceof NotFoundException)) {
+              // 에러가 있고, NotFoundException이 아니면
+              console.error(err); // 에러 로깅
+              console.error(err.message); // 오류 메시지 출력
+              setResult(err.message); // 에러 메시지 설정
+            }
+          }
+        );
+      })
+      .catch((err) => {
+        console.error("Error accessing camera: ", err);
+      });
   };
 
   return (
