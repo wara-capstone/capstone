@@ -113,10 +113,10 @@ function BarcodeReader() {
 
   const startDecoding = (id) => {
     const videoConstraints = {
-      // width: { ideal: 1920 },
-      // height: { ideal: 1080 },
-      width: { ideal: 1080 },
-      height: { ideal: 1920 },
+      width: { ideal: 1920 },
+      height: { ideal: 1080 },
+      // width: { ideal: 1080 },
+      // height: { ideal: 1920 },
       facingMode: "environment",
       deviceId: id ? { exact: id } : undefined,
       advanced: [{ focusMode: "continuous" }, { focusDistance: { ideal: 0 } }],
