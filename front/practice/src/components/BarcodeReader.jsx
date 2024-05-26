@@ -33,10 +33,6 @@ function BarcodeReader() {
   }, [productInfo]);
 
   useEffect(() => {
-    startDecoding(selectedDeviceId);
-  }, [selectedDeviceId]);
-
-  useEffect(() => {
     codeReader.listVideoInputDevices().then((devices) => {
       // 비디오 입력 장치 목록 조회
       setVideoInputDevices(devices); // 장치 목록 설정
