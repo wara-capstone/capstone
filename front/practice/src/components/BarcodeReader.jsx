@@ -89,7 +89,7 @@ function BarcodeReader() {
       height: { ideal: 1080 },
       facingMode: "environment",
       deviceId: id ? { exact: id } : undefined,
-      advanced: [{ focusMode: "continuous" }, { focusDistance: { ideal: 0 } }],
+      advanced: [{ focusMode: "continuous" }],
     };
 
     navigator.mediaDevices
