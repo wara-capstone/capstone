@@ -8,10 +8,6 @@ import BottomNav from "../components/BottomNav";
 import Category from "../components/Category";
 import Header from "../components/Header";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import { Link, useNavigate } from "react-router-dom";
-
 export default function Home() {
   const adImages = [
     { id: "1", src: adImage1 },
@@ -56,21 +52,12 @@ export default function Home() {
         allUrl={`${process.env.NODE_ENV === "development" ? "" : ""}${
           process.env.REACT_APP_API_URL
         }product/all/category/상의`}
-        categoryUrl={`${
-          process.env.NODE_ENV === "development" ? "" : ""
-        }${process.env.REACT_APP_API_URL}product/all/category/`}
+        categoryUrl={`${process.env.NODE_ENV === "development" ? "" : ""}${
+          process.env.REACT_APP_API_URL
+        }product/all/category/`}
       />
       {/* <CardList /> */}
-      <div>
-      <Link to="/user/pageUpload" className="user-link">
-            <button className="upload-btn">
-              <span role="img" aria-label="upload">📤</span> 글 업로드
-                <div className="move-page-icon">
-                  <FontAwesomeIcon icon={faChevronRight} />
-                </div>
-            </button>
-          </Link>
-      </div>
+
       <BottomNav />
     </div>
   );
