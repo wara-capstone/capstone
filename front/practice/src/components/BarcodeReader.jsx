@@ -203,6 +203,8 @@ function BarcodeReader() {
   const hints = new Map();
   const formats = [BarcodeFormat.CODE_128];
   hints.set(DecodeHintType.POSSIBLE_FORMATS, formats);
+  hints.set(DecodeHintType.TRY_HARDER, true);
+
   var fetchedProductInfo;
   const token = localStorage.getItem("token");
 
@@ -307,43 +309,89 @@ function BarcodeReader() {
     }
   };
 
+  // const startDecoding = (id) => {
+  //   // 디코딩 시작 함수
+  //   codeReader.decodeFromVideoDevice(
+  //     id,
+  //     videoRef.current,
+  //     async (result, err) => {
+  //       // 비디오 장치에서 바코드 디코딩
+  //       if (result) {
+  //         // 결과가 있으면
+  //         console.log(result); // 결과 로깅
+  //         var data = result.text.split("A");
+
+  //         fetchedProductInfo = await fetchProductInfo(data[0], data[1]); // 서버에서 바코드에 해당하는 제품 정보 가져오기
+  //         setProductInfo(fetchedProductInfo); // 제품 정보를 productInfo 상태 변수에 저장
+  //         setResult(fetchedProductInfo); // 결과 설정
+  //         setShowModal(true); // 모달 표시
+  //         setIsBarcodeDetected(true); // 바코드 인식 상태 설정
+
+  //         // 스캔이 완료된 후에 바코드 리더를 리셋하고 다시 스캔 시작
+  //         codeReader.reset();
+  //         startDecoding(id);
+  //       }
+  //       if (err && !(err instanceof NotFoundException)) {
+  //         // 에러가 있고, NotFoundException이 아니면
+  //         console.error(err); // 에러 로깅
+  //         console.error(err.message); // 오류 메시지 출력
+  //         setResult(err.message); // 에러 메시지 설정
+  //       }
+  //     }
+  //   );
+  // };
+
   const startDecoding = (id) => {
-    // 디코딩 시작 함수
-    codeReader.decodeFromVideoDevice(
-      id,
-      videoRef.current,
-      async (result, err) => {
-        // 비디오 장치에서 바코드 디코딩
-        if (result) {
-          // 결과가 있으면
-          console.log(result); // 결과 로깅
-          var data = result.text.split("A");
+    const videoConstraints = {
+      width: { ideal: 1920 },
+      height: { ideal: 1080 },
+      // width: { ideal: 1080 },
+      // height: { ideal: 1920 },
+      facingMode: "environment",
+      deviceId: id ? { exact: id } : undefined,
+      advanced: [{ focusMode: "continuous" }, { focusDistance: { ideal: 0 } }],
+    };
 
-          fetchedProductInfo = await fetchProductInfo(data[0], data[1]); // 서버에서 바코드에 해당하는 제품 정보 가져오기
-          setProductInfo(fetchedProductInfo); // 제품 정보를 productInfo 상태 변수에 저장
-          setResult(fetchedProductInfo); // 결과 설정
-          setShowModal(true); // 모달 표시
-          setIsBarcodeDetected(true); // 바코드 인식 상태 설정
+    navigator.mediaDevices
+      .getUserMedia({ video: videoConstraints })
+      .then((stream) => {
+        videoRef.current.srcObject = stream;
+        videoRef.current.play();
 
-          // 스캔이 완료된 후에 바코드 리더를 리셋하고 다시 스캔 시작
-          codeReader.reset();
-          startDecoding(id);
-        }
-        if (err && !(err instanceof NotFoundException)) {
-          // 에러가 있고, NotFoundException이 아니면
-          console.error(err); // 에러 로깅
-          console.error(err.message); // 오류 메시지 출력
-          setResult(err.message); // 에러 메시지 설정
-        }
-      }
-    );
+        codeReader.decodeFromStream(
+          stream,
+          videoRef.current,
+          async (result, err) => {
+            if (result) {
+              console.log(result);
+              var data = result.text.split("A");
+
+              fetchedProductInfo = await fetchProductInfo(data[0], data[1]);
+              setProductInfo(fetchedProductInfo);
+              setResult(fetchedProductInfo);
+              setShowModal(true);
+              setIsBarcodeDetected(true);
+              codeReader.reset();
+              startDecoding(id);
+            }
+            if (err && !(err instanceof NotFoundException)) {
+              console.error(err);
+              console.error(err.message);
+              setResult(err.message);
+            }
+          }
+        );
+      })
+      .catch((err) => {
+        console.error("Error accessing camera: ", err);
+      });
   };
 
   return (
     <div>
       {/* <button onClick={resetDecoding}>Reset</button>{" "} */}
       {/* 리셋 버튼, 클릭 시 디코딩 리셋 */}
-      {videoInputDevices.length > 0 && ( // 비디오 입력 장치가 있으면
+      {/* {videoInputDevices.length > 0 && ( // 비디오 입력 장치가 있으면
         <select // 장치 선택 셀렉트 박스
           value={selectedDeviceId} // 현재 선택된 장치 ID
           onChange={(e) => setSelectedDeviceId(e.target.value)} // 변경 시 장치 ID 설정
@@ -358,16 +406,16 @@ function BarcodeReader() {
             )
           )}
         </select>
-      )}
+      )} */}
 
       <div
         style={{
           // 비디오 요소 스타일
           width: "100%",
-          height: "100%",
-          paddingBottom: "100%",
+          height: "88vh",
+          // paddingBottom: "100%",
           position: "relative",
-          overflow: "hidden",
+          // overflow: "hidden",
           //border: "1px solid gray",
         }}
       >
@@ -375,11 +423,12 @@ function BarcodeReader() {
           ref={videoRef} // 비디오 참조 설정
           style={{
             // 비디오 요소 스타일
-            position: "absolute",
-            top: 0,
-            left: 0,
+            // position: "absolute",
+            // top: 0,
+            // left: 0,
             width: "100%",
             height: "100%",
+            objectFit: "cover",
           }}
         ></video>
       </div>
