@@ -5,6 +5,8 @@ import BottomNav from "../components/BottomNav";
 import Header from "../components/Header";
 import ProductImageWithTags from "../components/ProductImageWithTags";
 import ProductTagList from "../components/ProductTagList";
+import { Grid } from '@mui/material';
+import ProductTagListItem from "../components/ProductTagListItem";
 
 function PageUpload() {
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
@@ -39,6 +41,8 @@ function PageUpload() {
 
   const handleProductSelect = (product) => {
     setSelectedProduct(product);
+    console.log("상품선택한거표시표시표시");
+    console.log(product);
     handleCloseModal();
   };
 
@@ -114,8 +118,17 @@ function PageUpload() {
                 backgroundColor: "#f0f0f0",
               }}
             >
-              <p>선택된 상품: {selectedProduct.name}</p>
-              {/* 필요한 경우 추가적인 상품 정보 표시 */}
+              <Grid container spacing={2}>
+        {/* 선택된 상품을 배열로 변환하여 map 함수 사용 (이 예시에서는 단일 상품만 예상) */}
+        {[selectedProduct].map((product) => (
+          <Grid item xs={12} sm={6} key={product.id}>
+            <ProductTagListItem
+              itemData={product}
+              onClick={() => handleProductSelect(product)}
+            />
+          </Grid>
+        ))}
+      </Grid>
             </Box>
           )}
         </>
@@ -126,6 +139,7 @@ function PageUpload() {
           <ProductTagList onProductSelect={handleProductSelect} />
         </DialogContent>
       </Dialog>
+      
       <BottomNav />
     </div>
   );
