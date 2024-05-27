@@ -214,6 +214,10 @@ function BarcodeReader() {
   }, [productInfo]);
 
   useEffect(() => {
+    startDecoding(selectedDeviceId);
+  }, [selectedDeviceId]);
+
+  useEffect(() => {
     codeReader.listVideoInputDevices().then((devices) => {
       setVideoInputDevices(devices);
 
