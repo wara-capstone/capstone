@@ -21,9 +21,9 @@ function Header() {
 
   const handleConnectCart = () => {
     // 장바구니아이콘 클릭 시 로그인 상태 체크 후 라우팅 진행.
-    if (userId === null) {
+    if (userId === null || token === null) {
       navigate("/login");
-    } else if (userId !== null) {
+    } else if (userId !== null && token !== null) {
       navigate("/cart");
     }
   };
