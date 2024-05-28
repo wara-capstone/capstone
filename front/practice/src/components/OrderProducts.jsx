@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../components/OrderProducts.css';
 import Modal from 'react-modal';
 import { fetchRefreshToken } from "../utils/authUtil";
+import { Select } from "antd";
 
 
 export default function OrderProducts({ selectedBread, changeSingleBox, data, checkList }) {
@@ -21,10 +22,11 @@ export default function OrderProducts({ selectedBread, changeSingleBox, data, ch
     var email = localStorage.getItem('email');
     var token = localStorage.getItem('token');
     const CART_URL = process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DJANGO_CART_URL : process.env.REACT_APP_API_URL;
-    const handleColorChange = (e) => { // 선택한 색상 변경
-        const newTargetColor = e.target.value;
+    
+    const handleColorChange = (value) => { // 선택한 색상 변경
+        const newTargetColor = value;
         setTargetColor(newTargetColor);
-        console.log("Color changed to: " + e.target.value);
+        console.log("Color changed to: " + value);
     }
 
 
@@ -42,9 +44,9 @@ export default function OrderProducts({ selectedBread, changeSingleBox, data, ch
     }
     }, [result, targetColor]);
     
-      const handleSizeChange = (e) => { // 선택한 사이즈 변경
-        setTargetSize(e.target.value);
-        console.log("Size changed to: " + e.target.value);
+      const handleSizeChange = (value) => { // 선택한 사이즈 변경
+        setTargetSize(value);
+        console.log("Size changed to: " + value);
       }
 
       
@@ -208,18 +210,18 @@ return (
         <button className="quantityButton" style={{width:"2rem"}} onClick={quantityPlus}> + </button> 
         </div>
         <div style={{justifyContent:"space-around"}}>색상
-        <select value={targetColor} onChange={handleColorChange} >
+        <Select value={targetColor} onChange={handleColorChange} >
             {colorArray.map((color, index) => 
                 <option value={color} key={index}>{color}</option>
-        )}</select>
+        )}</Select>
 
         </div>
         <div>사이즈
-        <select value={targetSize} onChange={handleSizeChange}>
+        <Select value={targetSize} onChange={handleSizeChange}>
                 {sizeArrayForColor.map(
                     (size, index) => 
                 <option value={size} key={index}>{size}</option>
-        )}</select>
+        )}</Select>
 
 
         </div>

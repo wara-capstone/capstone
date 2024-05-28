@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { message } from "antd";
+import { message, Select } from "antd";
 import BottomNav from "../components/BottomNav";
 import "../components/Button.css";
 import EventButton from "../components/EventButton";
@@ -159,17 +159,19 @@ export default function Item() {
     }
   }, [result, targetColor]);
 
-  const handleColorChange = (e) => {
+  const handleColorChange = (value) => {
     // 선택한 색상 변경
-    const newTargetColor = e.target.value;
-    setTargetColor((color) => (color = newTargetColor));
-    console.log("Color changed to: " + e.target.value);
+    // const newTargetColor = e.target.value;
+    // setTargetColor(color => (color = newTargetColor));
+    setTargetColor(value);
+    console.log("Color changed to: " + value);
   };
 
-  const handleSizeChange = (e) => {
+  const handleSizeChange = (value) => {
     // 선택한 사이즈 변경
-    setTargetSize((size) => (size = e.target.value));
-    console.log("Size changed to: " + e.target.value);
+    // setTargetSize((size) => (size = e.target.value));
+    setTargetSize(value);
+    console.log("Size changed to: " + value);
   };
 
   useEffect(() => {
@@ -251,7 +253,7 @@ export default function Item() {
             <h3>재고: {stock}</h3>
             <div>
               <span style={{ fontSize: "20px" }}>색상</span>
-              <select
+              <Select
                 style={{ marginLeft: "1.3rem", fontSize: "20px" }}
                 value={targetColor}
                 onChange={handleColorChange}
@@ -261,14 +263,14 @@ export default function Item() {
                     {color}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
             <div>
               <span style={{ fontSize: "20px" }}>사이즈</span>
-              <select
+              <Select
                 style={{
                   marginLeft: "1rem",
-                  width: "4rem",
+                  width: "4.5rem",
                   textAlignLast: "center",
                   fontSize: "20px",
                 }}
@@ -280,7 +282,7 @@ export default function Item() {
                     {size}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
             <div
               className="quantityWrapper"

@@ -15,6 +15,7 @@ import { fetchRefreshToken } from "../utils/authUtil";
 
 
 export default function Purchase() {
+  const { IMP } = window; // 아임포트 모듈
   const navigate = useNavigate();
     const email = localStorage.getItem("email");
     const token = localStorage.getItem("token");
@@ -149,13 +150,13 @@ async function clickPurchase(tryAgain = true) { // 구매하기 버튼 클릭시
       pay_method: "card", // 결제수단
       merchant_uid: ``, // 주문번호
       amount: totalPrice, // 결제금액
-      name: "테스트주문", // 주문명
-      buyer_name: "이름1", // 구매자 이름
-      buyer_tel: "010-1234-1234", // 구매자 전화번호
-      buyer_email: "user@naver.com", // 구매자 이메일
-      buyer_addr: "대구광역시", // 구매자 주소
-      buyer_postcode: 40000, // 구매자 우편번호
-      // m_redirect_url: "{리디렉션 될 URL}", // 결제 완료 후 이동할 주소
+      name: "ON&OFF 결제", // 주문명
+      // buyer_name: "이름1", // 구매자 이름
+      // buyer_tel: "010-1234-1234", // 구매자 전화번호
+      buyer_email: email, // 구매자 이메일
+      // buyer_addr: "대구광역시", // 구매자 주소
+      // buyer_postcode: 40000, // 구매자 우편번호
+      m_redirect_url: "", // 결제 완료 후 이동할 주소
   };
   
     IMP.request_pay(data, callback);
@@ -163,9 +164,7 @@ async function clickPurchase(tryAgain = true) { // 구매하기 버튼 클릭시
     const callback = (response) => {
       const { success, error_msg } = response;
     
-      if (success) {
         async function paymentVerification(tryVerificationAgain = true) {  // 결제 검증하기
-  
         try {
           const paymentResponse = await fetch(`URL`, {
           method: "POST",
@@ -176,6 +175,7 @@ async function clickPurchase(tryAgain = true) { // 구매하기 버튼 클릭시
           body: JSON.stringify({
             imp_uid: response.imp_uid,  // 결제고유번호
             merchant_uid: response.merchant_uid, // 고객사 주문번호
+            isSuccess : success,
           }),
         })
             if (paymentResponse.status === 401 && tryVerificationAgain) {
@@ -203,7 +203,7 @@ async function clickPurchase(tryAgain = true) { // 구매하기 버튼 클릭시
               console.log(deleteString);
                 const fetchData = async () => {
                  const response = await fetch(
-                   `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}cart/items/?user_email=`+email+deleteString,
+                   `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}cart/items/?user_email=`+email+deleteString,
                    {
                      method: "DELETE",
                      headers: {
@@ -224,7 +224,6 @@ async function clickPurchase(tryAgain = true) { // 구매하기 버튼 클릭시
                };
                fetchData();
               }
-      
                navigate("/");
   
             }
@@ -236,10 +235,7 @@ async function clickPurchase(tryAgain = true) { // 구매하기 버튼 클릭시
       }
     }
       paymentVerification();
-    }
-    else{
-        alert(`결제 실패: ${error_msg}`);
-    }
+
       };
   
   
