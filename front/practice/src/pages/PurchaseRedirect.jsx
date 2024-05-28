@@ -89,10 +89,9 @@ const PurchaseRedirect = () => {
                         }
                       };
                       fetchData();
-
                     }
 
-
+                    navigate("/");
                   }
                   else {
                     alert("결제 검증 실패");
@@ -102,7 +101,6 @@ const PurchaseRedirect = () => {
             }
           }
             paymentVerification();
-            navigate("/");
 
     
 
