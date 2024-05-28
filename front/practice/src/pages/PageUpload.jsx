@@ -7,6 +7,7 @@ import ProductImageWithTags from "../components/ProductImageWithTags";
 import ProductTagList from "../components/ProductTagList";
 import { Grid } from '@mui/material';
 import ProductTagListItem from "../components/ProductTagListItem";
+import ProductSubmitButton from "../components/ProductSubmitButton";
 
 function PageUpload() {
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
@@ -79,16 +80,9 @@ function PageUpload() {
       {/* 이미지 업로드 후 보이는 버튼 */}
       {imagePreviewUrl && (
         <>
-          <Button
-            style={{
-              border: "1px solid #ccc",
-              position: "relative",
-              top: 10,
-              left: 100,
-            }}
-          >
-            등록
-          </Button>
+          <ProductSubmitButton/>
+            
+     
           <ProductImageWithTags
             imageUrl={imagePreviewUrl}
             onImageClick={handleImageClick}
