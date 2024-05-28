@@ -54,13 +54,6 @@ const PurchaseRedirect = () => {
                     // localStorage에서 checkList를 가져와서 배열로 파싱
                     let storedCheckList = localStorage.getItem('checkList');
                     let checkList = storedCheckList ? JSON.parse(storedCheckList) : [];
-                    // let storedCheckList = localStorage.getItem('checkList');
-                    // if (storedCheckList) {
-                    //     checkList = JSON.parse(storedCheckList);
-                    // } else {
-                    //     checkList = []; // 또는 적절한 기본값 설정
-                    //     console.log("장바구니 정보가 없습니다.");
-                    // }
 
                     if (checkList.length > 0) {
                       let deleteString = '';
@@ -84,8 +77,6 @@ const PurchaseRedirect = () => {
                         if (response.status === 204) {
                           console.log("장바구니 삭제 성공");
                           localStorage.removeItem('checkList');
-                          navigate("/");
-                          setUpdate(true); // 상태 변경으로 리렌더링 강제
                         }
                          else {
                          console.log(response);
@@ -93,7 +84,8 @@ const PurchaseRedirect = () => {
                           console.log(response.status);
                         }
                       };
-                      fetchData();
+                      await fetchData();
+                      navigate("/");
                     }
                   }
                   else {
@@ -109,8 +101,7 @@ const PurchaseRedirect = () => {
 
     }, []);
 
-    
-
+  
     const styles = {
         container: {
           display: 'flex',
