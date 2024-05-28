@@ -209,13 +209,13 @@ function BarcodeReader() {
   var fetchedProductInfo;
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    console.log(productInfo);
-  }, [productInfo]);
+  // useEffect(() => {
+  //   console.log(productInfo);
+  // }, [productInfo]);
 
-  useEffect(() => {
-    startDecoding(selectedDeviceId);
-  }, [selectedDeviceId]);
+  // useEffect(() => {
+  //   startDecoding(selectedDeviceId);
+  // }, [selectedDeviceId]);
 
   useEffect(() => {
     codeReader.listVideoInputDevices().then((devices) => {
@@ -389,51 +389,29 @@ function BarcodeReader() {
   };
 
   return (
-    <div>
-      {/* <button onClick={resetDecoding}>Reset</button>{" "} */}
-      {/* 리셋 버튼, 클릭 시 디코딩 리셋 */}
-      {/* {videoInputDevices.length > 0 && ( // 비디오 입력 장치가 있으면
-        <select // 장치 선택 셀렉트 박스
-          value={selectedDeviceId} // 현재 선택된 장치 ID
-          onChange={(e) => setSelectedDeviceId(e.target.value)} // 변경 시 장치 ID 설정
-        >
-          {videoInputDevices.map(
-            (
-              device // 각 장치에 대해 옵션 생성
-            ) => (
-              <option key={device.deviceId} value={device.deviceId}>
-                {device.label}
-              </option>
-            )
-          )}
-        </select>
-      )} */}
-
-      <div
+    <div
+      style={{
+        // 비디오 요소 스타일
+        width: "100%",
+        height: "88vh",
+        // paddingBottom: "100%",
+        position: "relative",
+        // overflow: "hidden",
+        //border: "1px solid gray",
+      }}
+    >
+      <video // 비디오 요소
+        ref={videoRef} // 비디오 참조 설정
         style={{
           // 비디오 요소 스타일
+          // position: "absolute",
+          // top: 0,
+          // left: 0,
           width: "100%",
-          height: "88vh",
-          // paddingBottom: "100%",
-          position: "relative",
-          // overflow: "hidden",
-          //border: "1px solid gray",
+          height: "100%",
+          objectFit: "cover",
         }}
-      >
-        <video // 비디오 요소
-          ref={videoRef} // 비디오 참조 설정
-          style={{
-            // 비디오 요소 스타일
-            // position: "absolute",
-            // top: 0,
-            // left: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-          }}
-        ></video>
-      </div>
-
+      ></video>
       <div>
         {isBarcodeDetected && products.length > 0 && (
           <BarcodeModal productInfo={productInfo}></BarcodeModal>
