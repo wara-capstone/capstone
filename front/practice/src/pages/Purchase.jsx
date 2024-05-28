@@ -228,7 +228,7 @@ async function clickPurchase(tryAgain = true) { // 구매하기 버튼 클릭시
             alert("결제 검증 실패");
           }
     } catch (error){
-      alert(`결제 실패: ${error_msg}`);
+      alert(`Purchase 화면, 결제 실패: ${error}`);
     }
   }
     paymentVerification();
