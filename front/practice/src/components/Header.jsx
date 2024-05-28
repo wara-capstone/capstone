@@ -4,7 +4,7 @@ import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Header.css";
 
-function Header() {
+function Header({ forceRedirect }) {
   const locationNow = useLocation();
   let navigate = useNavigate();
 
@@ -47,21 +47,30 @@ function Header() {
   return (
     <header className="header">
       <div className="back">
+        
+        
         <FontAwesomeIcon
           icon={faAngleLeft}
           className="back-icon"
-          onClick={goBack}
+          onClick={forceRedirect ? () => {} : goBack}
         />
       </div>
 
-      <Link to="/" className="link">
-        <h1 className="title">
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;On&Off
-        </h1>
-      </Link>
+
+        <Link to="/" className="link" onClick={(e) => {
+  if (forceRedirect) {
+    e.preventDefault(); // Link 컴포넌트의 기본 동작 중단
+    window.location.href = forceRedirect; // 강제 리다이렉트
+  }
+}}>
+          <h1 className="title">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;On&Off
+          </h1>
+        </Link>
+
 
       <div className="header-icon-container">
-        <div className="header-search-icon" onClick={handleConnectSearch}>
+        <div className="header-search-icon" onClick={forceRedirect ? () => {} : handleConnectSearch}>
           <FontAwesomeIcon
             icon="magnifying-glass"
             className={
@@ -72,7 +81,7 @@ function Header() {
           />
         </div>
 
-        <div className="header-cart-icon" onClick={handleConnectCart}>
+        <div className="header-cart-icon" onClick={forceRedirect ? () => {} :handleConnectCart}>
           <FontAwesomeIcon
             icon={faCartShopping}
             className={

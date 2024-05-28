@@ -131,7 +131,9 @@ const PurchaseRedirect = () => {
 
     return (
       <div className="home">
-      <Header/>
+      <Header
+      forceRedirect={`/`}
+      />
       <div style={styles.container}>
         <h1></h1>
         {purchaseCompleted ? (
