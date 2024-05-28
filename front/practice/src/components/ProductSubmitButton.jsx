@@ -8,7 +8,8 @@ const ProductSubmitButton = ({ userEmail, productData }) => {
     const formData = new FormData();
     const token = localStorage.getItem("token");
     const userEmail = localStorage.getItem("email");
-
+    console.log("버튼 눌렀을 때 상품표시");
+    console.log(productData);
     formData.append('user[userEmail]', userEmail);
 
     productData.forEach((product, index) => {

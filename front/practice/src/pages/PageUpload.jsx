@@ -15,6 +15,7 @@ function PageUpload() {
   const [openModal, setOpenModal] = useState(false); // 모달 상태 관리
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [tagPosition, setTagPosition] = useState(null);
+  const selectedProductsArray = [selectedProduct];
 
   const handleImageChange = (e) => {
     e.preventDefault();
@@ -55,6 +56,7 @@ function PageUpload() {
   };
 
   return (
+    
     <div className="PageUpload">
       <Header />
 
@@ -80,7 +82,7 @@ function PageUpload() {
       {/* 이미지 업로드 후 보이는 버튼 */}
       {imagePreviewUrl && (
         <>
-          <ProductSubmitButton/>
+        
             
      
           <ProductImageWithTags
@@ -114,14 +116,17 @@ function PageUpload() {
             >
               <Grid >
         {/* 선택된 상품을 배열로 변환하여 map 함수 사용 (이 예시에서는 단일 상품만 예상) */}
-        {[selectedProduct].map((product) => (
-          <Grid  key={product.id}>
-            <ProductTagListItem
-              itemData={product}
-              onClick={() => handleProductSelect(product)}
-            />
-          </Grid>
+        {selectedProductsArray.map((product) => (
+        <Grid key={product.id}>
+          <ProductTagListItem
+            itemData={product}
+            onClick={() => handleProductSelect(product)}
+          />
+        </Grid>
         ))}
+         <ProductSubmitButton
+        productData={selectedProductsArray}
+      />
       </Grid>
             </Box>
           )}
