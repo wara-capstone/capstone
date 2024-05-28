@@ -30,16 +30,15 @@ const PurchaseRedirect = () => {
     useEffect(async () => {
             async function paymentVerification(tryVerificationAgain = true) {  // 결제 검증하기
               try {
-                const paymentResponse = await fetch(`URL`, {
+                const paymentResponse = await fetch(`${process.env.REACT_APP_API_URL}payment/create`, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
                   Authorization:  token,
                 },
                 body: JSON.stringify({
-                  imp_uid: imp_uid,  // 결제고유번호
-                  merchant_uid: merchant_uid, // 고객사 주문번호
-                  // imp_success: imp_success, // 아임포트에서 결제 승인된 경우만 가지고 있는 값
+                  paymentUid: imp_uid,  // 결제고유번호
+                  orderUid: merchant_uid, // 고객사 주문번호
                 }),
               })
                   if (paymentResponse.status === 401 && tryVerificationAgain) {

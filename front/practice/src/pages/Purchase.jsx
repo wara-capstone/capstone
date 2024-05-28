@@ -106,15 +106,15 @@ async function clickPurchase(tryAgain = true) { // 구매하기 버튼 클릭시
   
     var formData;
       formData = new FormData();
-      formData.append('totalPayment', new Blob([JSON.stringify(totoalPayment)], { type: "application/json" }));
-      formData.append('payment', new Blob([JSON.stringify(payment)], { type: "application/json" }));
+      formData.append('order', new Blob([JSON.stringify(totoalPayment)], { type: "application/json" }));
+      formData.append('orderItem', new Blob([JSON.stringify(payment)], { type: "application/json" }));
   
     const PurchaseInformation = await fetch(  // 모의결제에 필요한 정보 가져오고 주문내역 보내기
-    `URL`,
+    `${process.env.REACT_APP_API_URL}order/create`,
     {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        // "Content-Type": "application/json",
         "Authorization": `${token}`
       },
       body : formData,
@@ -142,13 +142,13 @@ async function clickPurchase(tryAgain = true) { // 구매하기 버튼 클릭시
     console.log("성공");
   
     // 포트원 모의결제 시작
-    IMP.init(`imp30713673`); // 아임포트 모듈 초기화
+    IMP.init(`imp77151582`); // 아임포트 모듈 초기화
   
     // 백엔드로부터 주문 정보를 가져온 후 data에 넣기
     const data = {
       pg: `html5_inicis.INIpayTest`, // PG사
       pay_method: "card", // 결제수단
-      merchant_uid: ``, // 주문번호
+      merchant_uid: result.orderId, // 주문번호
       amount: totalPrice, // 결제금액
       name: "ON&OFF 결제", // 주문명
       // buyer_name: "이름1", // 구매자 이름
@@ -158,85 +158,84 @@ async function clickPurchase(tryAgain = true) { // 구매하기 버튼 클릭시
       // buyer_postcode: 40000, // 구매자 우편번호
       m_redirect_url: "", // 결제 완료 후 이동할 주소
   };
+
+  const callback = (response) => {
+    const { success, error_msg } = response;
+  
+      async function paymentVerification(tryVerificationAgain = true) {  // 결제 검증하기
+      try {
+        const paymentResponse = await fetch(`${process.env.REACT_APP_API_URL}payment/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:  token,
+        },
+        body: JSON.stringify({
+          paymentUid: response.imp_uid,  // 결제고유번호
+          orderUid: response.merchant_uid, // 고객사 주문번호
+        }),
+      })
+          if (paymentResponse.status === 401 && tryVerificationAgain) {
+            const RefreshToken = localStorage.getItem("RefreshToken");
+            await fetchRefreshToken(RefreshToken);
+            token = localStorage.getItem("token");
+            return paymentVerification(false);
+  
+          } else if (paymentResponse.status === 201) {
+
+            // 검증 요청에 대한 응답 JSON 파싱
+            // const paymentResult = await paymentResponse.json();
+
+            console.log("결제 검증 성공");
+
+            message.success("구매가 완료되었습니다.", 2);
+
+            if (checkList !== undefined) {
+            // 구매후 장바구니 삭제
+            var deleteString ='';
+            checkList.forEach(id => {
+              deleteString += `&cart_item_id=${id}`;
+            });
+        
+            console.log(deleteString);
+              const fetchData = async () => {
+               const response = await fetch(
+                 `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}cart/items/?user_email=`+email+deleteString,
+                 {
+                   method: "DELETE",
+                   headers: {
+                     "Content-Type": "application/json",
+                     "Authorization": `${token}`
+                   },
+                 }
+               );
+               if (response.status === 204) {
+                 console.log("성공");
+                 localStorage.removeItem('checkList');
+               }
+                else {
+                console.log(response);
+                 console.log("실패");
+                 console.log(response.status);
+               }
+             };
+             fetchData();
+            }
+             navigate("/");
+
+          }
+          else {
+            alert("결제 검증 실패");
+          }
+    } catch (error){
+      alert(`결제 실패: ${error_msg}`);
+    }
+  }
+    paymentVerification();
+
+    };
   
     IMP.request_pay(data, callback);
-  
-    const callback = (response) => {
-      const { success, error_msg } = response;
-    
-        async function paymentVerification(tryVerificationAgain = true) {  // 결제 검증하기
-        try {
-          const paymentResponse = await fetch(`URL`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization:  token,
-          },
-          body: JSON.stringify({
-            imp_uid: response.imp_uid,  // 결제고유번호
-            merchant_uid: response.merchant_uid, // 고객사 주문번호
-            isSuccess : success,
-          }),
-        })
-            if (paymentResponse.status === 401 && tryVerificationAgain) {
-              const RefreshToken = localStorage.getItem("RefreshToken");
-              await fetchRefreshToken(RefreshToken);
-              token = localStorage.getItem("token");
-              return paymentVerification(false);
-    
-            } else if (paymentResponse.status === 201) {
-  
-              // 검증 요청에 대한 응답 JSON 파싱
-              // const paymentResult = await paymentResponse.json();
-  
-              console.log("결제 검증 성공");
-  
-              message.success("구매가 완료되었습니다.", 2);
-  
-              if (checkList !== undefined) {
-              // 구매후 장바구니 삭제
-              var deleteString ='';
-              checkList.forEach(id => {
-                deleteString += `&cart_item_id=${id}`;
-              });
-          
-              console.log(deleteString);
-                const fetchData = async () => {
-                 const response = await fetch(
-                   `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}cart/items/?user_email=`+email+deleteString,
-                   {
-                     method: "DELETE",
-                     headers: {
-                       "Content-Type": "application/json",
-                       "Authorization": `${token}`
-                     },
-                   }
-                 );
-                 if (response.status === 204) {
-                   console.log("성공");
-                   localStorage.removeItem('checkList');
-                 }
-                  else {
-                  console.log(response);
-                   console.log("실패");
-                   console.log(response.status);
-                 }
-               };
-               fetchData();
-              }
-               navigate("/");
-  
-            }
-            else {
-              alert("결제 검증 실패");
-            }
-      } catch (error){
-        alert(`결제 실패: ${error_msg}`);
-      }
-    }
-      paymentVerification();
-
-      };
   
   
   } else {
