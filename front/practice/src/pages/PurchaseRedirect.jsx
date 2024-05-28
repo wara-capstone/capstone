@@ -87,7 +87,6 @@ const PurchaseRedirect = () => {
                         }
                       };
                       fetchData();
-                      // navigate("/");
                     }
                   }
                   else {
@@ -131,8 +130,9 @@ const PurchaseRedirect = () => {
       };
 
     return (
+      <div className="home">
+      <Header/>
       <div style={styles.container}>
-        <Header/>
         <h1></h1>
         {purchaseCompleted ? (
                 <p style={styles.message}>구매 완료!</p>
@@ -142,6 +142,7 @@ const PurchaseRedirect = () => {
                     <p style={styles.message}>구매 중...</p>
                 </>
             )}
+      </div>
       </div>
     );
   };
