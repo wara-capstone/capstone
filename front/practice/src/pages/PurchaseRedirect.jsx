@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchRefreshToken } from "../utils/authUtil";
+import { message } from "antd";
 
 const PurchaseRedirect = () => {
     // 현재 페이지의 URL에서 쿼리 파라미터 추출
@@ -84,6 +85,7 @@ const PurchaseRedirect = () => {
                           console.log("장바구니 삭제 성공");
                           localStorage.removeItem('checkList');
                           navigate("/");
+                          message.success("네비게이트 성공??");
                         }
                          else {
                          console.log(response);
