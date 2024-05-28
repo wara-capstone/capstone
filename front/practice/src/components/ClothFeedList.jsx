@@ -33,9 +33,8 @@ function ClothFeedList() {
         <Grid container spacing={2}>
           {" "}
           {posts.map((post) => (
-            <Grid item xs={12} sm={6} key={post.id}>
+            <Grid item xs={6} sm={6} key={post.id}>
               {" "}
-              {/* 반응형으로 설정: 작은 화면에서는 한 줄에 하나, 중간 크기 화면에서는 한 줄에 두 개 */}
               <ClothFeedListItem
                 id={post.id}
                 userName={post.userName}

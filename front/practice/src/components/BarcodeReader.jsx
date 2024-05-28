@@ -184,11 +184,12 @@ import {
   NotFoundException,
 } from "@zxing/library"; // ZXing 라이브러리 (바코드 및 QR 코드 리더)
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import Data from "../DB/Data.json"; // 로컬 JSON 데이터
+// import Data from "../DB/Data.json"; // 로컬 JSON 데이터
 
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom"; // React Router의 Navigate, useParams 사용
+import { useParams } from "react-router-dom"; // React Router의 Navigate, useParams 사용
 import BarcodeModal from "../components/BarcodeModal"; // 바코드 모달 컴포넌트
+
 function BarcodeReader() {
   const [videoInputDevices, setVideoInputDevices] = useState([]); // 비디오 입력 장치 목록
   const [selectedDeviceId, setSelectedDeviceId] = useState(""); // 선택된 비디오 입력 장치 ID
@@ -236,7 +237,7 @@ function BarcodeReader() {
         startDecoding(devices[0]?.deviceId || "");
       }
 
-      setProducts([Data.cardData[1]]); // 제품 목록 설정
+      // setProducts([Data.cardData[1]]); // 제품 목록 설정
     });
 
     const handleUnload = () => {
@@ -253,30 +254,30 @@ function BarcodeReader() {
     };
   }, [codeReader]); // codeReader가 바뀔 때마다 효과를 재실행
 
-  const resetDecoding = () => {
-    // 디코딩 리셋 함수
-    codeReader.reset(); // 바코드 리더 초기화
-    setResult(""); // 결과 초기화
-    setShowModal(false); // 모달 숨김
-    setIsBarcodeDetected(false); // 바코드 인식 상태 리셋
-    // 바코드 리더를 리셋한 후에 다시 스캔 시작
-    startDecoding(selectedDeviceId);
-  };
+  // const resetDecoding = () => {
+  //   // 디코딩 리셋 함수
+  //   codeReader.reset(); // 바코드 리더 초기화
+  //   setResult(""); // 결과 초기화
+  //   setShowModal(false); // 모달 숨김
+  //   setIsBarcodeDetected(false); // 바코드 인식 상태 리셋
+  //   // 바코드 리더를 리셋한 후에 다시 스캔 시작
+  //   startDecoding(selectedDeviceId);
+  // };
 
-  const userId = localStorage.getItem("email"); // 세션 스토리지에서 이메일(사용자 ID) 가져오기
-  const navigate = useNavigate(); // navigate 함수 사용
-  const handleAddCart = () => {
-    // 장바구니 추가 핸들러
-    if (userId === null) {
-      // 사용자 ID가 없으면
-      navigate("/login"); // 로그인 페이지로 이동
-    }
-  };
+  // const userId = localStorage.getItem("email"); // 세션 스토리지에서 이메일(사용자 ID) 가져오기
+  // const navigate = useNavigate(); // navigate 함수 사용
+  // const handleAddCart = () => {
+  //   // 장바구니 추가 핸들러
+  //   if (userId === null) {
+  //     // 사용자 ID가 없으면
+  //     navigate("/login"); // 로그인 페이지로 이동
+  //   }
+  // };
 
-  const selectedCard = Data.cardData.filter(
-    // 선택된 카드 필터링
-    (card) => card.id.toString() === result // 카드 ID가 결과와 같으면 선택
-  );
+  // const selectedCard = Data.cardData.filter(
+  //   // 선택된 카드 필터링
+  //   (card) => card.id.toString() === result // 카드 ID가 결과와 같으면 선택
+  // );
 
   const fetchProductInfo = async (productId, optionId) => {
     //Get
@@ -292,7 +293,7 @@ function BarcodeReader() {
           },
         }
       );
-      if (response.status == 200) {
+      if (response.status === 200) {
         console.log(response.data);
       } else {
         console.log("잘못된 요청");

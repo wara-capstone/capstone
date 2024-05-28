@@ -24,6 +24,7 @@ function ClothFeedListItem({ id, userName, userImg, img, caption }) {
         />
         {/* Header */}
         <CardHeader
+          sx={{ padding: "8px" }}
           avatar={
             <Avatar src={userImg} aria-label={userName}>
               {userName.charAt(0)} {/* Avatar에 userName의 첫 글자를 표시 */}
@@ -39,7 +40,11 @@ function ClothFeedListItem({ id, userName, userImg, img, caption }) {
                         </IconButton> */}
             </>
           }
-          title={<Typography fontWeight="bold">{userName}</Typography>}
+          title={
+            <Typography fontWeight="bold" fontSize="0.77rem">
+              {userName}
+            </Typography>
+          }
         />
       </Card>
     </div>

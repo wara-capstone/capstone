@@ -10,13 +10,9 @@ import {
 import React from "react";
 //import MoreVertIcon from '@mui/material/MoreVert';
 import { faker } from "@faker-js/faker";
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import IosShareIcon from '@mui/icons-material/IosShare';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import {styled} from '@mui/system';
-import Header from "../components/Header";
+import { styled } from "@mui/system";
 import BottomNav from "../components/BottomNav";
+import Header from "../components/Header";
 import ProductTagListItem from "../components/ProductTagListItem";
 const StyledCardHeader = styled(CardHeader)(({ theme }) => ({
   // 스타일 커스터마이징 추가
@@ -47,6 +43,7 @@ export default function ViewClothSharedFeed(props) {
       <Card>
         {/* Header */}
         <StyledCardHeader
+          sx={{ padding: "12px" }}
           avatar={
             <Avatar src={itemData.userImg} aria-label={itemData.userName}>
               {itemData.userName.charAt(0)}
@@ -60,7 +57,11 @@ export default function ViewClothSharedFeed(props) {
             </>
           }
           title={
-            <TitleTypography variant="body2" fontWeight="bold">
+            <TitleTypography
+              variant="body2"
+              fontWeight="bold"
+              fontSize="0.88rem"
+            >
               {itemData.userName}
             </TitleTypography>
           }
@@ -69,7 +70,7 @@ export default function ViewClothSharedFeed(props) {
         <CardMedia
           component="img"
           image={itemData.img}
-          sx={{ width: 500, height: 700 }}
+          sx={{ width: 500, height: 600 }}
           alt={itemData.caption}
         />
       </Card>
