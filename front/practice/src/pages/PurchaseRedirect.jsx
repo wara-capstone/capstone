@@ -9,7 +9,7 @@ const PurchaseRedirect = () => {
 
     // 로컬 스토리지에서 이메일과 토큰을 가져와 변수에 할당
     const email = localStorage.getItem("email");
-    const token = localStorage.getItem("token");
+    let token = localStorage.getItem("token");
 
     // 각 쿼리 파라미터의 값을 변수에 할당
     const imp_uid = urlParams.get("imp_uid");
@@ -49,7 +49,7 @@ const PurchaseRedirect = () => {
                     return paymentVerification(false);
           
                   } else if (paymentResponse.status === 201) {
-                    alert("모바일 결제 검증 성공");
+                    message.success("모바일 결제 검증 성공");
                     
                     // localStorage에서 checkList를 가져와서 배열로 파싱
                     let storedCheckList = localStorage.getItem('checkList');
@@ -85,7 +85,6 @@ const PurchaseRedirect = () => {
                           console.log("장바구니 삭제 성공");
                           localStorage.removeItem('checkList');
                           navigate("/");
-                          message.success("네비게이트 성공??");
                         }
                          else {
                          console.log(response);
