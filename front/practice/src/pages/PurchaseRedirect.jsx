@@ -2,6 +2,7 @@ import { useEffect , useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchRefreshToken } from "../utils/authUtil";
 import { message } from "antd";
+import Header from "../components/Header";
 
 const PurchaseRedirect = () => {
     // 현재 페이지의 URL에서 쿼리 파라미터 추출
@@ -10,7 +11,7 @@ const PurchaseRedirect = () => {
     // 로컬 스토리지에서 이메일과 토큰을 가져와 변수에 할당
     const email = localStorage.getItem("email");
     let token = localStorage.getItem("token");
-    const [update, setUpdate] = useState(false);
+    const [purchaseCompleted, setPurchaseCompleted] = useState(false); // 구매 완료 상태 관리
 
     // 각 쿼리 파라미터의 값을 변수에 할당
     const imp_uid = urlParams.get("imp_uid");
@@ -77,6 +78,7 @@ const PurchaseRedirect = () => {
                         if (response.status === 204) {
                           console.log("장바구니 삭제 성공");
                           localStorage.removeItem('checkList');
+                          setPurchaseCompleted(true); // 구매 완료 상태 설정
                         }
                          else {
                          console.log(response);
@@ -84,8 +86,8 @@ const PurchaseRedirect = () => {
                           console.log(response.status);
                         }
                       };
-                      await fetchData();
-                      navigate("/");
+                      fetchData();
+                      // navigate("/");
                     }
                   }
                   else {
@@ -130,9 +132,16 @@ const PurchaseRedirect = () => {
 
     return (
       <div style={styles.container}>
+        <Header/>
         <h1></h1>
-        <div style={styles.spinner}></div>
-        <p style={styles.message}>로딩 중...</p>
+        {purchaseCompleted ? (
+                <p style={styles.message}>구매 완료!</p>
+            ) : (
+                <>
+                    <div style={styles.spinner}></div>
+                    <p style={styles.message}>구매 중...</p>
+                </>
+            )}
       </div>
     );
   };
