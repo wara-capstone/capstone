@@ -50,7 +50,9 @@ const PurchaseRedirect = () => {
                   } else if (paymentResponse.status === 201) {
                     alert("모바일 결제 검증 성공");
                     
-                    let checkList = localStorage.getItem('checkList');
+                    // localStorage에서 checkList를 가져와서 배열로 파싱
+                    let storedCheckList = localStorage.getItem('checkList');
+                    let checkList = storedCheckList ? JSON.parse(storedCheckList) : [];
                     // let storedCheckList = localStorage.getItem('checkList');
                     // if (storedCheckList) {
                     //     checkList = JSON.parse(storedCheckList);
