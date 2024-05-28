@@ -412,11 +412,9 @@ function BarcodeReader() {
           objectFit: "cover",
         }}
       ></video>
-      <div>
-        {isBarcodeDetected && products.length > 0 && (
-          <BarcodeModal productInfo={productInfo}></BarcodeModal>
-        )}
-      </div>
+      {isBarcodeDetected && products.length > 0 && (
+        <BarcodeModal productInfo={productInfo}></BarcodeModal>
+      )}
     </div>
   );
 }
