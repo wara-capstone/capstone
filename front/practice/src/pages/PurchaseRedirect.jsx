@@ -48,7 +48,7 @@ const PurchaseRedirect = () => {
                     return paymentVerification(false);
           
                   } else if (paymentResponse.status === 201) {
-                    alert("결제 검증 성공");
+                    alert("모바일 결제 검증 성공");
                     
                     let checkList = localStorage.getItem('checkList');
                     // let storedCheckList = localStorage.getItem('checkList');
@@ -94,10 +94,10 @@ const PurchaseRedirect = () => {
                     navigate("/");
                   }
                   else {
-                    alert("결제 검증 실패");
+                    alert("모바일 결제 검증 실패");
                   }
             } catch (error){
-              alert(`결제 실패: ${error_msg}`);
+              alert(`에러로 모바일 결제 실패: ${error_msg}`);
             }
           }
             paymentVerification();
