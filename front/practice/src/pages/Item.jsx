@@ -249,10 +249,10 @@ export default function Item() {
             <h3>가격: {parseInt(price).toLocaleString()}</h3>
             {/* <p>상세 정보: {"없음"}</p> */}
             <h3>재고: {stock}</h3>
-            <div>
-              <span style={{ fontSize: "20px" }}>색상</span>
+            <div style={{ marginTop: "1.5rem" }}>
+              <span style={{ fontSize: "1rem" }}>색상</span>
               <select
-                style={{ marginLeft: "1.3rem", fontSize: "20px" }}
+                style={{ marginLeft: "1rem", fontSize: "1rem" }}
                 value={targetColor}
                 onChange={handleColorChange}
               >
@@ -263,14 +263,14 @@ export default function Item() {
                 ))}
               </select>
             </div>
-            <div>
-              <span style={{ fontSize: "20px" }}>사이즈</span>
+            <div style={{ marginTop: "0.5rem" }}>
+              <span style={{ fontSize: "1rem" }}>사이즈</span>
               <select
                 style={{
                   marginLeft: "1rem",
                   width: "4rem",
                   textAlignLast: "center",
-                  fontSize: "20px",
+                  fontSize: "1rem",
                 }}
                 value={targetSize}
                 onChange={handleSizeChange}
@@ -286,12 +286,14 @@ export default function Item() {
               className="quantityWrapper"
               style={{ justifyContent: "center" }}
             >
-              <span style={{ fontSize: "20px" }}>개수</span>
+              <span style={{ fontSize: "1rem" }}>개수</span>
               <button className="quantityButton" onClick={quantityMinus}>
                 {" "}
                 -{" "}
               </button>
-              <h3>{quantity}</h3>
+              <span style={{ fontSize: "1rem", fontWeight: "bold" }}>
+                {quantity}
+              </span>
               <button className="quantityButton" onClick={quantityPlus}>
                 {" "}
                 +{" "}
@@ -302,6 +304,7 @@ export default function Item() {
       </div>
       <div
         style={{
+          marginTop: "1.5rem",
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-around",

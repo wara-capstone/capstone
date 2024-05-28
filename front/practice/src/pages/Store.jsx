@@ -7,7 +7,6 @@ import EventButton from "../components/EventButton";
 import Header from "../components/Header";
 import { fetchRefreshToken } from "../utils/authUtil";
 
-
 export default function Store() {
   const { id } = useParams();
 
@@ -38,13 +37,18 @@ export default function Store() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}store/read/id/` + id, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${token}`,
-        },
-      });
+      const response = await fetch(
+        `${process.env.NODE_ENV === "development" ? "" : ""}${
+          process.env.REACT_APP_API_URL
+        }store/read/id/` + id,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        }
+      );
       result = await response.json();
       if (response.status === 401) {
         const RefreshToken = localStorage.getItem("RefreshToken");
@@ -69,7 +73,7 @@ export default function Store() {
     <div className="store">
       <Header />
       {storeData && ( // storeData가 null이 아닐 때만 렌더링
-        <div key={storeData.storeId}>
+        <div key={storeData.storeId} style={{ backgroundColor: "#f5f5f5" }}>
           <div className="item-image-container">
             <img
               src={storeData.storeImage}
@@ -93,8 +97,12 @@ export default function Store() {
       )}
 
       <Category
-        allUrl={`${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}product/all/store/${id}`}
-        categoryUrl={`${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}product/all/store/${id}/category?category=`}
+        allUrl={`${process.env.NODE_ENV === "development" ? "" : ""}${
+          process.env.REACT_APP_API_URL
+        }product/all/store/${id}`}
+        categoryUrl={`${process.env.NODE_ENV === "development" ? "" : ""}${
+          process.env.REACT_APP_API_URL
+        }product/all/store/${id}/category?category=`}
       />
 
       <BottomNav />
