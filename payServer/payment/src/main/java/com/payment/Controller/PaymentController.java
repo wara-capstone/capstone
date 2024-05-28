@@ -1,9 +1,6 @@
 package com.payment.Controller;
 
-import com.payment.DTO.PaymentDTO;
-import com.payment.DTO.TotalPaymentDTO;
-import com.payment.DTO.ResponseDTO;
-import com.payment.DTO.SimpleResponseDTO;
+import com.payment.DTO.*;
 import com.payment.Service.PaymentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +20,10 @@ public class PaymentController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<SimpleResponseDTO> createPayment(@RequestPart("totalPayment") TotalPaymentDTO totalPaymentDTO,
-                                                           @RequestPart("payment") List<PaymentDTO> paymentDTOS){
+    public ResponseEntity<SimpleResponseDTO> createPayment(@RequestBody PaymentRequestDTO paymentRequestDTO){
         logger.info("[Request] : CreatePayment");
-        logger.info("[Data]: " + totalPaymentDTO.toString());
-        SimpleResponseDTO response = paymentService.createPayment(totalPaymentDTO, paymentDTOS);
+        logger.info("[Data]: " + paymentRequestDTO.toString());
+        SimpleResponseDTO response = paymentService.createImportPayment(paymentRequestDTO);
         logger.info("[Response] : " + response.toString());
 
         if(response.getResult().equals("success")){

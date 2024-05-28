@@ -1,7 +1,7 @@
 package com.payment.DAO;
 
-import com.payment.Entity.PaymentEntity;
-import com.payment.Entity.TotalPaymentEntity;
+import com.payment.Entity.Payment;
+import com.payment.Entity.TotalPayment;
 import com.payment.Repository.TotalPaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -18,19 +18,19 @@ public class TotalPaymentDAOImpl implements TotalPaymentDAO {
     }
 
     @Override
-    public Map<String, Object> createTotalPayment(TotalPaymentEntity totalPaymentEntity) {
+    public Map<String, Object> createTotalPayment(TotalPayment totalPayment) {
         Map<String, Object> result = new HashMap<>();
 
-        if(totalPaymentRepository.existsByTotalPaymentId(totalPaymentEntity.getTotalPaymentId())){
+        if(totalPaymentRepository.existsByTotalPaymentId(totalPayment.getTotalPaymentId())){
            result.put("result", "fail");
            result.put("message", "해당하는 TotalPayment가 DB에 존재합니다.");
            return result;
         }
 
-        totalPaymentEntity.setDateTime(LocalDateTime.now());
-        totalPaymentRepository.save(totalPaymentEntity);
+        totalPayment.setDateTime(LocalDateTime.now());
+        totalPaymentRepository.save(totalPayment);
 
-        if(totalPaymentRepository.existsByTotalPaymentId(totalPaymentEntity.getTotalPaymentId())){
+        if(totalPaymentRepository.existsByTotalPaymentId(totalPayment.getTotalPaymentId())){
             result.put("result", "success");
         } else{
             result.put("result", "fail");
@@ -44,7 +44,7 @@ public class TotalPaymentDAOImpl implements TotalPaymentDAO {
     public Map<String, Object> readTotalPaymentByPurchaser(String purchaser) {
         Map<String, Object> result = new HashMap<>();
 
-        List<TotalPaymentEntity> totalPaymentEntities = totalPaymentRepository.findByPurchaser(purchaser);
+        List<TotalPayment> totalPaymentEntities = totalPaymentRepository.findByPurchaser(purchaser);
 
         if(!totalPaymentEntities.isEmpty()){
             result.put("result", "success");
@@ -57,34 +57,34 @@ public class TotalPaymentDAOImpl implements TotalPaymentDAO {
     }
 
     @Override
-    public List<PaymentEntity> readPaymentById(Long paymentId) {
-        TotalPaymentEntity totalPaymentEntity = totalPaymentRepository.findByTotalPaymentId(paymentId);
-        return totalPaymentEntity.getPayments();
+    public List<Payment> readPaymentById(Long paymentId) {
+        TotalPayment totalPayment = totalPaymentRepository.findByTotalPaymentId(paymentId);
+        return totalPayment.getPayments();
     }
 
     @Override
-    public Map<String, Object> updateTotalPayment(TotalPaymentEntity totalPaymentEntity) {
+    public Map<String, Object> updateTotalPayment(TotalPayment totalPayment) {
         Map<String, Object> result = new HashMap<>();
-        TotalPaymentEntity oldTotalPaymentEntity = totalPaymentRepository.findByTotalPaymentId(totalPaymentEntity.getTotalPaymentId());
+        TotalPayment oldTotalPayment = totalPaymentRepository.findByTotalPaymentId(totalPayment.getTotalPaymentId());
 
-        if (oldTotalPaymentEntity != null) {
-            oldTotalPaymentEntity.setTotalPaymentId(totalPaymentEntity.getTotalPaymentId());
-            oldTotalPaymentEntity.setPurchaser(totalPaymentEntity.getPurchaser());
-            oldTotalPaymentEntity.setTotalPrice(totalPaymentEntity.getTotalPrice());
-            oldTotalPaymentEntity.setDateTime(totalPaymentEntity.getDateTime());
+        if (oldTotalPayment != null) {
+            oldTotalPayment.setTotalPaymentId(totalPayment.getTotalPaymentId());
+            oldTotalPayment.setPurchaser(totalPayment.getPurchaser());
+            oldTotalPayment.setTotalPrice(totalPayment.getTotalPrice());
+            oldTotalPayment.setDateTime(totalPayment.getDateTime());
 
             // 더 효과적인 방법으로 컬렉션 업데이트
-            if (totalPaymentEntity.getPayments() != null) {
-                oldTotalPaymentEntity.getPayments().clear();
-                totalPaymentRepository.save(oldTotalPaymentEntity);
+            if (totalPayment.getPayments() != null) {
+                oldTotalPayment.getPayments().clear();
+                totalPaymentRepository.save(oldTotalPayment);
 
-                oldTotalPaymentEntity.getPayments().addAll(totalPaymentEntity.getPayments());
-                for (PaymentEntity payment : totalPaymentEntity.getPayments()) {
-                    payment.setTotalPaymentEntity(oldTotalPaymentEntity);
-                }
+                oldTotalPayment.getPayments().addAll(totalPayment.getPayments());
+//                for (Payment payment : totalPayment.getPayments()) {
+//                    payment.setTotalPayment(oldTotalPayment);
+//                }
             }
 
-            totalPaymentRepository.save(oldTotalPaymentEntity);
+            totalPaymentRepository.save(oldTotalPayment);
             result.put("result", "success");
         } else {
             result.put("result", "fail");
@@ -97,15 +97,15 @@ public class TotalPaymentDAOImpl implements TotalPaymentDAO {
     public Map<String, Object> deleteTotalPayment(Long paymentId) {
         Map<String, Object> result = new HashMap<>();
 
-        TotalPaymentEntity totalPaymentEntity = totalPaymentRepository.findByTotalPaymentId(paymentId);
+        TotalPayment totalPayment = totalPaymentRepository.findByTotalPaymentId(paymentId);
 
-        if(totalPaymentEntity == null){
+        if(totalPayment == null){
             result.put("result", "fail");
             result.put("message", "해당하는 TotalPayment가 DB에 존재하지 않습니다.");
             return result;
         }
 
-        totalPaymentRepository.delete(totalPaymentEntity);
+        totalPaymentRepository.delete(totalPayment);
 
         if(totalPaymentRepository.existsByTotalPaymentId(paymentId)){
             result.put("result", "fail");
