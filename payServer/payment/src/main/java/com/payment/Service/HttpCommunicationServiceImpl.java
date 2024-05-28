@@ -32,8 +32,7 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
             HttpHeaders headers = new HttpHeaders();
             HttpEntity<?> http = new HttpEntity<>(headers);
 
-//            URI uri = new URI(productService.getUri() + "/product/seller/store/" + storeId);
-            URI uri = new URI("https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app" + "/product/user/product/" + productId + "/" + optionId + "/" + count);
+            URI uri = new URI(productService.getUri() + "/api/product/user/product/" + productId + "/" + optionId + "/" + count);
             ResponseEntity response = restTemplate.exchange(uri, HttpMethod.PUT, http, String.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
