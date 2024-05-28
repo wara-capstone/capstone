@@ -10,7 +10,6 @@ const PurchaseRedirect = () => {
     // 로컬 스토리지에서 이메일과 토큰을 가져와 변수에 할당
     const email = localStorage.getItem("email");
     let token = localStorage.getItem("token");
-    const [update, setUpdate] = useState(false);
 
     // 각 쿼리 파라미터의 값을 변수에 할당
     const imp_uid = urlParams.get("imp_uid");
@@ -27,7 +26,6 @@ const PurchaseRedirect = () => {
     console.log(`error_msg: ${error_msg}`);
 
     const navigate = useNavigate();
-
 
     useEffect(async () => {
             async function paymentVerification(tryVerificationAgain = true) {  // 결제 검증하기
@@ -85,8 +83,7 @@ const PurchaseRedirect = () => {
                         if (response.status === 204) {
                           console.log("장바구니 삭제 성공");
                           localStorage.removeItem('checkList');
-                          setUpdate(true); // 상태 변경으로 리렌더링 강제
-                          navigate("/");
+                          navigate("/", { replace: true });
                         }
                          else {
                          console.log(response);
