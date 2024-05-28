@@ -15,8 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
@@ -27,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
 public class PaymentServiceImpl implements PaymentService {
     private final TotalPaymentDAO totalPaymentDAO;
     private final HttpCommunicationService httpCommunicationService;
@@ -58,10 +55,10 @@ public class PaymentServiceImpl implements PaymentService {
             Order order = orderService.findByOrderId(request.getOrderUid());
 
             // 결제 완료가 아니면
-            if(!iamportResponse.getResponse().getStatus().equals("paid")) {
+            if (!iamportResponse.getResponse().getStatus().equals("paid")) {
                 // 주문, 결제 삭제
                 orderService.deleteOrder(order);
-
+                logger.info("결제 미완료: {}", request.getPaymentUid());
                 throw new RuntimeException("결제 미완료");
             }
 
@@ -71,21 +68,22 @@ public class PaymentServiceImpl implements PaymentService {
             int iamportPrice = iamportResponse.getResponse().getAmount().intValue();
 
             // 결제 금액 검증
-            if(iamportPrice != price) {
+            if (iamportPrice != price) {
                 // 주문 삭제
                 orderService.deleteOrder(order);
-
                 // 결제금액 위변조로 의심되는 결제금액을 취소(아임포트)
                 iamportClient.cancelPaymentByImpUid(new CancelData(iamportResponse.getResponse().getImpUid(), true, new BigDecimal(iamportPrice)));
-
+                logger.info("결제금액 위변조 의심: {}", request.getPaymentUid());
                 throw new RuntimeException("결제금액 위변조 의심");
             }
 
             return createPayment(order, request.getPaymentUid());
 
         } catch (IamportResponseException e) {
+            logger.error("아임포트 응답 처리 중 오류 발생: {}", e.getMessage());
             throw new RuntimeException(e);
         } catch (IOException e) {
+            logger.error("입출력 예외 발생: {}", e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -95,29 +93,13 @@ public class PaymentServiceImpl implements PaymentService {
         TotalPayment totalPayment = toTotalPaymentEntity(order, paymentUid);
         Map<String, Object> resultMap = totalPaymentDAO.createTotalPayment(totalPayment);
 
-//        for(PaymentDTO paymentDTO : paymentDTOS){
-//            Payment payment = toPaymentEntity(paymentDTO);
-//            payment.setTotalPayment(totalPayment);
-//            Map<String, Object> paymentResult = paymentDAO.createPayment(payment);
-//
-//            try {
-//                httpCommunicationService.stockUpdate(payment.getProductId(), payment.getOptionId(), -payment.getQuantity());
-//            } catch(URISyntaxException e){
-//                e.getMessage();
-//            }
-//
-//            if(paymentResult.get("result").equals("fail")){
-//                return toSimpleResponseDTO(paymentResult);
-//            }
-//        }
-
-//        for(Payment payment : totalPayment.getPayments()){
-//            try {
-//                httpCommunicationService.stockUpdate(payment.getProductId(), payment.getOptionId(), -payment.getQuantity());
-//            } catch(URISyntaxException e){
-//                e.getMessage();
-//            }
-//        }
+        for (Payment payment : totalPayment.getPayments()) {
+            try {
+                httpCommunicationService.stockUpdate(payment.getProductId(), payment.getOptionId(), -payment.getQuantity());
+            } catch (URISyntaxException e) {
+                logger.error("URI 구문 예외 발생: {}", e.getMessage());
+            }
+        }
 
         SimpleResponseDTO simpleResponseDTO = toSimpleResponseDTO(resultMap);
         return simpleResponseDTO;
