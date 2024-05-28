@@ -83,6 +83,7 @@ const PurchaseRedirect = () => {
                         if (response.status === 204) {
                           console.log("장바구니 삭제 성공");
                           localStorage.removeItem('checkList');
+                          navigate("/");
                         }
                          else {
                          console.log(response);
@@ -92,8 +93,6 @@ const PurchaseRedirect = () => {
                       };
                       fetchData();
                     }
-
-                    navigate("/");
                   }
                   else {
                     alert("모바일 결제 검증 실패");

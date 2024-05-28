@@ -40,7 +40,7 @@ export default function Item() {
           user_email: email,
           store_id: result.storeId,
           product: {
-            p_image: result.productUrls[0],
+            p_image: result.productUrls[0].url,
             p_id: result.productId,
             p_name: result.productName,
             size: targetSize,
