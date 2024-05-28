@@ -50,7 +50,6 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public SimpleResponseDTO createImportPayment(PaymentRequestDTO request) {
-
         try {
             // 결제 단건 조회(아임포트)
             IamportResponse<com.siot.IamportRestClient.response.Payment> iamportResponse = iamportClient.paymentByImpUid(request.getPaymentUid());
@@ -111,13 +110,13 @@ public class PaymentServiceImpl implements PaymentService {
 //            }
 //        }
 
-        for(Payment payment : totalPayment.getPayments()){
-            try {
-                httpCommunicationService.stockUpdate(payment.getProductId(), payment.getOptionId(), -payment.getQuantity());
-            } catch(URISyntaxException e){
-                e.getMessage();
-            }
-        }
+//        for(Payment payment : totalPayment.getPayments()){
+//            try {
+//                httpCommunicationService.stockUpdate(payment.getProductId(), payment.getOptionId(), -payment.getQuantity());
+//            } catch(URISyntaxException e){
+//                e.getMessage();
+//            }
+//        }
 
         SimpleResponseDTO simpleResponseDTO = toSimpleResponseDTO(resultMap);
         return simpleResponseDTO;
