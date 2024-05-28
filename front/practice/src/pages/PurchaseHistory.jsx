@@ -31,7 +31,7 @@ export default function PurchaseHistory() {
   useEffect(() => {
       const fetchData = async () => {
         const response = await fetch(
-          `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}payment/read/user/${email}`,
+          `${process.env.REACT_APP_API_URL}payment/read/user/${email}`,
           {
             method: "GET",
             headers: {
