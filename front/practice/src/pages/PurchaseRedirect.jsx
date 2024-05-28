@@ -50,13 +50,14 @@ const PurchaseRedirect = () => {
                   } else if (paymentResponse.status === 201) {
                     alert("결제 검증 성공");
                     
-                    let storedCheckList = localStorage.getItem('checkList');
-                    if (storedCheckList) {
-                        checkList = JSON.parse(storedCheckList);
-                    } else {
-                        checkList = []; // 또는 적절한 기본값 설정
-                        console.log("장바구니 정보가 없습니다.");
-                    }
+                    let checkList = localStorage.getItem('checkList');
+                    // let storedCheckList = localStorage.getItem('checkList');
+                    // if (storedCheckList) {
+                    //     checkList = JSON.parse(storedCheckList);
+                    // } else {
+                    //     checkList = []; // 또는 적절한 기본값 설정
+                    //     console.log("장바구니 정보가 없습니다.");
+                    // }
 
                     if (checkList.length > 0) {
                       let deleteString = '';

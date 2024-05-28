@@ -13,6 +13,7 @@ import ChattingList from "./pages/ChattingList";
 import Item from "./pages/Item";
 import Purchase from "./pages/Purchase";
 import PurchaseHistory from "./pages/PurchaseHistory";
+import PurchaseRedirect from "./pages/PurchaseRedirect";
 import Store from "./pages/Store";
 import UserEdit from "./pages/UserEdit";
 import ViewClothSharedFeed from "./pages/ViewClothSharedFeed.jsx";
@@ -55,6 +56,7 @@ export default function Customer() {
           <Route path="/user/chattingList" element={<ChattingList />} />
           <Route path="/user/purchase" element={<Purchase />} />
           <Route path="/user/purchaseHistory" element={<PurchaseHistory />} />
+          <Route path="/user/purchase-redirect" element={<PurchaseRedirect/>} />
           <Route path="/ViewClothSharedFeed/:id" element={<ViewClothSharedFeed />} />
           <Route path="/user/pageUpload" element={<PageUpload />} />
           {/* 사장님 페이지 */}

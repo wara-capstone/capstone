@@ -110,7 +110,7 @@ async function clickPurchase(tryAgain = true) { // 구매하기 버튼 클릭시
       formData.append('orderItem', new Blob([JSON.stringify(payment)], { type: "application/json" }));
   
     const PurchaseInformation = await fetch(  // 모의결제에 필요한 정보 가져오고 주문내역 보내기
-    `${process.env.REACT_APP_API_URL}order/create`,
+    `https://onoff.zone/api/payment/order/create`,
     {
       method: "POST",
       headers: {
@@ -156,7 +156,7 @@ async function clickPurchase(tryAgain = true) { // 구매하기 버튼 클릭시
       buyer_email: email, // 구매자 이메일
       // buyer_addr: "대구광역시", // 구매자 주소
       // buyer_postcode: 40000, // 구매자 우편번호
-      m_redirect_url: "", // 결제 완료 후 이동할 주소
+      m_redirect_url: "https://onoff.zone/user/purchase-redirect", // 결제 완료 후 이동할 주소
   };
 
   const callback = (response) => {
