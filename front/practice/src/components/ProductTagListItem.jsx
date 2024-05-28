@@ -9,14 +9,14 @@ import { fetchRefreshToken } from "../utils/authUtil";
     alignItems: 'center',
   }));
   
-function ProductTagListItem({ itemData, onClick }) {
+function ProductTagListItem({ itemData, onClick, cardSize = {  }  }) {
 
-    // const formatPrice = (price) => {
-    //   return `${price.toLocaleString()}원`;
-    // };
+    const formatPrice = (price) => {
+      return `${price}원`;
+    };
   
     return (
-      <Card sx={{ display: "flex", alignItems: "center" }} onClick={onClick}>
+      <Card sx={{ display: "flex", alignItems: "center", width: cardSize.width, height: cardSize.height }} onClick={onClick}>
         <CardHeader
           avatar={
             <Avatar
@@ -31,7 +31,7 @@ function ProductTagListItem({ itemData, onClick }) {
             {itemData.productName}
           </TitleTypography>
           <Typography variant="subtitle1" color="text.secondary" component="div" align="left">
-            {/* {formatPrice(itemData.productPrice)} */}
+            {formatPrice(itemData.productPrice)} 
           </Typography>
         </CardContent>
       </Card>
