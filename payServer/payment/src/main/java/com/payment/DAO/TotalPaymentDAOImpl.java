@@ -21,13 +21,7 @@ public class TotalPaymentDAOImpl implements TotalPaymentDAO {
     public Map<String, Object> createTotalPayment(TotalPayment totalPayment) {
         Map<String, Object> result = new HashMap<>();
 
-        if(totalPaymentRepository.existsByTotalPaymentId(totalPayment.getTotalPaymentId())){
-           result.put("result", "fail");
-           result.put("message", "해당하는 TotalPayment가 DB에 존재합니다.");
-           return result;
-        }
-
-        totalPayment.setDateTime(LocalDateTime.now());
+        totalPayment.updateDateTime(LocalDateTime.now());
         totalPaymentRepository.save(totalPayment);
 
         if(totalPaymentRepository.existsByTotalPaymentId(totalPayment.getTotalPaymentId())){

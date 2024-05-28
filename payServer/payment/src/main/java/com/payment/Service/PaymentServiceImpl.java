@@ -20,6 +20,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -169,6 +170,7 @@ public class PaymentServiceImpl implements PaymentService {
                     .price(orderItem.getPrice())
                     .quantity(orderItem.getQuantity())
                     .purchaser(purchaser)
+                    .dateTime(LocalDateTime.now())
                     .build();
 
             paymentList.add(payment);
