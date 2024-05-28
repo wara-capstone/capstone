@@ -96,7 +96,7 @@ const PurchaseRedirect = () => {
                     }
                   }
                   else {
-                    alert("모바일 결제 검증 실패");
+                    alert("모바일 결제 검증 실패 "+ paymentResponse.status + " " + paymentResponse);
                   }
             } catch (error){
               alert(`에러로 모바일 결제 실패: ${error.message}`);
