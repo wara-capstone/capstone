@@ -57,7 +57,7 @@ export default function PurchaseHistory() {
 
           if(result.result === "success"){
             console.log("구매 내역이 존재합니다.");
-            result.data.forEach(async data => {
+            result.data.forEach(data => {
               setTotalPrice(totalPrice => totalPrice += data.totalPrice);
 
 
