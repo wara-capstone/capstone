@@ -57,7 +57,7 @@ export default function Home() {
         }product/all/category/`}
       />
       {/* <CardList /> */}
-
+      
       <BottomNav />
     </div>
   );

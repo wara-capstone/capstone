@@ -200,7 +200,7 @@ const UserProfile = () => {
               </button>
             </Link>
           )}
-          <Link to="/user/upload" className="user-link">
+          <Link to="/user/pageUpload" className="user-link">
             <button className="chattingList-btn">
               <span role="img" aria-label="upload">
                 📤
@@ -208,6 +208,7 @@ const UserProfile = () => {
               글 업로드
               <div className="move-page-icon">
                 <FontAwesomeIcon icon={faChevronRight} />
+                
               </div>
             </button>
           </Link>
