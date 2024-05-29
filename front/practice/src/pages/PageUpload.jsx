@@ -5,6 +5,9 @@ import BottomNav from "../components/BottomNav";
 import Header from "../components/Header";
 import ProductImageWithTags from "../components/ProductImageWithTags";
 import ProductTagList from "../components/ProductTagList";
+import { Grid } from '@mui/material';
+import ProductTagListItem from "../components/ProductTagListItem";
+import ProductSubmitButton from "../components/ProductSubmitButton";
 
 function PageUpload() {
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
@@ -12,6 +15,7 @@ function PageUpload() {
   const [openModal, setOpenModal] = useState(false); // 모달 상태 관리
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [tagPosition, setTagPosition] = useState(null);
+  const selectedProductsArray = [selectedProduct];
 
   const handleImageChange = (e) => {
     e.preventDefault();
@@ -39,6 +43,8 @@ function PageUpload() {
 
   const handleProductSelect = (product) => {
     setSelectedProduct(product);
+    console.log("상품선택한거표시표시표시");
+    console.log(product);
     handleCloseModal();
   };
 
@@ -50,6 +56,7 @@ function PageUpload() {
   };
 
   return (
+    
     <div className="PageUpload">
       <Header />
 
@@ -75,16 +82,9 @@ function PageUpload() {
       {/* 이미지 업로드 후 보이는 버튼 */}
       {imagePreviewUrl && (
         <>
-          <Button
-            style={{
-              border: "1px solid #ccc",
-              position: "relative",
-              top: 10,
-              left: 100,
-            }}
-          >
-            등록
-          </Button>
+        
+            
+     
           <ProductImageWithTags
             imageUrl={imagePreviewUrl}
             onImageClick={handleImageClick}
@@ -114,8 +114,20 @@ function PageUpload() {
                 backgroundColor: "#f0f0f0",
               }}
             >
-              <p>선택된 상품: {selectedProduct.name}</p>
-              {/* 필요한 경우 추가적인 상품 정보 표시 */}
+              <Grid >
+        {/* 선택된 상품을 배열로 변환하여 map 함수 사용 (이 예시에서는 단일 상품만 예상) */}
+        {selectedProductsArray.map((product) => (
+        <Grid key={product.id}>
+          <ProductTagListItem
+            itemData={product}
+            onClick={() => handleProductSelect(product)}
+          />
+        </Grid>
+        ))}
+         <ProductSubmitButton
+        productData={selectedProductsArray}
+      />
+      </Grid>
             </Box>
           )}
         </>
@@ -126,6 +138,7 @@ function PageUpload() {
           <ProductTagList onProductSelect={handleProductSelect} />
         </DialogContent>
       </Dialog>
+      
       <BottomNav />
     </div>
   );
