@@ -10,6 +10,7 @@ import ProductTagListItem from "../components/ProductTagListItem";
 import ProductSubmitButton from "../components/ProductSubmitButton";
 
 function PageUpload() {
+  const [imageFile, setImageFile] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   //const [showTags, setShowTags] = useState(false); // 상품태그를 표시할지 여부를 결정하는 state
   const [openModal, setOpenModal] = useState(false); // 모달 상태 관리
@@ -26,7 +27,7 @@ function PageUpload() {
     if (file) {
       reader.onloadend = () => {
         setImagePreviewUrl(reader.result);
-        //setShowTags(false); // 이미지가 새로 업로드될 때 태그 표시를 초기화
+        setImageFile(file);
       };
 
       reader.readAsDataURL(file);
@@ -44,7 +45,8 @@ function PageUpload() {
   const handleProductSelect = (product) => {
     setSelectedProduct(product);
     console.log("상품선택한거표시표시표시");
-    console.log(product);
+    //console.log(product);
+    console.log(selectedProductsArray);
     handleCloseModal();
   };
 
@@ -126,6 +128,7 @@ function PageUpload() {
         ))}
          <ProductSubmitButton
         productData={selectedProductsArray}
+        imageFile={imageFile}
       />
       </Grid>
             </Box>

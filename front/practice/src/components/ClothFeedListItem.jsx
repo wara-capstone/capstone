@@ -4,7 +4,7 @@ import React from "react";
 
 import { useNavigate } from "react-router-dom";
 // props 객체를 인자로 받아 구조 분해 할당을 통해 필요한 속성을 추출합니다.
-function ClothFeedListItem({ id, userName, userImg, img, caption }) {
+function ClothFeedListItem({ id, userFeedImage, userImage, userName, createdAt, modifiedAt }) {
   console.log(userName); // 이제 userName은 문자열로 콘솔에 출력됩니다.
 
   const navigate = useNavigate();
@@ -18,15 +18,15 @@ function ClothFeedListItem({ id, userName, userImg, img, caption }) {
         {/* Media */}
         <CardMedia
           component="img"
-          image={img}
-          alt={caption}
+          image={userFeedImage}
+          alt={userName}
           onClick={handleImageClick}
         />
         {/* Header */}
         <CardHeader
           sx={{ padding: "8px" }}
           avatar={
-            <Avatar src={userImg} aria-label={userName}>
+            <Avatar src={userImage} aria-label={userName}>
               {userName.charAt(0)} {/* Avatar에 userName의 첫 글자를 표시 */}
             </Avatar>
           }
@@ -43,6 +43,11 @@ function ClothFeedListItem({ id, userName, userImg, img, caption }) {
           title={
             <Typography fontWeight="bold" fontSize="0.77rem">
               {userName}
+            </Typography>
+          }
+          subheader={
+            <Typography fontSize="0.67rem">
+              {new Date(createdAt).toLocaleDateString()}
             </Typography>
           }
         />

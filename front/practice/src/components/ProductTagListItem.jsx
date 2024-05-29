@@ -31,7 +31,7 @@ function ProductTagListItem({ itemData, onClick, cardSize = {  }  }) {
             {itemData.productName}
           </TitleTypography>
           <Typography variant="subtitle1" color="text.secondary" component="div" align="left">
-            {formatPrice(itemData.productPrice)} 
+            {formatPrice(itemData.price)} 
           </Typography>
         </CardContent>
       </Card>

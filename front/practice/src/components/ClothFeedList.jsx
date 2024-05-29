@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import { Container, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ClothFeedListItem from "./ClothFeedListItem";
@@ -7,15 +6,17 @@ function ClothFeedList() {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    const mockPosts = [...Array(20)].map((_, i) => ({
-      userName: faker.person.fullName(),
-      userImg: faker.image.avatar(),
-      img: faker.image.url(),
-      caption: faker.lorem.text(),
-      id: i,
-    }));
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch(`http://101.101.216.115:21000/api/user-feed`);
+        const data = await response.json();
+        setPosts(data);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
+    };
 
-    setPosts(mockPosts);
+    fetchPosts();
   }, []);
 
   return (
@@ -28,19 +29,17 @@ function ClothFeedList() {
         // bottom: "20px",
       }}
     >
-      <Container sx={{ paddingBottom: "70px", paddingTop: "10px" }}>
-        {" "}
+      <Container sx={{ paddingBottom: '70px', paddingTop: '10px' }}>
         <Grid container spacing={2}>
-          {" "}
           {posts.map((post) => (
             <Grid item xs={6} sm={6} key={post.id}>
-              {" "}
               <ClothFeedListItem
                 id={post.id}
-                userName={post.userName}
-                userImg={post.userImg}
-                img={post.img}
-                caption={post.caption}
+                userFeedImage={post.userFeedImage}
+                userImage={post.user.userImage}
+                userName={post.user.userName}
+                createdAt={post.createdAt}
+                modifiedAt={post.modifiedAt}
               />
             </Grid>
           ))}
