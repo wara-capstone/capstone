@@ -73,7 +73,7 @@ export default function Store() {
     <div className="store">
       <Header />
       {storeData && ( // storeData가 null이 아닐 때만 렌더링
-        <div key={storeData.storeId} style={{ backgroundColor: "#f5f5f5" }}>
+        <div key={storeData.storeId}>
           <div className="item-image-container">
             <img
               src={storeData.storeImage}
