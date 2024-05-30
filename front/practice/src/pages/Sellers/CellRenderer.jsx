@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import "./Seller.css";
 const CellRenderer = (props) => {
   const token = localStorage.getItem("token");
   const [storeInfo, setStoreInfo] = useState({ result: "", data: [] });
-  const { storeId } = props; // storeId를 props로부터 전달받음
-  const { productId } = props;
+  const { storeId, productId } = props;
+  const navigate = useNavigate();
+  
+  const handleClick = () => {
+    navigate(`/seller/item/management/select/${storeId}/${productId}`);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -37,7 +43,7 @@ const CellRenderer = (props) => {
 
   return (
     <span>
-      <span>{cellValue}</span>&nbsp;
+      {/* <span>{cellValue}</span>&nbsp;
       <Link
         to={{
           pathname: `/seller/item/management/select/${storeId}/${productId}`
@@ -46,10 +52,17 @@ const CellRenderer = (props) => {
       >
         <button class="w-btn w-btn-indigo" 
         style={{ alignItems: 'center', justifyContent: 'center', height : '100%'}}
-        type="button">
+        type="button"> */}
+        <span>{cellValue}</span>&nbsp;
+      <button
+        className="w-btn w-btn-indigo"
+        style={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
+        type="button"
+        onClick={handleClick}
+      >
         등록/수정
     </button>
-      </Link>
+      {/* </Link> */}
     </span>
   );
 };

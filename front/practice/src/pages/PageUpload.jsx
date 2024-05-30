@@ -1,5 +1,5 @@
 import { Box, Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 //import ProductTagListItem from '../components/ProductTagListItem';
 import BottomNav from "../components/BottomNav";
 import Header from "../components/Header";
@@ -16,8 +16,8 @@ function PageUpload() {
   const [openModal, setOpenModal] = useState(false); // 모달 상태 관리
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [tagPosition, setTagPosition] = useState(null);
-  const selectedProductsArray = [selectedProduct];
-
+  // const selectedProductsArray = [selectedProduct];
+  const [selectedProductsArray, setSelectedProductsArray] = useState([]);
   const handleImageChange = (e) => {
     e.preventDefault();
 
@@ -42,11 +42,13 @@ function PageUpload() {
     setOpenModal(false); // 모달 닫기
   };
 
-  const handleProductSelect = (product) => {
-    setSelectedProduct(product);
+  useEffect(() => {
     console.log("상품선택한거표시표시표시");
-    //console.log(product);
     console.log(selectedProductsArray);
+  }, [selectedProductsArray]);
+  
+  const handleProductSelect = (product) => {
+    setSelectedProductsArray([...selectedProductsArray, product]);
     handleCloseModal();
   };
 
@@ -107,7 +109,7 @@ function PageUpload() {
             상품태그 추가
           </Button>
           {/* 선택된 상품 태그 정보 표시 */}
-          {selectedProduct && (
+          {selectedProductsArray.length > 0 && (
             <Box
               style={{
                 marginTop: "20px",
@@ -116,21 +118,23 @@ function PageUpload() {
                 backgroundColor: "#f0f0f0",
               }}
             >
-              <Grid >
-        {/* 선택된 상품을 배열로 변환하여 map 함수 사용 (이 예시에서는 단일 상품만 예상) */}
-        {selectedProductsArray.map((product) => (
-        <Grid key={product.id}>
+              <Grid container spacing={2}>
+      {/* 선택된 상품을 배열로 변환하여 map 함수 사용 */}
+      {selectedProductsArray.map((product) => (
+        <Grid  item xs={12} sm={6} md={4}>
           <ProductTagListItem
             itemData={product}
             onClick={() => handleProductSelect(product)}
           />
         </Grid>
-        ))}
-         <ProductSubmitButton
-        productData={selectedProductsArray}
-        imageFile={imageFile}
-      />
-      </Grid>
+      ))}
+      <Grid item xs={12}>
+        <ProductSubmitButton
+          productData={selectedProductsArray}
+          imageFile={imageFile}
+        />
+        </Grid>
+    </Grid>
             </Box>
           )}
         </>

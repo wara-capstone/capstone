@@ -28,7 +28,7 @@ import SellerHome from "./pages/Sellers/SellerHome";
 import SellerItemManagement from "./pages/Sellers/SellerItemManagement";
 import SellerStoreEdit from "./pages/Sellers/SellerStoreEdit";
 import SellerStoreRegister from "./pages/Sellers/SellerStoreRegister";
-// import SellerStoreManagement from "./pages/Sellers/SellerStoreManagement";
+// import SellerStoreManagement from "./pages/Sellers/SellerStoreManagement"; 
 // import SellerProductRegistration from "./pages/Sellers/SellerProductRegistration";
 import SellerStoresList from "./pages/Sellers/SellerStoresList";
 

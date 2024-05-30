@@ -23,6 +23,9 @@ import LoadingScreen from "../../components/LoadingScreen.jsx";
 export default function SellerItemManagement() {
   const { storeId } = useParams();
 
+ // 숫자로 변환
+  const storeIdNumber = parseInt(storeId, 10);
+
   const gridRef = useRef();
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
   const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
@@ -234,7 +237,7 @@ export default function SellerItemManagement() {
         const productId = params.data.productId; // productId를 params에서 추출
          
         return (
-          <CellRenderer storeId={storeId} productId={productId} {...params} />
+          <CellRenderer storeId={storeIdNumber} productId={productId} {...params} />
         );
       },
     },
