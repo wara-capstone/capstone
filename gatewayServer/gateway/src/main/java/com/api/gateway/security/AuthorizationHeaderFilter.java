@@ -92,7 +92,10 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
     private String resolveTokenRole(String token){
         try {
-            String subject = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("roles").toString();
+            String subject = Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token)
+                    .getBody().get("roles").toString();
             return subject;
         }catch (Exception e){
             logger.info("유저 권한 체크 실패");

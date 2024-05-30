@@ -5,6 +5,7 @@ import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 public class RouteConfig {
@@ -19,6 +20,19 @@ public class RouteConfig {
                 .route("payment-service", r->r.path("/api/payment/**")
                         .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
                         .uri("lb://PAYMENT-SERVICE"))
+
+                // user feed
+//                .route("user-feed-service", r->r.path("/api/user-feed").and().method(HttpMethod.POST)
+//                        .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
+//                        .uri("lb://USERFEED-SERVICE"))
+
+                .route("user-feed-service", r -> r.path("/api/user-feed/**").and().method(HttpMethod.POST)
+                        .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
+                        .uri("lb://USERFEED-SERVICE"))
+
+                .route("user-feed-service", r -> r.path("/api/user-feed/**").and().method(HttpMethod.GET)
+                        .uri("lb://USERFEED-SERVICE"))
+
 
 
                 // shoppingCart
@@ -59,7 +73,6 @@ public class RouteConfig {
 
                 // auth, user
                 .route("auth-service", r -> r.path("/api/auth/**")
-                        //.filters() filters를 제작하여 인증처리 
                         .uri("lb://USER-SERVICE"))
                 .route("user-service", r->r.path("/api/user/**")
                         .filters(f->f.filter(authFilter.apply(config -> {config.setRequiredRole("role_user");})))
