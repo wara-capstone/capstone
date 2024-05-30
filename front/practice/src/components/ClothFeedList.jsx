@@ -62,6 +62,10 @@ function ClothFeedList() {
   const token = localStorage.getItem("token");
   const RefreshToken = localStorage.getItem("RefreshToken");
 
+  const url = `${process.env.NODE_ENV === "development" ? "" : ""}${
+    process.env.REACT_APP_API_URL
+  }user-feed`;
+
   useEffect(() => {
     // const mockPosts = [...Array(20)].map((_, i) => ({
     //   userName: faker.person.fullName(),
@@ -72,16 +76,13 @@ function ClothFeedList() {
     // }));
 
     const fetchData = async () => {
-      const response = await fetch(
-        `http://101.101.216.115:21000/api/user-feed`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-        }
-      );
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      });
 
       if (response.status === 401) {
         RefreshToken = localStorage.getItem("RefreshToken");
