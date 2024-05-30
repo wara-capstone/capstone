@@ -28,6 +28,9 @@ const PurchaseRedirect = () => {
     console.log(`error_msg: ${error_msg}`);
 
     const navigate = useNavigate();
+    useEffect(() => {
+      console.log("구매 완료 상태: ", purchaseCompleted);
+    }, [purchaseCompleted]);
 
     useEffect(async () => {
             async function paymentVerification(tryVerificationAgain = true) {  // 결제 검증하기
