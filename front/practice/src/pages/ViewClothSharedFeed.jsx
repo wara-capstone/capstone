@@ -1,104 +1,117 @@
-//import MiniProfile from "../components/MiniProfile.jsx";
 import {
   Avatar,
-  Box,
-  Card,
   CardHeader,
   CardMedia,
+  Card as MuiCard,
   Typography,
 } from "@mui/material";
-import React from "react";
-//import MoreVertIcon from '@mui/material/MoreVert';
-import { faker } from "@faker-js/faker";
 import { styled } from "@mui/system";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import BottomNav from "../components/BottomNav";
+import Card from "../components/Card";
 import Header from "../components/Header";
-import ProductTagListItem from "../components/ProductTagListItem";
+
 const StyledCardHeader = styled(CardHeader)(({ theme }) => ({
   // 스타일 커스터마이징 추가
 }));
 
-// Title 스타일을 위한 컴포넌트
 const TitleTypography = styled(Typography)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   marginLeft: "8px", // 필요에 따라 조정
 }));
 
-export default function ViewClothSharedFeed(props) {
-  const { id, userName, userImg, img, caption } = props;
-  //const {id} = useParams();
-  //const [itemData, setItemData] = useState(null); 서버에서 데이터 받아올 때
+export default function ViewClothSharedFeed() {
+  const { id } = useParams();
+  const [itemData, setItemData] = useState(null);
 
-  const itemData = {
-    userName: faker.person.fullName(),
-    userImg: faker.image.avatar(),
-    img: faker.image.url(),
-    caption: faker.lorem.text(),
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `http://101.101.216.115:21000/api/user-feed/${id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const data = await response.json();
+        setItemData(data);
+        console.log(data);
+      } else {
+        console.log("실패");
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+  if (!itemData) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <div className="ViewClothSharedFeed">
+    <div className="ViewClothSharedFeed" style={{ backgroundColor: "#f2f2f2" }}>
       <Header />
-      <Card>
-        {/* Header */}
+      <MuiCard>
         <StyledCardHeader
-          sx={{ padding: "12px" }}
           avatar={
-            <Avatar src={itemData.userImg} aria-label={itemData.userName}>
-              {itemData.userName.charAt(0)}
+            <Avatar
+              src={itemData.user.userImage}
+              aria-label={itemData.user.userName}
+            >
+              {itemData.user.userName.charAt(0)}
             </Avatar>
           }
-          action={
-            <>
-              {/* <IconButton aria-label="settings">
-                            <MoreVertIcon />
-                        </IconButton> */}
-            </>
-          }
           title={
-            <TitleTypography
-              variant="body2"
-              fontWeight="bold"
-              fontSize="0.88rem"
-            >
-              {itemData.userName}
+            <TitleTypography variant="body2" fontWeight="bold">
+              {itemData.user.userName}
             </TitleTypography>
           }
         />
-        {/* Media */}
         <CardMedia
           component="img"
-          image={itemData.img}
-          sx={{ width: 500, height: 600 }}
+          image={itemData.userFeedImage}
+          sx={{ width: 390, height: 500 }}
           alt={itemData.caption}
         />
-      </Card>
-      <ProductTagListItem />
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between", // 좌우 여백을 최대로 하여 아이콘들을 양쪽 끝으로 분리
-          alignItems: "center", // 아이콘들을 상하 중앙 정렬
-          width: "100%", // 박스의 너비를 부모 컴포넌트에 맞춤
-        }}
-      >
-        {/* 왼쪽 아이콘 */}
-        {/* <IconButton aria-label="share">
-          <IosShareIcon />
-        </IconButton> */}
+      </MuiCard>
 
-        {/* 오른쪽 아이콘들을 감싸는 박스 */}
-        {/* <Box>
-          <IconButton aria-label="like">
-            <FavoriteBorderIcon />
-          </IconButton>
-          <IconButton aria-label="bookMark">
-            <BookmarkBorderIcon />
-          </IconButton>
-        </Box> */}
-      </Box>
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/* 이 놈이 문제임 */}
+      {/* <ProductTagListItem itemData={itemData} /> */}
+      {/* 이 놈 필요 없음 */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
 
+      {itemData.product &&
+        itemData.product.map((result, index) => {
+          return (
+            // <Link
+            //   to={`/item/${result.productId}`}
+            //   key={result.productId}
+            //   className="card-link"
+            // >
+            <Card
+              key={index}
+              title={result.productName}
+              // subTitle={result.productCategory}
+              price={result.productPrice}
+              mainImage={result.productImage}
+              // count={result.options[0].productStock}
+            />
+            // </Link>
+          );
+        })}
       <BottomNav />
     </div>
   );
