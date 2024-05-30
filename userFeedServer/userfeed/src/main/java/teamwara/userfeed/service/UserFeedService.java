@@ -2,9 +2,12 @@ package teamwara.userfeed.service;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import teamwara.userfeed.dto.*;
@@ -30,8 +33,8 @@ import java.util.UUID;
 public class UserFeedService {
     private final UserFeedRepository userFeedRepository;
     private final MemberRepository memberRepository;
-    private final ProductRepository productRepository;
-    private final WebClient webClient;
+    private final WebClient userServiceWebClient;
+    private final WebClient imageServiceWebClient;
 
     public List<UserFeedAllResponseDto> getUserFeeds() {
         return userFeedRepository.findAll().stream()
@@ -41,15 +44,6 @@ public class UserFeedService {
 
     @Transactional
     public UserFeedDetailResponseDto createUserFeed(UserFeedRequestDto userFeedRequestDto, MultipartFile imageFile) throws IOException {
-        // 파일 이름 생성
-        String imageFilename = UUID.randomUUID().toString() + "-" + imageFile.getOriginalFilename();
-        Path targetLocation = Paths.get("/Users/iminjae/minjae worksapce/ON-OFF/userFeedServer/userfeed/src/main/resources/static/" + imageFilename);
-
-        // 디렉토리가 있는지 확인하고, 없으면 생성
-        Files.createDirectories(targetLocation.getParent());
-
-        // 로컬 파일 시스템에 파일 저장
-        Files.copy(imageFile.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
         // 회원 정보 조회 또는 생성
         Member member = memberRepository.findByUserEmail(userFeedRequestDto.getUser().getUserEmail())
@@ -68,10 +62,13 @@ public class UserFeedService {
         ).toList();
 
         // UserFeed 생성 및 제품 리스트 연결
+        String userFeedImagePath = uploadImage(imageFile).block();
+
+        // UserFeed 생성 및 제품 리스트 연결
         UserFeed userFeed = UserFeed.builder()
-                .userFeedImage(targetLocation.toString())
+                .userFeedImage(userFeedImagePath) // 저장된 이미지 경로를 DB에 저장
                 .member(member)
-                .products(products) // 제품 리스트 추가
+                .products(products)
                 .build();
 
         // 각 제품에 UserFeed 설정
@@ -80,9 +77,10 @@ public class UserFeedService {
         // UserFeed 저장
         userFeedRepository.save(userFeed);
 
-        // Response 반환
+        // Response 반환, URL을 포함시키는 것을 고려
         return convertToUserFeedDetailResponseDto(userFeed);
     }
+
     public UserFeedDetailResponseDto getDetailUserFeed(Long id){
         Optional<UserFeed> optionalUserFeed = userFeedRepository.findById(id);
         UserFeed userFeed = optionalUserFeed.get();
@@ -119,13 +117,32 @@ public class UserFeedService {
 
     private Mono<UserDto> fetchMemberInfoByEmail(String email) {
         String url = "/api/user?email=" + email;
-        return webClient.get()
+        return userServiceWebClient.get()
                 .uri(url)
                 .retrieve()
                 .bodyToMono(UserApiResponse.class)
                 .map(response -> new UserDto(response.getProfileImage(), response.getName()));
     }
 
+    private Mono<String> uploadImage(MultipartFile imageFile) {
+        if (imageFile.isEmpty()) {
+            return Mono.error(new RuntimeException("파일이 비어 있습니다."));
+        }
+        return imageServiceWebClient.post()
+                .uri("/api/image/upload")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData("images", imageFile.getResource()))
+                .retrieve()
+                .bodyToMono(ImageUploadResponse.class)
+                .map(response -> response.getImages().get(0)); // Assuming 'images' is a list of image paths
+    }
+
+
+    @Getter
+    static class ImageUploadResponse {
+        private String result;
+        private List<String> images;
+    }
 
 
     @Getter
