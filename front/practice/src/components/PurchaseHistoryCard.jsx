@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../components/OrderProducts.css';
 
 export default function PurchaseHistoryCard({data}) {
@@ -19,7 +19,7 @@ return (
         <label style={{fontSize:"1.2rem"}}>{data.quantity} 개</label>
         </div>
     <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}} >
-        <h4>{(data.price * data.quantity).toLocaleString()}원</h4   > 
+        <h4>{(data.price * data.quantity).toLocaleString()}원</h4> 
     </div>
         </div>
 </div>

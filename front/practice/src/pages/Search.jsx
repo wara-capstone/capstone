@@ -11,7 +11,7 @@ import { FaCheck } from "react-icons/fa";
 
 export default function Search() {
   const [searchText, setSearchText] = useState(""); // 검색창 값
-  const token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
   const RefreshToken = localStorage.getItem("RefreshToken");
   const [searchData, setSearchData] = useState(null); // 상태 추가
   const [searchResultCount, setSearchResultCount] = useState(0); // 검색 결과 개수 상태

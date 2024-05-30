@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import LoadingScreen from "../../components/LoadingScreen";
-const token = localStorage.getItem("token");
+let token = localStorage.getItem("token");
 
 const { Meta } = Card;
 

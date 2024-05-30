@@ -10,7 +10,7 @@ const UserProfile = () => {
   const email = localStorage.getItem("email");
   const userRole = localStorage.getItem("role");
   const storeId = localStorage.getItem("storeid");
-  const token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
   const RefreshToken = localStorage.getItem("RefreshToken");
 
   let url;

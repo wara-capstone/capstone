@@ -9,7 +9,7 @@ const ProductSubmitButton = ({ productData, imageFile }) => {
   const handleSubmit = async () => {
     // Create FormData object
 
-    const token = localStorage.getItem("token");
+    let token = localStorage.getItem("token");
     const userEmail = localStorage.getItem("email");
     console.log("버튼 눌렀을 때 상품표시");
     console.log(productData);

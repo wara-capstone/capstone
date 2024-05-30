@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import "./Seller.css";
 const CellRenderer = (props) => {
-  const token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
   const [storeInfo, setStoreInfo] = useState({ result: "", data: [] });
   const { storeId, productId } = props;
   const navigate = useNavigate();

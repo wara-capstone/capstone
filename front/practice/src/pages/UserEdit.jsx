@@ -14,7 +14,7 @@ const UserEdit = ({ user }) => {
   
 
   let navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
   const email = localStorage.getItem("email");
   const RefreshToken = localStorage.getItem("RefreshToken");
 

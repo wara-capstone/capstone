@@ -8,7 +8,7 @@ import { fetchRefreshToken } from "../utils/authUtil";
 export default function ChattingList() {
   const [visitorUserEmails, setVisitorUserEmails] = useState([]);
   const userId = localStorage.getItem("email"); // 실제 userId 값으로 대체
-  const token = localStorage.getItem("token"); // 실제 token 값으로 대체
+  let token = localStorage.getItem("token"); // 실제 token 값으로 대체
   const { id } = useParams();
   const CHATTING_URL = process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DJANGO_CHATTING_URL : process.env.REACT_APP_API_URL;
   const [loading, setLoading] = useState(false);

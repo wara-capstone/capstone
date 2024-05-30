@@ -12,7 +12,7 @@ import { fetchRefreshToken } from "../utils/authUtil";
 
 export default function Cart() {
   const email = localStorage.getItem("email");
-  const token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
   const [modalIsOpen, setModalIsOpen] = useState(false); //팝업창
   const CART_URL =
     process.env.NODE_ENV === "development"

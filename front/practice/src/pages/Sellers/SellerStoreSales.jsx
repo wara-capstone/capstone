@@ -10,7 +10,7 @@ import SellerSideNav from "./SellerSideNav";
 
 export default function SellerStoreSales({ store }) {
   const email = localStorage.getItem("email");
-  const token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
 
   const { kakao } = window;
   var map;

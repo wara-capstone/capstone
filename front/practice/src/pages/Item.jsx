@@ -13,7 +13,7 @@ export default function Item() {
   const { id } = useParams();
 
   const email = localStorage.getItem("email");
-  const token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
   const CART_URL =
     process.env.NODE_ENV === "development"
       ? process.env.REACT_APP_DJANGO_CART_URL

@@ -396,7 +396,7 @@ function BarcodeReader() {
   const formats = [BarcodeFormat.CODE_128];
   hints.set(DecodeHintType.POSSIBLE_FORMATS, formats);
   var fetchedProductInfo;
-  const token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
 
   useEffect(() => {
     console.log(productInfo);

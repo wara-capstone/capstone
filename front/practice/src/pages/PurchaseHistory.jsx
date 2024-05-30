@@ -4,7 +4,7 @@ import BottomNav from "../components/BottomNav";
 import Card from "../components/Card"; // Card 컴포넌트 임포트
 import EventButton from "../components/EventButton";
 import Header from "../components/Header";
-import { useEffect, useState} from "react";
+import { useEffect, useState ,useRef}  from "react";
 import { useLocation } from "react-router-dom";
 import PurchaseProduct from "../components/PurchaseProduct";
 import "../components/CartComponents.css";
@@ -13,19 +13,23 @@ import {
   message
 }from "antd";
 import { fetchRefreshToken } from "../utils/authUtil";
+import moment from 'moment';
 
 export default function PurchaseHistory() {
 
-    const [purchaseItems, setPurchaseItems] = useState ([]);
+    const [paymentItems, setPaymentItems] = useState ([]);
+    // const paymentItems = useRef([]);
+
     const navigate = useNavigate();
     const email = localStorage.getItem("email");
-    const token = localStorage.getItem("token");
+    let token = localStorage.getItem("token");
     const [quantity, setQuantity] = useState([]); // 수량
     const [price, setPrice] = useState([]); // 제품 하나의 가격
     const [totalPrice, setTotalPrice] = useState(0); // 제품 당 가격
 
     // 총 금액
 //   const totalPrice = purchaseItems.reduce((acc, item) => acc + (item.product.price), 0);
+
 
 
   useEffect(() => {
@@ -54,14 +58,19 @@ export default function PurchaseHistory() {
 
           if(result.result === "success"){
             console.log("구매 내역이 존재합니다.");
-            result.data.map(data => {
+            
+            // let allPurchaseItems = [];
+
+            // result.data.forEach(async data => {
+              for (const data of result.data) {
               setTotalPrice(totalPrice => totalPrice += data.totalPrice);
 
-              data.paymentDTOS.map(async payment => {
+              const purchaseItems = [];
+
+              // data.paymentDTOS.map(async payment => {
+                for (const payment of data.paymentDTOS) {
               let productId = payment.productId;
               let optionId = payment.optionId;
-
-
 
               let response2 =  await fetch(
                 `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}product/all/${productId}/option/${optionId}`,
@@ -77,13 +86,27 @@ export default function PurchaseHistory() {
                 const result = await response2.json();
                 result["quantity"] = payment.quantity;
                 result["price"] = payment.price;
-                setPurchaseItems(prevItems => [...prevItems, result]);
+                purchaseItems.push(result);
+
+
+                console.log("하나씩 조회");
+                console.log(purchaseItems)
               } else {
                 console.log("실패");
               }
+              // allPurchaseItems.push(...purchaseItems);
+
+              // });
+            }  
+              console.log(data.totalPrice);
+              console.log("구매 시간은 " + data.dateTime + "입니다.");
+              purchaseItems["dateTime"] = data.dateTime;
+              purchaseItems["paymentPrice"] = data.totalPrice;
+              setPaymentItems(prevItems => [...prevItems, purchaseItems]);
               }
-              );
-          });
+              // });
+              setPaymentItems(prevItems => [...prevItems].reverse());
+          // setPaymentItems(allPurchaseItems);
           }
           else{
             message.success("구매 내역이 존재하지 않습니다!");
@@ -92,39 +115,62 @@ export default function PurchaseHistory() {
         } else{
           message.error("구매 내역을 불러오는데 실패하였습니다.", 1);
         }
-        console.log("구매내역", purchaseItems);
       };
       fetchData();
   }, [token]);
 
 
 
+
   return (
     <div className="cart-page">
       <Header />
-      <div>
-        {purchaseItems.length > 0 ? ( 
-            <div className="Cart">
-    {purchaseItems.map(data =>(
-        <PurchaseHistoryCard
-            data={data}
-        />
-        ))}
-        </div>
-        ):( <h2>구매내역이 없습니다.</h2> // 상품이 없을 때 표시할 메시지 또는 컴포넌트
-        )}
-        </div>
-
-        <div style={{display: 'flex', justifyContent: 'space-between', padding: '20px'}}>
+      <div style={{display: 'flex', justifyContent: 'space-between', padding: '5px'}}>
         <div>
           <label>구매 상품 개수: </label>
-          <span>{purchaseItems.length}</span>
+          <span>{paymentItems.length}</span>
         </div>
         <div>
           <label>총 구매 금액: </label>
           <span>{totalPrice.toLocaleString()}원</span> 
         </div>
       </div>
+      <div>
+        {paymentItems.length > 0 ? ( 
+            <div className="Cart">
+        {
+        paymentItems.map((paymentDTO, num) =>(
+          console.log(paymentDTO),
+          <div>
+            <hr />
+          <h3>구매일자 : {moment.utc(paymentDTO.dateTime).format('YYYY-MM-DD')}</h3>
+          {paymentDTO.map((data, index) => (
+        <PurchaseHistoryCard
+            key={index}
+            data={data}
+        />
+        ))}
+        <h3>총 구매 금액: {paymentDTO.paymentPrice}원</h3>
+        </div>
+      ))
+      
+        }
+      
+        </div>
+        ):( <h2>구매내역이 없습니다.</h2> // 상품이 없을 때 표시할 메시지 또는 컴포넌트
+        )}
+        </div>
+
+        {/* <div style={{display: 'flex', justifyContent: 'space-between', padding: '20px'}}>
+        <div>
+          <label>구매 상품 개수: </label>
+          <span>{paymentItems.length}</span>
+        </div>
+        <div>
+          <label>총 구매 금액: </label>
+          <span>{totalPrice.toLocaleString()}원</span> 
+        </div>
+      </div> */}
 
       {/* <EventButton buttonText={"결제"} onClick={clickPurchase} /> */}
       <BottomNav />

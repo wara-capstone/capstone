@@ -18,7 +18,7 @@ export default function Purchase() {
   const { IMP } = window; // 아임포트 모듈
   const navigate = useNavigate();
     const email = localStorage.getItem("email");
-    const token = localStorage.getItem("token");
+    let token = localStorage.getItem("token");
 
   const location = useLocation();
     const { checkList, selectedItems } = location.state;
