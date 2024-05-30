@@ -14,7 +14,7 @@ const BottomNav = () => {
   const userId = localStorage.getItem("email");
   const userRole = localStorage.getItem("role");
   const storeId = localStorage.getItem("storeid");
-  const token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
 
   let url;
 

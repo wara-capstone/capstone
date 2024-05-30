@@ -7,7 +7,7 @@ import SellerHeader from "./SellerHeader";
 
 export default function SellerHome() {
   const email = localStorage.getItem("email");
-  const token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
 
   // useEffect(() => {
   //     const fetchData = async () => {

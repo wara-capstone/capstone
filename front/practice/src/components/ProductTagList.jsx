@@ -8,7 +8,7 @@ import { message } from 'antd';
 function ProductTagList({ posts, onProductSelect}){
   const [purchaseItems, setPurchaseItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
   const userEmail = localStorage.getItem("email");
 
   useEffect(() => {

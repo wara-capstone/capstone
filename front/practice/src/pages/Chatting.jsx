@@ -17,7 +17,7 @@ export default function Chatting() {
   const seller = location.state.seller;
 
   const userId = localStorage.getItem("email"); // 실제 userId 값으로 대체
-  const token = localStorage.getItem("token"); // 실제 token 값으로 대체
+  let token = localStorage.getItem("token"); // 실제 token 값으로 대체
   var sellerId = seller;
 
   const chatMessagesRef = useRef(null); // Ref를 생성

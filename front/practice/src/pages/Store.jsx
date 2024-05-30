@@ -13,7 +13,7 @@ export default function Store() {
   const userId = localStorage.getItem("email");
   const userRole = localStorage.getItem("role");
   const storeId = localStorage.getItem("storeid");
-  const token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
 
   const [storeData, setStoreData] = useState(null); // 상태 추가
   var result;

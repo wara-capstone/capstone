@@ -11,7 +11,7 @@ export default function SellerChattingManagement() {
   const [customerId, setCustomerId] = useState(null);
 
   const userId = localStorage.getItem("email");
-  const token = localStorage.getItem("token"); // 실제 token 값으로 대체
+  let token = localStorage.getItem("token"); // 실제 token 값으로 대체
   const CHATTING_URL = process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DJANGO_CHATTING_URL : process.env.REACT_APP_API_URL;
   const [roundImage, setRoundImage] = useState(
     "https://via.placeholder.com/150x150"

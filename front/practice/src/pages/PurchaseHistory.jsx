@@ -13,6 +13,7 @@ import {
   message
 }from "antd";
 import { fetchRefreshToken } from "../utils/authUtil";
+import moment from 'moment';
 
 export default function PurchaseHistory() {
 
@@ -21,7 +22,7 @@ export default function PurchaseHistory() {
 
     const navigate = useNavigate();
     const email = localStorage.getItem("email");
-    const token = localStorage.getItem("token");
+    let token = localStorage.getItem("token");
     const [quantity, setQuantity] = useState([]); // 수량
     const [price, setPrice] = useState([]); // 제품 하나의 가격
     const [totalPrice, setTotalPrice] = useState(0); // 제품 당 가격
@@ -57,13 +58,17 @@ export default function PurchaseHistory() {
 
           if(result.result === "success"){
             console.log("구매 내역이 존재합니다.");
-            result.data.forEach(data => {
-              setTotalPrice(totalPrice => totalPrice += data.totalPrice);
+            
+            // let allPurchaseItems = [];
 
+            // result.data.forEach(async data => {
+              for (const data of result.data) {
+              setTotalPrice(totalPrice => totalPrice += data.totalPrice);
 
               const purchaseItems = [];
 
-              data.paymentDTOS.map(async payment => {
+              // data.paymentDTOS.map(async payment => {
+                for (const payment of data.paymentDTOS) {
               let productId = payment.productId;
               let optionId = payment.optionId;
 
@@ -89,11 +94,19 @@ export default function PurchaseHistory() {
               } else {
                 console.log("실패");
               }
-              });  
+              // allPurchaseItems.push(...purchaseItems);
 
-              // paymentItems.current = [...paymentItems.current, purchaseItems];
+              // });
+            }  
+              console.log(data.totalPrice);
+              console.log("구매 시간은 " + data.dateTime + "입니다.");
+              purchaseItems["dateTime"] = data.dateTime;
+              purchaseItems["paymentPrice"] = data.totalPrice;
               setPaymentItems(prevItems => [...prevItems, purchaseItems]);
-          });
+              }
+              // });
+              setPaymentItems(prevItems => [...prevItems].reverse());
+          // setPaymentItems(allPurchaseItems);
           }
           else{
             message.success("구매 내역이 존재하지 않습니다!");
@@ -112,23 +125,7 @@ export default function PurchaseHistory() {
   return (
     <div className="cart-page">
       <Header />
-      <div>
-        {paymentItems.length > 0 ? ( 
-            <div className="Cart">
-    {paymentItems.map((data, index) =>(
-      console.log("데이터 확인"),
-      console.log([...data]),
-        <PurchaseHistoryCard
-            key={index}
-            data={data}
-        />
-        ))}
-        </div>
-        ):( <h2>구매내역이 없습니다.</h2> // 상품이 없을 때 표시할 메시지 또는 컴포넌트
-        )}
-        </div>
-
-        <div style={{display: 'flex', justifyContent: 'space-between', padding: '20px'}}>
+      <div style={{display: 'flex', justifyContent: 'space-between', padding: '5px'}}>
         <div>
           <label>구매 상품 개수: </label>
           <span>{paymentItems.length}</span>
@@ -138,6 +135,42 @@ export default function PurchaseHistory() {
           <span>{totalPrice.toLocaleString()}원</span> 
         </div>
       </div>
+      <div>
+        {paymentItems.length > 0 ? ( 
+            <div className="Cart">
+        {
+        paymentItems.map((paymentDTO, num) =>(
+          console.log(paymentDTO),
+          <div>
+            <hr />
+          <h3>구매일자 : {moment.utc(paymentDTO.dateTime).format('YYYY-MM-DD')}</h3>
+          {paymentDTO.map((data, index) => (
+        <PurchaseHistoryCard
+            key={index}
+            data={data}
+        />
+        ))}
+        <h3>총 구매 금액: {paymentDTO.paymentPrice}원</h3>
+        </div>
+      ))
+      
+        }
+      
+        </div>
+        ):( <h2>구매내역이 없습니다.</h2> // 상품이 없을 때 표시할 메시지 또는 컴포넌트
+        )}
+        </div>
+
+        {/* <div style={{display: 'flex', justifyContent: 'space-between', padding: '20px'}}>
+        <div>
+          <label>구매 상품 개수: </label>
+          <span>{paymentItems.length}</span>
+        </div>
+        <div>
+          <label>총 구매 금액: </label>
+          <span>{totalPrice.toLocaleString()}원</span> 
+        </div>
+      </div> */}
 
       {/* <EventButton buttonText={"결제"} onClick={clickPurchase} /> */}
       <BottomNav />

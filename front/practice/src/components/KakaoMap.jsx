@@ -29,7 +29,7 @@ var choiceImageSize = new kakao.maps.Size(44, 58); // 선택한 마커의 크기
 
 export default function KakaoMap() {
   const email = localStorage.getItem("email");
-  const token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
   const RefreshToken = localStorage.getItem("RefreshToken");
   const CART_URL =
     process.env.NODE_ENV === "development"
