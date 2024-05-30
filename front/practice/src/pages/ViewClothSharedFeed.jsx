@@ -26,19 +26,21 @@ export default function ViewClothSharedFeed() {
   const { id } = useParams();
   const [itemData, setItemData] = useState(null);
 
+  const url =
+    `${process.env.NODE_ENV === "development" ? "" : ""}${
+      process.env.REACT_APP_API_URL
+    }user-feed/` + id;
+
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem("token");
-      const response = await fetch(
-        `http://101.101.216.115:21000/api/user-feed/${id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-        }
-      );
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      });
 
       if (response.status === 200) {
         const data = await response.json();
