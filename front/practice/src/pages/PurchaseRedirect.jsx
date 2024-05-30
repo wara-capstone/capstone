@@ -91,6 +91,8 @@ const PurchaseRedirect = () => {
                       };
                       fetchData();
                     }
+
+                    setPurchaseCompleted(true); // 구매 완료 상태 설정
                   }
                   else {
                     alert("모바일 결제 검증 실패 "+ paymentResponse.status + " " + paymentResponse);
