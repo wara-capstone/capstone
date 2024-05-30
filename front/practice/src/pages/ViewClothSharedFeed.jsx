@@ -57,7 +57,7 @@ export default function ViewClothSharedFeed() {
   }
 
   return (
-    <div className="ViewClothSharedFeed" style={{ backgroundColor: "#f2f2f2" }}>
+    <div className="ViewClothSharedFeed">
       <Header />
       <MuiCard>
         <StyledCardHeader
