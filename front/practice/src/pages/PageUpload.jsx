@@ -126,7 +126,7 @@ function PageUpload() {
         display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      marginBottom: '80px',
+      
       }}
     >
       <ProductImageWithTags
