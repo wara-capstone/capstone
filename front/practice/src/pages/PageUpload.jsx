@@ -155,6 +155,7 @@ function PageUpload() {
       borderRadius: '10px',
       padding: '10px 100px',
       fontWeight: 'bold',
+      marginBottom: '30px'
     }}
   >
     상품태그 추가
