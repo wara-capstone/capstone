@@ -10,7 +10,7 @@ function ClothFeedListItem({ id, userName, userImg, img, caption }) {
     <div className="ClothFeedListItem">
       <Card>
         {/* Media */}
-        <CardMedia component="img" image={img} alt={caption} />
+        <CardMedia component="img" height="200" image={img} alt={caption} />
         {/* Header */}
         <CardHeader
           avatar={

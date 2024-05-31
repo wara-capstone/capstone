@@ -1,7 +1,10 @@
 import { Button } from "@mui/material";
+import { message } from "antd";
+import { useNavigate } from 'react-router-dom';
 import React from "react";
 
 const ProductSubmitButton = ({ productData, imageFile }) => {
+  const navigate = useNavigate();
   const url = `${process.env.NODE_ENV === "development" ? "" : ""}${
     process.env.REACT_APP_API_URL
   }user-feed`;
@@ -60,8 +63,11 @@ const ProductSubmitButton = ({ productData, imageFile }) => {
 
       if (response.ok) {
         console.log("상품 정보가 성공적으로 전송되었습니다.");
+        message.success("글 등록 완료! 여러분의 소중한 이야기를 공유했습니다.");
+        navigate('/feed');
       } else {
         console.error("상품 정보 전송에 실패했습니다.");
+        message.error("글 등록 실패!");
       }
     } catch (error) {
       console.error(error);
