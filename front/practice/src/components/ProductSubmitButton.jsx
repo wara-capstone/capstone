@@ -75,12 +75,17 @@ const ProductSubmitButton = ({ productData, imageFile }) => {
   };
 
   return (
-    <Button
+    <Button variant="contained" 
       style={{
-        border: "1px solid #ccc",
+        backgroundColor: '#333',
+        color: '#fff',
+        border: "none",
         position: "relative",
         top: 10,
         left: 100,
+        borderRadius: "10px", // 버튼 모서리 둥글게 하기
+        fontWeight: "bold", // 글씨체 굵게 설정
+        marginTop: 20
       }}
       onClick={handleSubmit}
     >
