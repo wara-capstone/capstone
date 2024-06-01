@@ -1,86 +1,22 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Table } from "antd";
-import { ColumnsType } from "antd/es/table";
 import "@toast-ui/editor/dist/i18n/ko-kr";
-import { Editor } from "@toast-ui/react-editor";
+import Editor from '@toast-ui/editor';
 import axios from "axios";
-import { UploadFile } from "antd/es/upload/interface";
 
 import { UploadOutlined } from "@ant-design/icons";
-
-import "@toast-ui/editor/dist/toastui-editor.css";
-import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
-import "tui-color-picker/dist/tui-color-picker.css";
-import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-import ToastuiEditor, {
-  EditorOptions,
-  ViewerOptions,
-  EventMap,
-} from "@toast-ui/editor";
+import ToastuiEditor, {EditorOptions,ViewerOptions,EventMap} from "@toast-ui/editor";
 import ToastuiEditorViewer from "@toast-ui/editor/dist/toastui-editor-viewer";
-
-import {
-  PlusCircleOutlined,
-  SaveOutlined,
-  DeleteOutlined,
-  BarcodeOutlined,
-  PlusOutlined,
-  LoadingOutlined,
-} from "@ant-design/icons";
+import {PlusCircleOutlined, SaveOutlined, DeleteOutlined,BarcodeOutlined} from "@ant-design/icons";
 import SellerHeader from "./SellerHeader";
-import {
-  Typography,
-  Button,
-  Form,
-  Input,
-  Radio,
-  Checkbox,
-  Select,
-  Space,
-  message,
-  Upload,
-} from "antd";
+import {Typography,Button,Form,Input,Select,Space,message} from "antd";
 import "./Seller.css";
-import CellRenderer from "./CellRenderer";
+import ImageCellRenderer from "../../components/ImageCellRenderer";
+import SellerItemManagement from "./SellerItemManagement";
 const { TextArea } = Input;
-
 const mainCategory = ["상의", "아우터", "하의", "신발", "잡화", "기타"];
-
-// const smallCategory = {
-//   상의: [
-//     "맨투맨/스웨트셔츠",
-//     "셔츠/블라우스",
-//     "후드 티셔츠",
-//     "니트/스웨터",
-//     "긴소매 티셔츠",
-//     "반소매 티셔츠",
-//     "기타 상의",
-//   ],
-//   아우터: [
-//     "후드 집업",
-//     "카디건",
-//     "플리스/뽀글이",
-//     "코트",
-//     "패딩",
-//     "기타 아우터",
-//   ],
-//   바지: ["데님 팬츠", "코튼 팬츠", "트레이닝/조거 팬츠", "기타바지"],
-//   원피스스커트: ["원피스", "스커트"],
-//   신발: ["스니커즈", "샌들", "부츠", "로퍼", "기타 신발"],
-//   가방: [
-//     "백팩",
-//     "메신저/크로스 백",
-//     "숄더백",
-//     "토트백",
-//     "에코백",
-//     "지갑/머니클립",
-//     "기타 소품",
-//   ],
-// };
 
 const initialData = [
   {
@@ -157,14 +93,20 @@ export default function SellerProductRegistration(props) {
   const [isTrue, setIsTrue] = useState();
   const [images, setImages] = useState([]);
   const [barcodeUrl, setBarcodeUrl] = useState([]);
-  
+
+  useEffect(() => {
+    if (images.url) {
+      console.log("이미지가 담겼을까???ㅇㅇㅇ", images.url);
+    }
+  }, [images]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 단일 상품 조회
+        // 단일 상품 조회 (+ 해당상품의 모든 옵션 조회)
         setLoading(true);
         const response = await axios.get(
-          `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/all/${productId}`,
+          `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}product/all/${productId}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -172,13 +114,14 @@ export default function SellerProductRegistration(props) {
             },
           }
         );
-        console.log("받아온 값!!:" + JSON.stringify(response.data)); // 서버로부터 받아온 데이터를 JSON 문자열로 변환하여 출력
+        console.log("받아온 값(해당삼품의 모든 옵션 조회):" + JSON.stringify(response.data)); // 서버로부터 받아온 데이터를 JSON 문자열로 변환하여 출력
         console.log(response.status);
-        if (response.status == 200) {
+        if (response.status === 200) {
           setProductInfo(response.data);
-          setImages(response.data.productUrls);
-          setProductName(response.data.productName || "");
-          setSelectedCategory(response.data.productCategory);
+          setImages(response.data.productUrls[0].url);
+          // console.log("이미지가 담겼을까???ㅇㅇㅇ",images.url);
+          setProductName(productName);
+          setSelectedCategory(productCategory);
           setIsTrue(true);
 
           setOptionIndex(response.data.options.length);
@@ -263,6 +206,7 @@ export default function SellerProductRegistration(props) {
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
+    console.log("Selected file:", file);
     setFile(file);
     if (file) {
       const reader = new FileReader();
@@ -276,12 +220,6 @@ export default function SellerProductRegistration(props) {
       setPreviewImage(null);
     }
   };
-
-  const [saveData, setSaveData] = useState({
-    "": "",
-    "": "",
-    "": "",
-  });
 
   const handleSubmitButtonClick = async () => {
     try {
@@ -300,7 +238,12 @@ export default function SellerProductRegistration(props) {
       let formData = new FormData();
 
       formData.append("productDTO", new Blob([JSON.stringify(data)], { type: "application/json" }))
-      fetch(`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/seller`,
+      // images 추가
+      if (file) {
+        formData.append("images", file);
+      }
+
+      fetch(`${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}product/seller`,
         {
           method: "PUT",
           headers: headers,
@@ -317,9 +260,9 @@ export default function SellerProductRegistration(props) {
       formData = new FormData();
 
       if (file) {
-        console.log("file : " + file);
+        console.log("file : ", file);
         formData.append("images", file);
-        fetch(`${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/seller/product/` + productId,
+        fetch(`${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}product/seller/product/` + productId,
           {
             method: "PUT",
             headers: headers,
@@ -352,7 +295,7 @@ export default function SellerProductRegistration(props) {
     try {
       // 1. 서버에 삭제 요청 보내기
       const response = await axios.delete(
-        `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/seller/option/${
+        `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}product/seller/option/${
           productInfo.options[index].optionId
         }`,
         {
@@ -562,9 +505,9 @@ export default function SellerProductRegistration(props) {
     // 서버로 데이터 전송하는 로직 작성
     //var formData = new FormData();
     //formData.append('optionDTO', new Blob([JSON.stringify(optionDTO)], { type: "application/json" }));
-    console.log("문자열:" + productInfo.productId);
+    console.log("문자열:" + productName, productId);
     console.log("몇 번째 인덱스 입니까?", index);
-    console.log("담긴 옵션 정보" + productInfo.options[index].productPrice);
+
     if (index >= optionIndex) {
       var data = {
         productPrice: productInfo.options[index].productPrice,
@@ -572,42 +515,35 @@ export default function SellerProductRegistration(props) {
         productColor: productInfo.options[index].productColor,
         productStock: productInfo.options[index].productStock,
       };
+      console.log("담긴 옵션 정보:" , JSON.stringify(data));
       data = JSON.stringify(data);
       console.log("등록 으로")
       axios // 등록
-        .put(
-          `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/seller/option/add/product/${productInfo.productId}`,
-          // `https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app/product/seller/option/add?productId=19`,
-          data,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `${token}`,
-            },
-          }
-        )
-        .then((response) => {
-          console.log(response.data); // 서버 응답 출력
-        })
-        .catch((error) => {
-          console.error(error); // 오류 처리
-        });
-    } else {
+    .put(
+      `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}product/seller/option/add/product/${productId}`,
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      }
+    )
+    .then((response) => {
+      console.log(response.data); // 서버 응답 출력
+    })
+    .catch((error) => {
+      console.error(error); // 오류 처리
+    });
+} else {
       console.log("수정 으로");
-      var data = {
-        optionId: productInfo.options[index].optionId,
-        productPrice: productInfo.options[index].productPrice,
-        productSize: productInfo.options[index].productSize,
-        productColor: productInfo.options[index].productColor,
-        productStock: productInfo.options[index].productStock,
-      };
-      data = JSON.stringify(data);
+      
       //var formdata = new FormData();
       //formdata.append("optionDTO", new Blob([JSON.stringify(data)], { type: "application/json" }))
       console.log(data);
-      axios // 상품 등록
+      axios // 상품 삭제
         .put(
-          `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_API_URL}product/seller/option/`+productId,
+          `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}product/seller/option/`+productId,
           // `https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app/product/seller/option/add?productId=19`,
           data,
           {
@@ -693,6 +629,7 @@ export default function SellerProductRegistration(props) {
     return (
       <div className="seller-product-registration">
         <SellerHeader />
+        <ImageCellRenderer images={images} />
         <h1>상품 등록</h1>
         <div className="outer-div">
           <div className="inner-div"></div>
