@@ -1,78 +1,24 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "@toast-ui/editor/dist/i18n/ko-kr";
-import Editor from '@toast-ui/editor';
+
 import axios from "axios";
 
 import { UploadOutlined } from "@ant-design/icons";
 import "react-quill/dist/quill.snow.css";
 
-import ToastuiEditor, {EditorOptions,ViewerOptions,EventMap} from "@toast-ui/editor";
-import ToastuiEditorViewer from "@toast-ui/editor/dist/toastui-editor-viewer";
 import {PlusCircleOutlined, SaveOutlined, DeleteOutlined,BarcodeOutlined} from "@ant-design/icons";
 import SellerHeader from "./SellerHeader";
 import {Typography,Button,Form,Input,Select,Space,message} from "antd";
 import "./Seller.css";
 import ImageCellRenderer from "../../components/ImageCellRenderer";
-import SellerItemManagement from "./SellerItemManagement";
-const { TextArea } = Input;
-const mainCategory = ["상의", "아우터", "하의", "신발", "잡화", "기타"];
-
-const initialData = [
-  {
-    key: "1",
-    checked: false,
-    option: ["FREE", "크림"],
-    price: "10",
-    stock: "100",
-  },
-  {
-    key: "2",
-    checked: false,
-    option: ["FREE", "네이비"],
-    price: "20",
-    stock: "200",
-  },
-  {
-    key: "3",
-    checked: false,
-    option: ["FREE", "블랙"],
-    price: "30",
-    stock: "300",
-  },
-];
-
-const getBase64 = (img, callback) => {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
-  reader.readAsDataURL(img);
-};
-
-const beforeUpload = (file) => {
-  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-  if (!isJpgOrPng) {
-    message.error("You can only upload JPG/PNG file!");
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error("Image must smaller than 2MB!");
-  }
-  return isJpgOrPng && isLt2M;
-};
 
 export default function SellerProductRegistration(props) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const { storeId, productId } = useParams();
-  const [tableData, setTableData] = useState(initialData);
   const [optionIndex, setOptionIndex] = useState(0);
 
-  // onChange로 관리할 문자열
-  const [hashtag, setHashtag] = useState("");
-  // 해시태그를 담을 배열
-  const [hashArr, setHashArr] = useState([]);
-
-  const [mainCategory, setMainCategory] = useState([
+  const [mainCategory] = useState([
     "상의",
     "아우터",
     "하의",
@@ -86,13 +32,11 @@ export default function SellerProductRegistration(props) {
     setSelectedCategory(value);
   };
 
-  const [itemOptions, setItemOption] = useState();
   const token = localStorage.getItem("token");
   const [productInfo, setProductInfo] = useState({});
   //  const { productId } = props.location?.state || {};
   const [isTrue, setIsTrue] = useState();
   const [images, setImages] = useState([]);
-  const [barcodeUrl, setBarcodeUrl] = useState([]);
 
   useEffect(() => {
     if (images.url) {
@@ -141,66 +85,9 @@ export default function SellerProductRegistration(props) {
     fetchData();
   }, []);
 
-  const onKeyUp = useCallback(
-    (e) => {
-      if (typeof window !== "undefined") {
-        /* 요소 불러오기, 만들기*/
-        const $HashWrapOuter = document.querySelector(".HashWrapOuter");
-        const $HashWrapInner = document.createElement("div");
-        $HashWrapInner.className = "HashWrapInner";
-
-        /* 태그를 클릭 이벤트 관련 로직 */
-        $HashWrapInner.addEventListener("click", () => {
-          $HashWrapOuter?.removeChild($HashWrapInner);
-          console.log($HashWrapInner.innerHTML);
-          setHashArr(hashArr.filter((hashtag) => hashtag));
-        });
-
-        /* enter 키 코드 :13 */
-        if (e.keyCode === 13 && e.target.value.trim() !== "") {
-          console.log("Enter Key 입력됨!", e.target.value);
-          $HashWrapInner.innerHTML = "#" + e.target.value;
-          $HashWrapOuter?.appendChild($HashWrapInner);
-          setHashArr((hashArr) => [...hashArr, hashtag]);
-          setHashtag("");
-        }
-      }
-    },
-    [hashtag, hashArr]
-  );
-
   // 서버로 보낼 변수들 이름 지정
   const [productName, setProductName] = useState(
-    productInfo ? productInfo.productName : ""
-  );
-  const [productCategory, setProductCategory] = useState(
-    productInfo ? productInfo.productCategory : ""
-  );
-
-  const [editingKey, setEditingKey] = useState(null);
-  const [options, setOptions] = useState([{ items: ["사이즈 (예시: s)"] }]);
-
-  const [productStock, setProductStock] = useState(
-    productInfo && productInfo.options && productInfo.options[0]
-      ? productInfo.options[0].productStock
-      : ""
-  );
-  const [productPrice, setProductPrice] = useState(
-    productInfo && productInfo.options && productInfo.options[0]
-      ? productInfo.options[0].productPrice
-      : ""
-  );
-  const [productSize, setProductSize] = useState(
-    productInfo && productInfo.options && productInfo.options[0]
-      ? productInfo.options[0].productSize
-      : ""
-  );
-  const [productColor, setProductColor] = useState(
-    productInfo && productInfo.options && productInfo.options[0]
-      ? productInfo.options[0].productColor
-      : ""
-  );
-
+    productInfo ? productInfo.productName : "");
   const fileInputRef = useRef(null);
   const [previewImage, setPreviewImage] = useState(null);
   const [file, setFile] = useState(false);
@@ -359,86 +246,6 @@ export default function SellerProductRegistration(props) {
          });
   };
 
-  const columns = [
-    {
-      title: "상품명",
-      dataIndex: "name",
-      render: (text, { key }) =>
-        key === editingKey ? (
-          <Input
-            defaultValue={productName}
-            onChange={(e) => setProductName(e.target.value)}
-          />
-        ) : (
-          <Button
-            onClick={() => {
-              setEditingKey(key);
-              setProductName(text);
-            }}
-          >
-            {text}
-          </Button>
-        ),
-    },
-    { title: "가격", dataIndex: productPrice },
-    { title: "색상", dataIndex: productColor },
-    { title: "사이즈", dataIndex: productSize },
-    {
-      title: "수량",
-      render: (_, { key }) =>
-        key === editingKey && (
-          <Button
-            onClick={() => {
-              setTableData((prevData) =>
-                prevData.map((item) =>
-                  item.key === key ? { ...item, name: productName } : item
-                )
-              );
-              setEditingKey(null);
-            }}
-          >
-            Confirm
-          </Button>
-        ),
-    },
-  ];
-
-  const [value, setValue] = useState("");
-  const [isDisable, setIsDisable] = useState(false);
-
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }],
-      ["bold", "italic", "underline", "strike"],
-      [
-        { list: "ordered" },
-        { list: "bullet" },
-        { indent: "-1" },
-        { indent: "+1" },
-      ],
-      ["link", "image"],
-      [{ align: [] }, { color: [] }, { background: [] }],
-      ["clean"],
-    ],
-    ImageResize: { modules: ["Resize"] },
-  };
-
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "list",
-    "bullet",
-    "indent",
-    "link",
-    "image",
-    "align",
-    "color",
-    "background",
-  ];
-
   let plusOption = () => {
     const newOption = {
       productPrice: "",
@@ -474,27 +281,6 @@ export default function SellerProductRegistration(props) {
       // 이전 상태를 복사하고 새로운 options 배열을 할당하여 상태 업데이트
       return { ...prevProductInfo, options: newOptions };
     });
-  };
-
-  const [quillValue, setQuillValue] = useState("");
-
-  const handleQuillChange = (content, delta, source, editor) => {
-    setQuillValue(editor.getContents());
-  };
-
-  const [imageUrl, setImageUrl] = useState();
-
-  const handleChange = (info) => {
-    if (info.file.status === "uploading") {
-      setLoading(true);
-      return;
-    }
-    if (info.file.status === "done") {
-      getBase64(info.file.originFileObj, (url) => {
-        setLoading(false);
-        setImageUrl(url);
-      });
-    }
   };
 
   // 상품의 옵션 추가
@@ -595,31 +381,6 @@ export default function SellerProductRegistration(props) {
     },
   };
 
-  const imageHandler = (data) => {};
-  const [fileList, setFileList] = useState([]);
-
-  const uploadProps = {
-    // action: `$${process.env.NODE_ENV === 'development' ? 'http://' : 'https:'}//{process.env.REACT_APP_API_URL}product/seller/option/add/product/${productInfo.productId}`,
-    // action:"$${process.env.NODE_ENV === 'development' ? 'http://' : 'https:'}//{process.env.REACT_APP_API_URL}product/seller",
-    listType: "picture",
-    className: "upload-list-inline",
-    beforeUpload: (file) => {
-      setFileList([...fileList, file]);
-      return false; // 업로드 중단
-    },
-    fileList, // 수정: fileList 속성 사용
-  };
-
-
-  
-  const previewFile = (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setPreviewImage(reader.result);
-    };
-  };
-
   if (loading) {
     return <LoadingScreen></LoadingScreen>;
   } else {
@@ -632,112 +393,47 @@ export default function SellerProductRegistration(props) {
           <div className="inner-div"></div>
           <Form>
             {/* DropZone */}
-            <br />
-            <br />
-            {/* <div className="abc">
-              <Typography.Title level={4}>표시여부</Typography.Title> */}
-
-            {/* <div>
-                <table>
-                  <tr>
-                    <td>
-                      진열상태
-                      <br />
-                      품질처리
-                      <br />
-                    </td>
-                  </tr>
-                </table>
-                <label>진열상태&nbsp;</label>
-                <Radio>진열</Radio>
-                <Radio>미진열</Radio>
-                <br />
-                <label>품절처리&nbsp;</label>
-                <Checkbox>품절</Checkbox>
-                <dd>
-                  강제 품질을 체크하면 해당 상품은 고객에게 [품절]로 노출되며,
-                  구매가 불가능해집니다.
-                </dd>
-              </div>
-              <br />
-            </div> */}
-            <br />
+            
 
             <div className="productInfo">
-              <Typography.Title level={4}>기본정보</Typography.Title>
-              <hr />
-              <table>
-                <tr>
-                  <td>상품명&nbsp;</td>
-                  <Input
-                    value={productName} // 수정: 값이 없는 경우 빈 문자열을 사용
-                    onChange={(e) => setProductName(e.target.value)}
-                    count={{
-                      show: true,
-                      max: 100,
-                    }}
-                  />
-                </tr>
-                <br />
-                <tr>
-                  <td>상품번호&nbsp;</td>
-                  <td>자동입력됩니다.</td>
-                </tr>
-                <br />
-                <tr>
-                  <td>카테고리&nbsp;</td>
-                  <Space wrap>
-                    <Select
-                      defaultValue={selectedCategory} // 선택한 카테고리 값으로 초기화
-                      style={{ width: 120 }}
-                      onChange={handleMainCategoryChange}
-                      options={mainCategory.map((category) => ({
-                        label: category,
-                        value: category,
-                      }))}
-                    />
-                  </Space>
-                </tr>
-                <br />
-                {/* <tr>
-                  <td>수량</td>
-                  <td>
-                    <Input
-                      value={productInfo.productStock}
-                      onChange={(e) => setProductStock(e.target.value)}
-                      count={{
-                        show: true,
-                      }}
-                    />
-                  </td>
-                </tr> */}
-
-                {/* <tr>
-                  <td>해시태그</td>
-                  <td>
-                    <div className="HashWrap">
-                      <div className="HashWrapOuter">
-                        {hashArr.map((hashtag, index) => (
-                          <div key={index} className="HashWrapInner">
-                            #{hashtag}
-                          </div>
-                        ))}
-                      </div>
-                      <input
-                        className="HashInput"
-                        type="text"
-                        defaultValue={hashtag}
-                        //onChange={onChangeHashtag}
-                        onKeyUp={onKeyUp}
-                        placeholder="해시태그 입력"
-                      />
-                    </div>
-                  </td>
-                </tr> */}
-
-                <br />
-              </table>
-            </div>
+  <Typography.Title level={4}>기본정보</Typography.Title>
+  <hr />
+  <table>
+    <tr>
+      <td>상품명</td>
+      <td>
+        <Input
+          value={productName}
+          onChange={(e) => setProductName(e.target.value)}
+          count={{
+            show: true,
+            max: 100,
+          }}
+        />
+      </td>
+    </tr>
+    <tr>
+      <td>상품번호</td>
+      <td>자동입력됩니다.</td>
+    </tr>
+    <tr>
+      <td>카테고리</td>
+      <td>
+        <Space wrap>
+          <Select
+            defaultValue={selectedCategory}
+            style={{ width: 120 }}
+            onChange={handleMainCategoryChange}
+            options={mainCategory.map((category) => ({
+              label: category,
+              value: category,
+            }))}
+          />
+        </Space>
+      </td>
+    </tr>
+  </table>
+</div>
 
             <br />
 
@@ -824,8 +520,6 @@ export default function SellerProductRegistration(props) {
                                   >
                                     <BarcodeOutlined />
                                   </Button>
-                                  
-
                                 </div>                             
                               </table>                              
                             </div>
@@ -872,6 +566,7 @@ export default function SellerProductRegistration(props) {
   <Button
     onClick={() => fileInputRef.current.click()}
     icon={<UploadOutlined />}
+    style={{margin: '20px'}}
   >
     파일 선택
   </Button>
@@ -885,68 +580,29 @@ export default function SellerProductRegistration(props) {
   )}
 </div>
 <br /><br />
-</div>
-            {/* 이미지 에디터 코드 */}
-            {/* <div className="abc">
-              <Typography.Title level={4}>에디터</Typography.Title>
-              <hr />
-              <Editor
-                //initialValue="hello react editor world!"
-                previewStyle="vertical"
-                height="600px"
-                initialEditType="wysiwyg"
-                useCommandShortcut={false}
-                hideModeSwitch={true}
-                plugins={[colorSyntax]}
-                language="ko-KR"
-              hooks={{
-                addImageBlobHook: async (blob, callback) => {
-                  try {
-                    const imageData = new FormData();
-
-                    // OptionDTO 추가
-                    imageData.append("OptionDTO", optionValue); // optionValue는 실제 OptionDTO의 값입니다.
-
-                    // ProductDTO 추가
-                    imageData.append("ProductDTO", productValue); // productValue는 실제 ProductDTO의 값입니다.
-
-                    // 이미지 추가 (Images 키로 여러 이미지 추가)
-                    for (let i = 0; i < blobs.length; i++) {
-                      const blob = blobs[i]; // blobs는 실제 이미지 blob들의 배열입니다.
-                      const file = new File([blob], encodeURI(blob.name), {
-                        type: blob.type,
-                      });
-                      imageData.append("Images", file);
-                    }
-
-              //       // 서버에 전송
-              //       const imageURI = await axios({
-              //         method: "POST",
-              //         headers: {
-              //           "Content-Type": "multipart/form-data",
-              //         },
-              //         url: `${"/api"}/product/seller`,
-              //         data: imageData,
-              //         withCredentials: true,
-              //       });
-              //     } catch (error) {
-              //       console.log(error);
-              //     }
-              //   },
-              // }}
-              />
-
-              <br />
-            </div> */}
-
-            {/* <div className="abc">
-              <Typography.Title level={4}>상품 정보 제공 공시</Typography.Title>
-              <hr />
-
-              <br />
-            </div> */}
-
-            <Button onClick={handleSubmitButtonClick}>저장</Button>
+</div >
+<div style={{ display: 'flex', justifyContent: 'right' }}>
+            <Button 
+             style={{
+              fontSize: '16px',
+              fontWeight: 'bold',
+              padding: '10px 20px',
+              backgroundColor: 'white',
+              color: 'black',
+              border: '2px solid transparent',
+              outline: 'none',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+              backgroundColor: '#f0f0f0',
+              border: '2px solid blue',
+              cursor: 'pointer',
+              },
+            }}
+            onClick={handleSubmitButtonClick}>저장</Button>
+            </div>
           </Form>
         </div>
       </div>
