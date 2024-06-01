@@ -46,7 +46,7 @@ const CellRenderer = (props) => {
       <span>{cellValue}</span>&nbsp;
       <button
         className="w-btn w-btn-indigo"
-        style={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
+        style={{  alignItems: 'center', justifyContent: 'center', height: '100%' }}
         type="button"
         onClick={handleClick}
       >

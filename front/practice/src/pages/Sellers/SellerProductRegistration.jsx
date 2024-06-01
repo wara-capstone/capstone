@@ -119,9 +119,10 @@ export default function SellerProductRegistration(props) {
         if (response.status === 200) {
           setProductInfo(response.data);
           setImages(response.data.productUrls[0].url);
+          setPreviewImage(response.data.productUrls[1].url); // 이미지 URL을 previewImage 상태에 저장
           // console.log("이미지가 담겼을까???ㅇㅇㅇ",images.url);
-          setProductName(productName);
-          setSelectedCategory(productCategory);
+          setProductName(response.data.productName);
+          setSelectedCategory(response.data.productCategory);
           setIsTrue(true);
 
           setOptionIndex(response.data.options.length);
@@ -356,11 +357,7 @@ export default function SellerProductRegistration(props) {
          .catch(error => {
              console.error('에러 발생:', error);
          });
-
-
   };
-
-
 
   const columns = [
     {

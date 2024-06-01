@@ -10,12 +10,19 @@ const ImageCellRenderer = (images) => {
   const selectedIndex = 1; // 또는 2
 
   return (
-    <div>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}>
       {images.data.productUrls[selectedIndex] && (
         <img
           src={images.data.productUrls[selectedIndex].url}
           alt={images.data.productUrls[selectedIndex].url}
           style={{
+            height: '100px',
+            margin: '10px',
             maxWidth: '100%',
             maxHeight: '100px',
             objectFit: 'contain',
