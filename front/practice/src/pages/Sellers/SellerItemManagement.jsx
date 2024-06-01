@@ -115,9 +115,9 @@ export default function SellerItemManagement({images}) {
       cellRenderer: ImageCellRenderer,
       cellStyle: function(params) {
         if (params.column.colId === 'productUrls') { // 체크박스가 있는 컬럼 ID
-          return { textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems:'center', height:'100%'}; // 체크박스에 적용할 스타일
+          //return { textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems:'center', height:'100%'}; // 체크박스에 적용할 스타일
         } else {
-          return { whiteSpace: 'pre-wrap', textAlign: 'center', justifyContent: 'center',  autoHeight: true }; // 체크박스가 아닌 셀에 적용할 스타일
+          //return { whiteSpace: 'pre-wrap', textAlign: 'center', justifyContent: 'center',  autoHeight: true }; // 체크박스가 아닌 셀에 적용할 스타일
         }
       },
     },
