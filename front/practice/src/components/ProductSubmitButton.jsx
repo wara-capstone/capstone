@@ -34,6 +34,7 @@ const ProductSubmitButton = ({ productData, imageFile }) => {
       const product = [];
       for (let i = 0; i < productData.length; i++) {
         product.push({
+          productId: productData[i].productId,
           productImage: productData[i].productUrls[0].url,
           productName: productData[i].productName,
           productPrice: productData[i].price,
