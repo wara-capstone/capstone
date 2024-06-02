@@ -5,7 +5,7 @@ FROM openjdk:17-jdk
 COPY userfeed-0.0.1-SNAPSHOT.jar app.jar
 
 # 애플리케이션 실행 시 열릴 포트 지정
-EXPOSE 8080
+EXPOSE 21000
 
 # JAR 파일 실행
 ENTRYPOINT ["java", "-jar", "/app.jar"]
