@@ -116,10 +116,10 @@ function ClothFeedList() {
     >
       <Container sx={{ paddingBottom: "70px", paddingTop: "10px" }}>
         {" "}
-        <Grid container spacing={2}>
+        <Grid container spacing={1}>
           {" "}
           {posts.map((post) => (
-            <Grid item xs={12} sm={6} key={post.id}>
+            <Grid item xs={6} sm={6} key={post.id}>
               {" "}
               <Link
                 to={`/ViewClothSharedFeed/${post.id}`}

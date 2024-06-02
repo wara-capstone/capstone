@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import BottomNav from "../components/BottomNav";
 import Card from "../components/Card";
 import Header from "../components/Header";
@@ -98,20 +98,20 @@ export default function ViewClothSharedFeed() {
       {itemData.product &&
         itemData.product.map((result, index) => {
           return (
-            // <Link
-            //   to={`/item/${result.productId}`}
-            //   key={result.productId}
-            //   className="card-link"
-            // >
-            <Card
-              key={index}
-              title={result.productName}
-              // subTitle={result.productCategory}
-              price={result.productPrice}
-              mainImage={result.productImage}
-              // count={result.options[0].productStock}
-            />
-            // </Link>
+            <Link
+              to={`/item/${result.productId}`}
+              key={result.productId}
+              className="card-link"
+            >
+              <Card
+                key={index}
+                title={result.productName}
+                // subTitle={result.productCategory}
+                price={result.productPrice}
+                mainImage={result.productImage}
+                // count={result.options[0].productStock}
+              />
+            </Link>
           );
         })}
       <BottomNav />
