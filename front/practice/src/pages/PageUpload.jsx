@@ -10,6 +10,8 @@ import ProductTagListItem from "../components/ProductTagListItem";
 import ProductSubmitButton from "../components/ProductSubmitButton";
 
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { fontSize } from "@mui/system";
 
 function PageUpload() {
@@ -21,6 +23,12 @@ function PageUpload() {
   const [tagPosition, setTagPosition] = useState(null);
   // const selectedProductsArray = [selectedProduct];
   const [selectedProductsArray, setSelectedProductsArray] = useState([]);
+  const [isLiked, setIsLiked] = useState(false);
+
+  const handleLikeClick = () => {
+    setIsLiked(!isLiked);
+  };
+
   const handleImageChange = (e) => {
     e.preventDefault();
 
@@ -111,6 +119,7 @@ function PageUpload() {
 
       {/* 이미지 업로드 후 보이는 버튼 */}
       {imagePreviewUrl && (
+        
   <Box
     style={{
       display: 'flex',
@@ -121,6 +130,7 @@ function PageUpload() {
     }}
   >
     <Container
+    
       style={{
         maxWidth: '800px', // 이미지 컨테이너의 최대 너비 설정
         display: 'flex',
@@ -132,9 +142,29 @@ function PageUpload() {
       <ProductImageWithTags
         imageUrl={imagePreviewUrl}
         onImageClick={handleImageClick}
-        selectedProduct={selectedProduct}
+        selectedProduct={selectedProductsArray}
         tagPosition={tagPosition}
       />
+
+       <Box
+    style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      backgroundColor: 'white',
+      padding: '20px 0',
+    }}
+  >
+    <Container
+      style={{
+        maxWidth: '800px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+    </Container>
+  </Box>
     </Container>
   </Box>
 )}
@@ -171,6 +201,7 @@ function PageUpload() {
           />
         </Grid>
       ))}
+      
     </Grid>
   )}
 

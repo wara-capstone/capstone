@@ -5,6 +5,10 @@ import ProductTagListItem from './ProductTagListItem';
 function ProductImageWithTags({ imageUrl, onImageClick, selectedProduct }) {
   const [tags, setTags] = useState([]);
 
+  console.log("imageUrl는?", imageUrl);
+  console.log("onImageClick는?", onImageClick);
+  console.log("selectedProduct는?", selectedProduct);
+  console.log("tags는?", tags);
   useEffect(() => {
     console.log("상품태그 업데이트되었습니다.");
     console.log(tags);
@@ -22,43 +26,32 @@ function ProductImageWithTags({ imageUrl, onImageClick, selectedProduct }) {
 
   return (
     <div className="image-container" onClick={handleImageClick}>
-      <Box
-      sx={{
-        width: 300, // 박스의 너비
-        height: 300, // 박스의 높이
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        overflow: 'hidden',
-        margin: 'auto', // 중앙 정렬
-        marginTop: 10
-      }}
-      >
-      <img src={imageUrl} alt="Product" style={{ width: '100%' }} />
-    </Box>
-    {tags.map(tag => (
-      <div
-        key={tag.id}
-        className="product-tag"
-        style={{
-          position: 'absolute',
-          left: tag.x,
-          top: tag.y,
-          transform: 'translate(-50%, -50%)', // 태그를 클릭한 위치에 중앙에 배치
-        }}
-      >
-        
-        <Grid item xs={12} sm={6} md={4} lg={3} xl={2}> {/* 그리드 아이템의 크기 조정 */}
-              <ProductTagListItem
-                itemData={tag.product}
-                onClick={() => onImageClick(tag.product)}
-               
-              />
-            </Grid>
-      </div>
-    ))}
-  </div>
-);
+      <Box sx={{ position: 'relative', width: '100%', height: 'auto' }}>
+        <img src={imageUrl} alt="Product" style={{ width: '100%' }} />
+        {tags.map(tag => (
+          <div key={tag.id}>
+            {tag.product.map((product, index) => (
+              <div
+                key={`${tag.id}-${index}`}
+                className="product-tag"
+                style={{
+                  position: 'absolute',
+                  left: `${tag.x}px`,
+                  top: `${tag.y + index * 50}px`, // 각 상품 태그를 Y축으로 구분
+                  transform: 'translate(-50%, -50%)',
+                }}
+              >
+                <ProductTagListItem
+                  itemData={product}
+                  onClick={() => onImageClick(product)}
+                />
+              </div>
+            ))}
+          </div>
+        ))}
+      </Box>
+    </div>
+  );
 }
 
 export default ProductImageWithTags;

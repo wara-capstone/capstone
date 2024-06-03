@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from "react";
 import { Box, Card, CardHeader, Avatar, CardContent, Typography } from "@mui/material";
 import { styled } from '@mui/system';
-import { fetchRefreshToken } from "../utils/authUtil";
 
   // Title 스타일을 위한 컴포넌트
   const TitleTypography = styled(Typography)(({ theme }) => ({
@@ -9,8 +8,9 @@ import { fetchRefreshToken } from "../utils/authUtil";
     alignItems: 'center',
   }));
   
-function ProductTagListItem({ itemData, onClick, cardSize = {  }  }) {
-
+function ProductTagListItem({ itemData, onClick, cardSize = {}  }) {
+  console.log("상품태그할 때 url를 가져오고 있을까??");
+  console.log(itemData.productUrls[0].url);
     const formatPrice = (price) => {
       return `${price}원`;
     };
@@ -21,6 +21,7 @@ function ProductTagListItem({ itemData, onClick, cardSize = {  }  }) {
           avatar={
             <Avatar
               sx={{ width: 80, height: 80 }}
+              
               src={itemData.productUrls[0].url}
               variant="rounded"
             ></Avatar>
