@@ -20,7 +20,7 @@ import axios from "axios";
 import LoadingScreen from "../../components/LoadingScreen.jsx";
 
 // SellerItemManagement 컴포넌트 정의
-export default function SellerItemManagement() {
+export default function SellerItemManagement({images}) {
   const { storeId } = useParams();
 
  // 숫자로 변환
@@ -35,6 +35,10 @@ export default function SellerItemManagement() {
   const [loading, setLoading] = useState(true);
 
   const [rowData, setRowData] = useState();
+  useEffect(() => {
+    setRowData(images);
+  }, [images]);
+  
   var fetchData;
 
     fetchData = async () => {
@@ -49,37 +53,7 @@ export default function SellerItemManagement() {
             },
           }
         );
-        // data의 옵션값 추출 코드
-        // // 데이터 변형
-        // const transformedData = response.data.flatMap((item) =>
-        //   item.options.map((option) => ({
-        //     ...item,
-        //     productSize: option.productSize,
-        //     productColor: option.productColor,
-        //     productStock: option.productStock,
-        //   }))
-        // );
 
-      // // 데이터 변형
-      // const transformedData = response.data.map((item) =>
-      // ({
-      //   productId: item.productId,
-      //   storeId: item.storeId,
-      //   productName: item.productName,
-      //   productCategory: item.productCategory,
-      //   productUrls: item.productUrls,
-      //   // options
-      // })
-      // );
-
-      // const transformedData = response.data.map((item) => {
-      //   const options = item.options.map((option) => ({
-      //     productSize: [option.productSize],
-      //     productColor: [option.productColor],
-      //     productStock: [option.productStock],
-      //   }));
-
-      // setRowData(transformedData);
       setRowData(response.data);
       console.log(response.data);
     } catch (error) {
@@ -125,30 +99,11 @@ export default function SellerItemManagement() {
     fetchData();
   }, []);
 
-  // const transformData = (data) => {
-  //   return data.reduce((acc, item) => {
-  //     item.options.forEach(option => {
-  //       acc.push({
-  //         ...item,
-  //         productSize: option.productSize,
-  //         productColor: option.productColor,
-  //         productStock: option.productStock
-  //       });
-  //     });
-  //     return acc;
-  //   }, []);
-  // };
-
-  // // 사용 예:
-  // const response = await axios.get(`$${process.env.NODE_ENV === 'development' ? 'http://' : 'https:'}//{process.env.REACT_APP_API_URL}product/all/store/${storeId}`, { ... });
-  // const transformedData = transformData(response.data);
-  // setRowData(transformedData);
-  // 세로 줄바꿈 코드
 
   const [columnDefs, setColumnDefs] = useState([   
     {
       headerName: "상품사진",
-      field: "productUrls",
+      field: "images",
       headerClass: "center-header", // 각 컬럼에 headerClass 추가
       minWidth: 180,
       wrapText: true,
@@ -160,9 +115,9 @@ export default function SellerItemManagement() {
       cellRenderer: ImageCellRenderer,
       cellStyle: function(params) {
         if (params.column.colId === 'productUrls') { // 체크박스가 있는 컬럼 ID
-          return { textAlign: 'center', justifyContent: 'center'}; // 체크박스에 적용할 스타일
+          //return { textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems:'center', height:'100%'}; // 체크박스에 적용할 스타일
         } else {
-          return { whiteSpace: 'pre-wrap', textAlign: 'center', justifyContent: 'center',  autoHeight: true }; // 체크박스가 아닌 셀에 적용할 스타일
+          //return { whiteSpace: 'pre-wrap', textAlign: 'center', justifyContent: 'center',  autoHeight: true }; // 체크박스가 아닌 셀에 적용할 스타일
         }
       },
     },
@@ -256,38 +211,6 @@ export default function SellerItemManagement() {
     };
   }, []);
 
-  const onCellEditingStopped = useCallback((event) => {
-    console.log("cellEditingStopped");
-
-    // 수정된 데이터 가져오기
-    const updatedData = rowData;
-
-    // rowData 상태 업데이트
-    setRowData((prevRowData) => {
-      // 기존 rowData에서 수정된 행 찾기
-      const updatedRowData = prevRowData.map((row) => {
-        if (row.id === updatedData.productId) {
-          // id는 각 행을 식별할 수 있는 유니크한 값이어야 합니다.
-          return updatedData; // 수정된 데이터로 행 업데이트
-        } else {
-          return row; // 다른 행들은 그대로 유지
-        }
-      });
-
-      return updatedRowData;
-    });
-  }, []);
-
-  const onBtSave = useCallback(() => {
-    const allRowNodes = gridRef.current.api.getModel().rowsToDisplay;
-    const allRowData = allRowNodes.map((node) => node.data);
-    setSavedRowData(allRowData);
-    console.log(allRowData); // 콘솔에 모든 행의 데이터를 출력
-  }, []);
-  const [newProduct, setNewProduct] = useState({
-    productId: "",
-    productUrls: [""],
-  });
 
   const createProduct = async () => {
     var data = {
@@ -313,7 +236,7 @@ export default function SellerItemManagement() {
       }
     )
       .then((response) => {
-        if (response.status == 200) {
+        if (response.status === 200) {
           message.success("새로운 상품을 등록하였습니다.");
           //setNewProduct(response.json()); // JSON 형식의 응답을 파싱
         }
@@ -329,8 +252,6 @@ export default function SellerItemManagement() {
       });
   };
   
-
-
 
   if (loading) {
     <LoadingScreen> </LoadingScreen>;
@@ -356,9 +277,7 @@ export default function SellerItemManagement() {
             
                 onClick={() => {
                   createProduct();
-                  //setRowData([...rowData,
-                  //  {  productUrls: newProduct.productUrls[0] ,  productName: "",  productId: newProduct.productId,  productSize: "",  productColor: '',  productStock: '',}])
-                }}
+                      }}
               >
                 추가
               </button>
@@ -374,36 +293,41 @@ export default function SellerItemManagement() {
 
             </div>
 
-            {/* <div>
-            <button onClick={onBtSave}>저장</button>
-          </div> */}
           </div>
           <div className="grid-wrapper">
             <div style={gridStyle} className="ag-theme-alpine">
               <AgGridReact
                 ref={gridRef}
-                rowData={rowData}
                 columnDefs={columnDefs}
+                rowData={rowData}
                 getRowNodeId={getRowId}
                 defaultColDef={
                   {defaultColDef,
                    
-                    cellStyle: function(params) {
-                      if (params.column.colId !== 'productUrls') { // 체크박스 컬럼 ID로 변경
-                        return {  display: 'flex', whiteSpace: 'pre-wrap', textAlign: 'center',
-                        cellClass: 'ag-no-row-height-limit',lineHeight: '130%', wordSpacing: '10px',
-                        justifyContent: 'space-around', alignitems: 'center',margin:'px'};
-                      } else {
-                        return {display:'flex', textAlign: 'center', justifyContent: 'space-around',  wordSpacing: '10px',
-                         cellClass: 'ag-no-row-height-limit',lineHeight: '1.5'};
-                      }
+                    cellStyle: (params) => {
+                      const isProductUrlsColumn = params.column.colId === 'productUrls';
+                      return {
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        whiteSpace: 'pre-wrap',
+                        textAlign: 'center',
+                        cellClass: 'ag-no-row-height-limit',
+                        lineHeight: '130%',
+                        
+                        ...(isProductUrlsColumn && {
+                          wordSpacing: '0',
+                          //lineHeight: '1.5',
+                        }),
+                      };
                     },
                   }}
                 suppressRowClickSelection={true}
                 rowSelection={"multiple"}
                 rowHeight={100}
                 frameworkComponents={{
-                  imageCellRenderer: ImageCellRenderer, // 컴포넌트 등록
+                  ImageCellRenderer: ImageCellRenderer, // 컴포넌트 등록
                   cellRenderer: CellRenderer,
                 }}
               />

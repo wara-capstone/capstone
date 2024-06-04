@@ -14,6 +14,7 @@ import {
 }from "antd";
 import { fetchRefreshToken } from "../utils/authUtil";
 import moment from 'moment';
+import { all } from "axios";
 
 export default function PurchaseHistory() {
 
@@ -59,11 +60,13 @@ export default function PurchaseHistory() {
           if(result.result === "success"){
             console.log("구매 내역이 존재합니다.");
             
-            // let allPurchaseItems = [];
+            let allPurchaseItems = [];
+            let allPaymentPrice = 0;
 
             // result.data.forEach(async data => {
               for (const data of result.data) {
-              setTotalPrice(totalPrice => totalPrice += data.totalPrice);
+              allPaymentPrice += data.totalPrice;
+              // setTotalPrice(totalPrice => totalPrice += data.totalPrice);
 
               const purchaseItems = [];
 
@@ -94,7 +97,6 @@ export default function PurchaseHistory() {
               } else {
                 console.log("실패");
               }
-              // allPurchaseItems.push(...purchaseItems);
 
               // });
             }  
@@ -102,10 +104,14 @@ export default function PurchaseHistory() {
               console.log("구매 시간은 " + data.dateTime + "입니다.");
               purchaseItems["dateTime"] = data.dateTime;
               purchaseItems["paymentPrice"] = data.totalPrice;
-              setPaymentItems(prevItems => [...prevItems, purchaseItems]);
+              // setPaymentItems(prevItems => [...prevItems, purchaseItems]);
+              allPurchaseItems.push(purchaseItems);
               }
               // });
-              setPaymentItems(prevItems => [...prevItems].reverse());
+              // setPaymentItems(prevItems => [...prevItems].reverse());
+                      // 모든 데이터 로딩 후 한번에 상태 업데이트
+              setPaymentItems(allPurchaseItems.reverse());
+              setTotalPrice(allPaymentPrice);
           // setPaymentItems(allPurchaseItems);
           }
           else{

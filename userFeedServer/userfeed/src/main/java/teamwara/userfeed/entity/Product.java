@@ -11,8 +11,11 @@ import lombok.*;
 public class Product extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id")
+    @Column(name="p_id")
     private Long id;
+
+    @Column(nullable = false)
+    private Long productId;
 
     @Column(nullable = false)
     private String productImage;

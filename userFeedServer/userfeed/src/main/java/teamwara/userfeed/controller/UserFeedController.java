@@ -17,6 +17,16 @@ import java.util.List;
 public class UserFeedController {
     private final UserFeedService userFeedService;
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<?> getDetailUserFeed(@PathVariable("id") Long id){
+        try {
+            return ResponseEntity.ok(userFeedService.getDetailUserFeed(id));
+        }catch (Exception e){
+            e.printStackTrace(); // 로그에 에러 스택 트레이스 출력
+            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        }
+    }
+
     @GetMapping()
     public ResponseEntity<?> getUserFeeds() {
         try {
@@ -27,15 +37,7 @@ public class UserFeedController {
         }
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<?> getDetailUserFeed(@PathVariable("id") Long id){
-        try {
-            return ResponseEntity.ok(userFeedService.getDetailUserFeed(id));
-        }catch (Exception e){
-            e.printStackTrace(); // 로그에 에러 스택 트레이스 출력
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
-        }
-    }
+
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<?> createUserFeed(
             @RequestPart("image") MultipartFile imageFile,

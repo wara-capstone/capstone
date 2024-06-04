@@ -30,7 +30,8 @@ function ProductImageWithTags({ imageUrl, onImageClick, selectedProduct }) {
         justifyContent: 'center',
         alignItems: 'center',
         overflow: 'hidden',
-        margin: 'auto' // 중앙 정렬
+        margin: 'auto', // 중앙 정렬
+        marginTop: 10
       }}
       >
       <img src={imageUrl} alt="Product" style={{ width: '100%' }} />

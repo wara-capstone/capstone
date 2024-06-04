@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
+import { Box, Button, Dialog, DialogContent, DialogTitle, Container } from "@mui/material";
 import React, { useState, useEffect } from "react";
 //import ProductTagListItem from '../components/ProductTagListItem';
 import BottomNav from "../components/BottomNav";
@@ -8,6 +8,9 @@ import ProductTagList from "../components/ProductTagList";
 import { Grid } from '@mui/material';
 import ProductTagListItem from "../components/ProductTagListItem";
 import ProductSubmitButton from "../components/ProductSubmitButton";
+
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import { fontSize } from "@mui/system";
 
 function PageUpload() {
   const [imageFile, setImageFile] = useState(null);
@@ -61,10 +64,19 @@ function PageUpload() {
 
   return (
     
-    <div className="PageUpload">
+    <div className="PageUpload" >
       <Header />
 
       {!imagePreviewUrl && (
+      <Container
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '500px',
+          backgroundColor: 'white', // 컨테이너 색상을 흰색으로 설정
+        }}
+      >
         <div>
           <input
             accept="image/*"
@@ -74,81 +86,112 @@ function PageUpload() {
             onChange={handleImageChange}
           />
           <label htmlFor="contained-button-file">
-            <Button variant="contained" component="span">
-              사진 업로드
+            <Button
+              variant="contained"
+              component="span"
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                border: 'none', // 버튼 아웃라인 제거
+                backgroundColor: 'white', // 버튼 배경색을 흰색으로 변경
+                color: 'black', // 버튼 텍스트 색상을 검정색으로 변경
+                boxShadow: 'none', // 버튼 그림자 제거
+                borderRadius: '20px', // 버튼 라운드 추가
+              }}
+            >
+              <AddPhotoAlternateIcon sx={{ fontSize: 100 ,border: 'none' }} />
             </Button>
           </label>
         </div>
-      )}
+      </Container>
+    )}
 
       {/* 이미지 미리보기 박스를 ProductImageWithTags 컴포넌트로 변경합니다. */}
 
       {/* 이미지 업로드 후 보이는 버튼 */}
       {imagePreviewUrl && (
-        <>
-        
-            
-     
-          <ProductImageWithTags
-            imageUrl={imagePreviewUrl}
-            onImageClick={handleImageClick}
-            selectedProduct={selectedProduct}
-            tagPosition={tagPosition}
-          />
-          <Button
-            variant="outlined"
-            onClick={handleOpenModal} // 상품태그 추가 버튼 클릭 이벤트 핸들러
-            style={{
-              marginBottom: 20,
-              backgroundColor: "white", // 버튼 배경색을 하얀색으로 설정
-              color: "black", // 버튼 글씨색을 검정색으로 설정
-              border: "1px solid #ccc", // 테두리를 회색으로 설정
-              padding: "10px 100px", // 버튼의 내부 여백을 조정하여 길쭉한 형태로 만듦
-            }}
-          >
-            상품태그 추가
-          </Button>
-          {/* 선택된 상품 태그 정보 표시 */}
-          {selectedProductsArray.length > 0 && (
-            <Box
-              style={{
-                marginTop: "20px",
-                padding: "10px",
-                border: "1px solid #ccc",
-                backgroundColor: "#f0f0f0",
-              }}
-            >
-              <Grid container spacing={2}>
-      {/* 선택된 상품을 배열로 변환하여 map 함수 사용 */}
+  <Box
+    style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      backgroundColor: 'white',
+      padding: '20px 0', // 위아래에 여백 추가
+    }}
+  >
+    <Container
+      style={{
+        maxWidth: '800px', // 이미지 컨테이너의 최대 너비 설정
+        display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      
+      }}
+    >
+      <ProductImageWithTags
+        imageUrl={imagePreviewUrl}
+        onImageClick={handleImageClick}
+        selectedProduct={selectedProduct}
+        tagPosition={tagPosition}
+      />
+    </Container>
+  </Box>
+)}
+       <Box
+  style={{
+    marginTop: '20px',
+    padding: '10px',
+    backgroundColor: '#f0f0f0',
+  }}
+>
+  <Button
+    variant="outlined"
+    onClick={handleOpenModal}
+    style={{
+      backgroundColor: 'white',
+      color: 'black',
+      border: '1px solid black',
+      borderRadius: '10px',
+      padding: '10px 100px',
+      fontWeight: 'bold',
+      marginBottom: '30px'
+    }}
+  >
+    상품태그 추가
+  </Button>
+
+  {selectedProductsArray.length > 0 && (
+    <Grid container spacing={2}>
       {selectedProductsArray.map((product) => (
-        <Grid  item xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={12} md={12}>
           <ProductTagListItem
             itemData={product}
             onClick={() => handleProductSelect(product)}
           />
         </Grid>
       ))}
-      <Grid item xs={12}>
-        <ProductSubmitButton
-          productData={selectedProductsArray}
-          imageFile={imageFile}
-        />
-        </Grid>
     </Grid>
-            </Box>
-          )}
-        </>
-      )}
-      <Dialog open={openModal} onClose={handleCloseModal}>
-        <DialogTitle>상품 선택</DialogTitle>
-        <DialogContent>
-          <ProductTagList onProductSelect={handleProductSelect} />
-        </DialogContent>
-      </Dialog>
+  )}
+
+  <Grid item xs={12}>
+    <ProductSubmitButton
+      productData={selectedProductsArray}
+      imageFile={imageFile}
+    />
+  </Grid>
+</Box>
       
-      <BottomNav />
-    </div>
-  );
+    
+    <Dialog open={openModal} onClose={handleCloseModal}>
+      <DialogTitle>상품 선택</DialogTitle>
+      <DialogContent>
+        <ProductTagList onProductSelect={handleProductSelect} />
+      </DialogContent>
+    </Dialog>
+    <BottomNav />
+  </div>
+);
 }
 
 export default PageUpload;

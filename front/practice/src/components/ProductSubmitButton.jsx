@@ -1,7 +1,10 @@
 import { Button } from "@mui/material";
+import { message } from "antd";
+import { useNavigate } from 'react-router-dom';
 import React from "react";
 
 const ProductSubmitButton = ({ productData, imageFile }) => {
+  const navigate = useNavigate();
   const url = `${process.env.NODE_ENV === "development" ? "" : ""}${
     process.env.REACT_APP_API_URL
   }user-feed`;
@@ -31,6 +34,7 @@ const ProductSubmitButton = ({ productData, imageFile }) => {
       const product = [];
       for (let i = 0; i < productData.length; i++) {
         product.push({
+          productId: productData[i].productId,
           productImage: productData[i].productUrls[0].url,
           productName: productData[i].productName,
           productPrice: productData[i].price,
@@ -60,8 +64,11 @@ const ProductSubmitButton = ({ productData, imageFile }) => {
 
       if (response.ok) {
         console.log("상품 정보가 성공적으로 전송되었습니다.");
+        message.success("글 등록 완료! 여러분의 소중한 이야기를 공유했습니다.");
+        navigate('/feed');
       } else {
         console.error("상품 정보 전송에 실패했습니다.");
+        message.error("글 등록 실패!");
       }
     } catch (error) {
       console.error(error);
@@ -69,12 +76,17 @@ const ProductSubmitButton = ({ productData, imageFile }) => {
   };
 
   return (
-    <Button
+    <Button variant="contained" 
       style={{
-        border: "1px solid #ccc",
+        backgroundColor: '#333',
+        color: '#fff',
+        border: "none",
         position: "relative",
         top: 10,
         left: 100,
+        borderRadius: "10px", // 버튼 모서리 둥글게 하기
+        fontWeight: "bold", // 글씨체 굵게 설정
+        marginTop: 20
       }}
       onClick={handleSubmit}
     >

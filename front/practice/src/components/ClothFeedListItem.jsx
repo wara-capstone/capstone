@@ -10,7 +10,7 @@ function ClothFeedListItem({ id, userName, userImg, img, caption }) {
     <div className="ClothFeedListItem">
       <Card>
         {/* Media */}
-        <CardMedia component="img" image={img} alt={caption} />
+        <CardMedia component="img" height="200" image={img} alt={caption} />
         {/* Header */}
         <CardHeader
           avatar={
@@ -28,7 +28,12 @@ function ClothFeedListItem({ id, userName, userImg, img, caption }) {
                         </IconButton> */}
             </>
           }
-          title={<Typography fontWeight="bold">{userName}</Typography>}
+          title={
+            <Typography fontWeight="bold" sx={{ fontSize: "0.85rem" }}>
+              {userName}
+            </Typography>
+          }
+          sx={{ paddingBottom: "5px", paddingTop: "5px" }} // CardHeader의 높이를 낮추기 위해 패딩 조정
         />
       </Card>
     </div>

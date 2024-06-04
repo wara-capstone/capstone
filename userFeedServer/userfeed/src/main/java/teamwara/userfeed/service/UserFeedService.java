@@ -55,6 +55,7 @@ public class UserFeedService {
         // 제품 정보 생성
         List<Product> products = userFeedRequestDto.getProduct().stream().map(productDto ->
                 Product.builder()
+                        .productId(productDto.getProductId())
                         .productImage(productDto.getProductImage())
                         .productName(productDto.getProductName())
                         .productPrice(productDto.getProductPrice())
@@ -89,7 +90,7 @@ public class UserFeedService {
 
     private UserFeedDetailResponseDto convertToUserFeedDetailResponseDto(UserFeed userFeed) {
         List<ProductDto> productDtos = userFeed.getProducts().stream()
-                .map(product -> new ProductDto(product.getProductImage(),
+                .map(product -> new ProductDto(product.getProductId(),product.getProductImage(),
                         product.getProductName(), product.getProductPrice()))
                 .toList();
 
