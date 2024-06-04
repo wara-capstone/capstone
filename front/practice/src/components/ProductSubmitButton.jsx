@@ -3,7 +3,10 @@ import { message } from "antd";
 import { useNavigate } from 'react-router-dom';
 import React from "react";
 
-const ProductSubmitButton = ({ productData, imageFile }) => {
+
+
+const ProductSubmitButton = ({ productData, imageFile, userFeedContent }) => {
+
   const navigate = useNavigate();
   const url = `${process.env.NODE_ENV === "development" ? "" : ""}${
     process.env.REACT_APP_API_URL
@@ -43,6 +46,7 @@ const ProductSubmitButton = ({ productData, imageFile }) => {
 
       const userFeed = {
         user: user,
+        userFeedContent: userFeedContent,
         product: product,
       };
 

@@ -94,7 +94,7 @@ function ClothFeedList() {
         const data = await response.json(); // response.json()이 완료될 때까지 기다림
 
         setPosts(data); // 상태 업데이트
-
+        console.log("서버로 받은");
         console.log(data);
       } else {
         console.log("실패");
@@ -128,10 +128,11 @@ function ClothFeedList() {
               >
                 <ClothFeedListItem
                   id={post.id}
+                  userFeedContent={post.userFeedContent}
                   userName={post.user.userName}
                   userImg={post.user.userImage}
                   img={post.userFeedImage}
-                  // caption={post.caption}
+                   caption={"와랄라"}
                 />
               </Link>
             </Grid>

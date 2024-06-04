@@ -17,6 +17,7 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { fontSize } from "@mui/system";
+import ClothFeedListItem from "../components/ClothFeedListItem";
 
 function PageUpload() {
   const [imageFile, setImageFile] = useState(null);
@@ -28,6 +29,13 @@ function PageUpload() {
   // const selectedProductsArray = [selectedProduct];
   const [selectedProductsArray, setSelectedProductsArray] = useState([]);
   const [cardContentText, setCardContentText] = useState('This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like.');
+
+  const [userFeedContent, setUserFeedContent] = useState("");
+  console.log("userFeedContent에 값이 있어 없어?", userFeedContent);
+
+  const handleFeedContentChange = (event) => {
+    setUserFeedContent(event.target.value);
+  };
 
   const handleImageChange = (e) => {
     e.preventDefault();
@@ -174,6 +182,7 @@ function PageUpload() {
     </Container>
   </Box>
 )}
+ <div>
 <CardContent>
   <Typography variant="body2" color="text.secondary">
   <TextField
@@ -185,9 +194,12 @@ function PageUpload() {
           defaultValue=" "
           variant="filled"
           style={{ width: '300px'}}
+          onChange={handleFeedContentChange}
         />
   </Typography>
 </CardContent>
+{/* <ClothFeedListItem userFeedContent={userFeedContent} /> */}
+   </div>
        <Box
   style={{
     marginTop: '20px',
@@ -230,8 +242,9 @@ function PageUpload() {
     <ProductSubmitButton
       productData={selectedProductsArray}
       imageFile={imageFile}
+      userFeedContent={userFeedContent}
     />
-  </Grid>
+      </Grid>
 </Box>
       
     
