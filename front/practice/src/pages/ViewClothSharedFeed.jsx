@@ -3,7 +3,9 @@ import {
   CardHeader,
   CardMedia,
   Card as MuiCard,
+  IconButton,
   Typography,
+  Box,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import React, { useEffect, useState } from "react";
@@ -11,6 +13,11 @@ import { Link, useParams } from "react-router-dom";
 import BottomNav from "../components/BottomNav";
 import Card from "../components/Card";
 import Header from "../components/Header";
+// 아이콘
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import IosShareIcon from '@mui/icons-material/IosShare';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 
 const StyledCardHeader = styled(CardHeader)(({ theme }) => ({
   // 스타일 커스터마이징 추가
@@ -94,7 +101,29 @@ export default function ViewClothSharedFeed() {
       {/*  */}
       {/*  */}
       {/*  */}
+      <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between', // 좌우 여백을 최대로 하여 아이콘들을 양쪽 끝으로 분리
+        alignItems: 'center', // 아이콘들을 상하 중앙 정렬
+        width: '100%', // 박스의 너비를 부모 컴포넌트에 맞춤
+      }}
+    >
+      {/* 왼쪽 아이콘 */}
+      <IconButton aria-label="share">
+        <IosShareIcon />
+      </IconButton>
 
+      {/* 오른쪽 아이콘들을 감싸는 박스 */}
+      <Box>
+        <IconButton aria-label="like">
+          <FavoriteBorderIcon />
+        </IconButton>
+        <IconButton aria-label="bookMark">
+          <BookmarkBorderIcon />
+        </IconButton>
+      </Box>
+    </Box>         
       {itemData.product &&
         itemData.product.map((result, index) => {
           return (
@@ -114,6 +143,8 @@ export default function ViewClothSharedFeed() {
             </Link>
           );
         })}
+
+
       <BottomNav />
     </div>
   );
