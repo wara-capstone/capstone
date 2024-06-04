@@ -33,6 +33,8 @@ public class StoreServiceImpl implements StoreService {
     public SimpleResponseDTO createStore(StoreDTO storeDTO) {
         logger.info("Service Layer - createStore: Creating store with data: {}", storeDTO);
         StoreEntity storeEntity = toEntity(storeDTO);
+        String imageUri = "https://onoff.zone/api/image/download/2";
+        storeEntity.setStoreImage(imageUri);
 
         Map<String, Object> resultMap = storeDAO.createStore(storeEntity);
         SimpleResponseDTO simpleResponseDTO = toSimpleResponseDTO(resultMap);
