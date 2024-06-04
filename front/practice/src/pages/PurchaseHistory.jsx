@@ -131,7 +131,7 @@ export default function PurchaseHistory() {
   return (
     <div className="cart-page">
       <Header />
-      <div style={{display: 'flex', justifyContent: 'space-between', padding: '5px'}}>
+      {/* <div style={{display: 'flex', justifyContent: 'space-between', padding: '5px'}}>
         <div>
           <label>구매 상품 개수: </label>
           <span>{paymentItems.length}</span>
@@ -140,7 +140,7 @@ export default function PurchaseHistory() {
           <label>총 구매 금액: </label>
           <span>{totalPrice.toLocaleString()}원</span> 
         </div>
-      </div>
+      </div> */}
       <div>
         {paymentItems.length > 0 ? ( 
             <div className="Cart">
@@ -148,7 +148,6 @@ export default function PurchaseHistory() {
         paymentItems.map((paymentDTO, num) =>(
           console.log(paymentDTO),
           <div>
-            <hr />
           <h3>구매일자 : {moment.utc(paymentDTO.dateTime).format('YYYY-MM-DD')}</h3>
           {paymentDTO.map((data, index) => (
         <PurchaseHistoryCard
@@ -157,6 +156,7 @@ export default function PurchaseHistory() {
         />
         ))}
         <h3>총 구매 금액: {paymentDTO.paymentPrice}원</h3>
+        <hr style={{height:"0.05rem", width:"80%"}}/>
         </div>
       ))
       

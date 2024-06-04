@@ -176,7 +176,7 @@ function optionClose() { //옵션 변경 취소
 
 
 return (
-    <div className="orderProductList"> 
+    <div className="orderProductList" style={{height:"10rem"}}> 
     <div style={{display: 'flex', height:'3vh'}}>
         <input  
         type="checkbox"
@@ -187,37 +187,34 @@ return (
     </div>
 
     <div style={{display:'flex',justifyContent:'space-around'}}>
-     <div className="imageWrapper">
-     <img src={data.product.p_image} alt="bread" className="breadImage" />
+     <div className="imageWrapper" style={{height:"8rem"}}>
+     <img src={data.product.p_image} alt="bread" className="breadImage" style={{fontSize:"20px"}} />
     </div>
     <div className="optionWrapper">
-        <span className="dayOption">{data.product.color + ", " + data.product.size}</span> 
-        <label>{quantity} 개</label>
+        <span className="dayOption" style={{fontSize:"20px"}}>{data.product.color + ", " + data.product.size}</span> 
+        <label>
+          <span style={{fontSize:"20px"}}>{quantity} </span>
+          <span>개</span> 
+        </label>
         <button className="changeOption" onClick={async () => {
             await optionGet();
             setModalIsOpen(true);
-        }}>옵션변경</button>   
+        }} style={{fontSize:"15px"}} >옵션변경</button>   
     </div> 
     <Modal className='Modal'
         isOpen={modalIsOpen} 
         onRequestClose={()=> setModalIsOpen(false)}
         >
         옵션 변경
-        <div className="quantityWrapper">
-        개수
-        <button className="quantityButton" style={{width:"2rem"}} onClick={quantityMinus}> - </button> 
-             <h5>{quantity}</h5>
-        <button className="quantityButton" style={{width:"2rem"}} onClick={quantityPlus}> + </button> 
-        </div>
         <div style={{justifyContent:"space-around"}}>색상
-        <Select value={targetColor} onChange={handleColorChange} >
+        <Select value={targetColor} onChange={handleColorChange} style={{ width:"9rem", marginLeft:"1.5rem  "}} >
             {colorArray.map((color, index) => 
                 <option value={color} key={index}>{color}</option>
         )}</Select>
 
         </div>
         <div>사이즈
-        <Select value={targetSize} onChange={handleSizeChange}>
+        <Select value={targetSize} onChange={handleSizeChange} style={{ width:"9rem", marginLeft:"0.5rem"}}>
                 {sizeArrayForColor.map(
                     (size, index) => 
                 <option value={size} key={index}>{size}</option>
@@ -225,13 +222,21 @@ return (
 
 
         </div>
+        <div className="quantityWrapper">
+        <button className="quantityButton" style={{width:"2rem"}} onClick={quantityMinus}> - </button> 
+             <h5>{quantity}</h5>
+        <button className="quantityButton" style={{width:"2rem"}} onClick={quantityPlus}> + </button> 
+        </div>
         <div style={{display:"flex"}}>
             <button className="changeOption" onClick={optionClose}>취소</button>  
             <button className="changeOption"style={{backgroundColor: "#32A4FF", color:"white"}} onClick={optionEdit}>저장</button>
          </div>
       </Modal>
     <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}} >
-        <label>{data.product.price.toLocaleString()}원</label> 
+        <label>
+          <span style={{fontSize:"25px"}}>{data.product.price.toLocaleString()}</span>
+          <span>원</span>
+          </label> 
         {/* <div className='buttonWrapper'>
             <button className="button">결제</button>
             <button className="button">삭제</button> 
