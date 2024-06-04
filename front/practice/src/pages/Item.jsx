@@ -254,7 +254,7 @@ export default function Item() {
             <div>
               <span style={{ fontSize: "20px" }}>색상</span>
               <Select
-                style={{ marginLeft: "1.3rem", fontSize: "20px" }}
+                style={{ marginLeft: "1.3rem", fontSize: "20px" , width:"10.5rem" }}
                 value={targetColor}
                 onChange={handleColorChange}
               >
@@ -270,7 +270,7 @@ export default function Item() {
               <Select
                 style={{
                   marginLeft: "1rem",
-                  width: "4.5rem",
+                  width: "10rem",
                   textAlignLast: "center",
                   fontSize: "1rem",
                 }}
