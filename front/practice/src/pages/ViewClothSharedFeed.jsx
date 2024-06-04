@@ -1,7 +1,9 @@
 import {
   Avatar,
+  Box,
   CardHeader,
   CardMedia,
+  IconButton,
   Card as MuiCard,
   Typography,
 } from "@mui/material";
@@ -11,10 +13,10 @@ import { Link, useParams } from "react-router-dom";
 import BottomNav from "../components/BottomNav";
 import Card from "../components/Card";
 import Header from "../components/Header";
-
-import Slider from "react-slick";
-import "slick-carousel/slick/slick-theme.css";
-import "slick-carousel/slick/slick.css";
+// 아이콘
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import IosShareIcon from "@mui/icons-material/IosShare";
 
 const StyledCardHeader = styled(CardHeader)(({ theme }) => ({
   // 스타일 커스터마이징 추가
@@ -112,28 +114,48 @@ export default function ViewClothSharedFeed() {
       {/*  */}
       {/*  */}
       {/*  */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between", // 좌우 여백을 최대로 하여 아이콘들을 양쪽 끝으로 분리
+          alignItems: "center", // 아이콘들을 상하 중앙 정렬
+          width: "100%", // 박스의 너비를 부모 컴포넌트에 맞춤
+        }}
+      >
+        {/* 왼쪽 아이콘 */}
+        <IconButton aria-label="share">
+          <IosShareIcon />
+        </IconButton>
 
-      <Slider {...sliderSettings}>
-        {itemData.product &&
-          itemData.product.map((result, index) => {
-            return (
-              <Link
-                to={`/item/${result.productId}`}
-                key={result.productId}
-                className="card-link"
-              >
-                <Card
-                  key={index}
-                  title={result.productName}
-                  // subTitle={result.productCategory}
-                  price={result.productPrice}
-                  mainImage={result.productImage}
-                  // count={result.options[0].productStock}
-                />
-              </Link>
-            );
-          })}
-      </Slider>
+        {/* 오른쪽 아이콘들을 감싸는 박스 */}
+        <Box>
+          <IconButton aria-label="like">
+            <FavoriteBorderIcon />
+          </IconButton>
+          <IconButton aria-label="bookMark">
+            <BookmarkBorderIcon />
+          </IconButton>
+        </Box>
+      </Box>
+      {itemData.product &&
+        itemData.product.map((result, index) => {
+          return (
+            <Link
+              to={`/item/${result.productId}`}
+              key={result.productId}
+              className="card-link"
+            >
+              <Card
+                key={index}
+                title={result.productName}
+                // subTitle={result.productCategory}
+                price={result.productPrice}
+                mainImage={result.productImage}
+                // count={result.options[0].productStock}
+              />
+            </Link>
+          );
+        })}
 
       <BottomNav />
     </div>

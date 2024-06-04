@@ -247,14 +247,20 @@ export default function Item() {
               {/* <ImageSlider images={result.productUrls}></ImageSlider> */}
               {imageUrls.length > 0 && <ImageSlider images={imageUrls} />}
             </div>
-            <h2>{result.productName}</h2>
-            <h3>가격: {parseInt(price).toLocaleString()}</h3>
+            <div style={{ marginTop:"1rem", textAlign: "left", fontSize :"20px", marginLeft:"1rem"}}>{result.productName}</div>
+            <div style={{display: "flex", justifyContent:"space-between", alignItems:"center"}}>
+            <div style={{ textAlign: "left", marginLeft:"1rem" }}>
+              <span style={{fontSize :"35px"}}>{parseInt(price).toLocaleString()}</span>
+              <span style={{fontSize :"15px"}}>원</span>
+            </div>
+            <span style={{textAlign: "right", marginRight:"1.3rem", fontSize:"17px"}}>재고: {stock}</span>
+            </div>
             {/* <p>상세 정보: {"없음"}</p> */}
-            <h3>재고: {stock}</h3>
-            <div>
-              <span style={{ fontSize: "20px" }}>색상</span>
+            {/* <h3>재고: {stock}</h3> */}
+            <div style={{marginTop:"1.5rem"}}>
+            <span style={{ fontSize: "15px", marginRight:"0.6rem" }}>색상 </span>
               <Select
-                style={{ marginLeft: "1.3rem", fontSize: "20px" }}
+                style={{ marginLeft: "1rem", fontSize: "1rem" ,textAlignLast: "center", width:"18.5rem" }}
                 value={targetColor}
                 onChange={handleColorChange}
               >
@@ -265,12 +271,12 @@ export default function Item() {
                 ))}
               </Select>
             </div>
-            <div>
-              <span style={{ fontSize: "20px" }}>사이즈</span>
+            <div style={{marginTop:"0.5rem"}}>
+            <span style={{fontSize: "15px" }}>사이즈</span>
               <Select
                 style={{
                   marginLeft: "1rem",
-                  width: "4.5rem",
+                  width: "18.5rem",
                   textAlignLast: "center",
                   fontSize: "1rem",
                 }}
@@ -286,9 +292,8 @@ export default function Item() {
             </div>
             <div
               className="quantityWrapper"
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: "center", marginTop:"1rem" }}
             >
-              <span style={{ fontSize: "1rem" }}>개수</span>
               <button className="quantityButton" onClick={quantityMinus}>
                 {" "}
                 -{" "}
@@ -301,25 +306,29 @@ export default function Item() {
                 +{" "}
               </button>
             </div>
+            
           </div>
         )}
       </div>
       <div
         style={{
           marginTop: "1.5rem",
+          // marginBottom: "3rem",
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-around",
         }}
       >
         <div onClick={handleAddCart}>
-          <EventButton buttonText="장바구니 담기" onClick={clickAddCart} />
+          <EventButton buttonText="장바구니" onClick={clickAddCart} />
         </div>
 
         <div>
           <EventButton buttonText="구매하기" onClick={clickPurchase} />
         </div>
       </div>
+      <br/>
+      <br/>
       <BottomNav />
     </div>
   );

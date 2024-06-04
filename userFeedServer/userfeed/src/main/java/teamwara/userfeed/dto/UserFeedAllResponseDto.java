@@ -12,9 +12,10 @@ import java.util.List;
 public class UserFeedAllResponseDto {
     private Long id;
     private String userFeedImage;
+    private String userFeedContent;
     private UserDto user;
+    private int likesCount;
+    private boolean likedByMe;
     private String createdAt;
     private String modifiedAt;
-
-
 }

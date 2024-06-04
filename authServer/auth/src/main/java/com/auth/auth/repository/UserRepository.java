@@ -17,6 +17,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     public UserEntity findByEmail(String email);
     public void deleteByEmail(String email);
     public boolean existsByEmail(String email);
+    public boolean existsByNickname(String nickname);
 
     @Query("select COUNT(*) from UserEntity")
     public Integer getCount();

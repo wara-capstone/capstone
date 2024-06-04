@@ -1,29 +1,30 @@
 package teamwara.userfeed.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import teamwara.userfeed.dto.UserFeedAllResponseDto;
-import teamwara.userfeed.dto.UserFeedDetailResponseDto;
-import teamwara.userfeed.dto.UserFeedRequestDto;
+import teamwara.userfeed.dto.*;
 import teamwara.userfeed.service.UserFeedService;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("api/user-feed")
 public class UserFeedController {
     private final UserFeedService userFeedService;
 
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getDetailUserFeed(@PathVariable("id") Long id){
         try {
             return ResponseEntity.ok(userFeedService.getDetailUserFeed(id));
-        }catch (Exception e){
-            e.printStackTrace(); // 로그에 에러 스택 트레이스 출력
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        } catch (Exception e){
+            log.error("Error retrieving user feed details", e); // 로거를 사용한 에러 로깅
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
 
@@ -31,12 +32,11 @@ public class UserFeedController {
     public ResponseEntity<?> getUserFeeds() {
         try {
             return ResponseEntity.ok(userFeedService.getUserFeeds());
-        }catch (Exception e){
-            e.printStackTrace(); // 로그에 에러 스택 트레이스 출력
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        } catch (Exception e){
+            log.error("Error retrieving user feeds", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
-
 
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<?> createUserFeed(
@@ -44,10 +44,32 @@ public class UserFeedController {
             @RequestPart("userFeed") UserFeedRequestDto userFeedRequestDto) {
         try {
             UserFeedDetailResponseDto response = userFeedService.createUserFeed(userFeedRequestDto, imageFile);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(response);
         } catch (Exception e) {
-            e.printStackTrace(); // 로그에 에러 스택 트레이스 출력
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+            log.error("Error creating user feed", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
+
+    @PostMapping("/comment")
+    public ResponseEntity<?> createComment(@RequestBody UserFeedCommentRequestDto userFeedCommentRequestDto){
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(userFeedService.createComment(userFeedCommentRequestDto));
+        } catch (Exception e) {
+            log.error("Error creating comment", e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/like/toggle")
+    public ResponseEntity<?> toggleLike(@RequestBody LikeDto likeDto) {
+        try {
+            userFeedService.toggleLike(likeDto);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to toggle like: " + e.getMessage());
+        }
+    }
+
 }

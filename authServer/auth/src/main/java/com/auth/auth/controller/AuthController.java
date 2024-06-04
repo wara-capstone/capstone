@@ -37,7 +37,7 @@ public class AuthController {
         logger.info("[SignUp] 회원가입 요청 "+userDTO.toString());
         try {
             return ResponseEntity.status(201).body(this.authService.signUp(userDTO));
-        }catch (EmailDuplicateException | NullDTOException e){
+        }catch (EmailDuplicateException | NullDTOException | NicknameDuplicateException e){
             return ResponseEntity.status(400).body(UserDTO.builder().email(e.getMessage()).build());
         }
     }

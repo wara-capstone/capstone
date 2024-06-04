@@ -12,4 +12,5 @@ public interface UserDAO {
     public Integer getCountUser();
     public void deleteAllUser();
     public Boolean existUserByEmail(String email);
+    public Boolean existNickname(String nickname);
 }

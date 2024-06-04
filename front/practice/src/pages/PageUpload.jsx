@@ -6,10 +6,16 @@ import Header from "../components/Header";
 import ProductImageWithTags from "../components/ProductImageWithTags";
 import ProductTagList from "../components/ProductTagList";
 import { Grid } from '@mui/material';
+import CardContent from '@mui/material/CardContent';
+import Card from '@mui/material/Card';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import ProductTagListItem from "../components/ProductTagListItem";
 import ProductSubmitButton from "../components/ProductSubmitButton";
 
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { fontSize } from "@mui/system";
 
 function PageUpload() {
@@ -21,6 +27,8 @@ function PageUpload() {
   const [tagPosition, setTagPosition] = useState(null);
   // const selectedProductsArray = [selectedProduct];
   const [selectedProductsArray, setSelectedProductsArray] = useState([]);
+  const [cardContentText, setCardContentText] = useState('This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like.');
+
   const handleImageChange = (e) => {
     e.preventDefault();
 
@@ -56,12 +64,16 @@ function PageUpload() {
   };
 
   const handleImageClick = (e) => {
-    const rect = e.target.getBoundingClientRect();
-    const x = e.clientX - rect.left; // x position within the element.
-    const y = e.clientY - rect.top; // y position within the element.
-    setTagPosition({ x, y });
+    if (e.target) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      setTagPosition({ x, y });
+    } else {
+      console.error('e.target is undefined');
+    }
   };
-
+  
   return (
     
     <div className="PageUpload" >
@@ -110,7 +122,7 @@ function PageUpload() {
       {/* 이미지 미리보기 박스를 ProductImageWithTags 컴포넌트로 변경합니다. */}
 
       {/* 이미지 업로드 후 보이는 버튼 */}
-      {imagePreviewUrl && (
+      {imagePreviewUrl && (   
   <Box
     style={{
       display: 'flex',
@@ -121,6 +133,7 @@ function PageUpload() {
     }}
   >
     <Container
+    
       style={{
         maxWidth: '800px', // 이미지 컨테이너의 최대 너비 설정
         display: 'flex',
@@ -132,18 +145,56 @@ function PageUpload() {
       <ProductImageWithTags
         imageUrl={imagePreviewUrl}
         onImageClick={handleImageClick}
-        selectedProduct={selectedProduct}
+        selectedProduct={selectedProductsArray}
         tagPosition={tagPosition}
       />
+
+       <Box
+    style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      backgroundColor: 'white',
+      padding: '20px 0',
+    }}
+  >
+    <Container
+      style={{
+        maxWidth: '800px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      
+      
+   
+    </Container>
+  </Box>
     </Container>
   </Box>
 )}
+<CardContent>
+  <Typography variant="body2" color="text.secondary">
+  <TextField
+          id="filled-multiline-static"
+          label="문구를 작성해주세요."
+          multiline
+          rows={4}
+          rowsMax={10}
+          defaultValue=" "
+          variant="filled"
+          style={{ width: '300px'}}
+        />
+  </Typography>
+</CardContent>
        <Box
   style={{
     marginTop: '20px',
     padding: '10px',
     backgroundColor: '#f0f0f0',
   }}
+  
 >
   <Button
     variant="outlined"
@@ -171,6 +222,7 @@ function PageUpload() {
           />
         </Grid>
       ))}
+      
     </Grid>
   )}
 

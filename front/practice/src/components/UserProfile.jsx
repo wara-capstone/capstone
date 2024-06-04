@@ -12,6 +12,7 @@ const UserProfile = () => {
   const storeId = localStorage.getItem("storeid");
   let token = localStorage.getItem("token");
   const RefreshToken = localStorage.getItem("RefreshToken");
+  const [role, setRole] = useState("user");
 
   let url;
 
@@ -22,15 +23,17 @@ const UserProfile = () => {
     name: "유저",
     profileImage: "https://via.placeholder.com/150x150",
     email: email,
-    nickname: userRole,
+    role: role,
     phoneNumber: "010-1234-5678",
   });
 
   useEffect(() => {
     if (userRole === "user") {
       setIsSeller(false);
+      setRole("고객");
     } else if (userRole === "seller") {
       setIsSeller(true);
+      setRole("판매자");
     }
     const fetchData = async () => {
       setLoading(true);
@@ -156,7 +159,7 @@ const UserProfile = () => {
           </div>
           <div className="user-info">
             <h2>{user.name}</h2>
-            <p>{user.nickname}</p>
+            <p>{role}</p>
             <p>{user.email}</p>
             <p>{user.phoneNumber}</p>
           </div>
