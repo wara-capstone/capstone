@@ -49,7 +49,7 @@ export default function ViewClothSharedFeed() {
     dots: true,
     arrows: false,
 
-    centerPadding: "43px",
+    centerPadding: "30px",
 
     slidesToShow: 1,
     slidesToScroll: 1,
