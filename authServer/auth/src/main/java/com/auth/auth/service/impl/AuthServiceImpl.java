@@ -65,8 +65,9 @@ public class AuthServiceImpl implements AuthService {
      * @return 유저의 이메일을 담은 결과값 출력
      */
     @Override
-    public UserDTO signUp(UserDTO userDTO) throws EmailDuplicateException, NullDTOException {
+    public UserDTO signUp(UserDTO userDTO) throws EmailDuplicateException, NullDTOException, NicknameDuplicateException {
         this.emailDuplicateCheck(userDTO.getEmail());
+        this.existNicknameCheck(userDTO.getNickname());
         UserEntity signUpUser = userDAO.createUser(this.initEntity(userDTO));
         return UserDTO.builder().email(signUpUser.getEmail()).build();
     }
@@ -213,6 +214,11 @@ public class AuthServiceImpl implements AuthService {
             logger.info("패스워드 불일치");
             throw new PasswordMismatchException();
         }
+    }
+
+    private void existNicknameCheck(String nickname){
+        if(userDAO.existNickname(nickname))
+            throw new NicknameDuplicateException("\""+nickname+"\"" +"은/는 이미 존재하는 닉네임입니다.");
     }
 
     /**

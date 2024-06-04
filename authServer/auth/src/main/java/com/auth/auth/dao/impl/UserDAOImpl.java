@@ -56,4 +56,9 @@ public class UserDAOImpl implements UserDAO {
         return this.userRepository.existsByEmail(email);
     }
 
+    @Override
+    public Boolean existNickname(String nickname) {
+        return this.userRepository.existsByNickname(nickname);
+    }
+
 }
