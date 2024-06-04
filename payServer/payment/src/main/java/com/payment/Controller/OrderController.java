@@ -6,11 +6,10 @@ import com.payment.DTO.OrderResponseDTO;
 import com.payment.Service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/api/payment/order")
 public class OrderController {
     private final OrderService orderService;
 
