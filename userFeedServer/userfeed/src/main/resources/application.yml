@@ -17,9 +17,6 @@ spring:
         properties:
             hibernate:
                 format_sql: true
-    web:
-        resources:
-            static-locations: classpath:/static/, classpath:/public/
 
 
 server:
