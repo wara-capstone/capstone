@@ -47,7 +47,7 @@ export default function Home() {
       <div className="ad-image-container">
         <AdComponent images={adImages} />
       </div>
-      <Category
+      {/* <Category
         //현재 메인화면에서 카테고리 선택을 하지 않을 시, 상의 상품을 보여주도록 설정함. 추후 수정 필요.
         allUrl={`${process.env.NODE_ENV === "development" ? "" : ""}${
           process.env.REACT_APP_API_URL
@@ -55,9 +55,11 @@ export default function Home() {
         categoryUrl={`${process.env.NODE_ENV === "development" ? "" : ""}${
           process.env.REACT_APP_API_URL
         }product/all/category/`}
-      />
+      /> */}
       {/* <CardList /> */}
-      
+
+      <Category />
+
       <BottomNav />
     </div>
   );

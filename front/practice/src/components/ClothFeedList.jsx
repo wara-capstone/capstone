@@ -51,9 +51,11 @@
 
 // export default ClothFeedList;
 
+import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { fetchRefreshToken } from "../utils/authUtil";
 import ClothFeedListItem from "./ClothFeedListItem";
 
@@ -61,6 +63,14 @@ function ClothFeedList() {
   const [posts, setPosts] = useState([]);
   const token = localStorage.getItem("token");
   const RefreshToken = localStorage.getItem("RefreshToken");
+  const isLogin = localStorage.getItem("token") ? true : false;
+
+  const navigate = useNavigate();
+
+  const handleFeedUpload = () => {
+    // 페이지 이동
+    navigate("/user/pageUpload");
+  };
 
   const url = `${process.env.NODE_ENV === "development" ? "" : ""}${
     process.env.REACT_APP_API_URL
@@ -138,6 +148,14 @@ function ClothFeedList() {
           ))}
         </Grid>
       </Container>
+
+      <div className="feed-upload-btn-container">
+        {isLogin && (
+          <button className="feed-upload-btn" onClick={handleFeedUpload}>
+            <FontAwesomeIcon icon={faCirclePlus} />
+          </button>
+        )}
+      </div>
     </div>
   );
 }

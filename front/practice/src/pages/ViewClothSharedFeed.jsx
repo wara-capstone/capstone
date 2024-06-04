@@ -12,6 +12,10 @@ import BottomNav from "../components/BottomNav";
 import Card from "../components/Card";
 import Header from "../components/Header";
 
+import Slider from "react-slick";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
+
 const StyledCardHeader = styled(CardHeader)(({ theme }) => ({
   // 스타일 커스터마이징 추가
 }));
@@ -25,11 +29,25 @@ const TitleTypography = styled(Typography)(({ theme }) => ({
 export default function ViewClothSharedFeed() {
   const { id } = useParams();
   const [itemData, setItemData] = useState(null);
+  // const isLogin = localStorage.getItem("token") ? true : false;
 
   const url =
     `${process.env.NODE_ENV === "development" ? "" : ""}${
       process.env.REACT_APP_API_URL
     }user-feed/` + id;
+
+  const sliderSettings = {
+    className: "center",
+    centerMode: true,
+    centerPadding: "17px",
+
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -95,25 +113,28 @@ export default function ViewClothSharedFeed() {
       {/*  */}
       {/*  */}
 
-      {itemData.product &&
-        itemData.product.map((result, index) => {
-          return (
-            <Link
-              to={`/item/${result.productId}`}
-              key={result.productId}
-              className="card-link"
-            >
-              <Card
-                key={index}
-                title={result.productName}
-                // subTitle={result.productCategory}
-                price={result.productPrice}
-                mainImage={result.productImage}
-                // count={result.options[0].productStock}
-              />
-            </Link>
-          );
-        })}
+      <Slider {...sliderSettings}>
+        {itemData.product &&
+          itemData.product.map((result, index) => {
+            return (
+              <Link
+                to={`/item/${result.productId}`}
+                key={result.productId}
+                className="card-link"
+              >
+                <Card
+                  key={index}
+                  title={result.productName}
+                  // subTitle={result.productCategory}
+                  price={result.productPrice}
+                  mainImage={result.productImage}
+                  // count={result.options[0].productStock}
+                />
+              </Link>
+            );
+          })}
+      </Slider>
+
       <BottomNav />
     </div>
   );
