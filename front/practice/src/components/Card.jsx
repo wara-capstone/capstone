@@ -25,7 +25,8 @@ function Card({
         <p className="card-content">{content}</p>
         <p className="card-content2"> {content2}</p>
         <p className="card-price">
-          {price} {price ? "₩" : null}
+          <span style={{fontSize:"1.3rem"}}>{price}</span>
+          <span>{price ? "원" : null}</span>
         </p>
         {/* <p className="card-count">
           {count ? "재고: " : null} {count}
