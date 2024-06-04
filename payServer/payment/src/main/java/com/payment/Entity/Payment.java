@@ -24,10 +24,6 @@ public class Payment {
     private String purchaser;
     private LocalDateTime dateTime;
 
-//    @ManyToOne
-//    @JoinColumn(name = "total_payment_id")
-//    private TotalPayment totalPayment;
-
     public void updateDateTime(LocalDateTime dateTime){
         this.dateTime = dateTime;
     }

@@ -32,14 +32,8 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public ResponseDTO readOrderByPurchaser(String purchaser) {
-        return null;
-    }
-
-    @Override
-    public SimpleResponseDTO deleteOrder(Order order) {
+    public void deleteOrder(Order order) {
         orderDAO.deleteOrder(order);
-        return null;
     }
 
     public Order toOrderEntity(OrderDTO orderDTO, List<OrderItemDTO> orderItemDTOList){

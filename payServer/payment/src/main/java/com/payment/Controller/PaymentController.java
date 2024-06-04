@@ -20,57 +20,50 @@ public class PaymentController {
 
     @PostMapping("/create")
     public ResponseEntity<SimpleResponseDTO> createPayment(@RequestBody PaymentRequestDTO paymentRequestDTO){
-        logger.info("[Request] : CreatePayment");
-        logger.info("[Data]: " + paymentRequestDTO.toString());
+        logger.info("Controller Layer - createPayment: Creating payment...");
         SimpleResponseDTO response = paymentService.createImportPayment(paymentRequestDTO);
-        logger.info("[Response] : " + response.toString());
-
         if(response.getResult().equals("success")){
+            logger.info("Controller Layer - createPayment: Payment creation successful");
             return ResponseEntity.status(201).body(response);
         }
-
-        return ResponseEntity.status(400).body(null);
+        logger.error("Controller Layer - createPayment: Failed to create payment");
+        return ResponseEntity.status(500).body(null);
     }
 
     @GetMapping("/read/store/{storeId}")
     public ResponseEntity<ResponseDTO> readPaymentByStoreId(@PathVariable Long storeId){
-        logger.info("[Request] : ReadPaymentByStoreId");
-        logger.info("[Data]: " + storeId);
+        logger.info("Controller Layer - readPaymentByStoreId: Reading payment by store ID: {}", storeId);
         ResponseDTO response = paymentService.readPaymentByStoreId(storeId);
-        logger.info("[Response] : " + response.toString());
-
         if(response.getResult().equals("success")){
+            logger.info("Controller Layer - readPaymentByStoreId: Payment found for store ID: {}", storeId);
             return ResponseEntity.status(200).body(response);
         }
-
-        return ResponseEntity.status(400).body(null);
+        logger.error("Controller Layer - readPaymentByStoreId: Failed to read payment for store ID: {}", storeId);
+        return ResponseEntity.status(500).body(null);
     }
 
     @GetMapping("/read/user/{purchaser}")
     public ResponseEntity<ResponseDTO> readPaymentByPurchaser(@PathVariable String purchaser){
-        logger.info("[Request] : ReadPaymentByPurchaser");
-        logger.info("[Data]: " + purchaser);
+        logger.info("Controller Layer - readPaymentByPurchaser: Reading payment by purchaser: {}", purchaser);
         ResponseDTO response = paymentService.readPaymentByPurchaser(purchaser);
-        logger.info("[Response] : " + response.toString());
-
         if(response.getResult().equals("success")){
+            logger.info("Controller Layer - readPaymentByPurchaser: Payment found for purchaser: {}", purchaser);
             return ResponseEntity.status(200).body(response);
         }
-
-        return ResponseEntity.status(400).body(null);
+        logger.error("Controller Layer - readPaymentByPurchaser: Failed to read payment for purchaser: {}", purchaser);
+        return ResponseEntity.status(500).body(null);
     }
 
     @DeleteMapping("/delete/{paymentId}")
     public ResponseEntity<SimpleResponseDTO> deletePayment(@PathVariable Long paymentId){
-        logger.info("[Request] : DeletePayment");
-        logger.info("[Data]: " + paymentId);
+        logger.info("Controller Layer - deletePayment: Deleting payment by ID: {}", paymentId);
         SimpleResponseDTO response = paymentService.deletePayment(paymentId);
-        logger.info("[Response] : " + response.toString());
-
         if(response.getResult().equals("success")){
+            logger.info("Controller Layer - deletePayment: Payment deleted successfully with ID: {}", paymentId);
             return ResponseEntity.status(200).body(response);
         }
-
-        return ResponseEntity.status(400).body(null);
+        logger.error("Controller Layer - deletePayment: Failed to delete payment with ID: {}", paymentId);
+        return ResponseEntity.status(500).body(null);
     }
+
 }

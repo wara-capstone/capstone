@@ -11,9 +11,9 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class TotalPaymentDTO {
-    Long totalPaymentId;
-    String purchaser;
-    Long totalPrice;
-    String dateTime;
-    List<PaymentDTO> paymentDTOS;
+    private Long totalPaymentId;
+    private String purchaser;
+    private Long totalPrice;
+    private String dateTime;
+    private List<PaymentDTO> paymentDTOS;
 }

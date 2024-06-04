@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @ToString
 public class PaymentDTO {
-    Long paymentId;
-    Long storeId;
-    Long productId;
-    Long optionId;
-    Long price;
-    Long quantity;
-    String dateTime;
+    private Long paymentId;
+    private Long storeId;
+    private Long productId;
+    private Long optionId;
+    private Long price;
+    private Long quantity;
+    private String dateTime;
 }

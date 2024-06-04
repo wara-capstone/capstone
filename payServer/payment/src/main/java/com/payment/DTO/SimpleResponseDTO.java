@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class SimpleResponseDTO {
-    String result;
-    String message;
+    private String result;
+    private String message;
 }
