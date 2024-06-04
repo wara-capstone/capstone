@@ -7,7 +7,7 @@ const ImageCellRenderer = (images) => {
     return null; // 데이터가 없거나 productUrls가 없거나 비어있는 경우 렌더링하지 않음
   }
 
-  const selectedIndex = 1; // 또는 2
+  const selectedIndex = 0; // 또는 2
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
