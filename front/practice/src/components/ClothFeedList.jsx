@@ -151,9 +151,9 @@ function ClothFeedList() {
 
       <div className="feed-upload-btn-container">
         {isLogin && (
-          // <button className="feed-upload-btn" onClick={handleFeedUpload}>
-          <FontAwesomeIcon icon={faCirclePlus} onClick={handleFeedUpload} />
-          // </button>
+          <button className="feed-upload-btn" onClick={handleFeedUpload}>
+            <FontAwesomeIcon icon={faCirclePlus} />
+          </button>
         )}
       </div>
     </div>

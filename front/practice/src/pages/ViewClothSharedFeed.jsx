@@ -34,7 +34,7 @@ const TitleTypography = styled(Typography)(({ theme }) => ({
 export default function ViewClothSharedFeed() {
   const { id } = useParams();
   const [itemData, setItemData] = useState(null);
-  // const isLogin = localStorage.getItem("token") ? true : false;
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   const url =
     `${process.env.NODE_ENV === "development" ? "" : ""}${
@@ -43,15 +43,19 @@ export default function ViewClothSharedFeed() {
 
   const sliderSettings = {
     className: "center",
-    centerMode: true,
-    centerPadding: "17px",
 
-    dots: true,
+    centerMode: true,
     infinite: true,
-    speed: 500,
+    dots: true,
+    arrows: false,
+
+    centerPadding: "43px",
+
     slidesToShow: 1,
     slidesToScroll: 1,
-    arrows: false,
+
+    speed: 500,
+    beforeChange: (current, next) => setCurrentSlide(next), // 슬라이드 변경 시 현재 슬라이드 인덱스 업데이트
   };
 
   useEffect(() => {
@@ -144,11 +148,14 @@ export default function ViewClothSharedFeed() {
       <Slider {...sliderSettings}>
         {itemData.product &&
           itemData.product.map((result, index) => {
+            const isActive = index === currentSlide; // 현재 슬라이드 인덱스와 일치하는지 확인
+
             return (
               <Link
                 to={`/item/${result.productId}`}
                 key={result.productId}
-                className="card-link"
+                // className="card-link"
+                className={`card-link ${isActive ? "active-slide" : ""}`} // 현재 슬라이드에 클래스 추가
               >
                 <Card
                   key={index}
@@ -157,6 +164,10 @@ export default function ViewClothSharedFeed() {
                   price={result.productPrice}
                   mainImage={result.productImage}
                   // count={result.options[0].productStock}
+                  // specialStyle="special-card" // 여기서 다른 스타일 클래스 적용
+                  specialStyle={
+                    isActive ? "special-card-active" : "special-card"
+                  } // 현재 슬라이드에 다른 스타일 적용
                 />
               </Link>
             );

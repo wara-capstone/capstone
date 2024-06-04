@@ -81,15 +81,48 @@ export default function Store() {
               className="item-image"
             />
           </div>
-          <h1>{storeData.storeName}</h1>
-          <div className="button-link" onClick={handleConnectChatting}>
-            <EventButton buttonText={"1대1 상담"} />
+
+          <div
+            className="storeName-and-chatButton-container"
+            style={{
+              // textAlign: "left",
+              display: "flex",
+              justifyContent: "space-between",
+              marginLeft: "2rem",
+              marginRight: "2rem",
+            }}
+          >
+            <h1>{storeData.storeName}</h1>
+            <div
+              className="button-link"
+              style={{
+                position: "relative", // 버튼 고정
+                top: "1.5rem",
+              }}
+              onClick={handleConnectChatting}
+            >
+              <EventButton buttonText={"1대1 상담"} />
+            </div>
           </div>
-          <p>
+          <p
+            style={{
+              textAlign: "left",
+              marginLeft: "1rem",
+              marginRight: "1rem",
+            }}
+          >
             <span style={{ fontWeight: "bold" }}>가게위치:</span>{" "}
             {storeData.storeAddress}
           </p>
-          <p>
+          <p
+            style={{
+              textAlign: "left",
+              marginLeft: "1rem",
+              marginRight: "1rem",
+              wordWrap: "break-word",
+              overflowWrap: "break-word",
+            }}
+          >
             <span style={{ fontWeight: "bold" }}>가게정보:</span>{" "}
             {storeData.storeContents}
           </p>
