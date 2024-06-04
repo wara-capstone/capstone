@@ -65,8 +65,11 @@
   transition: all 0.3s ease; /* 부드러운 전환 효과 */
   background-color: white;
   /* border: 1px solid gray; 모서리에 회색 테두리 추가 */
-  box-shadow: 0 2px 4px rgba(54, 53, 53, 0.1);
   font-size: 1rem; /* 텍스트 크기 조정 */
+}
+
+.category-search-item-sort {
+  box-shadow: 0 2px 4px rgba(54, 53, 53, 0.1);
 }
 
 .category-search-item-num:hover,

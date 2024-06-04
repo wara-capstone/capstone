@@ -17,6 +17,9 @@ import Header from "../components/Header";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import IosShareIcon from "@mui/icons-material/IosShare";
+import Slider from "react-slick"; // react-slick 사용을 위해 import
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
 
 const StyledCardHeader = styled(CardHeader)(({ theme }) => ({
   // 스타일 커스터마이징 추가
@@ -137,25 +140,28 @@ export default function ViewClothSharedFeed() {
           </IconButton>
         </Box>
       </Box>
-      {itemData.product &&
-        itemData.product.map((result, index) => {
-          return (
-            <Link
-              to={`/item/${result.productId}`}
-              key={result.productId}
-              className="card-link"
-            >
-              <Card
-                key={index}
-                title={result.productName}
-                // subTitle={result.productCategory}
-                price={result.productPrice}
-                mainImage={result.productImage}
-                // count={result.options[0].productStock}
-              />
-            </Link>
-          );
-        })}
+
+      <Slider {...sliderSettings}>
+        {itemData.product &&
+          itemData.product.map((result, index) => {
+            return (
+              <Link
+                to={`/item/${result.productId}`}
+                key={result.productId}
+                className="card-link"
+              >
+                <Card
+                  key={index}
+                  title={result.productName}
+                  // subTitle={result.productCategory}
+                  price={result.productPrice}
+                  mainImage={result.productImage}
+                  // count={result.options[0].productStock}
+                />
+              </Link>
+            );
+          })}
+      </Slider>
 
       <BottomNav />
     </div>
