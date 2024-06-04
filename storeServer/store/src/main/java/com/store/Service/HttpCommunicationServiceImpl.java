@@ -21,7 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 @Service
-public class HttpCommunicationServiceImpl implements HttpCommunicationService{
+public class HttpCommunicationServiceImpl implements HttpCommunicationService {
     private final DiscoveryClient discoveryClient;
     private final static Logger logger = LoggerFactory.getLogger(HttpCommunicationServiceImpl.class);
 
@@ -38,19 +38,20 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
             HttpEntity<?> http = new HttpEntity<>(headers);
 
             URI uri = new URI(productService.getUri() + "/api/product/seller/store/" + storeId);
-//            URI uri = new URI("https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app" + "/product/seller/store/" + storeId);
 
             ResponseEntity response = restTemplate.exchange(uri, HttpMethod.DELETE, http, String.class);
 
-
             if (response.getStatusCode().is2xxSuccessful()) {
+                logger.info("Successfully deleted product with store ID: {}", storeId);
                 return true;
             }
 
         } catch (HttpClientErrorException e) {
+            logger.error("Failed to delete product with store ID: {}", storeId);
             return false;
         }
 
+        logger.error("Failed to delete product with store ID: {}", storeId);
         return false;
     }
 
@@ -75,11 +76,10 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
             http = new HttpEntity<>(bodyMap, headers);
 
             URI uri = new URI(imageService.getUri() + "/api/image/upload");
-//            URI uri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/upload");
             ResponseEntity response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
 
-
             if (response.getStatusCode().is2xxSuccessful()) {
+                logger.info("Successfully uploaded image: {}", image.getOriginalFilename());
                 LinkedHashMap responseBody = (LinkedHashMap) response.getBody();
                 List<String> images = (List) responseBody.get("images");
                 String imageUri = (String) images.get(0);
@@ -87,9 +87,10 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
                 return imageUri;
             }
         } catch (HttpClientErrorException e) {
+            logger.error("Failed to upload image: {}", image.getOriginalFilename());
             return "Failed to upload image";
         }
-
+        logger.error("Failed to upload image: {}", image.getOriginalFilename());
         return "Failed to upload image";
     }
 
@@ -111,17 +112,16 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
             MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
             ResponseEntity response;
 
-//            URI uri = new URI(imageService.getUri() + "/image/upload");
             if (imageKey != null) {
                 bodyMap.add("image", body);
                 headers.setContentType(MediaType.MULTIPART_FORM_DATA);
                 http = new HttpEntity<>(bodyMap, headers);
                 URI uri = new URI(imageService.getUri() + "/api/image/" + imageKey);
-//                URI uri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/" + imageKey);
                 response = restTemplate.exchange(uri, HttpMethod.PUT, http, String.class);
                 logger.info("ImageServer PUT Method");
 
                 if (response.getStatusCode().is2xxSuccessful()) {
+                    logger.info("Successfully updated image with key: {}", imageKey);
                     String imageUri = (String) response.getBody();
 
                     return imageUri;
@@ -131,11 +131,11 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
                 headers.setContentType(MediaType.MULTIPART_FORM_DATA);
                 http = new HttpEntity<>(bodyMap, headers);
                 URI uri = new URI(imageService.getUri() + "/api/image/upload");
-//                URI uri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/upload");
                 response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
                 logger.info("ImageServer POST method");
 
                 if (response.getStatusCode().is2xxSuccessful()) {
+                    logger.info("Successfully uploaded image: {}", image.getOriginalFilename());
                     LinkedHashMap responseBody = (LinkedHashMap) response.getBody();
                     List<String> images = (List) responseBody.get("images");
                     String imageUri = (String) images.get(0);
@@ -145,9 +145,10 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
             }
 
         } catch (HttpClientErrorException e) {
+            logger.error("Failed to upload/update image: {}", image.getOriginalFilename());
             return "Failed to upload image";
         }
-
+        logger.error("Failed to upload/update image: {}", image.getOriginalFilename());
         return "Failed to upload image";
     }
 
@@ -164,7 +165,6 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
 
             if (imageKey != null) {
                 URI uri = new URI(imageService.getUri() + "/api/image/" + imageKey);
-//                URI uri = new URI("https://port-0-image-jvpb2mloft5vlw.sel5.cloudtype.app/image/" + imageKey);
                 response = restTemplate.exchange(uri, HttpMethod.DELETE, http, Boolean.class);
                 logger.info("ImageServer DELETE Method");
                 return (Boolean) response.getBody();
@@ -172,6 +172,7 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
                 return true;
             }
         } catch (HttpClientErrorException e) {
+            logger.error("Failed to delete image with key: {}", imageKey);
             return false;
         }
     }

@@ -10,14 +10,14 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class StoreDTO {
-    Long storeId;
-    String storeName;
-    String storeSeller;
-    String storeAddress;
-    String storePhone;
-    Double storeLocationX;
-    Double storeLocationY;
-    String storeImage;
-    List<Long> productId;
-    String storeContents;
+    private Long storeId;
+    private String storeName;
+    private String storeSeller;
+    private String storeAddress;
+    private String storePhone;
+    private Double storeLocationX;
+    private Double storeLocationY;
+    private String storeImage;
+    private List<Long> productId;
+    private String storeContents;
 }
