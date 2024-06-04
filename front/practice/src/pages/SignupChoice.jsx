@@ -15,8 +15,8 @@ const SignupChoice = () => {
   const [password, setPassword] = useState("");
   const [loginCheck, setLoginCheck] = useState(false); // 로그인 상태 체크
 
-  const redirect_uri = `https://www.onoff.zone/signup`;
-  // const redirect_uri = `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_REDIRECT_URL}signup`
+  // const redirect_uri = `https://www.onoff.zone/signup`;
+  const redirect_uri = `${process.env.NODE_ENV === 'development' ? 'http://' : ''}${process.env.REACT_APP_REDIRECT_URL}signup`
   const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=5d3f977e28b7baf6825e7f34c62fd79a&redirect_uri=${redirect_uri}&response_type=code&prompt=login`;
 
   const navigate = useNavigate();
@@ -71,7 +71,7 @@ const SignupChoice = () => {
       <button className="signup-choice" onClick={handleSignup}>
       <FontAwesomeIcon icon={faEnvelope} size="lg" style={{  marginLeft: '0.6rem'}} />
       {/* 텍스트를 span 태그로 감싸고 스타일을 적용합니다. */}
-      <span style={{ flex: 1, textAlign: 'center' }}>이메일로 회원가입 하기싫어</span>
+      <span style={{ flex: 1, textAlign: 'center' }}>이메일로 회원가입</span>
       </button>
       <img src={KakaoButtonImage}
       style={{
