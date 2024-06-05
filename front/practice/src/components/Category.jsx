@@ -274,22 +274,24 @@ const Category = ({ storeId }) => {
         </div>
       )}
 
-      {searchResultCount !== 0 &&
-        searchData.map((result, index) => (
-          <Link
-            to={`/item/${result.productId}`}
-            key={`${result.productId}-${index}`} // `productId`와 `index`를 결합하여 고유한 키 생성
-            className="card-link"
-          >
-            <Card
+      <div className="card-list">
+        {searchResultCount !== 0 &&
+          searchData.map((result, index) => (
+            <Link
+              to={`/item/${result.productId}`}
               key={`${result.productId}-${index}`} // `productId`와 `index`를 결합하여 고유한 키 생성
-              title={result.name}
-              subTitle={result.category}
-              price={result.price}
-              mainImage={result.productUrls[0]}
-            />
-          </Link>
-        ))}
+              className="card-link"
+            >
+              <Card
+                key={`${result.productId}-${index}`} // `productId`와 `index`를 결합하여 고유한 키 생성
+                title={result.name}
+                subTitle={result.category}
+                price={result.price}
+                mainImage={result.productUrls[0]}
+              />
+            </Link>
+          ))}
+      </div>
     </div>
   );
 };
