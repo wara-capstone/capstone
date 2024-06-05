@@ -1,6 +1,9 @@
 // src/utils/authUtils.js
+import { message } from "antd";
+
 
 export const fetchRefreshToken = async (RefreshToken) => {
+
     console.log("AccessToken 재발급 요청중!!!!!!!!!!!!");
     const response = await fetch(
       `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}auth/signin`,
@@ -31,7 +34,8 @@ export const fetchRefreshToken = async (RefreshToken) => {
       localStorage.removeItem("RefreshToken");
 
       // 페이지 이동
-      navigate("/login");
+      window.location.href = "/login";
+      return;
     }
   };
   

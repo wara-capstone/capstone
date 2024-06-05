@@ -7,10 +7,10 @@ export default function PurchaseProduct({ selectedBread, changeSingleBox, data, 
     const perPrice = parseInt (selectedBread.product.price); // Product당 가격 * 개수 값
 
 return (
-    <div className="orderProductList" style={{height:"6.2rem"}}> 
+    <div className="orderProductList"> 
     <div style={{display:'flex',justifyContent:'space-around'}}>
      <div className="imageWrapper">
-     <img src={selectedBread.product.p_image} alt="bread" className="breadImage" />
+     <img src={selectedBread.product.p_image} alt="bread" className="breadImage"/>
     </div>
     <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
         <label style={{fontSize:"1.2rem"}}>{selectedBread.product.p_name}</label>

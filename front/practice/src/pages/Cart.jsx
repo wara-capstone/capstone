@@ -170,7 +170,7 @@ export default function Cart() {
       {selectedBread.length > 0 ? (
         <div className="shoppingBag">
           <div className="orderContainer">
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div style={{ marginTop:"0.3rem", display: "flex", justifyContent: "space-between" }}>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <OrderInformation
                   changeAllBox={changeAllBox}
@@ -178,13 +178,13 @@ export default function Cart() {
                   numberOfBread={numberOfBread}
                 />
                 <div style={{ width: "80px", alignItems: "center" }}>
-                  <label style={{}}>전체선택</label>
+                  <label style={{marginLeft:"-1rem"}}>전체선택</label>
                 </div>
               </div>
 
               <button
                 id="normal-button"
-                style={{ height: "2.5rem" }}
+                style={{ height: "2.5rem", marginRight: "0.6rem"}}
                 onClick={() => setModalIsOpen(true)}
               >
                 삭제
