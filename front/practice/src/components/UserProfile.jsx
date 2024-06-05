@@ -11,7 +11,7 @@ const UserProfile = () => {
   const userRole = localStorage.getItem("role");
   const storeId = localStorage.getItem("storeid");
   let token = localStorage.getItem("token");
-  const RefreshToken = localStorage.getItem("RefreshToken");
+  let RefreshToken = localStorage.getItem("RefreshToken");
   const [role, setRole] = useState("user");
 
   let url;
@@ -52,13 +52,11 @@ const UserProfile = () => {
       if (response.status === 401) {
         const fetchToken = async () => {
           const response = await fetch(
-            `${process.env.NODE_ENV === "development" ? "" : ""}${
-              process.env.REACT_APP_API_URL
-            }auth/signin`,
+            `${process.env.NODE_ENV === "development" ? "" : ""}${process.env.REACT_APP_API_URL}auth/signin`,
             {
               method: "GET",
               headers: {
-                Authorization: localStorage.getItem("RefreshToken"),
+              Authorization: localStorage.getItem("RefreshToken"),
               },
             }
           );
@@ -129,16 +127,6 @@ const UserProfile = () => {
     };
     KakaoLogout();
 
-    // 로그아웃 처리 로직을 구현합니다.
-    message.success("로그아웃 되었습니다.");
-    localStorage.removeItem("token");
-    localStorage.removeItem("email");
-    localStorage.removeItem("role");
-    localStorage.removeItem("storeid");
-    localStorage.removeItem("RefreshToken");
-
-    // 페이지 이동
-    navigate("/");
   };
 
   const handleConnectSeller = () => {
