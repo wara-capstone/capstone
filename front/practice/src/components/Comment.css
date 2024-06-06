@@ -1,0 +1,29 @@
+.comment-box {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  
+  .comment-content {
+    display: flex;
+    align-items: flex-start;
+    text-align: left;
+  }
+  
+  .comment-user-name {
+    font-weight: bold;
+    margin-left: 16px;
+    margin-right: 8px;
+    white-space: nowrap;
+  }
+  
+  .comment-text {
+    word-break: break-word;
+  }
+  
+  .comment-created-at {
+    margin-right: 4px;
+    white-space: nowrap;
+  }
+  
