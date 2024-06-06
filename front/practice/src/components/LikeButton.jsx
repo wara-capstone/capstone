@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import {Avatar,CardHeader,CardMedia,Card, IconButton,Divider,Typography,Box,Modal,TextField, Button
 } from "@mui/material";
 import { fetchRefreshToken } from "../utils/authUtil";
 
-const LikeButton = ({ id,likedByMe, likesCount,
-  setLikedByMeState,
-  setLikesCountState }) => {
+const LikeButton = ({ id
+ }) => {
   const [likedByMe, setLikedByMe] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
   const userEmail = localStorage.getItem("email");
@@ -50,7 +49,7 @@ useEffect(() => {
 const handleLike = async () => {
   try {
     const response = await fetch(`${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}user-feed/like/toggle`, {
-      method: 'POST',
+      method: likedByMe ? 'DELETE' : 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `${token}`,
@@ -64,9 +63,7 @@ const handleLike = async () => {
     if (response.ok) {
       setLikedByMe(!likedByMe);
       setLikesCount(likedByMe ? likesCount - 1 : likesCount + 1);
-      setLikedByMeState(!likedByMe);
-      setLikesCountState(likedByMe ? likesCount - 1 : likesCount + 1);
-    } else {
+      } else {
       console.error('Error liking post:', response.status);
     }
   } catch (error) {
