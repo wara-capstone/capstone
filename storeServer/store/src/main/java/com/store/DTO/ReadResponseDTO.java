@@ -11,14 +11,14 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class ReadResponseDTO {
-    Long storeId;
-    String storeName;
-    String storeSeller;
-    String storeAddress;
-    String storePhone;
-    double storeLocationX;
-    double storeLocationY;
-    String storeImage;
-    String storeContents;
-    List<Long> productId;
+    private Long storeId;
+    private String storeName;
+    private String storeSeller;
+    private String storeAddress;
+    private String storePhone;
+    private double storeLocationX;
+    private double storeLocationY;
+    private String storeImage;
+    private String storeContents;
+    private List<Long> productId;
 }

@@ -9,8 +9,8 @@ import lombok.*;
 @ToString
 @Builder
 public class CoordinateDTO {
-    Double minX;
-    Double maxX;
-    Double minY;
-    Double maxY;
+    private Double minX;
+    private Double maxX;
+    private Double minY;
+    private Double maxY;
 }

@@ -20,7 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 @Service
-public class HttpCommunicationServiceImpl implements HttpCommunicationService{
+public class HttpCommunicationServiceImpl implements HttpCommunicationService {
     private final DiscoveryClient discoveryClient;
     private final static Logger logger = LoggerFactory.getLogger(HttpCommunicationServiceImpl.class);
 
@@ -40,15 +40,17 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
 
             ResponseEntity response = restTemplate.exchange(uri, HttpMethod.DELETE, http, String.class);
 
-
             if (response.getStatusCode().is2xxSuccessful()) {
+                logger.info("Successfully deleted product with store ID: {}", storeId);
                 return true;
             }
 
         } catch (HttpClientErrorException e) {
+            logger.error("Failed to delete product with store ID: {}", storeId);
             return false;
         }
 
+        logger.error("Failed to delete product with store ID: {}", storeId);
         return false;
     }
 
@@ -75,8 +77,8 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
             URI uri = new URI(imageService.getUri() + "/api/image/upload");
             ResponseEntity response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
 
-
             if (response.getStatusCode().is2xxSuccessful()) {
+                logger.info("Successfully uploaded image: {}", image.getOriginalFilename());
                 LinkedHashMap responseBody = (LinkedHashMap) response.getBody();
                 List<String> images = (List) responseBody.get("images");
                 String imageUri = (String) images.get(0);
@@ -84,9 +86,10 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
                 return imageUri;
             }
         } catch (HttpClientErrorException e) {
+            logger.error("Failed to upload image: {}", image.getOriginalFilename());
             return "Failed to upload image";
         }
-
+        logger.error("Failed to upload image: {}", image.getOriginalFilename());
         return "Failed to upload image";
     }
 
@@ -116,6 +119,7 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
                 logger.info("ImageServer PUT Method");
 
                 if (response.getStatusCode().is2xxSuccessful()) {
+                    logger.info("Successfully updated image with key: {}", imageKey);
                     String imageUri = (String) response.getBody();
 
                     return imageUri;
@@ -129,6 +133,7 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
                 logger.info("ImageServer POST method");
 
                 if (response.getStatusCode().is2xxSuccessful()) {
+                    logger.info("Successfully uploaded image: {}", image.getOriginalFilename());
                     LinkedHashMap responseBody = (LinkedHashMap) response.getBody();
                     List<String> images = (List) responseBody.get("images");
                     String imageUri = (String) images.get(0);
@@ -138,9 +143,10 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
             }
 
         } catch (HttpClientErrorException e) {
+            logger.error("Failed to upload/update image: {}", image.getOriginalFilename());
             return "Failed to upload image";
         }
-
+        logger.error("Failed to upload/update image: {}", image.getOriginalFilename());
         return "Failed to upload image";
     }
 
@@ -163,6 +169,7 @@ public class HttpCommunicationServiceImpl implements HttpCommunicationService{
                 return true;
             }
         } catch (HttpClientErrorException e) {
+            logger.error("Failed to delete image with key: {}", imageKey);
             return false;
         }
     }

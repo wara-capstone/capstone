@@ -9,5 +9,5 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class SimpleResponseDTO {
-    String result;
+    private String result;
 }

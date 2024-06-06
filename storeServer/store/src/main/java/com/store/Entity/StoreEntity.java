@@ -14,18 +14,18 @@ import java.util.List;
 public class StoreEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long storeId;
-    String storeName;
-    String storeAddress;
-    String storePhone;
-    String storeSeller;
-    Double storeLocationX;
-    Double storeLocationY;
-    String storeImage;
-    String storeContents;
+    private Long storeId;
+    private String storeName;
+    private String storeAddress;
+    private String storePhone;
+    private String storeSeller;
+    private Double storeLocationX;
+    private Double storeLocationY;
+    private String storeImage;
+    private String storeContents;
 
     @ElementCollection
     @CollectionTable(name = "store_product", joinColumns = @JoinColumn(name = "store_id"))
     @Column(name = "product_id")
-    List<Long> productIds;
+    private List<Long> productIds;
 }
