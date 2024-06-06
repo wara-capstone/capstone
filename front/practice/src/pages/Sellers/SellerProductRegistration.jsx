@@ -334,6 +334,7 @@ export default function SellerProductRegistration(props) {
     )
     .then((response) => {
       console.log(response.data); // 서버 응답 출력
+      message.success("저장되었습니다");
     })
     .catch(async(error) => {
       console.error(error); // 오류 처리
@@ -376,34 +377,10 @@ export default function SellerProductRegistration(props) {
       console.error(error); // 오류 처리
       message.error("수정 실패");
     });      console.log(data);
-      axios // 상품 삭제
-        .put(
-          `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}product/seller/option/`+productId,
-          // `https://port-0-product-server-3yl7k2blonzju2k.sel5.cloudtype.app/product/seller/option/add?productId=19`,
-          data,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `${token}`,
-            },
-          }
-        )
-        .then((response) => {
-          console.log(response.data); // 서버 응답 출력
-        })
-        .catch(async(error) => {
-          console.error(error); // 오류 처리
-          if (error.response && error.response.status === 401 && tryAgain) {
-            const RefreshToken = localStorage.getItem("RefreshToken");
-            await fetchRefreshToken(RefreshToken); // 토큰 갱신 로직 호출
-            token = localStorage.getItem("token");
-            return addProductOption(index, false); // 재귀 호출
-          }
-        });
-    }
-    message.success("저장되었습니다");
+    
+    //message.success("저장되었습니다");
   };
-
+  }
   const LoadingScreen = () => {
     return (
       <div style={styles.container}>

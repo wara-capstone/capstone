@@ -230,7 +230,7 @@ function PageUpload() {
         <Grid item xs={12} sm={12} md={12}>
           <ProductTagListItem
             itemData={product}
-            onClick={() => handleProductSelect(product)}
+            // onClick={() => handleProductSelect(product)}
           />
         </Grid>
       ))}
