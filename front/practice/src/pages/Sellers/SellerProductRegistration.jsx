@@ -59,7 +59,7 @@ export default function SellerProductRegistration(props) {
           }
         );
         console.log("받아온 값(해당삼품의 모든 옵션 조회):" + JSON.stringify(response.data)); // 서버로부터 받아온 데이터를 JSON 문자열로 변환하여 출력
-        console.log(response.status);
+        console.log(JSON.stringify(response.data));
         if (response.status === 200) {
           setProductInfo(response.data);
           setImages(response.data.productUrls[0].url);
@@ -320,10 +320,35 @@ export default function SellerProductRegistration(props) {
     });
 } else {
       console.log("수정 으로");
-      
-      //var formdata = new FormData();
-      //formdata.append("optionDTO", new Blob([JSON.stringify(data)], { type: "application/json" }))
-      console.log(data);
+
+      let data = {
+        optionId: productInfo.options[index].optionId,
+        productPrice: productInfo.options[index].productPrice,
+        productSize: productInfo.options[index].productSize,
+        productColor: productInfo.options[index].productColor,
+        productStock: productInfo.options[index].productStock,
+        barcodeUrl: productInfo.options[index].barcodeUrl
+      };
+      console.log("formData는",data);
+      axios // 상품 옵션 수정
+    .put(
+      `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}product/seller/option/${productId}`,
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      }
+    )
+    .then((response) => {
+      console.log(response.data); // 서버 응답 출력
+      message.success("수정되었습니다");
+    })
+    .catch((error) => {
+      console.error(error); // 오류 처리
+      message.error("수정 실패");
+    });      console.log(data);
       axios // 상품 삭제
         .put(
           `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}product/seller/option/`+productId,
@@ -331,7 +356,7 @@ export default function SellerProductRegistration(props) {
           data,
           {
             headers: {
-              "Content-Type": "application/json",
+              "Content-Type": "multipart/form-data",
               Authorization: `${token}`,
             },
           }
