@@ -96,7 +96,7 @@ const LikeButton = ({
     <Box sx={{ display: "flex", alignItems: "center" }}>
       <IconButton
         aria-label={likedByMe ? "좋아요 취소" : "좋아요"}
-        color={likedByMe ? "primary" : "default"}
+        color={likedByMe ? "pink" : "default"}
         onClick={handleLike}
         sx={{ width: 40, height: 40 }}
       >
