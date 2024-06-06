@@ -15,6 +15,8 @@ export default function Store() {
   const storeId = localStorage.getItem("storeId");
   let token = localStorage.getItem("token");
 
+  const [connectStoreId, setConnectStoreId] = useState(null); // 상태 추가
+
   const [storeData, setStoreData] = useState(null); // 상태 추가
   var result;
 
@@ -58,6 +60,7 @@ export default function Store() {
 
       if (response.status === 200) {
         setStoreData(result.data); // 상태 업데이트
+        setConnectStoreId(result.data.storeId);
         //console.log(result.storeId);
         //console.log(result);
         //console.log(result.storeName);
@@ -129,7 +132,7 @@ export default function Store() {
         </div>
       )}
 
-      <Category storeId={storeId} />
+      <Category storeId={connectStoreId} />
 
       <BottomNav />
     </div>

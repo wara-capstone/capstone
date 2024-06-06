@@ -31,18 +31,18 @@ const Category = ({ storeId }) => {
   };
 
   useEffect(() => {
-    const encodedSearchText = encodeURIComponent(searchText);
+    // const encodedSearchText = encodeURIComponent(searchText);
 
     let sortUrl;
 
     if (storeId) {
       sortUrl = `${process.env.NODE_ENV === "development" ? "" : ""}${
         process.env.REACT_APP_API_URL
-      }product/all/sort/PRICE/${sortType}/${encodedSearchText}/${storeId}/0`;
+      }product/all/sort/PRICE/${sortType}/${searchText}/${storeId}/0`;
     } else {
       sortUrl = `${process.env.NODE_ENV === "development" ? "" : ""}${
         process.env.REACT_APP_API_URL
-      }product/all/sort/PRICE/${sortType}/${encodedSearchText}/0`;
+      }product/all/sort/PRICE/${sortType}/${searchText}/0`;
     }
 
     // API 요청
@@ -59,6 +59,7 @@ const Category = ({ storeId }) => {
       }
 
       if (response.status === 404) {
+        console.log(sortUrl);
         console.log("검색 결과가 없습니다.");
         setSearchData(null);
         setSearchResultCount(0);
@@ -69,6 +70,7 @@ const Category = ({ storeId }) => {
 
         setSearchData(data); // 상태 업데이트
 
+        console.log(sortUrl);
         console.log(data);
 
         if (data != null) {
@@ -81,7 +83,7 @@ const Category = ({ storeId }) => {
       }
     };
     fetchData();
-  }, [searchText, sortType]);
+  }, [searchText, sortType, storeId]);
 
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열기/닫기 상태
 
