@@ -7,7 +7,6 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { fetchRefreshToken } from "../utils/authUtil";
 import LikeButton from "./LikeButton";
 function ClothFeedCard({
   id,
@@ -21,7 +20,7 @@ function ClothFeedCard({
   const [likesCount, setLikesCount] = useState(0);
   const [liked, setLiked] = useState(false);
   const userEmail = localStorage.getItem("email");
-  const token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
 
   // 서버에서 조회하여 좋아요 수와 좋아요 상태를 가져옴
   useEffect(() => {
@@ -36,6 +35,7 @@ function ClothFeedCard({
             method: "GET",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `${token}`,
             },
           }
         );
@@ -56,41 +56,41 @@ function ClothFeedCard({
     fetchLikeData();
   }, [id]);
 
-  const handleLike = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NODE_ENV === "development" ? "" : ""}${
-          process.env.REACT_APP_API_URL
-        }user-feed/like/toggle`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-          body: JSON.stringify({
-            userEmail: userEmail,
-            userFeedId: id,
-          }),
-        }
-      );
+  // const handleLike = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.NODE_ENV === "development" ? "" : ""}${
+  //         process.env.REACT_APP_API_URL
+  //       }user-feed/like/toggle`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `${token}`,
+  //         },
+  //         body: JSON.stringify({
+  //           userEmail: userEmail,
+  //           userFeedId: id,
+  //         }),
+  //       }
+  //     );
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Server response:", data);
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       console.log("Server response:", data);
 
-        // 좋아요 상태 토글
-        setLikedByMe(!likedByMe);
+  //       // 좋아요 상태 토글
+  //       setLikedByMe(!likedByMe);
 
-        // 좋아요 개수 업데이트
-        setLikesCount(data.likesCount);
-      } else {
-        console.error("Error liking post:", response.status);
-      }
-    } catch (error) {
-      console.error("Error liking post:", error);
-    }
-  };
+  //       // 좋아요 개수 업데이트
+  //       setLikesCount(data.likesCount);
+  //     } else {
+  //       console.error("Error liking post:", response.status);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error liking post:", error);
+  //   }
+  // };
 
   return (
     <Card>

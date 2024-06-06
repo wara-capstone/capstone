@@ -54,15 +54,14 @@
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, Grid } from "@mui/material";
+import { message } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { fetchRefreshToken } from "../utils/authUtil";
 import ClothFeedListItem from "./ClothFeedListItem";
-import { message } from "antd";
 
 function ClothFeedList() {
   const [posts, setPosts] = useState([]);
-  // const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
   // const RefreshToken = localStorage.getItem("RefreshToken");
   const isLogin = localStorage.getItem("token") ? true : false;
 
@@ -83,6 +82,7 @@ function ClothFeedList() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `${token}`,
         },
       });
 
@@ -93,7 +93,7 @@ function ClothFeedList() {
         console.log("서버로 받은");
         console.log(data);
       } else {
-        message.error("피드를 불러오는데 실패했습니다.")
+        message.error("피드를 불러오는데 실패했습니다.");
         console.log("실패");
       }
     };

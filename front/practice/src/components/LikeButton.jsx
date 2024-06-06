@@ -15,7 +15,7 @@ const LikeButton = ({
   // const [likedByMeState, setLikedByMeState] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
 
-  const token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
 
   // 서버에서 조회하여 좋아요 수와 좋아요 상태를 가져옴
   useEffect(() => {
@@ -59,6 +59,9 @@ const LikeButton = ({
   }, [id, userEmail, likedByMe]);
 
   const handleLike = async () => {
+    setLikedByMe(!likedByMe);
+    setLikesCount(likedByMe ? likesCount - 1 : likesCount + 1);
+
     try {
       const response = await fetch(
         `${process.env.NODE_ENV === "development" ? "" : ""}${
@@ -78,8 +81,9 @@ const LikeButton = ({
       );
 
       if (response.ok) {
-        setLikedByMe(!likedByMe);
-        setLikesCount(likedByMe ? likesCount - 1 : likesCount + 1);
+        console.log("POST 요청 성공");
+        // setLikedByMe(!likedByMe);
+        // setLikesCount(likedByMe ? likesCount - 1 : likesCount + 1);
         // setLikesCountState(likedByMe ? likesCount - 1 : likesCount + 1);
       } else {
         console.error("Error liking post:", response.status);
