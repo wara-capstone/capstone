@@ -18,6 +18,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 import CardContent from "@mui/material/CardContent";
 import LikeButton from "../components/LikeButton";
 import Comment from "../components/Comment";
+import '../components/Comment.css';
 import { formatCreatedAt } from "../utils/dateUtils";
 
 const StyledCardHeader = styled(CardHeader)(({ theme }) => ({
@@ -249,28 +250,16 @@ export default function ViewClothSharedFeed() {
         <div key={index}>{comment}</div>
       ))}
       {commentsList.map((comment, index) => (
-       <Box
-       key={index}
-       display="flex"
-       alignItems="flex-start"
-       justifyContent="space-between"
-       mb={2}
-     >
-       <Box display="flex" alignItems="flex-start">
-         <Typography
-           variant="body2"
-           color="text"
-           fontWeight="bold"
-           marginLeft={"1rem"}
-           mr={1}
-         >
+       <Box key={index} className="comment-box">
+       <Box className="comment-content">
+         <Typography variant="body2" color="text" className="comment-user-name">
            {comment.userName}
          </Typography>
-         <Typography variant="body2" color="text.secondary">
+         <Typography variant="body2" color="text.secondary" className="comment-text">
            {comment.content}
          </Typography>
        </Box>
-       <Typography variant="body2" color="text.secondary" marginRight={"0.3rem"}>
+       <Typography variant="body2" color="text.secondary" className="comment-created-at">
          {formatCreatedAt(comment.createdAt)}
        </Typography>
      </Box>
