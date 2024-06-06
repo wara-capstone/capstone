@@ -13,17 +13,22 @@ import java.util.List;
 @Setter
 @ToString
 @Entity
-public class TotalPaymentEntity {
+public class TotalPayment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "totalPaymentId")
-    Long totalPaymentId;
-    String purchaser;
-    Long totalPrice;
-    LocalDateTime dateTime;
+    private Long totalPaymentId;
+    private String purchaser;
+    private Long totalPrice;
+    private LocalDateTime dateTime;
+    private String paymentUid; // 결제 고유 번호
 
-    @OneToMany(mappedBy = "totalPaymentEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    List<PaymentEntity> payments;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn
+    private List<Payment> payments;
+
+    public void updateDateTime(LocalDateTime dateTime){
+        this.dateTime = dateTime;
+    }
 
     @Override
     public String toString() {

@@ -1,7 +1,11 @@
 package com.payment.DTO;
 
+import com.payment.Entity.OrderItem;
 import lombok.*;
+
+import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -10,10 +14,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class TotalPaymentDTO {
-    private Long totalPaymentId;
+public class OrderDTO {
+    private Long id;
     private String purchaser;
     private Long totalPrice;
-    private String dateTime;
-    private List<PaymentDTO> paymentDTOS;
+    private LocalDateTime dateTime;
+    private List<OrderItemDTO> orderItemDTOList;
 }

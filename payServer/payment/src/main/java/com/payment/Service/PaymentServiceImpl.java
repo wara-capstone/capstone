@@ -3,15 +3,22 @@ package com.payment.Service;
 import com.payment.DAO.PaymentDAO;
 import com.payment.DAO.TotalPaymentDAO;
 import com.payment.DTO.*;
-import com.payment.Entity.PaymentEntity;
-import com.payment.Entity.TotalPaymentEntity;
+import com.payment.Entity.Order;
+import com.payment.Entity.OrderItem;
+import com.payment.Entity.Payment;
+import com.payment.Entity.TotalPayment;
+import com.siot.IamportRestClient.IamportClient;
+import com.siot.IamportRestClient.exception.IamportResponseException;
+import com.siot.IamportRestClient.request.CancelData;
+import com.siot.IamportRestClient.response.IamportResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,33 +30,74 @@ public class PaymentServiceImpl implements PaymentService {
     private final HttpCommunicationService httpCommunicationService;
     private final static Logger logger = LoggerFactory.getLogger(PaymentServiceImpl.class);
     private final PaymentDAO paymentDAO;
+    private final IamportClient iamportClient;
+    private final OrderService orderService;
 
-    public PaymentServiceImpl(@Autowired TotalPaymentDAO totalPaymentDAO,
-                              @Autowired PaymentDAO paymentDAO,
-                              @Autowired HttpCommunicationService httpCommunicationService) {
+    @Autowired
+    public PaymentServiceImpl(TotalPaymentDAO totalPaymentDAO,
+                              PaymentDAO paymentDAO,
+                              HttpCommunicationService httpCommunicationService,
+                              OrderService orderService,
+                              IamportClient iamportClient) {
         this.totalPaymentDAO = totalPaymentDAO;
         this.paymentDAO = paymentDAO;
         this.httpCommunicationService = httpCommunicationService;
+        this.orderService = orderService;
+        this.iamportClient = iamportClient;
     }
 
     @Override
-    public SimpleResponseDTO createPayment(TotalPaymentDTO totalPaymentDTO, List<PaymentDTO> paymentDTOS) {
-        TotalPaymentEntity totalPaymentEntity = toTotalPaymentEntity(totalPaymentDTO);
-        Map<String, Object> resultMap = totalPaymentDAO.createTotalPayment(totalPaymentEntity);
+    public SimpleResponseDTO createImportPayment(PaymentRequestDTO request) {
+        try {
+            // 결제 단건 조회(아임포트)
+            IamportResponse<com.siot.IamportRestClient.response.Payment> iamportResponse = iamportClient.paymentByImpUid(request.getPaymentUid());
+            // 주문내역 조회
+            Order order = orderService.findByOrderId(request.getOrderUid());
 
-        for(PaymentDTO paymentDTO : paymentDTOS){
-            PaymentEntity paymentEntity = toPaymentEntity(paymentDTO);
-            paymentEntity.setTotalPaymentEntity(totalPaymentEntity);
-            Map<String, Object> paymentResult = paymentDAO.createPayment(paymentEntity);
-
-            try {
-                httpCommunicationService.stockUpdate(paymentEntity.getProductId(), paymentEntity.getOptionId(), -paymentEntity.getQuantity());
-            } catch(URISyntaxException e){
-                e.getMessage();
+            // 결제 완료가 아니면
+            if (!iamportResponse.getResponse().getStatus().equals("paid")) {
+                // 주문, 결제 삭제
+                orderService.deleteOrder(order);
+                logger.info("결제 미완료: {}", request.getPaymentUid());
+                throw new RuntimeException("결제 미완료");
             }
 
-            if(paymentResult.get("result").equals("fail")){
-                return toSimpleResponseDTO(paymentResult);
+            // DB에 저장된 결제 금액
+            Long price = order.getTotalPrice();
+            // 실 결제 금액
+            int iamportPrice = iamportResponse.getResponse().getAmount().intValue();
+
+            // 결제 금액 검증
+            if (iamportPrice != price) {
+                // 주문 삭제
+                orderService.deleteOrder(order);
+                // 결제금액 위변조로 의심되는 결제금액을 취소(아임포트)
+                iamportClient.cancelPaymentByImpUid(new CancelData(iamportResponse.getResponse().getImpUid(), true, new BigDecimal(iamportPrice)));
+                logger.info("결제금액 위변조 의심: {}", request.getPaymentUid());
+                throw new RuntimeException("결제금액 위변조 의심");
+            }
+
+            return createPayment(order, request.getPaymentUid());
+
+        } catch (IamportResponseException e) {
+            logger.error("아임포트 응답 처리 중 오류 발생: {}", e.getMessage());
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            logger.error("입출력 예외 발생: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public SimpleResponseDTO createPayment(Order order, String paymentUid) {
+        TotalPayment totalPayment = toTotalPaymentEntity(order, paymentUid);
+        Map<String, Object> resultMap = totalPaymentDAO.createTotalPayment(totalPayment);
+
+        for (Payment payment : totalPayment.getPayments()) {
+            try {
+                httpCommunicationService.stockUpdate(payment.getProductId(), payment.getOptionId(), -payment.getQuantity());
+            } catch (URISyntaxException e) {
+                logger.error("URI 구문 예외 발생: {}", e.getMessage());
             }
         }
 
@@ -84,27 +132,33 @@ public class PaymentServiceImpl implements PaymentService {
         return simpleResponseDTO;
     }
 
-    public TotalPaymentEntity toTotalPaymentEntity(TotalPaymentDTO totalPaymentDTO) {
-        TotalPaymentEntity totalPaymentEntity = TotalPaymentEntity.builder()
-                .totalPaymentId(totalPaymentDTO.getTotalPaymentId())
-                .purchaser(totalPaymentDTO.getPurchaser())
-                .totalPrice(totalPaymentDTO.getTotalPrice())
+    public TotalPayment toTotalPaymentEntity(Order order, String paymentUid) {
+        return TotalPayment.builder()
+                .purchaser(order.getPurchaser())
+                .totalPrice(order.getTotalPrice())
+                .paymentUid(paymentUid)
+                .payments(toPaymentEntity(order.getOrderItemList(), order.getPurchaser()))
                 .build();
-
-        return totalPaymentEntity;
     }
 
-    public PaymentEntity toPaymentEntity(PaymentDTO paymentDTO) {
-        PaymentEntity paymentEntity = PaymentEntity.builder()
-                .paymentId(paymentDTO.getPaymentId())
-                .storeId(paymentDTO.getStoreId())
-                .productId(paymentDTO.getProductId())
-                .optionId(paymentDTO.getOptionId())
-                .price(paymentDTO.getPrice())
-                .quantity(paymentDTO.getQuantity())
-                .build();
+    public List<Payment> toPaymentEntity(List<OrderItem> orderItemList, String purchaser) {
+        List<Payment> paymentList = new ArrayList<Payment>();
 
-        return paymentEntity;
+        for(OrderItem orderItem : orderItemList){
+            Payment payment = Payment.builder()
+                    .storeId(orderItem.getStoreId())
+                    .productId(orderItem.getProductId())
+                    .optionId(orderItem.getOptionId())
+                    .price(orderItem.getPrice())
+                    .quantity(orderItem.getQuantity())
+                    .purchaser(purchaser)
+                    .dateTime(LocalDateTime.now())
+                    .build();
+
+            paymentList.add(payment);
+        }
+
+        return paymentList;
     }
 
     public SimpleResponseDTO toSimpleResponseDTO(Map<String, Object> resultMap) {
@@ -118,25 +172,25 @@ public class PaymentServiceImpl implements PaymentService {
         return simpleResponseDTO;
     }
 
-    public PaymentDTO toPaymentDTO(PaymentEntity paymentEntity){
+    public PaymentDTO toPaymentDTO(Payment payment){
         PaymentDTO paymentDTO = PaymentDTO.builder()
-                .paymentId(paymentEntity.getPaymentId())
-                .storeId(paymentEntity.getStoreId())
-                .productId(paymentEntity.getProductId())
-                .optionId(paymentEntity.getOptionId())
-                .quantity(paymentEntity.getQuantity())
-                .price(paymentEntity.getPrice())
-                .dateTime(paymentEntity.getDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .paymentId(payment.getPaymentId())
+                .storeId(payment.getStoreId())
+                .productId(payment.getProductId())
+                .optionId(payment.getOptionId())
+                .quantity(payment.getQuantity())
+                .price(payment.getPrice())
+                .dateTime(payment.getDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .build();
 
         return paymentDTO;
     }
 
-    public List<PaymentDTO> toPaymentDTOS(List<PaymentEntity> paymentEntities){
+    public List<PaymentDTO> toPaymentDTOS(List<Payment> paymentEntities){
         List<PaymentDTO> paymentDTOS = new ArrayList<>();
 
-        for(PaymentEntity paymentEntity : paymentEntities){
-            PaymentDTO paymentDTO = toPaymentDTO(paymentEntity);
+        for(Payment payment : paymentEntities){
+            PaymentDTO paymentDTO = toPaymentDTO(payment);
             paymentDTOS.add(paymentDTO);
         }
 
@@ -147,14 +201,14 @@ public class PaymentServiceImpl implements PaymentService {
         ResponseDTO responseDTO;
 
         if (resultMap.containsKey("data")) {
-            TotalPaymentEntity totalPaymentEntity = (TotalPaymentEntity) resultMap.get("data");
+            TotalPayment totalPayment = (TotalPayment) resultMap.get("data");
 
             TotalPaymentDTO totalPaymentDTO = TotalPaymentDTO.builder()
-                    .totalPaymentId(totalPaymentEntity.getTotalPaymentId())
-                    .purchaser(totalPaymentEntity.getPurchaser())
-                    .totalPrice(totalPaymentEntity.getTotalPrice())
-                    .dateTime(totalPaymentEntity.getDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                    .paymentDTOS(toPaymentDTOS(totalPaymentEntity.getPayments()))
+                    .totalPaymentId(totalPayment.getTotalPaymentId())
+                    .purchaser(totalPayment.getPurchaser())
+                    .totalPrice(totalPayment.getTotalPrice())
+                    .dateTime(totalPayment.getDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                    .paymentDTOS(toPaymentDTOS(totalPayment.getPayments()))
                     .build();
 
             responseDTO = ResponseDTO.builder()
@@ -162,16 +216,16 @@ public class PaymentServiceImpl implements PaymentService {
                     .data(totalPaymentDTO)
                     .build();
         } else if (resultMap.containsKey("dataList")) {
-            List<TotalPaymentEntity> totalPaymentEntities = (List<TotalPaymentEntity>) resultMap.get("dataList");
+            List<TotalPayment> totalPaymentEntities = (List<TotalPayment>) resultMap.get("dataList");
             List<TotalPaymentDTO> totalPaymentDTOS = new ArrayList<>();
 
-            for (TotalPaymentEntity totalPaymentEntity : totalPaymentEntities) {
+            for (TotalPayment totalPayment : totalPaymentEntities) {
                 TotalPaymentDTO totalPaymentDTO = TotalPaymentDTO.builder()
-                        .totalPaymentId(totalPaymentEntity.getTotalPaymentId())
-                        .purchaser(totalPaymentEntity.getPurchaser())
-                        .totalPrice(totalPaymentEntity.getTotalPrice())
-                        .dateTime(totalPaymentEntity.getDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                        .paymentDTOS(toPaymentDTOS(totalPaymentEntity.getPayments()))
+                        .totalPaymentId(totalPayment.getTotalPaymentId())
+                        .purchaser(totalPayment.getPurchaser())
+                        .totalPrice(totalPayment.getTotalPrice())
+                        .dateTime(totalPayment.getDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                        .paymentDTOS(toPaymentDTOS(totalPayment.getPayments()))
                         .build();
                 totalPaymentDTOS.add(totalPaymentDTO);
             }
@@ -195,16 +249,16 @@ public class PaymentServiceImpl implements PaymentService {
         ResponseDTO responseDTO;
 
         if (resultMap.containsKey("data")) {
-            PaymentEntity paymentEntity = (PaymentEntity) resultMap.get("data");
+            Payment payment = (Payment) resultMap.get("data");
 
             PaymentDTO paymentDTO = PaymentDTO.builder()
-                    .paymentId(paymentEntity.getPaymentId())
-                    .storeId(paymentEntity.getStoreId())
-                    .productId(paymentEntity.getProductId())
-                    .optionId(paymentEntity.getOptionId())
-                    .price(paymentEntity.getPrice())
-                    .quantity(paymentEntity.getQuantity())
-                    .dateTime(paymentEntity.getDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                    .paymentId(payment.getPaymentId())
+                    .storeId(payment.getStoreId())
+                    .productId(payment.getProductId())
+                    .optionId(payment.getOptionId())
+                    .price(payment.getPrice())
+                    .quantity(payment.getQuantity())
+                    .dateTime(payment.getDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                     .build();
 
             responseDTO = ResponseDTO.builder()
@@ -212,18 +266,18 @@ public class PaymentServiceImpl implements PaymentService {
                     .data(paymentDTO)
                     .build();
         } else if (resultMap.containsKey("dataList")) {
-            List<PaymentEntity> paymentEntities = (List<PaymentEntity>) resultMap.get("dataList");
+            List<Payment> paymentEntities = (List<Payment>) resultMap.get("dataList");
             List<PaymentDTO> paymentDTOS = new ArrayList<>();
 
-            for (PaymentEntity paymentEntity : paymentEntities) {
+            for (Payment payment : paymentEntities) {
                 PaymentDTO paymentDTO = PaymentDTO.builder()
-                        .paymentId(paymentEntity.getPaymentId())
-                        .storeId(paymentEntity.getStoreId())
-                        .productId(paymentEntity.getProductId())
-                        .optionId(paymentEntity.getOptionId())
-                        .price(paymentEntity.getPrice())
-                        .quantity(paymentEntity.getQuantity())
-                        .dateTime(paymentEntity.getDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                        .paymentId(payment.getPaymentId())
+                        .storeId(payment.getStoreId())
+                        .productId(payment.getProductId())
+                        .optionId(payment.getOptionId())
+                        .price(payment.getPrice())
+                        .quantity(payment.getQuantity())
+                        .dateTime(payment.getDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                         .build();
                 paymentDTOS.add(paymentDTO);
             }

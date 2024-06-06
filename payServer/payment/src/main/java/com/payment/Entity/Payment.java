@@ -12,20 +12,21 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Entity
-public class PaymentEntity {
+public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long paymentId;
-    Long storeId;
-    Long productId;
-    Long optionId;
-    Long price;
-    Long quantity;
-    LocalDateTime dateTime;
+    private Long paymentId;
+    private Long storeId;
+    private Long productId;
+    private Long optionId;
+    private Long price;
+    private Long quantity;
+    private String purchaser;
+    private LocalDateTime dateTime;
 
-    @ManyToOne
-    @JoinColumn(name = "total_payment_id")
-    TotalPaymentEntity totalPaymentEntity;
+    public void updateDateTime(LocalDateTime dateTime){
+        this.dateTime = dateTime;
+    }
 
     @Override
     public String toString() {
@@ -36,8 +37,6 @@ public class PaymentEntity {
                 ", optionId=" + optionId +
                 ", price=" + price +
                 ", quantity=" + quantity +
-                ", dateTime=" + dateTime +
-                ", totalPaymentEntity=" + (totalPaymentEntity != null ? totalPaymentEntity.getTotalPaymentId() : "null") +
-                '}';
+                ", dateTime=" + dateTime + "}";
     }
 }

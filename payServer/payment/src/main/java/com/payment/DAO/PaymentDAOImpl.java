@@ -1,13 +1,11 @@
 package com.payment.DAO;
 
-import com.payment.Entity.PaymentEntity;
+import com.payment.Entity.Payment;
 import com.payment.Repository.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,21 +19,21 @@ public class PaymentDAOImpl implements PaymentDAO{
     }
 
     @Override
-    public Map<String, Object> createPayment(PaymentEntity paymentEntity) {
+    public Map<String, Object> createPayment(Payment payment) {
         Map<String, Object> result = new HashMap<>();
 
-        if(paymentRepository.existsByPaymentId(paymentEntity.getPaymentId())){
+        if(paymentRepository.existsByPaymentId(payment.getPaymentId())){
             result.put("result", "fail");
             result.put("message", "해당하는 Payment가 DB에 존재합니다.");
             return result;
         }
 
-        paymentEntity.setDateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
-        paymentRepository.save(paymentEntity);
+        payment.setDateTime(LocalDateTime.now());
+        paymentRepository.save(payment);
 
-        if(paymentRepository.existsByPaymentId(paymentEntity.getPaymentId())){
+        if(paymentRepository.existsByPaymentId(payment.getPaymentId())){
             result.put("result", "success");
-            result.put("data", paymentRepository.findByPaymentId(paymentEntity.getPaymentId()));
+            result.put("data", paymentRepository.findByPaymentId(payment.getPaymentId()));
         } else{
             result.put("result", "fail");
             result.put("message", "Payment가 정상적으로 저장되지 않았습니다.");
@@ -48,7 +46,7 @@ public class PaymentDAOImpl implements PaymentDAO{
     public Map<String, Object> readPaymentByStoreId(Long storeId) {
         Map<String, Object> result = new HashMap<>();
 
-        List<PaymentEntity> paymentEntities = paymentRepository.findByStoreId(storeId);
+        List<Payment> paymentEntities = paymentRepository.findByStoreId(storeId);
 
         if(!paymentEntities.isEmpty()){
             result.put("result", "success");
@@ -61,10 +59,10 @@ public class PaymentDAOImpl implements PaymentDAO{
     }
 
     @Override
-    public Map<String, Object> deletePayment(PaymentEntity paymentEntity) {
+    public Map<String, Object> deletePayment(Payment payment) {
         Map<String, Object> result = new HashMap<>();
-        Long paymentId = paymentEntity.getPaymentId();
-        paymentRepository.delete(paymentEntity);
+        Long paymentId = payment.getPaymentId();
+        paymentRepository.delete(payment);
         paymentRepository.flush(); // 데이터베이스 동기화
 
         if(paymentRepository.existsByPaymentId(paymentId)){

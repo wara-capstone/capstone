@@ -1,4 +1,6 @@
 package com.payment.DTO;
+
+
 import lombok.*;
 
 @Builder
@@ -7,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class SimpleResponseDTO {
+public class OrderResponseDTO {
     private String result;
-    private String message;
+    private Long orderId;
 }

@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class ResponseDTO {
-    String result;
-    String message;
-    Object data;
+    private String result;
+    private String message;
+    private Object data;
 }

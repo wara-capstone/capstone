@@ -1,14 +1,13 @@
 package com.payment.Service;
 
-import com.payment.DTO.PaymentDTO;
-import com.payment.DTO.TotalPaymentDTO;
-import com.payment.DTO.ResponseDTO;
-import com.payment.DTO.SimpleResponseDTO;
+import com.payment.DTO.*;
+import com.payment.Entity.Order;
 
 import java.util.List;
 
 public interface PaymentService {
-    public SimpleResponseDTO createPayment(TotalPaymentDTO totalPaymentDTO, List<PaymentDTO> paymentDTOS);
+    public SimpleResponseDTO createImportPayment(PaymentRequestDTO request);
+    public SimpleResponseDTO createPayment(Order order, String paymentUid);
     public ResponseDTO readPaymentByStoreId(Long storeId);
     public ResponseDTO readPaymentByPurchaser(String purchaser);
     public SimpleResponseDTO updatePayment(TotalPaymentDTO totalPaymentDTO);
