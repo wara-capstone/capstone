@@ -45,8 +45,8 @@ export default function ViewClothSharedFeed() {
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [commentsList, setCommentsList] = useState([]);
-  const [likedByMe, setLikedByMe] = useState(false);
-  const [likesCount, setLikesCount] = useState(0);
+  // const [likedByMe, setLikedByMe] = useState(false);
+  // const [likesCount, setLikesCount] = useState(0);
 
   // 좋아요 요청 보내기
 
@@ -73,6 +73,8 @@ export default function ViewClothSharedFeed() {
   };
 
   useEffect(() => {
+    console.log("feedId 조회 가능?", id, userEmail);
+
     const fetchData = async () => {
       const token = localStorage.getItem("token");
       const response = await fetch(url, {
@@ -110,7 +112,9 @@ export default function ViewClothSharedFeed() {
   const handleCommentSubmit = async () => {
     try {
       const response = await fetch(
-        `http://49.50.161.45:21000/api/user-feed/like/toggle`,
+        `${process.env.NODE_ENV === "development" ? "" : ""}${
+          process.env.REACT_APP_API_URL
+        }user-feed/like/toggle`,
         {
           method: "POST",
           headers: {
@@ -208,11 +212,11 @@ export default function ViewClothSharedFeed() {
 
           <LikeButton
             id={id}
-            userEmail={userEmail}
-            likedByMe={likedByMe}
-            likesCount={likesCount}
-            setLikedByMeState={setLikedByMe}
-            setLikesCountState={setLikesCount}
+            // userEmail={userEmail}
+            // likedByMe={likedByMe}
+            // likesCount={likesCount}
+            // setLikedByMeState={setLikedByMe}
+            // setLikesCountState={setLikesCount}
           />
 
           <Box
