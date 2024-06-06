@@ -4,6 +4,8 @@ import SellerHeader from "./SellerHeader";
 import SellerSideNav from "./SellerSideNav";
 import { message } from "antd";
 
+import { fetchRefreshToken } from "../../utils/authUtil";
+
 const { kakao } = window;
 
 const SellerStoreRegister = ({ store }) => {
@@ -52,7 +54,7 @@ const SellerStoreRegister = ({ store }) => {
   }, []);
 
   // form submission handler
-  const handleSubmit = (e) => {
+  const handleSubmit = (e, tryAgain = true) => {
     e.preventDefault();
     // TODO: Implement the code to send updated data to the server
 
@@ -113,8 +115,14 @@ const SellerStoreRegister = ({ store }) => {
           console.log(token);
           console.log(email);
         })
-        .catch((error) => {
+        .catch(async(error) => {
           console.error(error);
+          if (error.response && error.response.status === 401 && tryAgain) {
+            const RefreshToken = localStorage.getItem("RefreshToken");
+            await fetchRefreshToken(RefreshToken); // 토큰 갱신 로직 호출
+            token = localStorage.getItem("token");
+            return handleSubmit(e, false); // 재귀 호출
+          }
         });
     } else {
       formData = JSON.stringify(data);
@@ -143,8 +151,14 @@ const SellerStoreRegister = ({ store }) => {
           message.success("가게 등록이 완료되었습니다.");
           console.log(data.result);
         })
-        .catch((error) => {
+        .catch(async(error) => {
           console.error(error);
+          if (error.response && error.response.status === 401 && tryAgain) {
+            const RefreshToken = localStorage.getItem("RefreshToken");
+            await fetchRefreshToken(RefreshToken); // 토큰 갱신 로직 호출
+            token = localStorage.getItem("token");
+            return handleSubmit(e, false); // 재귀 호출
+          }
         });
     }
   };

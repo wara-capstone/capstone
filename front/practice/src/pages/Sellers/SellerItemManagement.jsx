@@ -6,6 +6,7 @@ import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
 import "ag-grid-community/styles/ag-theme-alpine.css"; // Optional theme CSS
 import { useParams } from "react-router-dom";
 import ImageCellRenderer from "../../components/ImageCellRenderer";
+import { fetchRefreshToken } from "../../utils/authUtil";
 
 import CellRenderer from "./CellRenderer.jsx";
 import { message } from "antd";
@@ -54,6 +55,13 @@ export default function SellerItemManagement({images}) {
           }
         );
 
+        if (response.status === 401) {
+          let RefreshToken = localStorage.getItem("RefreshToken");
+          await fetchRefreshToken(RefreshToken);
+          token = localStorage.getItem("token");
+        }
+  
+
       setRowData(response.data);
       console.log(response.data);
     } catch (error) {
@@ -63,9 +71,10 @@ export default function SellerItemManagement({images}) {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [token]);
 
   // 삭제 버튼의 onClick 핸들러
   const handleDelete = async () => {

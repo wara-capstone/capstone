@@ -3,7 +3,7 @@ import SellerHeader from "./SellerHeader";
 //import Card from "../../components/Card";
 import { Card } from "antd";
 import { Link } from "react-router-dom";
-
+import { fetchRefreshToken } from "../../utils/authUtil";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import LoadingScreen from "../../components/LoadingScreen";
@@ -19,7 +19,7 @@ const StoresListPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (tryAgain = true) => {
       setLoading(true);
       const result = await axios.get(
         `${process.env.NODE_ENV === "development" ? "" : ""}${
@@ -33,6 +33,15 @@ const StoresListPage = () => {
           },
         }
       );
+      if (result.status === 401 && tryAgain) {
+        let RefreshToken = localStorage.getItem("RefreshToken");
+        await fetchRefreshToken(RefreshToken);
+        token = localStorage.getItem("token");
+        return fetchData(false);
+      }
+
+      
+
       console.log("받아온 값:" + JSON.stringify(result.data)); // 서버로부터 받아온 데이터를 JSON 문자열로 변환하여 출력
       if (result.data && Array.isArray(result.data.data)) {
         setStoreInfo(result.data);

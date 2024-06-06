@@ -7,6 +7,7 @@ import imageSrc2 from "../../adImages/iconImage/shopRed.png";
 import "./Seller.css";
 import SellerHeader from "./SellerHeader";
 import SellerSideNav from "./SellerSideNav";
+import { fetchRefreshToken } from "../../utils/authUtil";
 
 export default function SellerStoreSales({ store }) {
   const email = localStorage.getItem("email");
@@ -42,7 +43,7 @@ export default function SellerStoreSales({ store }) {
     normalImage = createMarkerImage(imageSrc4, imageSize);
 
   // fetch 통신 method
-  const fetchData = async (initMarkers) => {
+  const fetchData = async (initMarkers, tryAgain = true) => {
     console.log(email);
     try {
       const response = await fetch(
@@ -64,6 +65,12 @@ export default function SellerStoreSales({ store }) {
         initMarkers();
       } else if (response.status === 400) {
         console.log("데이터 전송 실패");
+      }
+      else if(response.status === 401 && tryAgain){
+        let RefreshToken = localStorage.getItem("RefreshToken");
+        await fetchRefreshToken(RefreshToken);
+        token = localStorage.getItem("token");
+        fetchData(initMarkers, false);
       }
     } catch (error) {
       console.error("오류 발생:", error);
@@ -140,7 +147,7 @@ export default function SellerStoreSales({ store }) {
   }, []);
 
   useEffect(() => {
-    async function fetchPayments() {
+    async function fetchPayments(tryAgain = true) {
       // Payments 상태 초기화
       setPayments([]);
 
@@ -158,6 +165,12 @@ export default function SellerStoreSales({ store }) {
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        if (response.status === 401 && tryAgain) {
+          let RefreshToken = localStorage.getItem("RefreshToken");
+          await fetchRefreshToken(RefreshToken);
+          token = localStorage.getItem("token");
+          return fetchPayments(false);
         }
 
         const data = await response.json();
