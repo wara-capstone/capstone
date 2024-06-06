@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Seller.css";
 import SellerHeader from "./SellerHeader";
 import SellerSideNav from "./SellerSideNav";
+import { message } from "antd";
 
 const { kakao } = window;
 
@@ -102,10 +103,11 @@ const SellerStoreRegister = ({ store }) => {
           if (response.ok) {
             return response.json(); // JSON 형식의 응답을 파싱
           }
+          message.error("가게 등록에 실패했습니다.")
           throw new Error("네트워크 응답이 실패했습니다.");
         })
         .then((data) => {
-          alert("성공!");
+          message.success("가게 등록이 완료되었습니다.");
           console.log(data.result);
           console.log(formData);
           console.log(token);
@@ -134,10 +136,11 @@ const SellerStoreRegister = ({ store }) => {
           if (response.ok) {
             return response.json(); // JSON 형식의 응답을 파싱
           }
+          message.error("가게 등록에 실패했습니다.");
           throw new Error("네트워크 응답이 실패했습니다.");
         })
         .then((data) => {
-          alert("성공!");
+          message.success("가게 등록이 완료되었습니다.");
           console.log(data.result);
         })
         .catch((error) => {
@@ -181,7 +184,7 @@ const SellerStoreRegister = ({ store }) => {
           console.log(marker === null);
           map.panTo(coord);
         } else {
-          alert("오류발생!");
+          message.error("입력한 위치의 주소를 찾을 수 없습니다.");
         }
       });
     } else {

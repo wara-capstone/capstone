@@ -173,6 +173,7 @@ export default function SellerStoreSales({ store }) {
           setPayments(data.data); // 상태 업데이트
         }
       } catch (error) {
+        message.error("상품이 존재하지 않습니다.");
         console.error("Error getting visitor_user_emails:", error);
 
         // if ((selectedMarker = null)) {

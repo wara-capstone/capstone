@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { message } from "antd";
 import imageSrc4 from "../../adImages/iconImage/iconBlue.png";
 import imageSrc3 from "../../adImages/iconImage/iconRed.png";
 import imageSrc from "../../adImages/iconImage/shopBlue.png";
@@ -217,10 +218,11 @@ const SellerStoreEdit = ({ store }) => {
           if (response.ok) {
             return response.json();
           }
+          message.error("가게정보 수정에 실패했습니다.")
           throw new Error("네트워크 응답이 실패했습니다.");
         })
         .then((data) => {
-          alert("성공!");
+          message.success("성공!");
           console.log(data.result);
           window.location.reload();
         })
@@ -241,10 +243,10 @@ const SellerStoreEdit = ({ store }) => {
           if (response.ok) {
             return response.json();
           }
+          message.error("가게정보 수정에 실패했습니다.")
           throw new Error("네트워크 응답이 실패했습니다.");
         })
         .then((data) => {
-          alert("성공!");
           console.log(data.result);
           window.location.reload();
         })
@@ -313,7 +315,7 @@ const SellerStoreEdit = ({ store }) => {
         throw new Error("네트워크 응답이 실패했습니다.");
       })
       .then((data) => {
-        alert("성공!");
+        message.success("성공!");
         console.log(data.result);
         window.location.reload();
       })
