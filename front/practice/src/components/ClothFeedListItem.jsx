@@ -11,6 +11,7 @@ function ClothFeedListItem({ id, userName, userImg, img, caption, userFeedConten
   return (
     <div className="ClothFeedListItem" >
       <ClothFeedCard
+        id={id}
         userName={userName}
         userImg={userImg}
         img={img}
