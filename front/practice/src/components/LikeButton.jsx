@@ -12,7 +12,7 @@ const LikeButton = ({
   // setLikesCountState,
 }) => {
   const [likedByMe, setLikedByMe] = useState(false);
-  const [likedByMeState, setLikedByMeState] = useState(false);
+  // const [likedByMeState, setLikedByMeState] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
 
   const userEmail = localStorage.getItem("email");
@@ -83,7 +83,6 @@ const LikeButton = ({
       if (response.ok) {
         setLikedByMe(!likedByMe);
         setLikesCount(likedByMe ? likesCount - 1 : likesCount + 1);
-        setLikedByMeState(!likedByMe);
         // setLikesCountState(likedByMe ? likesCount - 1 : likesCount + 1);
       } else {
         console.error("Error liking post:", response.status);
@@ -99,7 +98,7 @@ const LikeButton = ({
         aria-label={likedByMe ? "좋아요 취소" : "좋아요"}
         color={likedByMe ? "primary" : "default"}
         onClick={handleLike}
-        sx={{ width: 28, height: 28 }}
+        sx={{ width: 40, height: 40 }}
       >
         {likedByMe ? (
           <FavoriteIcon fontSize="small" />
