@@ -37,7 +37,7 @@ const TitleTypography = styled(Typography)(({ theme }) => ({
 
 export default function ViewClothSharedFeed() {
   // const [id, setId] = useState('');
-  const [token, setToken] = useState("");
+  let token = localStorage.getItem("token");
   const userEmail = localStorage.getItem("email");
   const { id } = useParams();
   const [itemData, setItemData] = useState(null);
@@ -76,7 +76,6 @@ export default function ViewClothSharedFeed() {
     console.log("feedId 조회 가능?", id, userEmail);
 
     const fetchData = async () => {
-      const token = localStorage.getItem("token");
       const response = await fetch(url, {
         method: "GET",
         headers: {
