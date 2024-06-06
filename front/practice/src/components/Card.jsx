@@ -26,8 +26,14 @@ function Card({
         <p className="card-content">{content}</p>
         <p className="card-content2"> {content2}</p>
         <p className="card-price">
-          <span style={{ fontSize: "1.3rem" }}>{parseInt(price).toLocaleString()}</span>
-          <span>{price ? "원" : null}</span>
+          {price !== null ? (
+            <>
+              <span style={{ fontSize: "1.3rem" }}>
+                {parseInt(price).toLocaleString()}
+              </span>
+              <span>원</span>
+            </>
+          ) : null}
         </p>
         {/* <p className="card-count">
           {count ? "재고: " : null} {count}

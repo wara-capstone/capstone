@@ -2,10 +2,10 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Box, IconButton, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { fetchRefreshToken } from "../utils/authUtil";
 
 const LikeButton = ({
   id,
+  userEmail,
   // likedByMe,
   // likesCount,
   // setLikedByMeState,
@@ -15,7 +15,6 @@ const LikeButton = ({
   // const [likedByMeState, setLikedByMeState] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
 
-  const userEmail = localStorage.getItem("email");
   const token = localStorage.getItem("token");
 
   // 서버에서 조회하여 좋아요 수와 좋아요 상태를 가져옴
@@ -57,7 +56,7 @@ const LikeButton = ({
     };
 
     fetchLikeData();
-  }, [id]);
+  }, [id, userEmail, likedByMe]);
 
   const handleLike = async () => {
     try {
@@ -94,9 +93,9 @@ const LikeButton = ({
     <Box sx={{ display: "flex", alignItems: "center" }}>
       <IconButton
         aria-label={likedByMe ? "좋아요 취소" : "좋아요"}
-        color={likedByMe ? "pink" : "default"}
+        // color={likedByMe ? "white" : "default"}
         onClick={handleLike}
-        sx={{ width: 40, height: 40 }}
+        sx={{ width: 40, height: 40, color: likedByMe ? "red" : "default" }}
       >
         {likedByMe ? (
           <FavoriteIcon fontSize="small" />

@@ -37,7 +37,7 @@ const TitleTypography = styled(Typography)(({ theme }) => ({
 
 export default function ViewClothSharedFeed() {
   // const [id, setId] = useState('');
-  const [token, setToken] = useState("");
+  const token = localStorage.getItem("token");
   const userEmail = localStorage.getItem("email");
   const { id } = useParams();
   const [itemData, setItemData] = useState(null);
@@ -76,11 +76,11 @@ export default function ViewClothSharedFeed() {
     console.log("feedId 조회 가능?", id, userEmail);
 
     const fetchData = async () => {
-      const token = localStorage.getItem("token");
       const response = await fetch(url, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `${token}`,
         },
       });
 
@@ -118,6 +118,7 @@ export default function ViewClothSharedFeed() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `${token}`,
           },
           body: JSON.stringify({
             userFeedId: id,
@@ -216,6 +217,7 @@ export default function ViewClothSharedFeed() {
             // likesCount={likesCount}
             // setLikedByMeState={setLikedByMe}
             // setLikesCountState={setLikesCount}
+            userFeedId={userEmail}
           />
 
           <Box
