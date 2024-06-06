@@ -20,7 +20,8 @@
 .event-button {
   position: relative;
   /* top: 100px; */
-  background-color: rgb(174, 174, 174);
+  /* background-color: rgb(174, 174, 174); */
+  background-color: black;
   border: none;
   border-radius: 10px;
   color: #fff;

@@ -6,6 +6,7 @@ import com.auth.auth.dto.TokenDTO;
 import com.auth.auth.dto.UserDTO;
 import com.auth.auth.except.*;
 import com.auth.auth.service.AuthService;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +67,7 @@ public class AuthController {
             logger.info(refreshToken);
             logger.info("refreshToken으로 토큰 갱신");
             return ResponseEntity.status(201).body(this.authService.refreshToken(refreshToken));
-        }catch (RefreshTokenNotValidException e){
+        }catch (RefreshTokenNotValidException | ExpiredJwtException e){
             return ResponseEntity.status(400).body(TokenDTO.builder().accessToken(e.getMessage()).build());
         }
     }

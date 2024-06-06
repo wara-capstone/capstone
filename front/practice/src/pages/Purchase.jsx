@@ -378,14 +378,15 @@ async function clickPurchase(tryAgain = true) { // 구매하기 버튼 클릭시
         )}
         </div>
 
-        <div style={{display: 'flex', justifyContent: 'space-between', padding: '20px'}}>
+        <div style={{display: 'flex', justifyContent: 'space-between', padding: '15px'}}>
         <div>
           <label>구매 상품 개수: </label>
-          <span>{selectedItems.length}</span>
+          <span style={{fontSize:"25px"}}>{selectedItems.length}</span>
         </div>
         <div>
           <label>결제 총 금액: </label>
-          <span>{totalPrice.toLocaleString()}원</span> 
+          <span style={{fontSize:"25px"}}>{totalPrice.toLocaleString()}</span> 
+          <span>원</span>
         </div>
       </div>
 <div style={{bottom: "1rem", position: "fixed", justifyContent:"center", transform: "translate(-50%, -50%)", left:"50%"}}>

@@ -59,7 +59,7 @@ const SignupChoice = () => {
     // 로그인 처리 로직을 구현합니다.
     event.preventDefault();
     await new Promise((r) => setTimeout(r, 1000));
-    
+    console.log(kakaoURL + "kakaoURL")
     window.location.href = kakaoURL;
 
   };

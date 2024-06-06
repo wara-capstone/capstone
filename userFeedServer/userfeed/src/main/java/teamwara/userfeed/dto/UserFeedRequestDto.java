@@ -11,5 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 public class UserFeedRequestDto {
     private MemberDto user;
+    private String userFeedContent;
     private List<ProductDto> product;
 }

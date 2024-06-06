@@ -11,7 +11,8 @@ const UserProfile = () => {
   const userRole = localStorage.getItem("role");
   const storeId = localStorage.getItem("storeid");
   let token = localStorage.getItem("token");
-  const RefreshToken = localStorage.getItem("RefreshToken");
+  let RefreshToken = localStorage.getItem("RefreshToken");
+  const [role, setRole] = useState("user");
 
   let url;
 
@@ -22,15 +23,17 @@ const UserProfile = () => {
     name: "유저",
     profileImage: "https://via.placeholder.com/150x150",
     email: email,
-    nickname: userRole,
+    role: role,
     phoneNumber: "010-1234-5678",
   });
 
   useEffect(() => {
     if (userRole === "user") {
       setIsSeller(false);
+      setRole("고객");
     } else if (userRole === "seller") {
       setIsSeller(true);
+      setRole("판매자");
     }
     const fetchData = async () => {
       setLoading(true);
@@ -49,13 +52,11 @@ const UserProfile = () => {
       if (response.status === 401) {
         const fetchToken = async () => {
           const response = await fetch(
-            `${process.env.NODE_ENV === "development" ? "" : ""}${
-              process.env.REACT_APP_API_URL
-            }auth/signin`,
+            `${process.env.NODE_ENV === "development" ? "" : ""}${process.env.REACT_APP_API_URL}auth/signin`,
             {
               method: "GET",
               headers: {
-                Authorization: localStorage.getItem("RefreshToken"),
+              Authorization: localStorage.getItem("RefreshToken"),
               },
             }
           );
@@ -136,6 +137,7 @@ const UserProfile = () => {
 
     // 페이지 이동
     navigate("/");
+
   };
 
   const handleConnectSeller = () => {
@@ -156,7 +158,7 @@ const UserProfile = () => {
           </div>
           <div className="user-info">
             <h2>{user.name}</h2>
-            <p>{user.nickname}</p>
+            <p>{role}</p>
             <p>{user.email}</p>
             <p>{user.phoneNumber}</p>
           </div>
@@ -175,17 +177,19 @@ const UserProfile = () => {
             </button>
           </Link>
 
-          <Link to="/user/chattingList" className="user-link">
-            <button className="chattingList-btn">
-              <span role="img" aria-label="conversation">
-                💬
-              </span>{" "}
-              나의 1대1 상담 내역
-              <div className="move-page-icon">
-                <FontAwesomeIcon icon={faChevronRight} />
-              </div>
-            </button>
-          </Link>
+          {!isSeller && (
+            <Link to="/user/chattingList" className="user-link">
+              <button className="chattingList-btn">
+                <span role="img" aria-label="conversation">
+                  💬
+                </span>{" "}
+                나의 1대1 상담 내역
+                <div className="move-page-icon">
+                  <FontAwesomeIcon icon={faChevronRight} />
+                </div>
+              </button>
+            </Link>
+          )}
 
           {!isSeller && (
             <Link to="/user/purchaseHistory" className="user-link">
@@ -200,7 +204,7 @@ const UserProfile = () => {
               </button>
             </Link>
           )}
-          <Link to="/user/pageUpload" className="user-link">
+          {/* <Link to="/user/pageUpload" className="user-link">
             <button className="chattingList-btn">
               <span role="img" aria-label="upload">
                 📤
@@ -211,7 +215,7 @@ const UserProfile = () => {
                 
               </div>
             </button>
-          </Link>
+          </Link> */}
         </div>
 
         <div className="move-seller-page-btn-container">

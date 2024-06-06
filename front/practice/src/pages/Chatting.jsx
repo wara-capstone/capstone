@@ -4,13 +4,15 @@ import BottomNav from "../components/BottomNav";
 import Header from "../components/Header";
 import { fetchRefreshToken } from "../utils/authUtil";
 
-
 export default function Chatting() {
   const [currentRoomId, setCurrentRoomId] = useState(null);
   const [socket, setSocket] = useState(null);
   const [messageInput, setMessageInput] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
-  const CHATTING_URL = process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DJANGO_CHATTING_URL : process.env.REACT_APP_API_URL;
+  const CHATTING_URL =
+    process.env.NODE_ENV === "development"
+      ? process.env.REACT_APP_DJANGO_CHATTING_URL
+      : process.env.REACT_APP_API_URL;
   const location = useLocation(); // 채팅방으로 넘어온 값
 
   // location.state.seller를 통해 storeData.storeSeller 값 받아옴
@@ -55,17 +57,22 @@ export default function Chatting() {
     }
 
     try {
-      const response = await fetch(`${process.env.NODE_ENV === 'development' ? '' : ''}${CHATTING_URL}chat/rooms/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${token}`,
-        },
-        body: JSON.stringify({
-          shop_user_email: sellerId,
-          visitor_user_email: userId,
-        }),
-      });
+      const response = await fetch(
+        `${
+          process.env.NODE_ENV === "development" ? "" : ""
+        }${CHATTING_URL}chat/rooms/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+          body: JSON.stringify({
+            shop_user_email: sellerId,
+            visitor_user_email: userId,
+          }),
+        }
+      );
 
       if (response.status === 401 && tryAgain) {
         const refreshToken = localStorage.getItem("RefreshToken");
@@ -114,7 +121,11 @@ export default function Chatting() {
   const setupWebSocket = (roomId, authToken) => {
     // 인증 토큰을 URL의 쿼리 파라미터로 추가
     const newSocket = new WebSocket(
-      `${process.env.NODE_ENV === 'development' ? 'ws://' : 'wss://www.onoff.zone'}${CHATTING_URL}ws/room/${roomId}/messages?token=${authToken}`
+      `${
+        process.env.NODE_ENV === "development"
+          ? "ws://"
+          : "wss://www.onoff.zone"
+      }${CHATTING_URL}ws/room/${roomId}/messages?token=${authToken}`
     );
 
     console.log(newSocket.url);
@@ -174,16 +185,18 @@ export default function Chatting() {
             sendMessage();
           }}
         >
-          <input
-            id="message-input"
-            type="text"
-            value={messageInput}
-            onChange={handleInputChange}
-            placeholder="메시지를 입력하세요"
-          />
-          <button id="send-btn" onClick={sendMessage}>
-            보내기
-          </button>
+          <div id="message-input-container">
+            <input
+              id="message-input"
+              type="text"
+              value={messageInput}
+              onChange={handleInputChange}
+              placeholder="메시지를 입력하세요"
+            />
+            <button id="send-btn" onClick={sendMessage}>
+              보내기
+            </button>
+          </div>
         </form>
       </div>
       <BottomNav />

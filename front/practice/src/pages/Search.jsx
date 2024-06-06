@@ -31,9 +31,7 @@ export default function Search() {
       process.env.REACT_APP_API_URL
     }product/all/SEARCH/${encodedSearchText}/0`;
 
-    const sortUrl = `${
-      process.env.NODE_ENV === "development" ? "" : ""
-    }${
+    const sortUrl = `${process.env.NODE_ENV === "development" ? "" : ""}${
       process.env.REACT_APP_API_URL
     }product/all/sort/PRICE/${sortType}/${encodedSearchText}/0`;
 
@@ -133,7 +131,7 @@ export default function Search() {
 
         <div className="search-item-sort" onClick={handleSortClick}>
           <span style={{ fontSize: "15px" }}>{sortText}</span>
-          <BiSort />
+          <BiSort style={{ color: "#336699" }} />
         </div>
       </div>
 
@@ -169,7 +167,9 @@ export default function Search() {
                 >
                   낮은가격순
                 </div>
-                {sortText === "낮은가격순" && <FaCheck />}
+                {sortText === "낮은가격순" && (
+                  <FaCheck style={{ color: "#336699" }} />
+                )}
               </div>
               <div
                 style={{
@@ -189,7 +189,9 @@ export default function Search() {
                 >
                   높은가격순
                 </div>
-                {sortText === "높은가격순" && <FaCheck />}
+                {sortText === "높은가격순" && (
+                  <FaCheck style={{ color: "#336699" }} />
+                )}
               </div>
             </div>
           </div>

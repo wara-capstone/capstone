@@ -12,8 +12,10 @@ export default function Store() {
 
   const userId = localStorage.getItem("email");
   const userRole = localStorage.getItem("role");
-  const storeId = localStorage.getItem("storeid");
+  const storeId = localStorage.getItem("storeId");
   let token = localStorage.getItem("token");
+
+  const [connectStoreId, setConnectStoreId] = useState(null); // 상태 추가
 
   const [storeData, setStoreData] = useState(null); // 상태 추가
   var result;
@@ -58,6 +60,7 @@ export default function Store() {
 
       if (response.status === 200) {
         setStoreData(result.data); // 상태 업데이트
+        setConnectStoreId(result.data.storeId);
         //console.log(result.storeId);
         //console.log(result);
         //console.log(result.storeName);
@@ -81,29 +84,55 @@ export default function Store() {
               className="item-image"
             />
           </div>
-          <h1>{storeData.storeName}</h1>
-          <div className="button-link" onClick={handleConnectChatting}>
-            <EventButton buttonText={"1대1 상담"} />
+
+          <div
+            className="storeName-and-chatButton-container"
+            style={{
+              // textAlign: "left",
+              display: "flex",
+              justifyContent: "space-between",
+              marginLeft: "2rem",
+              marginRight: "2rem",
+            }}
+          >
+            <h1>{storeData.storeName}</h1>
+            <div
+              className="button-link"
+              style={{
+                position: "relative", // 버튼 고정
+                top: "1.5rem",
+              }}
+              onClick={handleConnectChatting}
+            >
+              <EventButton buttonText={"1대1 상담"} />
+            </div>
           </div>
-          <p>
+          <p
+            style={{
+              textAlign: "left",
+              marginLeft: "1rem",
+              marginRight: "1rem",
+            }}
+          >
             <span style={{ fontWeight: "bold" }}>가게위치:</span>{" "}
             {storeData.storeAddress}
           </p>
-          <p>
+          <p
+            style={{
+              textAlign: "left",
+              marginLeft: "1rem",
+              marginRight: "1rem",
+              wordWrap: "break-word",
+              overflowWrap: "break-word",
+            }}
+          >
             <span style={{ fontWeight: "bold" }}>가게정보:</span>{" "}
             {storeData.storeContents}
           </p>
         </div>
       )}
 
-      <Category
-        allUrl={`${process.env.NODE_ENV === "development" ? "" : ""}${
-          process.env.REACT_APP_API_URL
-        }product/all/store/${id}`}
-        categoryUrl={`${process.env.NODE_ENV === "development" ? "" : ""}${
-          process.env.REACT_APP_API_URL
-        }product/all/store/${id}/category?category=`}
-      />
+      <Category storeId={connectStoreId} />
 
       <BottomNav />
     </div>

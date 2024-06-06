@@ -1,6 +1,9 @@
 // src/utils/authUtils.js
+import { message } from "antd";
+
 
 export const fetchRefreshToken = async (RefreshToken) => {
+
     console.log("AccessToken 재발급 요청중!!!!!!!!!!!!");
     const response = await fetch(
       `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}auth/signin`,
@@ -22,6 +25,17 @@ export const fetchRefreshToken = async (RefreshToken) => {
   
     } else {
       console.log("리프레시 토큰 발급 실패");
+      // 로그아웃 처리 로직을 구현합니다.
+      message.success("로그아웃 되었습니다.");
+      localStorage.removeItem("token");
+      localStorage.removeItem("email");
+      localStorage.removeItem("role");
+      localStorage.removeItem("storeid");
+      localStorage.removeItem("RefreshToken");
+
+      // 페이지 이동
+      window.location.href = "/login";
+      return;
     }
   };
   
