@@ -1,15 +1,5 @@
 import {
-  Avatar,
-  Box,
-  Button,
-  CardHeader,
-  CardMedia,
-  Divider,
-  IconButton,
-  Modal,
-  Card as MuiCard,
-  TextField,
-  Typography,
+  Avatar,Box,Button,CardHeader,CardMedia,Divider,IconButton,Modal,Card as MuiCard,TextField,Typography,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import React, { useEffect, useState } from "react";
@@ -21,11 +11,14 @@ import Header from "../components/Header";
 import Slider from "react-slick"; // react-slick 사용을 위해 import
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
-// import { fetchRefreshToken } from "../utils/authUtil";
-
+import { fetchRefreshToken } from "../utils/authUtil";
+import InputAdornment from '@mui/material/InputAdornment';
+import MoodIcon from '@mui/icons-material/Mood';
 import CommentIcon from "@mui/icons-material/Comment";
 import CardContent from "@mui/material/CardContent";
 import LikeButton from "../components/LikeButton";
+import Comment from "../components/Comment";
+import { formatCreatedAt } from "../utils/dateUtils";
 
 const StyledCardHeader = styled(CardHeader)(({ theme }) => ({
   // 스타일 커스터마이징 추가
@@ -47,6 +40,7 @@ export default function ViewClothSharedFeed() {
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [commentsList, setCommentsList] = useState([]);
+  const [comments, setComments] = useState([]);
   // const [likedByMe, setLikedByMe] = useState(false);
   // const [likesCount, setLikesCount] = useState(0);
 
@@ -90,6 +84,7 @@ export default function ViewClothSharedFeed() {
         // const RefreshToken = localStorage.getItem("RefreshToken");
         // await fetchRefreshToken(RefreshToken);
         const data = await response.json();
+        setCommentsList(data.comments);
         setItemData(data);
         console.log(data);
       } else {
@@ -104,15 +99,15 @@ export default function ViewClothSharedFeed() {
     return <div>Loading...</div>;
   }
 
-  const handleCommentModal = () => {
-    setShowCommentModal(!showCommentModal);
-  };
+  // const handleCommentModal = () => {
+  //   setShowCommentModal(!showCommentModal);
+  // };
 
-  const handleCommentTextChange = (event) => {
-    setCommentText(event.target.value);
-  };
+  // const handleCommentTextChange = (event) => {
+  //   setCommentText(event.target.value);
+  // };
   // 댓글 내용 서버로 보내는 코드
-  const handleCommentSubmit = async () => {
+  const handleCommentSubmit = async (newComment) => {
     try {
       const response = await fetch(
         `${process.env.NODE_ENV === "development" ? "" : ""}${
@@ -127,7 +122,7 @@ export default function ViewClothSharedFeed() {
           body: JSON.stringify({
             userFeedId: id,
             userEmail: userEmail,
-            content: commentText,
+            content: newComment,
           }),
         }
       );
@@ -137,9 +132,10 @@ export default function ViewClothSharedFeed() {
         // await fetchRefreshToken(RefreshToken);
         // 댓글 전송 성공 시 처리 로직
         console.log("댓글이 성공적으로 전송되었습니다.");
-        setCommentsList([...commentsList, { content: commentText }]); // 새로운 댓글 추가
-        setCommentText(""); // 입력 필드 초기화
-        handleCommentModal(); // 모달 창 닫기
+        //setCommentsList([...commentsList, { content: commentText }]); // 새로운 댓글 추가
+         // 댓글 목록에 새로운 댓글 추가
+      //setComments([...comments, newComment]);
+      setCommentsList([...commentsList, newComment]);
       } else {
         // 댓글 전송 실패 시 처리 로직
         console.error("댓글 전송에 실패했습니다.");
@@ -203,12 +199,12 @@ export default function ViewClothSharedFeed() {
           })}
       </Slider>
 
-      <Box
+      {/* <Box
         sx={{
           backgroundColor: "white",
           padding: "16px",
         }}
-      >
+      > */}
         <Box
           sx={{
             display: "flex",
@@ -221,6 +217,7 @@ export default function ViewClothSharedFeed() {
 
           {/* 오른쪽 아이콘들을 감싸는 박스 */}
 
+<<<<<<< HEAD
           <LikeButton
             id={id}
             // userEmail={userEmail}
@@ -231,65 +228,27 @@ export default function ViewClothSharedFeed() {
             userFeedId={userEmail}
           />
 
+=======
+          
+</Box>
+>>>>>>> feat/feed
           <Box
             sx={{
               backgroundColor: "white",
               padding: "16px",
             }}
           >
-            <IconButton aria-label="Comment" onClick={handleCommentModal}>
-              <CommentIcon />
-            </IconButton>
-          </Box>
-          {showCommentModal && (
-            <Modal
-              open={showCommentModal}
-              onClose={handleCommentModal}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  width: 400,
-                  bgcolor: "background.paper",
-                  border: "2px solid #000",
-                  boxShadow: 24,
-                  p: 4,
-                }}
-              >
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  댓글 작성
-                </Typography>
-                <TextField
-                  id="comment-input"
-                  label="댓글 입력"
-                  variant="outlined"
-                  multiline
-                  rows={4}
-                  fullWidth
-                  sx={{ mt: 2 }}
-                  value={commentText}
-                  onChange={handleCommentTextChange}
-                />
-                <Box
-                  sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}
-                >
-                  <Button variant="contained" onClick={handleCommentSubmit}>
-                    작성
-                  </Button>
-                </Box>
-              </Box>
-            </Modal>
-          )}
-        </Box>
+    
+    <LikeButton
+
+            id={id}
+
+          />
         <CardContent>
           <Typography variant="subtitle1" color="text" textAlign="left">
             {itemData.userFeedContent}
           </Typography>
+<<<<<<< HEAD
           <Divider sx={{ my: 2 }} />
           {/* 댓글 작성 표시 */}
           {commentsList.map((comment, index) => (
@@ -298,8 +257,49 @@ export default function ViewClothSharedFeed() {
             </Typography>
           ))}
         </CardContent>
+=======
+          {/* <Divider sx={{ my: 2 }} /> */}
+          </CardContent>
+            {/* 댓글 작성 표시 */}
+            
+        
+>>>>>>> feat/feed
       </Box>
-
+      <div>
+      {/* 다른 게시물 관련 UI */}
+      <Comment onCommentSubmit={handleCommentSubmit} />
+      {/* 댓글 목록 렌더링 */}
+      {comments.map((comment, index) => (
+        <div key={index}>{comment}</div>
+      ))}
+      {commentsList.map((comment, index) => (
+       <Box
+       key={index}
+       display="flex"
+       alignItems="flex-start"
+       justifyContent="space-between"
+       mb={2}
+     >
+       <Box display="flex" alignItems="flex-start">
+         <Typography
+           variant="body2"
+           color="text"
+           fontWeight="bold"
+           marginLeft={"1rem"}
+           mr={1}
+         >
+           {comment.userName}
+         </Typography>
+         <Typography variant="body2" color="text.secondary">
+           {comment.content}
+         </Typography>
+       </Box>
+       <Typography variant="body2" color="text.secondary" marginRight={"0.3rem"}>
+         {formatCreatedAt(comment.createdAt)}
+       </Typography>
+     </Box>
+    ))}
+    </div>
       <BottomNav />
     </div>
   );
