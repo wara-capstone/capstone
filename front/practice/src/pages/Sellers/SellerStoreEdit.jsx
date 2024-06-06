@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { message } from "antd";
 import imageSrc4 from "../../adImages/iconImage/iconBlue.png";
 import imageSrc3 from "../../adImages/iconImage/iconRed.png";
 import imageSrc from "../../adImages/iconImage/shopBlue.png";
@@ -6,6 +7,8 @@ import imageSrc2 from "../../adImages/iconImage/shopRed.png";
 import "./Seller.css";
 import SellerHeader from "./SellerHeader";
 import SellerSideNav from "./SellerSideNav";
+
+import { fetchRefreshToken } from "../../utils/authUtil";
 
 const SellerStoreEdit = ({ store }) => {
   const { kakao } = window;
@@ -52,7 +55,7 @@ const SellerStoreEdit = ({ store }) => {
     normalImage = createMarkerImage(imageSrc4, imageSize);
 
   // fetch 통신 method
-  const fetchData = async (initMarkers) => {
+  const fetchData = async (initMarkers, tryAgain = true) => {
     console.log(email);
     try {
       const response = await fetch(`${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}store/read/seller/${email}`, {
@@ -70,7 +73,16 @@ const SellerStoreEdit = ({ store }) => {
         console.log(markerList);
         // console.log(latlng);
         initMarkers();
-      } else if (response.status === 400) {
+      }
+      else if (response.status === 401 && tryAgain) {
+        let RefreshToken = localStorage.getItem("RefreshToken");
+        await fetchRefreshToken(RefreshToken);
+        token = localStorage.getItem("token");
+        return fetchData(initMarkers, false);
+      }
+
+      
+      else if (response.status === 400) {
         console.log("데이터 전송 실패");
       }
     } catch (error) {
@@ -171,7 +183,7 @@ const SellerStoreEdit = ({ store }) => {
   //
   //
   // form submission handler
-  const handleSubmit = (e) => {
+  const handleSubmit = (e, tryAgain = true) => {
     e.preventDefault();
     var data = {
       storeId: storeId,
@@ -217,15 +229,22 @@ const SellerStoreEdit = ({ store }) => {
           if (response.ok) {
             return response.json();
           }
+          message.error("가게정보 수정에 실패했습니다.")
           throw new Error("네트워크 응답이 실패했습니다.");
         })
         .then((data) => {
-          alert("성공!");
+          message.success("성공!");
           console.log(data.result);
           window.location.reload();
         })
-        .catch((error) => {
+        .catch(async(error) => {
           console.error(error);
+          if (error.response && error.response.status === 401 && tryAgain) {
+            const RefreshToken = localStorage.getItem("RefreshToken");
+            await fetchRefreshToken(RefreshToken); // 토큰 갱신 로직 호출
+            token = localStorage.getItem("token");
+            return handleSubmit(e, false); // 재귀 호출
+          }
         });
     } else {
       formData = JSON.stringify(data);
@@ -241,15 +260,21 @@ const SellerStoreEdit = ({ store }) => {
           if (response.ok) {
             return response.json();
           }
+          message.error("가게정보 수정에 실패했습니다.")
           throw new Error("네트워크 응답이 실패했습니다.");
         })
         .then((data) => {
-          alert("성공!");
           console.log(data.result);
           window.location.reload();
         })
-        .catch((error) => {
+        .catch(async(error) => {
           console.error(error);
+          if (error.response && error.response.status === 401 && tryAgain) {
+            const RefreshToken = localStorage.getItem("RefreshToken");
+            await fetchRefreshToken(RefreshToken); // 토큰 갱신 로직 호출
+            token = localStorage.getItem("token");
+            return handleSubmit(e, false); // 재귀 호출
+          }
         });
     }
   };
@@ -289,7 +314,7 @@ const SellerStoreEdit = ({ store }) => {
     });
   }
 
-  const handleDeleteStore = async (event) => {
+  const handleDeleteStore = async (event, tryAgain= true) => {
     // 삭제 처리 로직을 구현합니다.
     event.preventDefault();
 
@@ -313,12 +338,18 @@ const SellerStoreEdit = ({ store }) => {
         throw new Error("네트워크 응답이 실패했습니다.");
       })
       .then((data) => {
-        alert("성공!");
+        message.success("성공!");
         console.log(data.result);
         window.location.reload();
       })
-      .catch((error) => {
+      .catch(async(error) => {
         console.error(error);
+        if (error.response && error.response.status === 401 && tryAgain) {
+          const RefreshToken = localStorage.getItem("RefreshToken");
+          await fetchRefreshToken(RefreshToken); // 토큰 갱신 로직 호출
+          token = localStorage.getItem("token");
+          return handleDeleteStore(event, false); // 재귀 호출
+        }
       });
   };
 

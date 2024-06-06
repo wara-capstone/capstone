@@ -11,6 +11,7 @@ import SellerHeader from "./SellerHeader";
 import {Typography,Button,Form,Input,Select,Space,message} from "antd";
 import "./Seller.css";
 import ImageCellRenderer from "../../components/ImageCellRenderer";
+import { fetchRefreshToken } from "../../utils/authUtil";
 
 export default function SellerProductRegistration(props) {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ export default function SellerProductRegistration(props) {
     setSelectedCategory(value);
   };
 
-  const token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
   const [productInfo, setProductInfo] = useState({});
   //  const { productId } = props.location?.state || {};
   const [isTrue, setIsTrue] = useState();
@@ -71,7 +72,12 @@ export default function SellerProductRegistration(props) {
 
           setOptionIndex(response.data.options.length);
           console.log("옵션이 존재??? ", response.data.options);
-        } else {
+        } else if(response.status === 401){
+            let RefreshToken = localStorage.getItem("RefreshToken");
+            await fetchRefreshToken(RefreshToken);
+            token = localStorage.getItem("token");
+        }
+        else {
           setProductInfo({ data: [] });
           setIsTrue(false);
         }
@@ -83,7 +89,7 @@ export default function SellerProductRegistration(props) {
     };
 
     fetchData();
-  }, []);
+  }, [token]);
 
   // 서버로 보낼 변수들 이름 지정
   const [productName, setProductName] = useState(
@@ -109,7 +115,7 @@ export default function SellerProductRegistration(props) {
     }
   };
 
-  const handleSubmitButtonClick = async () => {
+  const handleSubmitButtonClick = async (tryAgain = true) => {
     try {
       var data = {
         productId: productId,
@@ -138,10 +144,17 @@ export default function SellerProductRegistration(props) {
           body: formData
         }
 
-      ).then((response) => {
+      ).then(async(response) => {
         if (response.status === 200) {
           message.success("저장되었습니다.");
-        } else {
+        }
+        else if(response.status === 401 && tryAgain){
+          let RefreshToken = localStorage.getItem("RefreshToken");
+          await fetchRefreshToken(RefreshToken);
+          token = localStorage.getItem("token");  
+          return handleSubmitButtonClick(false);
+        }
+        else {
           message.error("error");
         }
       });
@@ -179,7 +192,7 @@ export default function SellerProductRegistration(props) {
     }
   };
 
-  const removeOption = async (index) => {
+  const removeOption = async (index, tryAgain = true) => {
     try {
       // 1. 서버에 삭제 요청 보내기
       const response = await axios.delete(
@@ -195,7 +208,14 @@ export default function SellerProductRegistration(props) {
       );
       if (response.status === 200) {
         console.log("Option deleted successfully");
-      } else {
+      } 
+      else if (response.status === 401 && tryAgain) {
+        let RefreshToken = localStorage.getItem("RefreshToken");
+        await fetchRefreshToken(RefreshToken);
+        token = localStorage.getItem("token");
+        return removeOption(index, false);
+      }
+      else {
         console.log("Failed to delete option:", response.status);
         
       }
@@ -284,7 +304,7 @@ export default function SellerProductRegistration(props) {
   };
 
   // 상품의 옵션 추가
-  const addProductOption = (index) => {
+  const addProductOption = (index, tryAgain = true) => {
     // 서버로 데이터 전송하는 로직 작성
     //var formData = new FormData();
     //formData.append('optionDTO', new Blob([JSON.stringify(optionDTO)], { type: "application/json" }));
@@ -315,8 +335,15 @@ export default function SellerProductRegistration(props) {
     .then((response) => {
       console.log(response.data); // 서버 응답 출력
     })
-    .catch((error) => {
+    .catch(async(error) => {
       console.error(error); // 오류 처리
+      if (error.response && error.response.status === 401 && tryAgain) {
+        const RefreshToken = localStorage.getItem("RefreshToken");
+        await fetchRefreshToken(RefreshToken); // 토큰 갱신 로직 호출
+        token = localStorage.getItem("token");
+        return addProductOption(index, false); // 재귀 호출
+      }
+
     });
 } else {
       console.log("수정 으로");
@@ -364,8 +391,14 @@ export default function SellerProductRegistration(props) {
         .then((response) => {
           console.log(response.data); // 서버 응답 출력
         })
-        .catch((error) => {
+        .catch(async(error) => {
           console.error(error); // 오류 처리
+          if (error.response && error.response.status === 401 && tryAgain) {
+            const RefreshToken = localStorage.getItem("RefreshToken");
+            await fetchRefreshToken(RefreshToken); // 토큰 갱신 로직 호출
+            token = localStorage.getItem("token");
+            return addProductOption(index, false); // 재귀 호출
+          }
         });
     }
     message.success("저장되었습니다");
