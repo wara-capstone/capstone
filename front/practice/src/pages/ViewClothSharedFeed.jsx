@@ -21,6 +21,7 @@ import Header from "../components/Header";
 import Slider from "react-slick"; // react-slick 사용을 위해 import
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
+import { fetchRefreshToken } from "../utils/authUtil";
 
 import CommentIcon from "@mui/icons-material/Comment";
 import CardContent from "@mui/material/CardContent";
@@ -37,7 +38,7 @@ const TitleTypography = styled(Typography)(({ theme }) => ({
 
 export default function ViewClothSharedFeed() {
   // const [id, setId] = useState('');
-  const [token, setToken] = useState("");
+  const token = localStorage.getItem("token");
   const userEmail = localStorage.getItem("email");
   const { id } = useParams();
   const [itemData, setItemData] = useState(null);
@@ -86,6 +87,8 @@ export default function ViewClothSharedFeed() {
       });
 
       if (response.status === 200) {
+        const RefreshToken = localStorage.getItem("RefreshToken");
+        await fetchRefreshToken(RefreshToken);
         const data = await response.json();
         setItemData(data);
         console.log(data);
@@ -114,11 +117,12 @@ export default function ViewClothSharedFeed() {
       const response = await fetch(
         `${process.env.NODE_ENV === "development" ? "" : ""}${
           process.env.REACT_APP_API_URL
-        }user-feed/like/toggle`,
+        }user-feed/comment`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `${token}`,
           },
           body: JSON.stringify({
             userFeedId: id,
@@ -129,9 +133,11 @@ export default function ViewClothSharedFeed() {
       );
 
       if (response.ok) {
+        const RefreshToken = localStorage.getItem("RefreshToken");
+        await fetchRefreshToken(RefreshToken);
         // 댓글 전송 성공 시 처리 로직
         console.log("댓글이 성공적으로 전송되었습니다.");
-        setCommentsList([...commentsList, commentText]); // 새로운 댓글 추가
+        setCommentsList([...commentsList, { content: commentText }]); // 새로운 댓글 추가
         setCommentText(""); // 입력 필드 초기화
         handleCommentModal(); // 모달 창 닫기
       } else {
@@ -279,6 +285,13 @@ export default function ViewClothSharedFeed() {
             {itemData.userFeedContent}
           </Typography>
           <Divider sx={{ my: 2 }} />
+            {/* 댓글 작성 표시 */}
+            {commentsList.map((comment, index) => (
+      <Typography key={index} variant="body2" color="text.secondary">
+        {comment.content}
+      </Typography>
+    ))}
+
         </CardContent>
       </Box>
 
