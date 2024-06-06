@@ -127,6 +127,17 @@ const UserProfile = () => {
     };
     KakaoLogout();
 
+    // 로그아웃 처리 로직을 구현합니다.
+    message.success("로그아웃 되었습니다.");
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    localStorage.removeItem("role");
+    localStorage.removeItem("storeid");
+    localStorage.removeItem("RefreshToken");
+
+    // 페이지 이동
+    navigate("/");
+
   };
 
   const handleConnectSeller = () => {
