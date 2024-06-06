@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,7 @@ public class ImageServiceImpl implements ImageService {
 
     private static final Logger logger = LoggerFactory.getLogger(ImageServiceImpl.class);
     private final ImageDAO imageDAO;
+    private static final Long[] ids = {1L, 2L, 3L};
 
     public  ImageServiceImpl(
             @Autowired ImageDAO imageDAO
@@ -71,6 +73,10 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public ResponseEntity<Boolean> deleteImage(Long id) {
+        for(Long i : ids){
+            if(i.equals(id)) return ResponseEntity.status(200).body(false);
+        }
+
         if(!this.imageDAO.deleteImage(id)){
             return ResponseEntity.status(400).body(false);
         }
