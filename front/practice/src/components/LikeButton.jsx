@@ -98,7 +98,7 @@ const LikeButton = ({
         aria-label={likedByMe ? "좋아요 취소" : "좋아요"}
         color={likedByMe ? "primary" : "default"}
         onClick={handleLike}
-        sx={{ width: 28, height: 28 }}
+        sx={{ width: 40, height: 40 }}
       >
         {likedByMe ? (
           <FavoriteIcon fontSize="small" />
