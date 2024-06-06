@@ -252,14 +252,14 @@ export default function ViewClothSharedFeed() {
       {commentsList.map((comment, index) => (
        <Box key={index} className="comment-box">
        <Box className="comment-content">
-         <Typography variant="body2" color="text" className="comment-user-name">
+         <Typography variant="body2" color="text" className="comment-user-name" mr={2} fontWeight="bold" marginLeft={"0.5rem"}>
            {comment.userName}
          </Typography>
          <Typography variant="body2" color="text.secondary" className="comment-text">
            {comment.content}
          </Typography>
        </Box>
-       <Typography variant="body2" color="text.secondary" className="comment-created-at">
+       <Typography variant="body2" color="text.secondary" className="comment-created-at" marginLeft={"0.5rem"} marginRight={"0.3rem"} lineHeight={1.5} fontSize={'0.7rem'} >
          {formatCreatedAt(comment.createdAt)}
        </Typography>
      </Box>
