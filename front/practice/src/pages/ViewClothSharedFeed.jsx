@@ -37,7 +37,7 @@ const TitleTypography = styled(Typography)(({ theme }) => ({
 
 export default function ViewClothSharedFeed() {
   // const [id, setId] = useState('');
-  const token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
   const userEmail = localStorage.getItem("email");
   const { id } = useParams();
   const [itemData, setItemData] = useState(null);
