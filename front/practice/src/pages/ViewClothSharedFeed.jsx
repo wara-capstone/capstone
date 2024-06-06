@@ -21,7 +21,7 @@ import Header from "../components/Header";
 import Slider from "react-slick"; // react-slick 사용을 위해 import
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
-import { fetchRefreshToken } from "../utils/authUtil";
+// import { fetchRefreshToken } from "../utils/authUtil";
 
 import CommentIcon from "@mui/icons-material/Comment";
 import CardContent from "@mui/material/CardContent";
@@ -86,8 +86,8 @@ export default function ViewClothSharedFeed() {
       });
 
       if (response.status === 200) {
-        const RefreshToken = localStorage.getItem("RefreshToken");
-        await fetchRefreshToken(RefreshToken);
+        // const RefreshToken = localStorage.getItem("RefreshToken");
+        // await fetchRefreshToken(RefreshToken);
         const data = await response.json();
         setItemData(data);
         console.log(data);
@@ -132,8 +132,8 @@ export default function ViewClothSharedFeed() {
       );
 
       if (response.ok) {
-        const RefreshToken = localStorage.getItem("RefreshToken");
-        await fetchRefreshToken(RefreshToken);
+        // const RefreshToken = localStorage.getItem("RefreshToken");
+        // await fetchRefreshToken(RefreshToken);
         // 댓글 전송 성공 시 처리 로직
         console.log("댓글이 성공적으로 전송되었습니다.");
         setCommentsList([...commentsList, { content: commentText }]); // 새로운 댓글 추가
@@ -285,13 +285,12 @@ export default function ViewClothSharedFeed() {
             {itemData.userFeedContent}
           </Typography>
           <Divider sx={{ my: 2 }} />
-            {/* 댓글 작성 표시 */}
-            {commentsList.map((comment, index) => (
-      <Typography key={index} variant="body2" color="text.secondary">
-        {comment.content}
-      </Typography>
-    ))}
-
+          {/* 댓글 작성 표시 */}
+          {commentsList.map((comment, index) => (
+            <Typography key={index} variant="body2" color="text.secondary">
+              {comment.content}
+            </Typography>
+          ))}
         </CardContent>
       </Box>
 
