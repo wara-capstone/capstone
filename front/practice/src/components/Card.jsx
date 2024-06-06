@@ -26,7 +26,7 @@ function Card({
         <p className="card-content">{content}</p>
         <p className="card-content2"> {content2}</p>
         <p className="card-price">
-          {price !== null ? (
+          {price && !isNaN(parseInt(price)) ? (
             <>
               <span style={{ fontSize: "1.3rem" }}>
                 {parseInt(price).toLocaleString()}

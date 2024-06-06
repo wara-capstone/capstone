@@ -26,6 +26,7 @@ import "slick-carousel/slick/slick.css";
 import CommentIcon from "@mui/icons-material/Comment";
 import CardContent from "@mui/material/CardContent";
 import LikeButton from "../components/LikeButton";
+
 const StyledCardHeader = styled(CardHeader)(({ theme }) => ({
   // 스타일 커스터마이징 추가
 }));
@@ -178,11 +179,13 @@ export default function ViewClothSharedFeed() {
       <Slider {...sliderSettings}>
         {itemData.product &&
           itemData.product.map((result, index) => {
+            const isActive = index === currentSlide; // 현재 슬라이드 인덱스와 일치하는지 확인
+
             return (
               <Link
                 to={`/item/${result.productId}`}
                 key={result.productId}
-                className="card-link"
+                className={`card-link ${isActive ? "active-slide" : ""}`} // 현재 슬라이드에 클래스 추가
               >
                 <Card
                   key={index}
@@ -191,6 +194,9 @@ export default function ViewClothSharedFeed() {
                   price={result.productPrice}
                   mainImage={result.productImage}
                   // count={result.options[0].productStock}
+                  specialStyle={
+                    isActive ? "special-card-active" : "special-card"
+                  } // 현재 슬라이드에 다른 스타일 적용
                 />
               </Link>
             );
