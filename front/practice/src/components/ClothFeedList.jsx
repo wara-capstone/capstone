@@ -77,14 +77,6 @@ function ClothFeedList() {
   }user-feed`;
 
   useEffect(() => {
-    // const mockPosts = [...Array(20)].map((_, i) => ({
-    //   userName: faker.person.fullName(),
-    //   userImg: faker.image.avatar(),
-    //   img: faker.image.url(),
-    //   caption: faker.lorem.text(),
-    //   id: i,
-    // }));
-
     const fetchData = async () => {
       const response = await fetch(url, {
         method: "GET",
@@ -104,7 +96,7 @@ function ClothFeedList() {
         const data = await response.json(); // response.json()이 완료될 때까지 기다림
 
         setPosts(data); // 상태 업데이트
-
+        console.log("서버로 받은");
         console.log(data);
       } else {
         console.log("실패");
@@ -118,6 +110,7 @@ function ClothFeedList() {
       className="ClothFeedList"
       style={{
         backgroundColor: "#f2f2f2",
+
         // height: "88vh",
         // position: "relative",
         // padding: "10px",
@@ -129,7 +122,7 @@ function ClothFeedList() {
         <Grid container spacing={1}>
           {" "}
           {posts.map((post) => (
-            <Grid item xs={6} sm={6} key={post.id}>
+            <Grid item xs={9} sm={6} key={post.id}>
               {" "}
               <Link
                 to={`/ViewClothSharedFeed/${post.id}`}
@@ -138,10 +131,11 @@ function ClothFeedList() {
               >
                 <ClothFeedListItem
                   id={post.id}
+                  userFeedContent={post.userFeedContent}
                   userName={post.user.userName}
                   userImg={post.user.userImage}
                   img={post.userFeedImage}
-                  // caption={post.caption}
+                  caption={"와랄라"}
                 />
               </Link>
             </Grid>
