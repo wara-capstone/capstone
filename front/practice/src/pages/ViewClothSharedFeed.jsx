@@ -217,21 +217,8 @@ export default function ViewClothSharedFeed() {
 
           {/* 오른쪽 아이콘들을 감싸는 박스 */}
 
-<<<<<<< HEAD
-          <LikeButton
-            id={id}
-            // userEmail={userEmail}
-            // likedByMe={likedByMe}
-            // likesCount={likesCount}
-            // setLikedByMeState={setLikedByMe}
-            // setLikesCountState={setLikesCount}
-            userFeedId={userEmail}
-          />
-
-=======
           
 </Box>
->>>>>>> feat/feed
           <Box
             sx={{
               backgroundColor: "white",
@@ -248,22 +235,11 @@ export default function ViewClothSharedFeed() {
           <Typography variant="subtitle1" color="text" textAlign="left">
             {itemData.userFeedContent}
           </Typography>
-<<<<<<< HEAD
-          <Divider sx={{ my: 2 }} />
-          {/* 댓글 작성 표시 */}
-          {commentsList.map((comment, index) => (
-            <Typography key={index} variant="body2" color="text.secondary">
-              {comment.content}
-            </Typography>
-          ))}
-        </CardContent>
-=======
           {/* <Divider sx={{ my: 2 }} /> */}
           </CardContent>
             {/* 댓글 작성 표시 */}
             
         
->>>>>>> feat/feed
       </Box>
       <div>
       {/* 다른 게시물 관련 UI */}
