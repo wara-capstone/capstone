@@ -81,7 +81,6 @@ export default function ViewClothSharedFeed() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${token}`,
         },
       });
 

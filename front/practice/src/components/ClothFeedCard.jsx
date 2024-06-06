@@ -36,15 +36,12 @@ function ClothFeedCard({
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `${token}`,
             },
           }
         );
 
         if (response.ok) {
           console.log("GET 요청 성공");
-          const RefreshToken = localStorage.getItem("RefreshToken");
-          await fetchRefreshToken(RefreshToken);
           const data = await response.json();
           setLikedByMe(data.likedByMe);
           setLikesCount(data.likesCount);

@@ -58,11 +58,12 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchRefreshToken } from "../utils/authUtil";
 import ClothFeedListItem from "./ClothFeedListItem";
+import { message } from "antd";
 
 function ClothFeedList() {
   const [posts, setPosts] = useState([]);
-  const token = localStorage.getItem("token");
-  const RefreshToken = localStorage.getItem("RefreshToken");
+  // const token = localStorage.getItem("token");
+  // const RefreshToken = localStorage.getItem("RefreshToken");
   const isLogin = localStorage.getItem("token") ? true : false;
 
   const navigate = useNavigate();
@@ -82,15 +83,8 @@ function ClothFeedList() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${token}`,
         },
       });
-
-      if (response.status === 401) {
-        RefreshToken = localStorage.getItem("RefreshToken");
-        fetchRefreshToken(RefreshToken);
-        token = localStorage.getItem("token");
-      }
 
       if (response.status === 200) {
         const data = await response.json(); // response.json()이 완료될 때까지 기다림
@@ -99,11 +93,12 @@ function ClothFeedList() {
         console.log("서버로 받은");
         console.log(data);
       } else {
+        message.error("피드를 불러오는데 실패했습니다.")
         console.log("실패");
       }
     };
     fetchData();
-  }, [token]);
+  }, []);
 
   return (
     <div

@@ -39,8 +39,6 @@ const LikeButton = ({
 
         if (response.ok) {
           console.log("GET 요청 성공");
-          const RefreshToken = localStorage.getItem("RefreshToken");
-          await fetchRefreshToken(RefreshToken);
           const data = await response.json();
           console.log(
             "좋아요 상태와 수",
