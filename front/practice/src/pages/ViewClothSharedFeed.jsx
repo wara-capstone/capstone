@@ -93,7 +93,7 @@ export default function ViewClothSharedFeed() {
     };
 
     fetchData();
-  }, [id]);
+  }, [id, commentsList]);
 
   if (!itemData) {
     return <div>Loading...</div>;
@@ -107,6 +107,7 @@ export default function ViewClothSharedFeed() {
   //   setCommentText(event.target.value);
   // };
   // 댓글 내용 서버로 보내는 코드
+  
   const handleCommentSubmit = async (newComment) => {
     try {
       const response = await fetch(
