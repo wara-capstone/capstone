@@ -22,6 +22,7 @@ const Category = ({ storeId }) => {
   const [searchResultCount, setSearchResultCount] = useState(0); // 검색 결과 개수 상태
   const [sortText, setSortText] = useState("낮은가격순"); // 정렬 텍스트 상태
   const [sortType, setSortType] = useState("ASC"); // 정렬 타입 상태
+  const [sortCondition, setSortCondition] = useState("PRICE"); // 정렬 조건 상태
   const [searchText, setSearchText] = useState("상의"); // 검색창 값
   const [searchData, setSearchData] = useState(null); // 상태 추가
 
@@ -38,11 +39,11 @@ const Category = ({ storeId }) => {
     if (storeId) {
       sortUrl = `${process.env.NODE_ENV === "development" ? "" : ""}${
         process.env.REACT_APP_API_URL
-      }product/all/sort/PRICE/${sortType}/${searchText}/${storeId}/0`;
+      }product/all/sort/${sortCondition}/${sortType}/${searchText}/${storeId}/0`;
     } else {
       sortUrl = `${process.env.NODE_ENV === "development" ? "" : ""}${
         process.env.REACT_APP_API_URL
-      }product/all/sort/PRICE/${sortType}/${searchText}/0`;
+      }product/all/sort/${sortCondition}/${sortType}/${searchText}/0`;
     }
 
     // API 요청
@@ -116,11 +117,15 @@ const Category = ({ storeId }) => {
 
     if (sortText === "낮은가격순") {
       setSortType("ASC");
+      setSortCondition("PRICE");
     } else if (sortText === "높은가격순") {
       setSortType("DESC");
+      setSortCondition("PRICE");
+    } else if (sortText === "최신등록순") {
+      setSortType("ASC");
+      setSortCondition("LATEST");
     }
   }, [sortText]);
-
   return (
     <div className="category-container-include-items">
       <div className="category-container">
@@ -268,6 +273,28 @@ const Category = ({ storeId }) => {
                   높은가격순
                 </div>
                 {sortText === "높은가격순" && (
+                  <FaCheck style={{ color: "#336699" }} />
+                )}
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: "13px", // 텍스트 간의 간격 설정
+                  borderBottom: "2px solid #f0f0f0", // 구분선 추가
+                }}
+                onClick={() => handleOptionSelect("최신등록순")}
+              >
+                <div
+                  style={{
+                    fontWeight: sortText === "최신등록순" ? "bold" : "normal",
+                    fontSize: "18px",
+                  }}
+                >
+                  최신등록순
+                </div>
+                {sortText === "최신등록순" && (
                   <FaCheck style={{ color: "#336699" }} />
                 )}
               </div>

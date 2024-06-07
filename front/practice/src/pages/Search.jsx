@@ -17,6 +17,7 @@ export default function Search() {
   const [searchResultCount, setSearchResultCount] = useState(0); // 검색 결과 개수 상태
   const [sortText, setSortText] = useState("낮은가격순"); // 정렬 텍스트 상태
   const [sortType, setSortType] = useState("ASC"); // 정렬 타입 상태
+  const [sortCondition, setSortCondition] = useState("PRICE"); // 정렬 조건 상태
 
   function myFunction(event) {
     event.preventDefault();
@@ -35,9 +36,13 @@ export default function Search() {
       process.env.REACT_APP_API_URL
     }product/all/sort/PRICE/${sortType}/${encodedSearchText}/0`;
 
+    const newSortUrl = `${process.env.NODE_ENV === "development" ? "" : ""}${
+      process.env.REACT_APP_API_URL
+    }product/all/sort/${sortCondition}/${sortType}/${encodedSearchText}/0`;
+
     // API 요청
     const fetchData = async () => {
-      const response = await fetch(sortUrl, {
+      const response = await fetch(newSortUrl, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -105,8 +110,13 @@ export default function Search() {
 
     if (sortText === "낮은가격순") {
       setSortType("ASC");
+      setSortCondition("PRICE");
     } else if (sortText === "높은가격순") {
       setSortType("DESC");
+      setSortCondition("PRICE");
+    } else if (sortText === "최신등록순") {
+      setSortType("ASC");
+      setSortCondition("LATEST");
     }
   }, [sortText]);
 
@@ -190,6 +200,28 @@ export default function Search() {
                   높은가격순
                 </div>
                 {sortText === "높은가격순" && (
+                  <FaCheck style={{ color: "#336699" }} />
+                )}
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: "13px", // 텍스트 간의 간격 설정
+                  borderBottom: "2px solid #f0f0f0", // 구분선 추가
+                }}
+                onClick={() => handleOptionSelect("최신등록순")}
+              >
+                <div
+                  style={{
+                    fontWeight: sortText === "최신등록순" ? "bold" : "normal",
+                    fontSize: "18px",
+                  }}
+                >
+                  최신등록순
+                </div>
+                {sortText === "최신등록순" && (
                   <FaCheck style={{ color: "#336699" }} />
                 )}
               </div>
