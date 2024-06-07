@@ -1,5 +1,8 @@
 import {
-  Avatar,Box,Button,CardHeader,CardMedia,Divider,IconButton,Modal,Card as MuiCard,TextField,Typography,
+  Avatar, Box,
+  CardHeader, CardMedia,
+  Card as MuiCard,
+  Typography
 } from "@mui/material";
 import { styled } from "@mui/system";
 import React, { useEffect, useState } from "react";
@@ -8,17 +11,13 @@ import BottomNav from "../components/BottomNav";
 import Card from "../components/Card";
 import Header from "../components/Header";
 // 아이콘
+import CardContent from "@mui/material/CardContent";
 import Slider from "react-slick"; // react-slick 사용을 위해 import
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
-import { fetchRefreshToken } from "../utils/authUtil";
-import InputAdornment from '@mui/material/InputAdornment';
-import MoodIcon from '@mui/icons-material/Mood';
-import CommentIcon from "@mui/icons-material/Comment";
-import CardContent from "@mui/material/CardContent";
-import LikeButton from "../components/LikeButton";
 import Comment from "../components/Comment";
 import '../components/Comment.css';
+import LikeButton from "../components/LikeButton";
 import { formatCreatedAt } from "../utils/dateUtils";
 
 const StyledCardHeader = styled(CardHeader)(({ theme }) => ({
@@ -230,6 +229,7 @@ export default function ViewClothSharedFeed() {
     <LikeButton
 
             id={id}
+            userEmail = {userEmail}
 
           />
         <CardContent>
