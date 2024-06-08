@@ -42,7 +42,7 @@ const PurchaseRedirect = () => {
 
   useEffect(async () => {
     // message.success(`토큰 상태 확인:${sharedToken}`, 100);
-    setLocalStorage(
+    await setLocalStorage(
       token,
       refreshToken,
       email,
