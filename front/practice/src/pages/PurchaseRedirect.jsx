@@ -66,13 +66,14 @@ const PurchaseRedirect = () => {
             }),
           }
         );
+        const result = await paymentResponse.json();
         if (paymentResponse.status === 401 && tryVerificationAgain) {
           const RefreshToken = localStorage.getItem("RefreshToken");
           await fetchRefreshToken(RefreshToken);
           token = localStorage.getItem("token");
           return paymentVerification(false);
         } else if (paymentResponse.status === 201) {
-          message.success(paymentResponse.message);
+          message.success(result.message);
 
           // localStorage에서 checkList를 가져와서 배열로 파싱
           let storedCheckList = localStorage.getItem("checkList");
