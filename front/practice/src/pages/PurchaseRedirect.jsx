@@ -21,7 +21,7 @@ const PurchaseRedirect = () => {
   const imp_success = urlParams.get("imp_success");
   const error_code = urlParams.get("error_code"); // 이 파라미터는 에러가 있을 때만 존재
   const error_msg = urlParams.get("error_msg"); // 이 파라미터는 에러가 있을 때만 존재
-  const sharedToken = urlParams.get("token");
+  const sharedToken = urlParams.get("token"); //
 
   // 추출한 값 확인을 위해 콘솔에 출력
   console.log(`imp_uid: ${imp_uid}`);
@@ -36,8 +36,9 @@ const PurchaseRedirect = () => {
   }, [purchaseCompleted]);
 
   useEffect(async () => {
-    message.success(`토큰 상태 확인:${token}`, 100);
-
+    message.success(`토큰 상태 확인:${sharedToken}`, 100);
+    localStorage.setItem("token", sharedToken);
+    token = localStorage.getItem("token");
     async function paymentVerification(tryVerificationAgain = true) {
       // 결제 검증하기
       try {
@@ -47,7 +48,7 @@ const PurchaseRedirect = () => {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: sharedToken,
+              Authorization: token,
             },
             body: JSON.stringify({
               paymentUid: imp_uid, // 결제고유번호
