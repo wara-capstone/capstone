@@ -9,7 +9,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import KakaoButtonImage from "../adImages/kakao_login.png";
 
+import { useRecoilState } from 'recoil';
+import { tokenAtom } from '../utils/tokenAtom';
+
+
 const Login = () => {
+  const [sharedToken, setSharedToken] = useRecoilState(tokenAtom);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginCheck, setLoginCheck] = useState(false); // 로그인 상태 체크
@@ -62,6 +67,8 @@ const Login = () => {
 
       console.log("로그인성공, 이메일주소:" + result.email);
       console.log("로그인 후"+ localStorage.getItem("email"), localStorage.getItem("role"), localStorage.getItem("storeid"), localStorage.getItem("token"));
+      setSharedToken(result.accessToken);
+     
       message.success("로그인되었습니다.", 2);
       navigate("/"); // 로그인 성공시 홈으로 이동합니다.
     } else {

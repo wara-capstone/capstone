@@ -35,9 +35,11 @@ import "./App.css";
 import SellerStoreSales from "./pages/Sellers/SellerStoreSales";
 
 import PageUpload from "./pages/PageUpload";
+import { RecoilRoot } from 'recoil';
 
 export default function Customer() {
   return (
+    <RecoilRoot>
     <BrowserRouter>
       <div className="App">
         <Routes>
@@ -94,5 +96,6 @@ export default function Customer() {
         </Routes>
       </div>
     </BrowserRouter>
+    </RecoilRoot>
   );
 }

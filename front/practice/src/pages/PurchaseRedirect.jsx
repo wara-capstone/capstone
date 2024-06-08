@@ -4,9 +4,13 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { fetchRefreshToken } from "../utils/authUtil";
 
+import { useRecoilState } from 'recoil';
+import { tokenAtom } from '../utils/tokenAtom';
+
 const PurchaseRedirect = () => {
   // 현재 페이지의 URL에서 쿼리 파라미터 추출
   const urlParams = new URL(window.location.href).searchParams;
+  const [sharedToken, setSharedToken] = useRecoilState(tokenAtom);
 
   // 로컬 스토리지에서 이메일과 토큰을 가져와 변수에 할당
   const email = localStorage.getItem("email");
@@ -42,7 +46,7 @@ const PurchaseRedirect = () => {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: localStorage.getItem("token"),
+              Authorization: sharedToken,
             },
             body: JSON.stringify({
               paymentUid: imp_uid, // 결제고유번호
