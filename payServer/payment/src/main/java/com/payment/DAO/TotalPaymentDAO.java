@@ -12,4 +12,5 @@ public interface TotalPaymentDAO {
     public List<Payment> readPaymentById(Long paymentId);
     public Map<String, Object> updateTotalPayment(TotalPayment totalPayment);
     public Map<String, Object> deleteTotalPayment(Long paymentId);
+    public Boolean existsByPaymentUid(String paymentUid);
 }

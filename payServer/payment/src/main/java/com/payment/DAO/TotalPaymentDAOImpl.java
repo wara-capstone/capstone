@@ -26,6 +26,7 @@ public class TotalPaymentDAOImpl implements TotalPaymentDAO {
 
         if(totalPaymentRepository.existsByTotalPaymentId(totalPayment.getTotalPaymentId())){
             result.put("result", "success");
+            result.put("message", "결제가 완료되었습니다.");
         } else{
             result.put("result", "fail");
             result.put("message", "TotalPayment가 정상적으로 저장되지 않았습니다.");
@@ -109,5 +110,10 @@ public class TotalPaymentDAOImpl implements TotalPaymentDAO {
         }
 
         return result;
+    }
+
+    @Override
+    public Boolean existsByPaymentUid(String paymentUid){
+        return totalPaymentRepository.existsByPaymentUid(paymentUid);
     }
 }
