@@ -23,7 +23,7 @@ export const fetchRefreshToken = async (RefreshToken) => {
   
       console.log("리프레시 토큰, 엑세스 토큰 재발급 완료!!!!!!!!!!!!");
   
-    } else {
+    } else if(response.status === 401){
       console.log("리프레시 토큰 발급 실패");
       // 로그아웃 처리 로직을 구현합니다.
       message.success("로그아웃 되었습니다.");
