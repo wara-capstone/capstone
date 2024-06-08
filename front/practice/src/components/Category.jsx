@@ -84,7 +84,7 @@ const Category = ({ storeId }) => {
       }
     };
     fetchData();
-  }, [searchText, sortType, storeId]);
+  }, [searchText, sortType, storeId, sortCondition]);
 
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열기/닫기 상태
 
