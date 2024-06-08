@@ -116,7 +116,7 @@ const PurchaseRedirect = () => {
     //   }
     // }
     // paymentVerification();
-  }, []);
+  }, [token]);
 
   const styles = {
     container: {
