@@ -1,4 +1,4 @@
-package teamwara.userfeed.dto;
+package teamwara.userfeed.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

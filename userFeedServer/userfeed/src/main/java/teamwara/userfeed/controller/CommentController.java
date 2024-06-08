@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import teamwara.userfeed.dto.UserFeedCommentRequestDto;
+import teamwara.userfeed.dto.request.UserFeedCommentRequestDto;
 import teamwara.userfeed.service.CommentService;
 
 @RestController

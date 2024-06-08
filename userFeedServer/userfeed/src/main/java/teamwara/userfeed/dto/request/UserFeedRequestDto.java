@@ -1,8 +1,10 @@
-package teamwara.userfeed.dto;
+package teamwara.userfeed.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import teamwara.userfeed.dto.MemberDto;
+import teamwara.userfeed.dto.ProductDto;
 
 import java.util.List;
 

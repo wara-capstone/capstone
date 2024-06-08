@@ -1,4 +1,4 @@
-package teamwara.userfeed.dto;
+package teamwara.userfeed.dto.response;
 
 
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LikeDto {
-    private String userEmail;
-    private Long userFeedId;
+public class LikeResponseDto {
+    private int likesCount;
+    private boolean likedByMe;
 }

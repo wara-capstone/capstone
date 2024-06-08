@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import teamwara.userfeed.dto.*;
+import teamwara.userfeed.dto.request.CommentRequestDto;
+import teamwara.userfeed.dto.request.UserFeedCommentRequestDto;
+import teamwara.userfeed.dto.response.UserFeedDetailResponseDto;
 import teamwara.userfeed.entity.Comment;
 import teamwara.userfeed.entity.Member;
 import teamwara.userfeed.entity.UserFeed;
@@ -57,11 +60,11 @@ public class CommentService {
 
         UserDto userDto = webClientService.fetchMemberInfoByEmail(userFeed.getMember().getUserEmail()).block();
 
-        List<CommentDto> commentDtos = new ArrayList<>();
+        List<CommentRequestDto> commentDtos = new ArrayList<>();
         if (userFeed.getComments() != null) {
             for (Comment comment : userFeed.getComments()) {
                 UserDto commentUserDto = webClientService.fetchMemberInfoByEmail(comment.getMember().getUserEmail()).block();
-                CommentDto commentDto = new CommentDto(
+                CommentRequestDto commentDto = new CommentRequestDto(
                         commentUserDto.getUserName(),
                         comment.getContent(),
                         comment.getCreatedDate().toString(),

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import teamwara.userfeed.dto.LikeDto;
+import teamwara.userfeed.dto.request.LikeRequestDto;
 import teamwara.userfeed.service.LikeService;
 
 @RestController
@@ -18,7 +18,7 @@ import teamwara.userfeed.service.LikeService;
 public class LikeController {
     public final LikeService likeService;
     @PostMapping("/like/toggle")
-    public ResponseEntity<?> toggleLike(@RequestBody LikeDto likeDto) {
+    public ResponseEntity<?> toggleLike(@RequestBody LikeRequestDto likeDto) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(likeService.toggleLike(likeDto));
         } catch (Exception e) {

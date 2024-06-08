@@ -4,10 +4,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import teamwara.userfeed.dto.*;
+import teamwara.userfeed.dto.request.CommentRequestDto;
+import teamwara.userfeed.dto.request.UserFeedRequestDto;
+import teamwara.userfeed.dto.response.UserFeedAllResponseDto;
+import teamwara.userfeed.dto.response.UserFeedDetailResponseDto;
 import teamwara.userfeed.entity.*;
 import teamwara.userfeed.repository.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -86,10 +89,10 @@ public class UserFeedService {
 
         UserDto userDto = webClientService.fetchMemberInfoByEmail(userFeed.getMember().getUserEmail()).block();
 
-        List<CommentDto> commentDtos = userFeed.getComments().stream()
+        List<CommentRequestDto> commentDtos = userFeed.getComments().stream()
                 .map(comment -> {
                     UserDto commentUserDto = webClientService.fetchMemberInfoByEmail(comment.getMember().getUserEmail()).block();
-                    return new CommentDto(
+                    return new CommentRequestDto(
                             commentUserDto.getUserName(),
                             comment.getContent(),
                             comment.getCreatedDate().toString(),

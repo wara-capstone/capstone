@@ -3,8 +3,8 @@ package teamwara.userfeed.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import teamwara.userfeed.dto.LikeDto;
-import teamwara.userfeed.dto.LikeResponseDto;
+import teamwara.userfeed.dto.request.LikeRequestDto;
+import teamwara.userfeed.dto.response.LikeResponseDto;
 import teamwara.userfeed.entity.Member;
 import teamwara.userfeed.entity.UserFeed;
 import teamwara.userfeed.entity.UserFeedLike;
@@ -22,7 +22,7 @@ public class LikeService {
     private final MemberRepository memberRepository;
     private final LikeRepository likeRepository;
     @Transactional
-    public LikeResponseDto toggleLike(LikeDto likeDto) {
+    public LikeResponseDto toggleLike(LikeRequestDto likeDto) {
         Member member = memberRepository.findByUserEmail(likeDto.getUserEmail())
                 // 없으면 유저 생성
                 .orElseGet(() -> {

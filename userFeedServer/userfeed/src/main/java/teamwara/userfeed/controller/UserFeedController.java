@@ -6,8 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import teamwara.userfeed.dto.*;
-import teamwara.userfeed.repository.LikeRepository;
+import teamwara.userfeed.dto.request.UserFeedRequestDto;
+import teamwara.userfeed.dto.response.UserFeedAllResponseDto;
+import teamwara.userfeed.dto.response.UserFeedDetailResponseDto;
 import teamwara.userfeed.service.UserFeedService;
 
 import java.util.List;
