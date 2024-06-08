@@ -7,11 +7,11 @@ import LoadingScreen from "./LoadingScreen";
 import "./UserProfile.css";
 
 const UserProfile = () => {
-  const email = localStorage.getItem("email");
-  const userRole = localStorage.getItem("role");
-  const storeId = localStorage.getItem("storeid");
-  let token = localStorage.getItem("token");
-  let RefreshToken = localStorage.getItem("RefreshToken");
+  const email = sessionStorage.getItem("email");
+  const userRole = sessionStorage.getItem("role");
+  const storeId = sessionStorage.getItem("storeid");
+  let token = sessionStorage.getItem("token");
+  let RefreshToken = sessionStorage.getItem("RefreshToken");
   const [role, setRole] = useState("user");
 
   let url;
@@ -45,7 +45,7 @@ const UserProfile = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: localStorage.getItem("token"),
+            Authorization: sessionStorage.getItem("token"),
           },
         }
       );
@@ -56,7 +56,7 @@ const UserProfile = () => {
             {
               method: "GET",
               headers: {
-              Authorization: localStorage.getItem("RefreshToken"),
+              Authorization: sessionStorage.getItem("RefreshToken"),
               },
             }
           );
@@ -64,9 +64,9 @@ const UserProfile = () => {
           if (response.status === 201) {
             const result = await response.json();
 
-            localStorage.setItem("RefreshToken", result.refreshToken); // 여기서 RefreshToken을 저장.
+            sessionStorage.setItem("RefreshToken", result.refreshToken); // 여기서 RefreshToken을 저장.
             console.log("리프레시 토큰 재발급 완료!");
-            localStorage.setItem("token", result.accessToken); // 여기서 AccessToken을 저장합니다.
+            sessionStorage.setItem("token", result.accessToken); // 여기서 AccessToken을 저장합니다.
           } else {
             console.log("실패");
             navigate("/login");
@@ -84,10 +84,10 @@ const UserProfile = () => {
         });
         console.log("받아온 사진 존재,", result.profileImage);
 
-        // localStorage.removeItem("token");
-        // localStorage.removeItem("email");
-        // localStorage.removeItem("role");
-        // localStorage.removeItem("storeid");
+        // sessionStorage.removeItem("token");
+        // sessionStorage.removeItem("email");
+        // sessionStorage.removeItem("role");
+        // sessionStorage.removeItem("storeid");
         // setLoading(false);
         // navigate("/");
       } else {
@@ -103,7 +103,7 @@ const UserProfile = () => {
   const handleLogout = () => {
     const KakaoLogout = async () => {
       const response = await fetch(
-        `https://kapi.kakao.com/v1/user/logout?target_id_type=user_id&target_id=${localStorage.getItem(
+        `https://kapi.kakao.com/v1/user/logout?target_id_type=user_id&target_id=${sessionStorage.getItem(
           "kakaoUserId"
         )}`,
         {
@@ -113,7 +113,7 @@ const UserProfile = () => {
           },
           body: JSON.stringify({
             target_id_type: "user_id",
-            target_id: localStorage.getItem("kakaoUserId"),
+            target_id: sessionStorage.getItem("kakaoUserId"),
           }),
         }
       );
@@ -129,11 +129,11 @@ const UserProfile = () => {
 
     // 로그아웃 처리 로직을 구현합니다.
     message.success("로그아웃 되었습니다.");
-    localStorage.removeItem("token");
-    localStorage.removeItem("email");
-    localStorage.removeItem("role");
-    localStorage.removeItem("storeid");
-    localStorage.removeItem("RefreshToken");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("email");
+    sessionStorage.removeItem("role");
+    sessionStorage.removeItem("storeid");
+    sessionStorage.removeItem("RefreshToken");
 
     // 페이지 이동
     navigate("/");

@@ -13,8 +13,8 @@ const SellerStoreRegister = ({ store }) => {
   const [geocoder, setGeocoder] = useState(null);
   const [marker, setMarker] = useState(null); // 마커 객체를 저장할 상태
 
-  const [email, setEmail] = useState(localStorage.getItem("email"));
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [email, setEmail] = useState(sessionStorage.getItem("email"));
+  const [token, setToken] = useState(sessionStorage.getItem("token"));
   const [name, setName] = useState(store?.name || "");
   const [location, setLocation] = useState("");
   const [content, setContent] = useState(store?.content || "");
@@ -30,12 +30,12 @@ const SellerStoreRegister = ({ store }) => {
   );
 
   useEffect(() => {
-    setEmail(localStorage.getItem("email"));
-    setToken(localStorage.getItem("token"));
+    setEmail(sessionStorage.getItem("email"));
+    setToken(sessionStorage.getItem("token"));
 
     console.log(
-      "현재 페이지" + localStorage.getItem("email"),
-      localStorage.getItem("token")
+      "현재 페이지" + sessionStorage.getItem("email"),
+      sessionStorage.getItem("token")
     );
 
     var mapDiv = document.querySelector("#storeMap"), // 지도를 표시할 div
@@ -118,9 +118,9 @@ const SellerStoreRegister = ({ store }) => {
         .catch(async(error) => {
           console.error(error);
           if (error.response && error.response.status === 401 && tryAgain) {
-            const RefreshToken = localStorage.getItem("RefreshToken");
+            const RefreshToken = sessionStorage.getItem("RefreshToken");
             await fetchRefreshToken(RefreshToken); // 토큰 갱신 로직 호출
-            token = localStorage.getItem("token");
+            token = sessionStorage.getItem("token");
             return handleSubmit(e, false); // 재귀 호출
           }
         });
@@ -154,9 +154,9 @@ const SellerStoreRegister = ({ store }) => {
         .catch(async(error) => {
           console.error(error);
           if (error.response && error.response.status === 401 && tryAgain) {
-            const RefreshToken = localStorage.getItem("RefreshToken");
+            const RefreshToken = sessionStorage.getItem("RefreshToken");
             await fetchRefreshToken(RefreshToken); // 토큰 갱신 로직 호출
-            token = localStorage.getItem("token");
+            token = sessionStorage.getItem("token");
             return handleSubmit(e, false); // 재귀 호출
           }
         });

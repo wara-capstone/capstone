@@ -12,8 +12,8 @@ import { fetchRefreshToken } from "../utils/authUtil";
 export default function Item() {
   const { id } = useParams();
 
-  const email = localStorage.getItem("email");
-  let token = localStorage.getItem("token");
+  const email = sessionStorage.getItem("email");
+  let token = sessionStorage.getItem("token");
   const CART_URL =
     process.env.NODE_ENV === "development"
       ? process.env.REACT_APP_DJANGO_CART_URL
@@ -87,9 +87,9 @@ export default function Item() {
       );
 
       if (response.status === 401) {
-        const RefreshToken = localStorage.getItem("RefreshToken");
+        const RefreshToken = sessionStorage.getItem("RefreshToken");
         fetchRefreshToken(RefreshToken);
-        token = localStorage.getItem("token");
+        token = sessionStorage.getItem("token");
       }
 
       if (response.status === 201) {

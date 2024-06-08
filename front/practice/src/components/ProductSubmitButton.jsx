@@ -15,8 +15,8 @@ const ProductSubmitButton = ({ productData, imageFile, userFeedContent }) => {
   const handleSubmit = async () => {
     // Create FormData object
 
-    let token = localStorage.getItem("token");
-    const userEmail = localStorage.getItem("email");
+    let token = sessionStorage.getItem("token");
+    const userEmail = sessionStorage.getItem("email");
     console.log("버튼 눌렀을 때 상품표시");
     console.log(productData);
     console.log("이미지파일이 뜨는부분");

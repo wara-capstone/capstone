@@ -6,8 +6,8 @@ import "./Seller.css";
 import SellerHeader from "./SellerHeader";
 
 export default function SellerHome() {
-  const email = localStorage.getItem("email");
-  let token = localStorage.getItem("token");
+  const email = sessionStorage.getItem("email");
+  let token = sessionStorage.getItem("token");
 
   // useEffect(() => {
   //     const fetchData = async () => {
@@ -32,7 +32,7 @@ export default function SellerHome() {
   // }, []);
 
   useEffect(() => {
-    console.log("현재 페이지"+ localStorage.getItem("email"), localStorage.getItem("token"));
+    console.log("현재 페이지"+ sessionStorage.getItem("email"), sessionStorage.getItem("token"));
   }, []);
 
   return (
