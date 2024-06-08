@@ -3,14 +3,17 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { fetchRefreshToken } from "../utils/authUtil";
+import { setLocalStorage } from "../utils/setLocalStorage";
+
 
 const PurchaseRedirect = () => {
   // 현재 페이지의 URL에서 쿼리 파라미터 추출
   const urlParams = new URL(window.location.href).searchParams;
 
+
   // 로컬 스토리지에서 이메일과 토큰을 가져와 변수에 할당
-  const email = localStorage.getItem("email");
-  let token = localStorage.getItem("token");
+  // const email = localStorage.getItem("email");
+  // let token = localStorage.getItem("token");
   const [purchaseCompleted, setPurchaseCompleted] = useState(false); // 구매 완료 상태 관리
 
   // 각 쿼리 파라미터의 값을 변수에 할당
@@ -19,6 +22,11 @@ const PurchaseRedirect = () => {
   const imp_success = urlParams.get("imp_success");
   const error_code = urlParams.get("error_code"); // 이 파라미터는 에러가 있을 때만 존재
   const error_msg = urlParams.get("error_msg"); // 이 파라미터는 에러가 있을 때만 존재
+  const token = urlParams.get("token"); //
+  const refreshToken = urlParams.get("refreshToken"); //
+  const email = urlParams.get("email"); //
+  const role = urlParams.get("role"); //
+  const kakaoUserId = urlParams.get("kakaoUserId"); //
 
   // 추출한 값 확인을 위해 콘솔에 출력
   console.log(`imp_uid: ${imp_uid}`);
@@ -33,6 +41,14 @@ const PurchaseRedirect = () => {
   }, [purchaseCompleted]);
 
   useEffect(async () => {
+    // message.success(`토큰 상태 확인:${sharedToken}`, 100);
+    setLocalStorage(
+      token,
+      refreshToken,
+      email,
+      role,
+      kakaoUserId
+    )
     async function paymentVerification(tryVerificationAgain = true) {
       // 결제 검증하기
       try {
@@ -75,13 +91,13 @@ const PurchaseRedirect = () => {
                 `${process.env.NODE_ENV === "development" ? "http://" : ""}${
                   process.env.REACT_APP_API_URL
                 }cart/items/?user_email=` +
-                  email +
+                  localStorage.getItem("email") +
                   deleteString,
                 {
                   method: "DELETE",
                   headers: {
                     "Content-Type": "application/json",
-                    Authorization: `${token}`,
+                    Authorization: localStorage.getItem("token"),
                   },
                 }
               );
