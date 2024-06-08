@@ -17,8 +17,8 @@ import { fetchRefreshToken } from "../utils/authUtil";
 export default function Purchase() {
   const { IMP } = window; // 아임포트 모듈
   const navigate = useNavigate();
-    const email = localStorage.getItem("email");
-    let token = localStorage.getItem("token");
+    const email = sessionStorage.getItem("email");
+    let token = sessionStorage.getItem("token");
 
   const location = useLocation();
     const { checkList, selectedItems } = location.state;
@@ -48,9 +48,9 @@ export default function Purchase() {
         );
 
         if (response.status === 401) {
-          const RefreshToken = localStorage.getItem("RefreshToken");
+          const RefreshToken = sessionStorage.getItem("RefreshToken");
           fetchRefreshToken(RefreshToken);
-          token = localStorage.getItem("token");
+          token = sessionStorage.getItem("token");
         }
   
         if (response.status === 200) {
@@ -125,17 +125,17 @@ async function clickPurchase(tryAgain = true) { // 구매하기 버튼 클릭시
   );
   
   if (PurchaseInformation.status === 401 && tryPurchaseAgain) {
-    const RefreshToken = localStorage.getItem("RefreshToken");
+    const RefreshToken = sessionStorage.getItem("RefreshToken");
     await fetchRefreshToken(RefreshToken);
-    token = localStorage.getItem("token");
+    token = sessionStorage.getItem("token");
     return fetchPurchase(false);
   }
   
   if (PurchaseInformation.status === 200) {
     
-    // 장바구니 삭제를 위한 cart_item_id 배열을 localStorage에 저장
+    // 장바구니 삭제를 위한 cart_item_id 배열을 sessionStorage에 저장
     if (checkList !== undefined) {
-      localStorage.setItem('checkList', JSON.stringify(checkList));
+      sessionStorage.setItem('checkList', JSON.stringify(checkList));
     }
   
     const result = await PurchaseInformation.json();  // 값
@@ -176,9 +176,9 @@ async function clickPurchase(tryAgain = true) { // 구매하기 버튼 클릭시
         }),
       })
           if (paymentResponse.status === 401 && tryVerificationAgain) {
-            const RefreshToken = localStorage.getItem("RefreshToken");
+            const RefreshToken = sessionStorage.getItem("RefreshToken");
             await fetchRefreshToken(RefreshToken);
-            token = localStorage.getItem("token");
+            token = sessionStorage.getItem("token");
             return paymentVerification(false);
   
           } else if (paymentResponse.status === 201) {
@@ -211,7 +211,7 @@ async function clickPurchase(tryAgain = true) { // 구매하기 버튼 클릭시
                );
                if (response.status === 204) {
                  console.log("성공");
-                 localStorage.removeItem('checkList');
+                 sessionStorage.removeItem('checkList');
                }
                 else {
                 console.log(response);
@@ -300,9 +300,9 @@ async function clickPurchase(tryAgain = true) { // 구매하기 버튼 클릭시
 //       console.log(response);
 
 //       if (response.status === 401 && tryAgain) {
-//         const RefreshToken = localStorage.getItem("RefreshToken");
+//         const RefreshToken = sessionStorage.getItem("RefreshToken");
 //         fetchRefreshToken(RefreshToken);
-//         token = localStorage.getItem("token");
+//         token = sessionStorage.getItem("token");
 //         return clickPurchase(false);
 //       }
 

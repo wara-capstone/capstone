@@ -23,8 +23,8 @@ const SellerStoreEdit = ({ store }) => {
   var imageSize = new kakao.maps.Size(42, 56); // 마커의 크기 기존 33, 36
   var choiceImageSize = new kakao.maps.Size(44, 58); // 선택한 마커의 크기 기존 38, 40
 
-  const email = localStorage.getItem("email");
-  let token = localStorage.getItem("token");
+  const email = sessionStorage.getItem("email");
+  let token = sessionStorage.getItem("token");
 
   const [name, setName] = useState(store?.name || "");
   const [location, setLocation] = useState(store?.location || "");
@@ -75,9 +75,9 @@ const SellerStoreEdit = ({ store }) => {
         initMarkers();
       }
       else if (response.status === 401 && tryAgain) {
-        let RefreshToken = localStorage.getItem("RefreshToken");
+        let RefreshToken = sessionStorage.getItem("RefreshToken");
         await fetchRefreshToken(RefreshToken);
-        token = localStorage.getItem("token");
+        token = sessionStorage.getItem("token");
         return fetchData(initMarkers, false);
       }
 
@@ -240,9 +240,9 @@ const SellerStoreEdit = ({ store }) => {
         .catch(async(error) => {
           console.error(error);
           if (error.response && error.response.status === 401 && tryAgain) {
-            const RefreshToken = localStorage.getItem("RefreshToken");
+            const RefreshToken = sessionStorage.getItem("RefreshToken");
             await fetchRefreshToken(RefreshToken); // 토큰 갱신 로직 호출
-            token = localStorage.getItem("token");
+            token = sessionStorage.getItem("token");
             return handleSubmit(e, false); // 재귀 호출
           }
         });
@@ -270,9 +270,9 @@ const SellerStoreEdit = ({ store }) => {
         .catch(async(error) => {
           console.error(error);
           if (error.response && error.response.status === 401 && tryAgain) {
-            const RefreshToken = localStorage.getItem("RefreshToken");
+            const RefreshToken = sessionStorage.getItem("RefreshToken");
             await fetchRefreshToken(RefreshToken); // 토큰 갱신 로직 호출
-            token = localStorage.getItem("token");
+            token = sessionStorage.getItem("token");
             return handleSubmit(e, false); // 재귀 호출
           }
         });
@@ -345,9 +345,9 @@ const SellerStoreEdit = ({ store }) => {
       .catch(async(error) => {
         console.error(error);
         if (error.response && error.response.status === 401 && tryAgain) {
-          const RefreshToken = localStorage.getItem("RefreshToken");
+          const RefreshToken = sessionStorage.getItem("RefreshToken");
           await fetchRefreshToken(RefreshToken); // 토큰 갱신 로직 호출
-          token = localStorage.getItem("token");
+          token = sessionStorage.getItem("token");
           return handleDeleteStore(event, false); // 재귀 호출
         }
       });

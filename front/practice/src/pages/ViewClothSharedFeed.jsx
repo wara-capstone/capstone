@@ -33,8 +33,8 @@ const TitleTypography = styled(Typography)(({ theme }) => ({
 
 export default function ViewClothSharedFeed() {
   // const [id, setId] = useState('');
-  const token = localStorage.getItem("token");
-  const userEmail = localStorage.getItem("email");
+  const token = sessionStorage.getItem("token");
+  const userEmail = sessionStorage.getItem("email");
   const { id } = useParams();
   const [itemData, setItemData] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -59,6 +59,8 @@ export default function ViewClothSharedFeed() {
 
     centerMode: true,
     infinite: true,
+    //infinite: itemData.product.length > 1, // 카드가 하나일 때 반복되지 않도록 설정
+
     dots: true,
     arrows: false,
 
@@ -85,8 +87,8 @@ export default function ViewClothSharedFeed() {
       });
 
       if (response.status === 200) {
-        const RefreshToken = localStorage.getItem("RefreshToken");
-        await fetchRefreshToken(RefreshToken);
+         const RefreshToken = sessionStorage.getItem("RefreshToken");
+         await fetchRefreshToken(RefreshToken);
         const data = await response.json();
         
         setCommentsList(data.comments);
@@ -100,6 +102,9 @@ export default function ViewClothSharedFeed() {
     if (buttonClicked) {
       fetchData();
     }
+    fetchData();
+
+
  
   }, [buttonClicked, token]);
 
@@ -115,7 +120,7 @@ export default function ViewClothSharedFeed() {
   //   setCommentText(event.target.value);
   // };
   // 댓글 내용 서버로 보내는 코드
-  
+
   const handleCommentSubmit = async (newComment) => {
     try {
       setButtonClicked(true);
@@ -138,14 +143,14 @@ export default function ViewClothSharedFeed() {
       );
 
       if (response.ok) {
-        const RefreshToken = localStorage.getItem("RefreshToken");
-        await fetchRefreshToken(RefreshToken);
+         const RefreshToken = sessionStorage.getItem("RefreshToken");
+         await fetchRefreshToken(RefreshToken);
         // 댓글 전송 성공 시 처리 로직
         console.log("댓글이 성공적으로 전송되었습니다.");
         //setCommentsList([...commentsList, { content: commentText }]); // 새로운 댓글 추가
-         // 댓글 목록에 새로운 댓글 추가
-      //setComments([...comments, newComment]);
-      setCommentsList([...commentsList, newComment]);
+        // 댓글 목록에 새로운 댓글 추가
+        //setComments([...comments, newComment]);
+        setCommentsList([...commentsList, newComment]);
       } else {
         // 댓글 전송 실패 시 처리 로직
         console.error("댓글 전송에 실패했습니다.");
@@ -153,8 +158,9 @@ export default function ViewClothSharedFeed() {
     } catch (error) {
       console.error("댓글 전송 중 오류가 발생했습니다:", error);
     }
+  
   };
-
+  
   return (
     <div className="ViewClothSharedFeed">
       <Header />
@@ -182,27 +188,57 @@ export default function ViewClothSharedFeed() {
         />
       </MuiCard>
 
-      <Slider {...sliderSettings}>
-        {itemData.product &&
-          itemData.product.map((result, index) => {
-            return (
-              <Link
-                to={`/item/${result.productId}`}
-                key={result.productId}
-                className="card-link"
-              >
-                <Card
-                  key={index}
-                  title={result.productName}
-                  // subTitle={result.productCategory}
-                  price={result.productPrice}
-                  mainImage={result.productImage}
-                  // count={result.options[0].productStock}
-                />
-              </Link>
-            );
-          })}
-      </Slider>
+      {itemData.product.length > 1 ? (
+        <Slider {...sliderSettings}>
+          {itemData.product &&
+            itemData.product.map((result, index) => {
+              const isActive = index === currentSlide; // 현재 슬라이드 인덱스와 일치하는지 확인
+
+              return (
+                <Link
+                  to={`/item/${result.productId}`}
+                  key={result.productId}
+                  className={`card-link ${isActive ? "active-slide" : ""}`} // 현재 슬라이드에 클래스 추가
+                >
+                  <Card
+                    key={index}
+                    title={result.productName}
+                    // subTitle={result.productCategory}
+                    price={result.productPrice}
+                    mainImage={result.productImage}
+                    // count={result.options[0].productStock}
+                    specialStyle={
+                      isActive ? "special-card-active" : "special-card"
+                    } // 현재 슬라이드에 다른 스타일 적용
+                  />
+                </Link>
+              );
+            })}
+        </Slider>
+      ) : (
+        itemData.product &&
+        itemData.product.map((result, index) => {
+          const isActive = index === currentSlide; // 현재 슬라이드 인덱스와 일치하는지 확인
+
+          return (
+            <Link
+              to={`/item/${result.productId}`}
+              key={result.productId}
+              className={`card-link ${isActive ? "active-slide" : ""}`} // 현재 슬라이드에 클래스 추가
+            >
+              <Card
+                key={index}
+                title={result.productName}
+                // subTitle={result.productCategory}
+                price={result.productPrice}
+                mainImage={result.productImage}
+                // count={result.options[0].productStock}
+                specialStyle={isActive ? "special-card-active" : "special-card"} // 현재 슬라이드에 다른 스타일 적용
+              />
+            </Link>
+          );
+        })
+      )}
 
       {/* <Box
         sx={{
@@ -210,65 +246,75 @@ export default function ViewClothSharedFeed() {
           padding: "16px",
         }}
       > */}
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between", // 좌우 여백을 최대로 하여 아이콘들을 양쪽 끝으로 분리
-            alignItems: "center", // 아이콘들을 상하 중앙 정렬
-            width: "100%", // 박스의 너비를 부모 컴포넌트에 맞춤
-          }}
-        >
-          {/* 왼쪽 아이콘 */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between", // 좌우 여백을 최대로 하여 아이콘들을 양쪽 끝으로 분리
+          alignItems: "center", // 아이콘들을 상하 중앙 정렬
+          width: "100%", // 박스의 너비를 부모 컴포넌트에 맞춤
+        }}
+      >
+        {/* 왼쪽 아이콘 */}
 
-          {/* 오른쪽 아이콘들을 감싸는 박스 */}
-
-          
-</Box>
-          <Box
-            sx={{
-              backgroundColor: "white",
-              padding: "16px",
-            }}
-          >
-    
-    <LikeButton
-
-            id={id}
-
-          />
+        {/* 오른쪽 아이콘들을 감싸는 박스 */}
+      </Box>
+      <Box
+        sx={{
+          backgroundColor: "white",
+          padding: "16px",
+        }}
+      >
+        <LikeButton id={id} userEmail={userEmail} />
         <CardContent>
           <Typography variant="subtitle1" color="text" textAlign="left">
             {itemData.userFeedContent}
           </Typography>
           {/* <Divider sx={{ my: 2 }} /> */}
-          </CardContent>
-            {/* 댓글 작성 표시 */}
-            
-        
+        </CardContent>
+        {/* 댓글 작성 표시 */}
       </Box>
       <div>
-      {/* 다른 게시물 관련 UI */}
-      <Comment onCommentSubmit={handleCommentSubmit} />
-      {/* 댓글 목록 렌더링 */}
-      {comments.map((comment, index) => (
-        <div key={index}>{comment}</div>
-      ))}
-      {commentsList.map((comment, index) => (
-       <Box key={index} className="comment-box">
-       <Box className="comment-content">
-         <Typography variant="body2" color="text" className="comment-user-name">
-           {comment.userName}
-         </Typography>
-         <Typography variant="body2" color="text.secondary" className="comment-text">
-           {comment.content}
-         </Typography>
-       </Box>
-       <Typography variant="body2" color="text.secondary" className="comment-created-at">
-         {formatCreatedAt(comment.createdAt)}
-       </Typography>
-     </Box>
-    ))}
-    </div>
+        {/* 다른 게시물 관련 UI */}
+        <Comment onCommentSubmit={handleCommentSubmit} />
+        {/* 댓글 목록 렌더링 */}
+        {comments.map((comment, index) => (
+          <div key={index}>{comment}</div>
+        ))}
+        {commentsList.map((comment, index) => (
+          <Box key={index} className="comment-box">
+            <Box className="comment-content">
+              <Typography
+                variant="body2"
+                color="text"
+                className="comment-user-name"
+                mr={2}
+                fontWeight="bold"
+                marginLeft={"0.5rem"}
+              >
+                {comment.userName}
+              </Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                className="comment-text"
+              >
+                {comment.content}
+              </Typography>
+            </Box>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              className="comment-created-at"
+              marginLeft={"0.5rem"}
+              marginRight={"0.3rem"}
+              lineHeight={1.5}
+              fontSize={"0.7rem"}
+            >
+              {formatCreatedAt(comment.createdAt)}
+            </Typography>
+          </Box>
+        ))}
+      </div>
       <BottomNav />
     </div>
   );

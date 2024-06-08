@@ -8,8 +8,8 @@ import { message } from 'antd';
 function ProductTagList({ posts, onProductSelect}){
   const [purchaseItems, setPurchaseItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  let token = localStorage.getItem("token");
-  const userEmail = localStorage.getItem("email");
+  let token = sessionStorage.getItem("token");
+  const userEmail = sessionStorage.getItem("email");
 
   useEffect(() => {
     console.log("구매 정보가 업데이트되었습니다.");
@@ -31,9 +31,9 @@ function ProductTagList({ posts, onProductSelect}){
         );
 
         if (response.status === 401) {
-          const RefreshToken = localStorage.getItem("RefreshToken");
+          const RefreshToken = sessionStorage.getItem("RefreshToken");
           await fetchRefreshToken(RefreshToken);
-          const newToken = localStorage.getItem("token");
+          const newToken = sessionStorage.getItem("token");
           // 토큰 갱신 후 재요청
           const retryResponse = await fetch(
             `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}payment/read/user/${userEmail}`,

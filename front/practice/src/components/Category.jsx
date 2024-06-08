@@ -16,8 +16,8 @@ import { BiSort } from "react-icons/bi";
 
 const Category = ({ storeId }) => {
   // const [selectedCategory, setSelectedCategory] = useState(null);
-  let token = localStorage.getItem("token");
-  const RefreshToken = localStorage.getItem("RefreshToken");
+  let token = sessionStorage.getItem("token");
+  const RefreshToken = sessionStorage.getItem("RefreshToken");
 
   const [searchResultCount, setSearchResultCount] = useState(0); // 검색 결과 개수 상태
   const [sortText, setSortText] = useState("낮은가격순"); // 정렬 텍스트 상태
@@ -84,7 +84,7 @@ const Category = ({ storeId }) => {
       }
     };
     fetchData();
-  }, [searchText, sortType, storeId]);
+  }, [searchText, sortType, storeId, sortCondition]);
 
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열기/닫기 상태
 

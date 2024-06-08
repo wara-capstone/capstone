@@ -18,8 +18,8 @@ export default function Chatting() {
   // location.state.seller를 통해 storeData.storeSeller 값 받아옴
   const seller = location.state.seller;
 
-  const userId = localStorage.getItem("email"); // 실제 userId 값으로 대체
-  let token = localStorage.getItem("token"); // 실제 token 값으로 대체
+  const userId = sessionStorage.getItem("email"); // 실제 userId 값으로 대체
+  let token = sessionStorage.getItem("token"); // 실제 token 값으로 대체
   var sellerId = seller;
 
   const chatMessagesRef = useRef(null); // Ref를 생성
@@ -75,9 +75,9 @@ export default function Chatting() {
       );
 
       if (response.status === 401 && tryAgain) {
-        const refreshToken = localStorage.getItem("RefreshToken");
-        await fetchRefreshToken(refreshToken); // fetchRefreshToken이 프로미스를 반환하고, 새로운 토큰을 localStorage에 저장한다고 가정
-        token = localStorage.getItem("token"); // 새로운 토큰으로 업데이트
+        const refreshToken = sessionStorage.getItem("RefreshToken");
+        await fetchRefreshToken(refreshToken); // fetchRefreshToken이 프로미스를 반환하고, 새로운 토큰을 sessionStorage에 저장한다고 가정
+        token = sessionStorage.getItem("token"); // 새로운 토큰으로 업데이트
         return openOrCreateRoom(false); // 재귀 호출하지만, 무한 루프 방지를 위해 tryAgain을 false로 설정
       }
 
