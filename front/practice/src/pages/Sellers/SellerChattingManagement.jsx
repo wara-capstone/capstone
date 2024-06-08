@@ -12,7 +12,10 @@ export default function SellerChattingManagement() {
 
   const userId = localStorage.getItem("email");
   let token = localStorage.getItem("token"); // 실제 token 값으로 대체
-  const CHATTING_URL = process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DJANGO_CHATTING_URL : process.env.REACT_APP_API_URL;
+  const CHATTING_URL =
+    process.env.NODE_ENV === "development"
+      ? process.env.REACT_APP_DJANGO_CHATTING_URL
+      : process.env.REACT_APP_API_URL;
   const [roundImage, setRoundImage] = useState(
     "https://via.placeholder.com/150x150"
   );
@@ -65,23 +68,51 @@ export default function SellerChattingManagement() {
     setCustomerId(value);
   };
 
+  const getUserName = async (email) => {
+    const response = await fetch(
+      `${process.env.NODE_ENV === "development" ? "" : ""}${
+        process.env.REACT_APP_API_URL
+      }user?email=${email}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      }
+    );
+
+    const result = await response.json();
+    if (response.status === 200) {
+      return result.nickname;
+    } else {
+      console.log("실패");
+      return email;
+    }
+  };
+
   const openOrCreateRoom = async () => {
     if (socket) {
       socket.close();
     }
 
     try {
-      const response = await fetch(`${process.env.NODE_ENV === 'development' ? '' : ''}${CHATTING_URL}chat/rooms/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${token}`,
-        },
-        body: JSON.stringify({
-          shop_user_email: userId,
-          visitor_user_email: customerId,
-        }),
-      });
+      const response = await fetch(
+        `${
+          process.env.NODE_ENV === "development" ? "" : ""
+        }${CHATTING_URL}chat/rooms/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+          body: JSON.stringify({
+            shop_user_email: userId,
+            visitor_user_email: customerId,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -90,56 +121,55 @@ export default function SellerChattingManagement() {
       const roomData = await response.json();
 
       setCurrentRoomId(roomData.id);
-      displayMessages(roomData.messages);
+      await displayMessages(roomData.messages); // 비동기 처리
       setupWebSocket(roomData.id, token);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const displayMessages = (messages) => {
+  const displayMessages = async (messages) => {
     // 메시지를 시간 순서대로 정렬
-    messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    messages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
-    const messageElements = messages.map((message) => {
-      // if (message.sender_email && message.text) {
-      const className = message.sender_email === userId ? "sent" : "received";
-      return (
-        <div key={message.id} className={`message-bubble ${className}`}>
-          {`${message.sender_email}: ${message.text}`}
-        </div>
-      );
-      // }
-      // return null;
-    });
+    const messageElements = await Promise.all(
+      messages.map(async (message) => {
+        const userName = await getUserName(message.sender_email);
+        const className = message.sender_email === userId ? "sent" : "received";
+        return (
+          <div key={message.id} className={`message-bubble ${className}`}>
+            {`${userName}: ${message.text}`}
+          </div>
+        );
+      })
+    );
     setChatMessages(messageElements);
   };
 
   const setupWebSocket = (roomId, authToken) => {
     // 인증 토큰을 URL의 쿼리 파라미터로 추가
     const newSocket = new WebSocket(
-      `${process.env.NODE_ENV === 'development' ? 'ws://' : 'wss://www.onoff.zone'}${CHATTING_URL}ws/room/${roomId}/messages?token=${authToken}`
+      `${
+        process.env.NODE_ENV === "development"
+          ? "ws://"
+          : "wss://www.onoff.zone"
+      }${CHATTING_URL}ws/room/${roomId}/messages?token=${authToken}`
     );
 
-    console.log(newSocket.url);
-
-    newSocket.onmessage = (event) => {
+    newSocket.onmessage = async (event) => {
       const data = JSON.parse(event.data);
+      const userName = await getUserName(data.sender_email);
 
       const className = data.sender_email === userId ? "sent" : "received";
       const messageElem = (
         <div key={data.id} className={`message-bubble ${className}`}>
-          {`${data.sender_email}: ${data.message}`}
+          {`${userName}: ${data.message}`}
         </div>
       );
-      // setChatMessages((prevMessages) => [...prevMessages, messageElem]);
+
       setChatMessages((prevMessages) => {
-        // 새로운 메시지를 메시지 배열의 끝에 추가
         const newMessages = [...prevMessages, messageElem];
-
-        // 메시지 배열을 timestamp에 따라 정렬
         newMessages.sort((a, b) => new Date(a.key) - new Date(b.key));
-
         return newMessages;
       });
     };
@@ -169,13 +199,18 @@ export default function SellerChattingManagement() {
     async function fetchChattingList() {
       setLoading(true);
       try {
-        const response = await fetch(`${process.env.NODE_ENV === 'development' ? '' : ''}${CHATTING_URL}chat/rooms/?email=${userId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-        });
+        const response = await fetch(
+          `${
+            process.env.NODE_ENV === "development" ? "" : ""
+          }${CHATTING_URL}chat/rooms/?email=${userId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -207,26 +242,55 @@ export default function SellerChattingManagement() {
   }, [userId]);
 
   const fetchImage = async (email) => {
-    const response = await fetch(`${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}user?email=${email}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${token}`,
-      },
-    });
+    const response = await fetch(
+      `${process.env.NODE_ENV === "development" ? "" : ""}${
+        process.env.REACT_APP_API_URL
+      }user?email=${email}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      }
+    );
     const result = await response.json();
     if (response.status === 200) {
       setRoundImage(result.profileImage); // 상태 업데이트
-      console.log("성공");
-      console.log(result.email);
-      console.log(result.profileImage);
       return result.profileImage;
     } else {
       console.log("실패");
     }
   };
+
+  const [userNames, setUserNames] = useState({}); // 사용자 이메일을 키로, 이름을 값으로 가지는 객체
+
+  useEffect(() => {
+    visitorUserEmails.forEach(async (user) => {
+      const response = await fetch(
+        `${process.env.NODE_ENV === "development" ? "" : ""}${
+          process.env.REACT_APP_API_URL
+        }user?email=${user.email}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const result = await response.json();
+        setUserNames((prev) => ({ ...prev, [user.email]: result.nickname }));
+      } else {
+        console.log("사용자 이름 가져오기 실패");
+      }
+    });
+  }, [visitorUserEmails, token]); // visitorUserEmails 또는 token이 변경될 때마다 useEffect 재실행
+
   if (loading) {
-    return <LoadingScreen></LoadingScreen>;
+    return <LoadingScreen />;
   } else {
     return (
       <div className="seller-chatting-management">
@@ -243,7 +307,11 @@ export default function SellerChattingManagement() {
                   <div className="list-item-content">
                     <img src={user.image} alt="User" className="round-image" />
                     <div className="user-details">
-                      <h2>{user.email}</h2>
+                      <h2>
+                        {userNames[user.email] ||
+                          "사용자 이름을 가져오는 중..."}
+                      </h2>
+
                       <p>최근 메세지: {user.latestMessage}</p>
                     </div>
                   </div>
@@ -261,7 +329,6 @@ export default function SellerChattingManagement() {
             </div>
 
             {/* <!-- 메시지 입력 및 전송 --> */}
-
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -275,7 +342,7 @@ export default function SellerChattingManagement() {
                 placeholder="메시지를 입력하세요"
                 id="message-input"
               />
-              <button id="send-btn" onClick={sendMessage}>
+              <button id="send-btn" type="submit">
                 보내기
               </button>
             </form>

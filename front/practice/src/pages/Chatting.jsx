@@ -9,6 +9,7 @@ export default function Chatting() {
   const [socket, setSocket] = useState(null);
   const [messageInput, setMessageInput] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
+  const [userNames, setUserNames] = useState({});
   const CHATTING_URL =
     process.env.NODE_ENV === "development"
       ? process.env.REACT_APP_DJANGO_CHATTING_URL
@@ -49,6 +50,29 @@ export default function Chatting() {
 
   const handleInputChange = (event) => {
     setMessageInput(event.target.value);
+  };
+
+  const getUserName = async (email) => {
+    const response = await fetch(
+      `${process.env.NODE_ENV === "development" ? "" : ""}${
+        process.env.REACT_APP_API_URL
+      }user?email=${email}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      }
+    );
+
+    const result = await response.json();
+    if (response.status === 200) {
+      return result.nickname;
+    } else {
+      console.log("실패");
+      return email;
+    }
   };
 
   const openOrCreateRoom = async (tryAgain = true) => {
@@ -95,26 +119,21 @@ export default function Chatting() {
     }
   };
 
-  const displayMessages = (messages) => {
-    console.log("h1");
-
+  const displayMessages = async (messages) => {
     // 메시지를 시간 순서대로 정렬
-    messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    messages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
-    const messageElements = messages.map((message) => {
-      // if (message.sender_email && message.text) {
-      const className = message.sender_email === userId ? "sent" : "received";
-      return (
-        <div
-          key={message.id} // 각 메시지에 고유한 key prop를 제공합니다.
-          className={`message-bubble ${className}`}
-        >
-          {`${message.sender_email}: ${message.text}`}
-        </div>
-      );
-      // }
-      // return null;
-    });
+    const messageElements = await Promise.all(
+      messages.map(async (message) => {
+        const userName = await getUserName(message.sender_email);
+        const className = message.sender_email === userId ? "sent" : "received";
+        return (
+          <div key={message.id} className={`message-bubble ${className}`}>
+            {`${userName}: ${message.text}`}
+          </div>
+        );
+      })
+    );
     setChatMessages(messageElements);
   };
 
@@ -128,25 +147,20 @@ export default function Chatting() {
       }${CHATTING_URL}ws/room/${roomId}/messages?token=${authToken}`
     );
 
-    console.log(newSocket.url);
-
-    newSocket.onmessage = (event) => {
+    newSocket.onmessage = async (event) => {
       const data = JSON.parse(event.data);
+      const userName = await getUserName(data.sender_email);
 
       const className = data.sender_email === userId ? "sent" : "received";
       const messageElem = (
         <div key={data.id} className={`message-bubble ${className}`}>
-          {`${data.sender_email}: ${data.message}`}
+          {`${userName}: ${data.message}`}
         </div>
       );
-      // setChatMessages((prevMessages) => [...prevMessages, messageElem]);
+
       setChatMessages((prevMessages) => {
-        // 새로운 메시지를 메시지 배열의 끝에 추가
         const newMessages = [...prevMessages, messageElem];
-
-        // 메시지 배열을 timestamp에 따라 정렬
         newMessages.sort((a, b) => new Date(a.key) - new Date(b.key));
-
         return newMessages;
       });
     };
@@ -172,13 +186,10 @@ export default function Chatting() {
     <div className="chatting">
       <Header />
       <div id="chat-container">
-        {/* <!-- 채팅방 메시지 --> */}
         <div id="chat-messages">
           {chatMessages}
           <div ref={chatMessagesRef} />
         </div>
-        {/* <!-- 메시지 입력 및 전송 --> */}
-
         <form
           onSubmit={(e) => {
             e.preventDefault();

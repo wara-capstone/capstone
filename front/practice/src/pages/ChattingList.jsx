@@ -10,7 +10,10 @@ export default function ChattingList() {
   const userId = localStorage.getItem("email"); // 실제 userId 값으로 대체
   let token = localStorage.getItem("token"); // 실제 token 값으로 대체
   const { id } = useParams();
-  const CHATTING_URL = process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DJANGO_CHATTING_URL : process.env.REACT_APP_API_URL;
+  const CHATTING_URL =
+    process.env.NODE_ENV === "development"
+      ? process.env.REACT_APP_DJANGO_CHATTING_URL
+      : process.env.REACT_APP_API_URL;
   const [loading, setLoading] = useState(false);
   const [roundImage, setRoundImage] = useState(
     "https://via.placeholder.com/150x150"
@@ -21,13 +24,18 @@ export default function ChattingList() {
     async function fetchChattingList() {
       try {
         setLoading(true);
-        const response = await fetch(`${process.env.NODE_ENV === 'development' ? '' : ''}${CHATTING_URL}chat/rooms/?email=${userId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-        });
+        const response = await fetch(
+          `${
+            process.env.NODE_ENV === "development" ? "" : ""
+          }${CHATTING_URL}chat/rooms/?email=${userId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
+          }
+        );
 
         if (response.status === 401) {
           const refreshToken = localStorage.getItem("RefreshToken");
@@ -65,13 +73,18 @@ export default function ChattingList() {
   }, [userId, token]);
 
   const fetchImage = async (email, tryAgain = true) => {
-    const response = await fetch(`${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}user?email=${email}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${token}`,
-      },
-    });
+    const response = await fetch(
+      `${process.env.NODE_ENV === "development" ? "" : ""}${
+        process.env.REACT_APP_API_URL
+      }user?email=${email}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      }
+    );
     const result = await response.json();
     if (response.status === 200) {
       setRoundImage(result.profileImage); // 상태 업데이트
@@ -79,7 +92,7 @@ export default function ChattingList() {
       console.log(result.email);
       console.log(result.profileImage);
       return result.profileImage;
-    }else if (response.status === 401 && tryAgain) {
+    } else if (response.status === 401 && tryAgain) {
       // 토큰 갱신 로직 (예시)
       const refreshToken = localStorage.getItem("RefreshToken");
       // fetchRefreshToken은 새로운 토큰을 발급받는 함수라고 가정합니다.
@@ -87,8 +100,7 @@ export default function ChattingList() {
       token = localStorage.getItem("token"); // 새로운 토큰으로 업데이트
       // 재시도하지만, 무한 루프 방지를 위해 tryAgain을 false로 설정
       return fetchImage(email, false);
-    }   
-    else {
+    } else {
       console.log("실패");
     }
   };
@@ -105,6 +117,33 @@ export default function ChattingList() {
       });
     }
   };
+
+  const [userNames, setUserNames] = useState({}); // 사용자 이메일을 키로, 이름을 값으로 가지는 객체
+
+  useEffect(() => {
+    visitorUserEmails.forEach(async (user) => {
+      const response = await fetch(
+        `${process.env.NODE_ENV === "development" ? "" : ""}${
+          process.env.REACT_APP_API_URL
+        }user?email=${user.email}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const result = await response.json();
+        setUserNames((prev) => ({ ...prev, [user.email]: result.nickname }));
+      } else {
+        console.log("사용자 이름 가져오기 실패");
+      }
+    });
+  }, [visitorUserEmails, token]); // visitorUserEmails 또는 token이 변경될 때마다 useEffect 재실행
+
   if (loading) {
     return <LoadingScreen></LoadingScreen>;
   } else {
@@ -122,7 +161,11 @@ export default function ChattingList() {
                   <div className="list-item-content">
                     <img src={user.image} alt="User" className="round-image" />
                     <div className="user-details">
-                      <h2>{user.email}</h2>
+                      <h2>
+                        {userNames[user.email] ||
+                          "사용자 이름을 가져오는 중..."}
+                      </h2>
+
                       <p>최근 메세지: {user.latestMessage}</p>
                     </div>
                   </div>
