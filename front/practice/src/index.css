@@ -419,8 +419,8 @@ code {
 
 /* 전송 버튼 스타일 */
 #send-btn {
-  width: 20%;
-  height: 43px;
+  width: 19%;
+  height: 44px;
   padding: 10px;
   background: rgb(255, 100, 100);
   color: white;
