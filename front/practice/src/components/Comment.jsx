@@ -41,7 +41,7 @@ function Comment({ onCommentSubmit }) {
                   sx={{ fontWeight: 'bold', marginRight: '1rem'}}
                   onClick={handleCommentSubmit}
                 >
-                  게시
+                  등록
                 </Button>
               </InputAdornment>
             ),

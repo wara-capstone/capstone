@@ -95,7 +95,7 @@ export default function ViewClothSharedFeed() {
     };
 
     fetchData();
-  }, [id, commentsList]);
+  }, []);
 
   if (!itemData) {
     return <div>Loading...</div>;
