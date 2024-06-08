@@ -71,7 +71,7 @@ const SignupChoice = () => {
       <button className="signup-choice" onClick={handleSignup} style={{width:"16.3rem"}}>
       <FontAwesomeIcon icon={faEnvelope} size="lg" style={{  marginLeft: '0.8rem'}} />
       {/* 텍스트를 span 태그로 감싸고 스타일을 적용합니다. */}
-      <span style={{ flex: 1, textAlign: 'center' }}>이메일로 회원가입</span>
+      <span style={{ flex: 1, textAlign: 'center', fontSize: `18px` }}>이메일로 회원가입</span>
       </button>
       <img src={KakaoButtonImage}
       style={{
