@@ -4,13 +4,15 @@ import App from "./App";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import Modal from 'react-modal';
- 
+import { RecoilRoot } from 'recoil';
 
 Modal.setAppElement('#root')
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
+  <RecoilRoot>
     <App />
+  </RecoilRoot>
   // </React.StrictMode>
 );
 
