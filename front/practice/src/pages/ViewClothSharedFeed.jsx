@@ -103,10 +103,14 @@ export default function ViewClothSharedFeed() {
       fetchData();
     }
     fetchData();
+<<<<<<< HEAD
 
 
  
   }, [buttonClicked, token]);
+=======
+  }, [buttonClicked]);
+>>>>>>> feat/feed
 
   if (!itemData) {
     return <div>Loading...</div>;
