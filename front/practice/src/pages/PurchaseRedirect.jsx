@@ -40,9 +40,9 @@ const PurchaseRedirect = () => {
   }, [purchaseCompleted]);
 
   useEffect(async () => {
-    console.log("토큰 확인: ", sharedToken);
+    message.success(`recoil 토큰 확인: ${sharedToken}`, 100);
     token = sharedToken;
-    console.log("토큰 확인: ", token);
+    message.success(`변수에 넣은 토큰 확인:${token}`, 100);
 
     // async function paymentVerification(tryVerificationAgain = true) {
     //   // 결제 검증하기
