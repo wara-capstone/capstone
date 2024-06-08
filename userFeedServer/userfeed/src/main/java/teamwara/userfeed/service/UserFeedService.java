@@ -11,7 +11,10 @@ import teamwara.userfeed.dto.response.UserFeedDetailResponseDto;
 import teamwara.userfeed.entity.*;
 import teamwara.userfeed.repository.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +61,7 @@ public class UserFeedService {
                 .userFeedContent(userFeedRequestDto.getUserFeedContent())
                 .member(member)
                 .products(products)
+                .comments(new ArrayList<>())
                 .build();
 
         products.forEach(product -> product.setUserFeed(userFeed));
@@ -89,7 +93,10 @@ public class UserFeedService {
 
         UserDto userDto = webClientService.fetchMemberInfoByEmail(userFeed.getMember().getUserEmail()).block();
 
-        List<CommentRequestDto> commentDtos = userFeed.getComments().stream()
+        // Handle potential null comments safely using Optional.ofNullable and stream operations
+        List<CommentRequestDto> commentDtos = Optional.ofNullable(userFeed.getComments())
+                .orElseGet(Collections::emptyList)  // Provide an empty list if comments are null
+                .stream()
                 .map(comment -> {
                     UserDto commentUserDto = webClientService.fetchMemberInfoByEmail(comment.getMember().getUserEmail()).block();
                     return new CommentRequestDto(
@@ -112,4 +119,5 @@ public class UserFeedService {
                 commentDtos
         );
     }
+
 }
