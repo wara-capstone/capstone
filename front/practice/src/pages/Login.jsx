@@ -1,5 +1,5 @@
 // Login.js
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import{
   message
@@ -25,6 +25,10 @@ const Login = () => {
   const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=5d3f977e28b7baf6825e7f34c62fd79a&redirect_uri=${redirect_uri}&response_type=code&prompt=select_account`;
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log("업데이트된 토큰:", sharedToken);
+  }, [sharedToken]);
 
   const handleKakaoLogin = async (event) => {
     // 로그인 처리 로직을 구현합니다.
@@ -68,7 +72,7 @@ const Login = () => {
       console.log("로그인성공, 이메일주소:" + result.email);
       console.log("로그인 후"+ localStorage.getItem("email"), localStorage.getItem("role"), localStorage.getItem("storeid"), localStorage.getItem("token"));
       setSharedToken(result.accessToken);
-     
+ 
       message.success("로그인되었습니다.", 2);
       navigate("/"); // 로그인 성공시 홈으로 이동합니다.
     } else {
