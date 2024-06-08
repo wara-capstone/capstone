@@ -161,7 +161,7 @@ async function clickPurchase(tryAgain = true) { // 구매하기 버튼 클릭시
       buyer_email: email, // 구매자 이메일
       // buyer_addr: "대구광역시", // 구매자 주소
       // buyer_postcode: 40000, // 구매자 우편번호
-      m_redirect_url: "https://onoff.zone/user/purchase-redirect", // 결제 완료 후 이동할 주소
+      m_redirect_url: `https://onoff.zone/user/purchase-redirect?token=${token}`, // 결제 완료 후 이동할 주소
   };
 
   const callback = (response) => {
