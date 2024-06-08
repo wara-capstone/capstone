@@ -42,7 +42,7 @@ const PurchaseRedirect = () => {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: token,
+              Authorization: sessionStorage.getItem("token"),
             },
             body: JSON.stringify({
               paymentUid: imp_uid, // 결제고유번호

@@ -27,11 +27,11 @@ export const fetchRefreshToken = async (RefreshToken) => {
       console.log("리프레시 토큰 발급 실패");
       // 로그아웃 처리 로직을 구현합니다.
       message.success("로그아웃 되었습니다.");
-      sessionStorage.removeItem("token");
-      sessionStorage.removeItem("email");
-      sessionStorage.removeItem("role");
-      sessionStorage.removeItem("storeid");
-      sessionStorage.removeItem("RefreshToken");
+      // sessionStorage.removeItem("token");
+      // sessionStorage.removeItem("email");
+      // sessionStorage.removeItem("role");
+      // sessionStorage.removeItem("storeid");
+      // sessionStorage.removeItem("RefreshToken");
 
       // 페이지 이동
       window.location.href = "/login";
