@@ -78,7 +78,6 @@ public class PaymentServiceImpl implements PaymentService {
             }
 
             return createPayment(order, request.getPaymentUid());
-
         } catch (IamportResponseException e) {
             logger.error("아임포트 응답 처리 중 오류 발생: {}", e.getMessage());
             throw new RuntimeException(e);
@@ -90,6 +89,10 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public SimpleResponseDTO createPayment(Order order, String paymentUid) {
+        if(totalPaymentDAO.existsByPaymentUid(paymentUid)){
+            return new SimpleResponseDTO("success", "이미 결제가 완료되었습니다.");
+        }
+
         TotalPayment totalPayment = toTotalPaymentEntity(order, paymentUid);
         Map<String, Object> resultMap = totalPaymentDAO.createTotalPayment(totalPayment);
 

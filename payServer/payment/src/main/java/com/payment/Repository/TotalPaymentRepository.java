@@ -9,4 +9,5 @@ public interface TotalPaymentRepository extends JpaRepository<TotalPayment, Stri
     public Boolean existsByTotalPaymentId(Long totalPaymentId);
     public TotalPayment findByTotalPaymentId(Long totalPaymentId);
     public List<TotalPayment> findByPurchaser(String purchaser);
+    public Boolean existsByPaymentUid(String paymentUid);
 }
