@@ -29,11 +29,27 @@ public class UserFeedService {
     private final WebClient userServiceWebClient;
     private final WebClient imageServiceWebClient;
 
-    public List<UserFeedAllResponseDto> getUserFeeds() {
-        return userFeedRepository.findAll().stream()
-                .map(this::convertToDto)
-                .toList();
+
+    public UserFeedDetailResponseDto getDetailUserFeed(Long id, String email) {
+        UserFeed userFeed = userFeedRepository.findById(id).orElseThrow(() -> new RuntimeException("User feed not found"));
+        boolean likedByMe = (email != null && likeRepository.existsByMember_UserEmailAndUserFeedId(email, userFeed.getId()));
+        return convertToUserFeedDetailResponseDto(userFeed, likedByMe);
     }
+
+
+    public List<UserFeedAllResponseDto> getUserFeeds(String email) {
+        List<UserFeed> userFeeds = userFeedRepository.findAll();
+        return userFeeds.stream().map(feed -> {
+            boolean likedByMe = false;
+            if (email != null && !email.isEmpty()) {
+
+                System.out.println("응디");
+                likedByMe = likeRepository.existsByMember_UserEmailAndUserFeedId(email, feed.getId());
+            }
+            return convertToUserFeedAllResponseDto(feed, likedByMe);
+        }).toList();
+    }
+
 
     @Transactional
     public UserFeedDetailResponseDto createUserFeed(UserFeedRequestDto userFeedRequestDto, MultipartFile imageFile) throws IOException {
@@ -76,10 +92,113 @@ public class UserFeedService {
         return convertToUserFeedDetailResponseDto(userFeed);
     }
 
-    public UserFeedDetailResponseDto getDetailUserFeed(Long id){
-        Optional<UserFeed> optionalUserFeed = userFeedRepository.findById(id);
-        UserFeed userFeed = optionalUserFeed.get();
+    private UserFeedDetailResponseDto convertToUserFeedDetailResponseDto(UserFeed userFeed, boolean likedByMe) {
+        List<ProductDto> productDtos = userFeed.getProducts().stream()
+                .map(product -> new ProductDto(product.getProductId(), product.getProductImage(),
+                        product.getProductName(), product.getProductPrice()))
+                .toList();
+
+        UserDto userDto = fetchMemberInfoByEmail(userFeed.getMember().getUserEmail()).block();
+
+        List<CommentDto> commentDtos = new ArrayList<>();
+        if (userFeed.getComments() != null) {
+            for (Comment comment : userFeed.getComments()) {
+                UserDto commentUserDto = fetchMemberInfoByEmail(comment.getMember().getUserEmail()).block();
+                CommentDto commentDto = new CommentDto(
+                        commentUserDto.getUserName(),
+                        comment.getContent(),
+                        comment.getCreatedDate().toString(),
+                        comment.getModifiedDate().toString());
+                commentDtos.add(commentDto);
+            }
+        }
+
+        int likesCount = likeRepository.countByUserFeedId(userFeed.getId());
+
+        return new UserFeedDetailResponseDto(
+                userFeed.getUserFeedImage(),
+                userFeed.getUserFeedContent(),
+                userDto,
+                likesCount,
+                likedByMe,
+                productDtos,
+                commentDtos
+        );
+    }
+
+    public UserFeedDetailResponseDto getDetailUserFeedByEmail(Long id, String email) {
+        Optional<UserFeed> optionalUserFeed = userFeedRepository.findByIdAndMemberUserEmail(id, email);
+        if (optionalUserFeed.isPresent()) {
+            UserFeedDetailResponseDto response = convertToUserFeedDetailResponseDto(optionalUserFeed.get());
+            response.setLikedByMe(likeRepository.existsByMember_UserEmailAndUserFeedId(email, id));
+            return response;
+        } else {
+            throw new RuntimeException("User feed not found for the specified ID and email");
+        }
+    }
+
+
+    public List<UserFeedAllResponseDto> getUserFeedsByEmail(String email) {
+        List<UserFeed> userFeeds = userFeedRepository.findByMemberUserEmail(email);
+        return userFeeds.stream()
+                .map(this::convertToDto)
+                .toList();
+    }
+
+    @Transactional
+    public UserFeedDetailResponseDto createComment(UserFeedCommentRequestDto userFeedCommentRequestDto){
+        // 회원 정보 조회 또는 생성
+        Member member = memberRepository.findByUserEmail(userFeedCommentRequestDto.getUserEmail())
+                .orElseGet(() -> {
+                    Member newMember = new Member(userFeedCommentRequestDto.getUserEmail());
+                    return memberRepository.save(newMember);
+                });
+
+        Optional<UserFeed> userFeedOptional = userFeedRepository.findById(userFeedCommentRequestDto.getUserFeedId());
+        UserFeed userFeed = userFeedOptional.get();
+        // UserFeed 생성 및 제품 리스트 연결
+        Comment comment = Comment.builder()
+                .content(userFeedCommentRequestDto.getContent())
+                .member(member)
+                .userFeed(userFeed)
+                .build();
+
+        commentRepository.save(comment);
+
         return convertToUserFeedDetailResponseDto(userFeed);
+    }
+    @Transactional
+    public LikeResponseDto toggleLike(LikeDto likeDto) {
+        Member member = memberRepository.findByUserEmail(likeDto.getUserEmail())
+                // 없으면 유저 생성
+                .orElseGet(() -> {
+                    Member newMember = new Member(likeDto.getUserEmail());
+                    return memberRepository.save(newMember);
+                });
+
+        Optional<UserFeed> optionalUserFeed = userFeedRepository.findById(likeDto.getUserFeedId());
+        if (!optionalUserFeed.isPresent()) {
+            throw new IllegalArgumentException("UserFeed with ID " + likeDto.getUserFeedId() + " not found");
+        }
+        UserFeed userFeed = optionalUserFeed.get();
+
+        if (likeRepository.existsByMember_UserEmailAndUserFeedId(likeDto.getUserEmail(), likeDto.getUserFeedId())) {
+            likeRepository.deleteByMember_UserEmailAndUserFeedId(likeDto.getUserEmail(), likeDto.getUserFeedId());
+            userFeed.decreaseLikes();  // 좋아요 제거 시 좋아요 수 감소
+        } else {
+            UserFeedLike newLike = UserFeedLike.builder()
+                    .userFeed(userFeed)
+                    .member(member)
+                    .build();
+            likeRepository.save(newLike);
+            userFeed.increaseLikes();  // 좋아요 추가 시 좋아요 수 증가
+        }
+
+
+        boolean likedByMe = likeRepository.existsByMember_UserEmailAndUserFeedId(likeDto.getUserEmail(), userFeed.getId());
+
+
+        return new LikeResponseDto(userFeed.getLikesCount(),likedByMe);
     }
 
     private UserFeedDetailResponseDto convertToUserFeedDetailResponseDto(UserFeed userFeed) {
@@ -118,6 +237,22 @@ public class UserFeedService {
         );
     }
 
+    private UserFeedAllResponseDto convertToUserFeedAllResponseDto(UserFeed userFeed, boolean likedByMe) {
+        String email = userFeed.getMember().getUserEmail();
+        UserDto userDto = fetchMemberInfoByEmail(email).block();  // 비동기 결과를 동기적으로 변환
+        int likesCount = likeRepository.countByUserFeedId(userFeed.getId());
+        // 아래에서 필요한 데이터 필드를 포함하여 DTO 객체를 생성하는 코드를 작성하세요.
+        return new UserFeedAllResponseDto(
+                userFeed.getId(),
+                userFeed.getUserFeedImage(),
+                userFeed.getUserFeedContent(),
+                userDto,
+                likesCount,
+                likedByMe, // 외부에서 계산된 값 사용
+                userFeed.getCreatedDate().toString(),
+                userFeed.getModifiedDate().toString()
+        );
+    }
 
     private UserFeedAllResponseDto convertToDto(UserFeed userFeed) {
         String email = userFeed.getMember().getUserEmail();
@@ -135,53 +270,6 @@ public class UserFeedService {
                 userFeed.getCreatedDate().toString(),
                 userFeed.getModifiedDate().toString()
         );
-    }
-    @Transactional
-    public UserFeedDetailResponseDto createComment(UserFeedCommentRequestDto userFeedCommentRequestDto){
-        // 회원 정보 조회 또는 생성
-        Member member = memberRepository.findByUserEmail(userFeedCommentRequestDto.getUserEmail())
-                .orElseGet(() -> {
-                    Member newMember = new Member(userFeedCommentRequestDto.getUserEmail());
-                    return memberRepository.save(newMember);
-                });
-
-        Optional<UserFeed> userFeedOptional = userFeedRepository.findById(userFeedCommentRequestDto.getUserFeedId());
-        UserFeed userFeed = userFeedOptional.get();
-        // UserFeed 생성 및 제품 리스트 연결
-        Comment comment = Comment.builder()
-                .content(userFeedCommentRequestDto.getContent())
-                .member(member)
-                .userFeed(userFeed)
-                .build();
-
-        commentRepository.save(comment);
-
-        return convertToUserFeedDetailResponseDto(userFeed);
-    }
-
-    @Transactional
-    public void toggleLike(LikeDto likeDto) {
-        Optional<Member> optionalMember = memberRepository.findByUserEmail(likeDto.getUserEmail());
-        Member member = optionalMember.get();
-        if (member == null) {
-            throw new IllegalArgumentException("Member with email " + likeDto.getUserEmail() + " not found");
-        }
-
-        Optional<UserFeed> optionalUserFeed = userFeedRepository.findById(likeDto.getUserFeedId());
-        if (!optionalUserFeed.isPresent()) {
-            throw new IllegalArgumentException("UserFeed with ID " + likeDto.getUserFeedId() + " not found");
-        }
-        UserFeed userFeed = optionalUserFeed.get();
-
-        if (likeRepository.existsByMember_UserEmailAndUserFeedId(likeDto.getUserEmail(), likeDto.getUserFeedId())) {
-            likeRepository.deleteByMember_UserEmailAndUserFeedId(likeDto.getUserEmail(), likeDto.getUserFeedId());
-        } else {
-            UserFeedLike newLike = UserFeedLike.builder()
-                    .userFeed(userFeed)
-                    .member(member)
-                    .build();
-            likeRepository.save(newLike);
-        }
     }
 
 

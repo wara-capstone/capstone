@@ -4,7 +4,7 @@ spring:
             max-file-size: 30MB  # 업로드 가능한 최대 파일 크기
             max-request-size: 30MB  # 한 요청에서 처리할 수 있는 최대 데이터 크기
     datasource:
-        url: jdbc:postgresql://localhost:5432/postgres
+        url: jdbc:postgresql://localhost:5432/postgres?createDatabaseIfNotExist=true
         username: postgres
         password: 1234
         driver-class-name: org.postgresql.Driver
@@ -14,9 +14,9 @@ spring:
         hibernate:
             ddl-auto: update
         show-sql: true
-        properties:
-            hibernate:
-                format_sql: true
+#        properties:
+#            hibernate:
+#                format_sql: true
 
 
 server:
