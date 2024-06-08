@@ -103,11 +103,12 @@ export default function ViewClothSharedFeed() {
       fetchData();
     }
     fetchData();
-
-
- 
+  
   }, [buttonClicked, token]);
 
+
+
+  
   if (!itemData) {
     return <div>Loading...</div>;
   }
@@ -123,6 +124,7 @@ export default function ViewClothSharedFeed() {
 
   const handleCommentSubmit = async (newComment) => {
     try {
+      
       setButtonClicked(true);
       const response = await fetch(
         `${process.env.NODE_ENV === "development" ? "" : ""}${
@@ -147,6 +149,7 @@ export default function ViewClothSharedFeed() {
         // await fetchRefreshToken(RefreshToken);
         // 댓글 전송 성공 시 처리 로직
         console.log("댓글이 성공적으로 전송되었습니다.");
+        window.location.reload();
         //setCommentsList([...commentsList, { content: commentText }]); // 새로운 댓글 추가
         // 댓글 목록에 새로운 댓글 추가
         //setComments([...comments, newComment]);
@@ -275,11 +278,9 @@ export default function ViewClothSharedFeed() {
       </Box>
       <div>
         {/* 다른 게시물 관련 UI */}
-        <Comment onCommentSubmit={handleCommentSubmit} />
+        <Comment onCommentSubmit={handleCommentSubmit} commentsList={commentsList}/>
         {/* 댓글 목록 렌더링 */}
-        {comments.map((comment, index) => (
-          <div key={index}>{comment}</div>
-        ))}
+        
         {commentsList.map((comment, index) => (
           <Box key={index} className="comment-box">
             <Box className="comment-content">
