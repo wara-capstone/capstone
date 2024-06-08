@@ -1,10 +1,5 @@
 import {
-  Avatar,
-  Box,
-  CardHeader,
-  CardMedia,
-  Card as MuiCard,
-  Typography,
+  Avatar,Box,Button,CardHeader,CardMedia,Divider,IconButton,Modal,Card as MuiCard,TextField,Typography,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import React, { useEffect, useState } from "react";
@@ -13,13 +8,17 @@ import BottomNav from "../components/BottomNav";
 import Card from "../components/Card";
 import Header from "../components/Header";
 // 아이콘
-import CardContent from "@mui/material/CardContent";
 import Slider from "react-slick"; // react-slick 사용을 위해 import
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
-import Comment from "../components/Comment";
-import "../components/Comment.css";
+import { fetchRefreshToken } from "../utils/authUtil";
+import InputAdornment from '@mui/material/InputAdornment';
+import MoodIcon from '@mui/icons-material/Mood';
+import CommentIcon from "@mui/icons-material/Comment";
+import CardContent from "@mui/material/CardContent";
 import LikeButton from "../components/LikeButton";
+import Comment from "../components/Comment";
+import '../components/Comment.css';
 import { formatCreatedAt } from "../utils/dateUtils";
 
 const StyledCardHeader = styled(CardHeader)(({ theme }) => ({
@@ -44,6 +43,7 @@ export default function ViewClothSharedFeed() {
   const [commentsList, setCommentsList] = useState([]);
   const [comments, setComments] = useState([]);
   const [buttonClicked, setButtonClicked] = useState(false);
+  const [reload, setReload] = useState(false); 
   // const [likedByMe, setLikedByMe] = useState(false);
   // const [likesCount, setLikesCount] = useState(0);
 
@@ -77,6 +77,7 @@ export default function ViewClothSharedFeed() {
     console.log("feedId 조회 가능?", id, userEmail);
 
     const fetchData = async () => {
+      const token = localStorage.getItem("token");
       const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -89,10 +90,8 @@ export default function ViewClothSharedFeed() {
         // const RefreshToken = localStorage.getItem("RefreshToken");
         // await fetchRefreshToken(RefreshToken);
         const data = await response.json();
-
-        if (buttonClicked) {
-          setCommentsList(data.comments);
-        }
+        
+        setCommentsList(data.comments);
         setItemData(data);
         console.log(data);
       } else {
@@ -104,7 +103,10 @@ export default function ViewClothSharedFeed() {
       fetchData();
     }
     fetchData();
-  }, [buttonClicked]);
+
+
+ 
+  }, [buttonClicked, token]);
 
   if (!itemData) {
     return <div>Loading...</div>;
@@ -156,8 +158,9 @@ export default function ViewClothSharedFeed() {
     } catch (error) {
       console.error("댓글 전송 중 오류가 발생했습니다:", error);
     }
+  
   };
-
+  
   return (
     <div className="ViewClothSharedFeed">
       <Header />
