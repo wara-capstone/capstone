@@ -137,7 +137,7 @@ export default function SellerItemManagement({images}) {
       editable: false,
       wrapText: true,
       autoHeight: true,
-      minWidth: 180,
+      minWidth: 300,
     },
     {
       headerName: "상품코드",
