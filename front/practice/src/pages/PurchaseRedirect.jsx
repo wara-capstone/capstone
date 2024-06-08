@@ -72,7 +72,7 @@ const PurchaseRedirect = () => {
           token = localStorage.getItem("token");
           return paymentVerification(false);
         } else if (paymentResponse.status === 201) {
-          message.success("모바일 결제 검증 성공");
+          message.success(paymentResponse.message);
 
           // localStorage에서 checkList를 가져와서 배열로 파싱
           let storedCheckList = localStorage.getItem("checkList");
