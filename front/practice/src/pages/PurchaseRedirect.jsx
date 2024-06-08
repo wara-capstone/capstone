@@ -40,85 +40,89 @@ const PurchaseRedirect = () => {
   }, [purchaseCompleted]);
 
   useEffect(async () => {
-    async function paymentVerification(tryVerificationAgain = true) {
-      // 결제 검증하기
-      try {
-        const paymentResponse = await fetch(
-          `${process.env.REACT_APP_API_URL}payment/create`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: sharedToken,
-            },
-            body: JSON.stringify({
-              paymentUid: imp_uid, // 결제고유번호
-              orderUid: merchant_uid, // 고객사 주문번호
-            }),
-          }
-        );
-        if (paymentResponse.status === 401 && tryVerificationAgain) {
-          const RefreshToken = localStorage.getItem("RefreshToken");
-          await fetchRefreshToken(RefreshToken);
-          token = localStorage.getItem("token");
-          return paymentVerification(false);
-        } else if (paymentResponse.status === 201) {
-          message.success("모바일 결제 검증 성공");
+    console.log("토큰 확인: ", sharedToken);
+    token = sharedToken;
+    console.log("토큰 확인: ", token);
 
-          // localStorage에서 checkList를 가져와서 배열로 파싱
-          let storedCheckList = localStorage.getItem("checkList");
-          let checkList = storedCheckList ? JSON.parse(storedCheckList) : [];
+    // async function paymentVerification(tryVerificationAgain = true) {
+    //   // 결제 검증하기
+    //   try {
+    //     const paymentResponse = await fetch(
+    //       `${process.env.REACT_APP_API_URL}payment/create`,
+    //       {
+    //         method: "POST",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //           Authorization: sharedToken,
+    //         },
+    //         body: JSON.stringify({
+    //           paymentUid: imp_uid, // 결제고유번호
+    //           orderUid: merchant_uid, // 고객사 주문번호
+    //         }),
+    //       }
+    //     );
+    //     if (paymentResponse.status === 401 && tryVerificationAgain) {
+    //       const RefreshToken = localStorage.getItem("RefreshToken");
+    //       await fetchRefreshToken(RefreshToken);
+    //       token = localStorage.getItem("token");
+    //       return paymentVerification(false);
+    //     } else if (paymentResponse.status === 201) {
+    //       message.success("모바일 결제 검증 성공");
 
-          if (checkList.length > 0) {
-            let deleteString = "";
-            checkList.forEach((id) => {
-              deleteString += `&cart_item_id=${id}`;
-            });
+    //       // localStorage에서 checkList를 가져와서 배열로 파싱
+    //       let storedCheckList = localStorage.getItem("checkList");
+    //       let checkList = storedCheckList ? JSON.parse(storedCheckList) : [];
 
-            console.log(deleteString);
+    //       if (checkList.length > 0) {
+    //         let deleteString = "";
+    //         checkList.forEach((id) => {
+    //           deleteString += `&cart_item_id=${id}`;
+    //         });
 
-            const fetchData = async () => {
-              const response = await fetch(
-                `${process.env.NODE_ENV === "development" ? "http://" : ""}${
-                  process.env.REACT_APP_API_URL
-                }cart/items/?user_email=` +
-                  email +
-                  deleteString,
-                {
-                  method: "DELETE",
-                  headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `${token}`,
-                  },
-                }
-              );
-              if (response.status === 204) {
-                console.log("장바구니 삭제 성공");
-                localStorage.removeItem("checkList");
-                setPurchaseCompleted(true); // 구매 완료 상태 설정
-              } else {
-                console.log(response);
-                console.log("장바구니 삭제 실패");
-                console.log(response.status);
-              }
-            };
-            fetchData();
-          }
+    //         console.log(deleteString);
 
-          setPurchaseCompleted(true); // 구매 완료 상태 설정
-        } else {
-          alert(
-            "모바일 결제 검증 실패 " +
-              paymentResponse.status +
-              " " +
-              paymentResponse
-          );
-        }
-      } catch (error) {
-        alert(`에러로 모바일 결제 실패: ${error.message}`);
-      }
-    }
-    paymentVerification();
+    //         const fetchData = async () => {
+    //           const response = await fetch(
+    //             `${process.env.NODE_ENV === "development" ? "http://" : ""}${
+    //               process.env.REACT_APP_API_URL
+    //             }cart/items/?user_email=` +
+    //               email +
+    //               deleteString,
+    //             {
+    //               method: "DELETE",
+    //               headers: {
+    //                 "Content-Type": "application/json",
+    //                 Authorization: `${token}`,
+    //               },
+    //             }
+    //           );
+    //           if (response.status === 204) {
+    //             console.log("장바구니 삭제 성공");
+    //             localStorage.removeItem("checkList");
+    //             setPurchaseCompleted(true); // 구매 완료 상태 설정
+    //           } else {
+    //             console.log(response);
+    //             console.log("장바구니 삭제 실패");
+    //             console.log(response.status);
+    //           }
+    //         };
+    //         fetchData();
+    //       }
+
+    //       setPurchaseCompleted(true); // 구매 완료 상태 설정
+    //     } else {
+    //       alert(
+    //         "모바일 결제 검증 실패 " +
+    //           paymentResponse.status +
+    //           " " +
+    //           paymentResponse
+    //       );
+    //     }
+    //   } catch (error) {
+    //     alert(`에러로 모바일 결제 실패: ${error.message}`);
+    //   }
+    // }
+    // paymentVerification();
   }, []);
 
   const styles = {
