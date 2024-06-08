@@ -32,8 +32,8 @@ const TitleTypography = styled(Typography)(({ theme }) => ({
 
 export default function ViewClothSharedFeed() {
   // const [id, setId] = useState('');
-  const token = localStorage.getItem("token");
-  const userEmail = localStorage.getItem("email");
+  const token = sessionStorage.getItem("token");
+  const userEmail = sessionStorage.getItem("email");
   const { id } = useParams();
   const [itemData, setItemData] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -81,7 +81,7 @@ export default function ViewClothSharedFeed() {
       });
 
       if (response.status === 200) {
-        // const RefreshToken = localStorage.getItem("RefreshToken");
+        // const RefreshToken = sessionStorage.getItem("RefreshToken");
         // await fetchRefreshToken(RefreshToken);
         const data = await response.json();
         setCommentsList(data.comments);
@@ -93,7 +93,7 @@ export default function ViewClothSharedFeed() {
     };
 
     fetchData();
-  }, [id, commentsList]);
+  }, [id]);
 
   if (!itemData) {
     return <div>Loading...</div>;
@@ -129,7 +129,7 @@ export default function ViewClothSharedFeed() {
       );
 
       if (response.ok) {
-        // const RefreshToken = localStorage.getItem("RefreshToken");
+        // const RefreshToken = sessionStorage.getItem("RefreshToken");
         // await fetchRefreshToken(RefreshToken);
         // 댓글 전송 성공 시 처리 로직
         console.log("댓글이 성공적으로 전송되었습니다.");

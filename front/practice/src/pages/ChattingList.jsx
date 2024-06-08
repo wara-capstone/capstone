@@ -7,8 +7,8 @@ import { fetchRefreshToken } from "../utils/authUtil";
 
 export default function ChattingList() {
   const [visitorUserEmails, setVisitorUserEmails] = useState([]);
-  const userId = localStorage.getItem("email"); // 실제 userId 값으로 대체
-  let token = localStorage.getItem("token"); // 실제 token 값으로 대체
+  const userId = sessionStorage.getItem("email"); // 실제 userId 값으로 대체
+  let token = sessionStorage.getItem("token"); // 실제 token 값으로 대체
   const { id } = useParams();
   const CHATTING_URL = process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DJANGO_CHATTING_URL : process.env.REACT_APP_API_URL;
   const [loading, setLoading] = useState(false);
@@ -30,9 +30,9 @@ export default function ChattingList() {
         });
 
         if (response.status === 401) {
-          const refreshToken = localStorage.getItem("RefreshToken");
-          await fetchRefreshToken(refreshToken); // fetchRefreshToken이 프로미스를 반환하고, 새로운 토큰을 localStorage에 저장한다고 가정
-          token = localStorage.getItem("token"); // 새로운 토큰으로 업데이트
+          const refreshToken = sessionStorage.getItem("RefreshToken");
+          await fetchRefreshToken(refreshToken); // fetchRefreshToken이 프로미스를 반환하고, 새로운 토큰을 sessionStorage에 저장한다고 가정
+          token = sessionStorage.getItem("token"); // 새로운 토큰으로 업데이트
         }
 
         if (!response.ok) {
@@ -81,10 +81,10 @@ export default function ChattingList() {
       return result.profileImage;
     }else if (response.status === 401 && tryAgain) {
       // 토큰 갱신 로직 (예시)
-      const refreshToken = localStorage.getItem("RefreshToken");
+      const refreshToken = sessionStorage.getItem("RefreshToken");
       // fetchRefreshToken은 새로운 토큰을 발급받는 함수라고 가정합니다.
       await fetchRefreshToken(refreshToken);
-      token = localStorage.getItem("token"); // 새로운 토큰으로 업데이트
+      token = sessionStorage.getItem("token"); // 새로운 토큰으로 업데이트
       // 재시도하지만, 무한 루프 방지를 위해 tryAgain을 false로 설정
       return fetchImage(email, false);
     }   

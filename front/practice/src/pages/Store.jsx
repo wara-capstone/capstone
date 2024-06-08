@@ -10,10 +10,10 @@ import { fetchRefreshToken } from "../utils/authUtil";
 export default function Store() {
   const { id } = useParams();
 
-  const userId = localStorage.getItem("email");
-  const userRole = localStorage.getItem("role");
-  const storeId = localStorage.getItem("storeId");
-  let token = localStorage.getItem("token");
+  const userId = sessionStorage.getItem("email");
+  const userRole = sessionStorage.getItem("role");
+  const storeId = sessionStorage.getItem("storeId");
+  let token = sessionStorage.getItem("token");
 
   const [connectStoreId, setConnectStoreId] = useState(null); // 상태 추가
 
@@ -53,9 +53,9 @@ export default function Store() {
       );
       result = await response.json();
       if (response.status === 401) {
-        const RefreshToken = localStorage.getItem("RefreshToken");
+        const RefreshToken = sessionStorage.getItem("RefreshToken");
         fetchRefreshToken(RefreshToken);
-        token = localStorage.getItem("token");
+        token = sessionStorage.getItem("token");
       }
 
       if (response.status === 200) {
