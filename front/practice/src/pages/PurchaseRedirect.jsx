@@ -42,16 +42,16 @@ const PurchaseRedirect = () => {
 
   useEffect(async () => {
     // message.success(`토큰 상태 확인:${sharedToken}`, 100);
-    await setLocalStorage(
-      token,
-      refreshToken,
-      email,
-      role,
-      kakaoUserId
-    )
     async function paymentVerification(tryVerificationAgain = true) {
       // 결제 검증하기
       try {
+        await setLocalStorage(
+          token,
+          refreshToken,
+          email,
+          role,
+          kakaoUserId
+        )
         const paymentResponse = await fetch(
           `${process.env.REACT_APP_API_URL}payment/create`,
           {
