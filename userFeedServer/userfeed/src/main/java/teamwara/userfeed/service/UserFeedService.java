@@ -84,23 +84,28 @@ public class UserFeedService {
 
     private UserFeedDetailResponseDto convertToUserFeedDetailResponseDto(UserFeed userFeed) {
         List<ProductDto> productDtos = userFeed.getProducts().stream()
-                .map(product -> new ProductDto(product.getProductId(),product.getProductImage(),
+                .map(product -> new ProductDto(product.getProductId(), product.getProductImage(),
                         product.getProductName(), product.getProductPrice()))
                 .toList();
 
         UserDto userDto = fetchMemberInfoByEmail(userFeed.getMember().getUserEmail()).block();
 
-        List<CommentDto> commentDtos = (userFeed.getComments() != null) ? userFeed.getComments().stream()
-                .map(comment -> new CommentDto(
-                        userDto.getUserName(),
+        List<CommentDto> commentDtos = new ArrayList<>();
+        if (userFeed.getComments() != null) {
+            for (Comment comment : userFeed.getComments()) {
+                UserDto commentUserDto = fetchMemberInfoByEmail(comment.getMember().getUserEmail()).block();
+                CommentDto commentDto = new CommentDto(
+                        commentUserDto.getUserName(),
                         comment.getContent(),
                         comment.getCreatedDate().toString(),
-                        comment.getModifiedDate().toString()))
-                .toList() : new ArrayList<>();
+                        comment.getModifiedDate().toString());
+                commentDtos.add(commentDto);
+            }
+        }
 
         int likesCount = likeRepository.countByUserFeedId(userFeed.getId());
-        Long memberId=userFeed.getMember().getId();
-        boolean likedByMe = likeRepository.existsByUserFeedIdAndMemberId(userFeed.getId(),memberId);
+        Long memberId = userFeed.getMember().getId();
+        boolean likedByMe = likeRepository.existsByUserFeedIdAndMemberId(userFeed.getId(), memberId);
 
         return new UserFeedDetailResponseDto(
                 userFeed.getUserFeedImage(),
@@ -112,6 +117,7 @@ public class UserFeedService {
                 commentDtos
         );
     }
+
 
     private UserFeedAllResponseDto convertToDto(UserFeed userFeed) {
         String email = userFeed.getMember().getUserEmail();
