@@ -26,7 +26,7 @@ const LikeButton = ({
         const response = await fetch(
           `${process.env.NODE_ENV === "development" ? "" : ""}${
             process.env.REACT_APP_API_URL
-          }user-feed/${id}`,
+          }user-feed/${id}?email=${userEmail}`,
           {
             method: "GET",
             headers: {
