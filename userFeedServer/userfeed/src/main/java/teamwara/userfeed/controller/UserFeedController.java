@@ -54,23 +54,6 @@ public class UserFeedController {
         }
     }
 
-    @PostMapping("/comment")
-    public ResponseEntity<?> createComment(@RequestBody UserFeedCommentRequestDto userFeedCommentRequestDto){
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(userFeedService.createComment(userFeedCommentRequestDto));
-        } catch (Exception e) {
-            log.error("Error creating comment", e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
-        }
-    }
 
-    @PostMapping("/like/toggle")
-    public ResponseEntity<?> toggleLike(@RequestBody LikeDto likeDto) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(userFeedService.toggleLike(likeDto));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Failed to toggle like: " + e.getMessage());
-        }
-    }
 
 }
