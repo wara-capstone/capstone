@@ -469,6 +469,10 @@ code {
   height: 85vh;
 }
 
+.chatting-list .button-link {
+  width: 100%;
+}
+
 /* 개별 채팅 항목 스타일 */
 .chatting-list .list-item,
 .seller-chatting-management .list-item {
@@ -508,19 +512,20 @@ code {
 .seller-chatting-management .user-details {
   margin-left: 20px; /* 왼쪽 여백 추가 */
   flex-grow: 1; /* 남은 공간을 모두 채움 */
+  text-align: left; /* 텍스트를 왼쪽으로 정렬 */
 }
 
 /* 사용자 이름 스타일 */
 .chatting-list h2,
 .seller-chatting-management h2 {
-  margin: 1px; /* 위아래 여백 제거 */
-  font-size: 1.3em; /* 글자 크기를 약간 증가시킵니다 */
+  margin: 1px;
+  font-size: 1.4em; /* 글자 크기를 약간 증가시킵니다 */
 }
 
 /* 최신 메시지 스타일 */
 .chatting-list p,
 .seller-chatting-management p {
-  margin: 0; /* 위아래 여백 제거 */
+  margin: 3px; /* 위아래 여백 제거 */
   color: #666; /* 회색 글자 색상 */
   font-size: 0.8em; /* 글자 크기를 약간 증가시킵니다 */
 }
