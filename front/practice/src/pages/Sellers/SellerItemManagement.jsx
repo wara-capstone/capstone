@@ -31,7 +31,7 @@ export default function SellerItemManagement({images}) {
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
   const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
   const [savedRowData, setSavedRowData] = useState([]);
-  let token = sessionStorage.getItem("token");
+  let token = localStorage.getItem("token");
   const [productInfo, setProductInfo] = useState({ result: "", data: [] });
   const [loading, setLoading] = useState(true);
 
@@ -56,9 +56,9 @@ export default function SellerItemManagement({images}) {
         );
 
         if (response.status === 401) {
-          let RefreshToken = sessionStorage.getItem("RefreshToken");
+          let RefreshToken = localStorage.getItem("RefreshToken");
           await fetchRefreshToken(RefreshToken);
-          token = sessionStorage.getItem("token");
+          token = localStorage.getItem("token");
         }
   
 

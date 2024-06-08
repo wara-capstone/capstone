@@ -19,8 +19,8 @@ export default function OrderProducts({ selectedBread, changeSingleBox, data, ch
     const [result, setResult] = useState(null); // 옵션 가져오기 결과
 
 
-    var email = sessionStorage.getItem('email');
-    var token = sessionStorage.getItem('token');
+    var email = localStorage.getItem('email');
+    var token = localStorage.getItem('token');
     const CART_URL = process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DJANGO_CART_URL : process.env.REACT_APP_API_URL;
     
     const handleColorChange = (value) => { // 선택한 색상 변경
@@ -73,9 +73,9 @@ async function optionGet(tryAgain = true) { //옵션 가져오기
       const resultData = await response.json();
 
       if (response.status === 401 && tryAgain) {
-        const RefreshToken = sessionStorage.getItem("RefreshToken");
+        const RefreshToken = localStorage.getItem("RefreshToken");
         fetchRefreshToken(RefreshToken);
-        token = sessionStorage.getItem("token");
+        token = localStorage.getItem("token");
         return optionGet(false); // 재귀 호출하지만, 무한 루프 방지를 위해 tryAgain을 false로 설정
       }
 
@@ -140,9 +140,9 @@ async function optionEdit(tryAgain = true){  //옵션 변경
         console.log(payload);
 
         if (response.status === 401 && tryAgain) {
-          const RefreshToken = sessionStorage.getItem("RefreshToken");
+          const RefreshToken = localStorage.getItem("RefreshToken");
           fetchRefreshToken(RefreshToken);
-          token = sessionStorage.getItem("token");
+          token = localStorage.getItem("token");
           return optionEdit(false); // 재귀 호출하지만, 무한 루프 방지를 위해 tryAgain을 false로 설정
         }  
 

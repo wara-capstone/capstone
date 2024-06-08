@@ -9,8 +9,8 @@ const PurchaseRedirect = () => {
   const urlParams = new URL(window.location.href).searchParams;
 
   // 로컬 스토리지에서 이메일과 토큰을 가져와 변수에 할당
-  const email = sessionStorage.getItem("email");
-  let token = sessionStorage.getItem("token");
+  const email = localStorage.getItem("email");
+  let token = localStorage.getItem("token");
   const [purchaseCompleted, setPurchaseCompleted] = useState(false); // 구매 완료 상태 관리
 
   // 각 쿼리 파라미터의 값을 변수에 할당
@@ -42,7 +42,7 @@ const PurchaseRedirect = () => {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: sessionStorage.getItem("token"),
+              Authorization: localStorage.getItem("token"),
             },
             body: JSON.stringify({
               paymentUid: imp_uid, // 결제고유번호
@@ -51,15 +51,15 @@ const PurchaseRedirect = () => {
           }
         );
         if (paymentResponse.status === 401 && tryVerificationAgain) {
-          const RefreshToken = sessionStorage.getItem("RefreshToken");
+          const RefreshToken = localStorage.getItem("RefreshToken");
           await fetchRefreshToken(RefreshToken);
-          token = sessionStorage.getItem("token");
+          token = localStorage.getItem("token");
           return paymentVerification(false);
         } else if (paymentResponse.status === 201) {
           message.success("모바일 결제 검증 성공");
 
-          // sessionStorage에서 checkList를 가져와서 배열로 파싱
-          let storedCheckList = sessionStorage.getItem("checkList");
+          // localStorage에서 checkList를 가져와서 배열로 파싱
+          let storedCheckList = localStorage.getItem("checkList");
           let checkList = storedCheckList ? JSON.parse(storedCheckList) : [];
 
           if (checkList.length > 0) {
@@ -87,7 +87,7 @@ const PurchaseRedirect = () => {
               );
               if (response.status === 204) {
                 console.log("장바구니 삭제 성공");
-                sessionStorage.removeItem("checkList");
+                localStorage.removeItem("checkList");
                 setPurchaseCompleted(true); // 구매 완료 상태 설정
               } else {
                 console.log(response);

@@ -33,7 +33,7 @@ export default function SellerProductRegistration(props) {
     setSelectedCategory(value);
   };
 
-  let token = sessionStorage.getItem("token");
+  let token = localStorage.getItem("token");
   const [productInfo, setProductInfo] = useState({});
   //  const { productId } = props.location?.state || {};
   const [isTrue, setIsTrue] = useState();
@@ -73,9 +73,9 @@ export default function SellerProductRegistration(props) {
           setOptionIndex(response.data.options.length);
           console.log("옵션이 존재??? ", response.data.options);
         } else if(response.status === 401){
-            let RefreshToken = sessionStorage.getItem("RefreshToken");
+            let RefreshToken = localStorage.getItem("RefreshToken");
             await fetchRefreshToken(RefreshToken);
-            token = sessionStorage.getItem("token");
+            token = localStorage.getItem("token");
         }
         else {
           setProductInfo({ data: [] });
@@ -149,9 +149,9 @@ export default function SellerProductRegistration(props) {
           message.success("저장되었습니다.");
         }
         else if(response.status === 401 && tryAgain){
-          let RefreshToken = sessionStorage.getItem("RefreshToken");
+          let RefreshToken = localStorage.getItem("RefreshToken");
           await fetchRefreshToken(RefreshToken);
-          token = sessionStorage.getItem("token");  
+          token = localStorage.getItem("token");  
           return handleSubmitButtonClick(false);
         }
         else {
@@ -210,9 +210,9 @@ export default function SellerProductRegistration(props) {
         console.log("Option deleted successfully");
       } 
       else if (response.status === 401 && tryAgain) {
-        let RefreshToken = sessionStorage.getItem("RefreshToken");
+        let RefreshToken = localStorage.getItem("RefreshToken");
         await fetchRefreshToken(RefreshToken);
-        token = sessionStorage.getItem("token");
+        token = localStorage.getItem("token");
         return removeOption(index, false);
       }
       else {
@@ -339,9 +339,9 @@ export default function SellerProductRegistration(props) {
     .catch(async(error) => {
       console.error(error); // 오류 처리
       if (error.response && error.response.status === 401 && tryAgain) {
-        const RefreshToken = sessionStorage.getItem("RefreshToken");
+        const RefreshToken = localStorage.getItem("RefreshToken");
         await fetchRefreshToken(RefreshToken); // 토큰 갱신 로직 호출
-        token = sessionStorage.getItem("token");
+        token = localStorage.getItem("token");
         return addProductOption(index, false); // 재귀 호출
       }
 

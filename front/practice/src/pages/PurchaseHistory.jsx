@@ -22,8 +22,8 @@ export default function PurchaseHistory() {
     // const paymentItems = useRef([]);
 
     const navigate = useNavigate();
-    const email = sessionStorage.getItem("email");
-    let token = sessionStorage.getItem("token");
+    const email = localStorage.getItem("email");
+    let token = localStorage.getItem("token");
     const [quantity, setQuantity] = useState([]); // 수량
     const [price, setPrice] = useState([]); // 제품 하나의 가격
     const [totalPrice, setTotalPrice] = useState(0); // 제품 당 가격
@@ -47,9 +47,9 @@ export default function PurchaseHistory() {
         );
 
         if (response.status === 401) {
-          const RefreshToken = sessionStorage.getItem("RefreshToken");
+          const RefreshToken = localStorage.getItem("RefreshToken");
           fetchRefreshToken(RefreshToken);
-          token = sessionStorage.getItem("token");
+          token = localStorage.getItem("token");
         }
   
         if (response.status === 200) {

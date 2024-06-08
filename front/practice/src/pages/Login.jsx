@@ -51,17 +51,17 @@ const Login = () => {
     if (response.status === 200) {
       setLoginCheck(false);
       // Store token in local storage
-      console.log("로그인 전"+ sessionStorage.getItem("email"), sessionStorage.getItem("role"), sessionStorage.getItem("storeid"), sessionStorage.getItem("token"));
-      sessionStorage.setItem("token", result.accessToken);  // 여기서 Access 토큰을 저장합니다.
-      sessionStorage.setItem("RefreshToken", result.refreshToken); // 여기서 RefreshToken을 저장.
+      console.log("로그인 전"+ localStorage.getItem("email"), localStorage.getItem("role"), localStorage.getItem("storeid"), localStorage.getItem("token"));
+      localStorage.setItem("token", result.accessToken);  // 여기서 Access 토큰을 저장합니다.
+      localStorage.setItem("RefreshToken", result.refreshToken); // 여기서 RefreshToken을 저장.
 
-      sessionStorage.setItem("email", result.email); // 여기서 userid를 저장합니다.
-      sessionStorage.setItem("role", result.role); // 여기서 role를 저장합니다.
-      sessionStorage.setItem("storeid", result.storeId); // 여기서 storeId를 저장합니다.
-      sessionStorage.setItem("kakaoUserId", result.kakaoUserId); // 여기서 kakaoUserId를 저장합니다.
+      localStorage.setItem("email", result.email); // 여기서 userid를 저장합니다.
+      localStorage.setItem("role", result.role); // 여기서 role를 저장합니다.
+      localStorage.setItem("storeid", result.storeId); // 여기서 storeId를 저장합니다.
+      localStorage.setItem("kakaoUserId", result.kakaoUserId); // 여기서 kakaoUserId를 저장합니다.
 
       console.log("로그인성공, 이메일주소:" + result.email);
-      console.log("로그인 후"+ sessionStorage.getItem("email"), sessionStorage.getItem("role"), sessionStorage.getItem("storeid"), sessionStorage.getItem("token"));
+      console.log("로그인 후"+ localStorage.getItem("email"), localStorage.getItem("role"), localStorage.getItem("storeid"), localStorage.getItem("token"));
       message.success("로그인되었습니다.", 2);
       navigate("/"); // 로그인 성공시 홈으로 이동합니다.
     } else {

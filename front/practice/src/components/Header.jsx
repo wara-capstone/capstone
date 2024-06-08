@@ -12,11 +12,11 @@ function Header({ forceRedirect }) {
     navigate(-1);
   };
 
-  const userId = sessionStorage.getItem("email");
-  const userRole = sessionStorage.getItem("role");
-  const storeId = sessionStorage.getItem("storeid");
-  let token = sessionStorage.getItem("token");
-  const RefreshToken = sessionStorage.getItem("RefreshToken");
+  const userId = localStorage.getItem("email");
+  const userRole = localStorage.getItem("role");
+  const storeId = localStorage.getItem("storeid");
+  let token = localStorage.getItem("token");
+  const RefreshToken = localStorage.getItem("RefreshToken");
 
   let url;
 

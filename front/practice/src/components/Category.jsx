@@ -16,8 +16,8 @@ import { BiSort } from "react-icons/bi";
 
 const Category = ({ storeId }) => {
   // const [selectedCategory, setSelectedCategory] = useState(null);
-  let token = sessionStorage.getItem("token");
-  const RefreshToken = sessionStorage.getItem("RefreshToken");
+  let token = localStorage.getItem("token");
+  const RefreshToken = localStorage.getItem("RefreshToken");
 
   const [searchResultCount, setSearchResultCount] = useState(0); // 검색 결과 개수 상태
   const [sortText, setSortText] = useState("낮은가격순"); // 정렬 텍스트 상태
