@@ -15,7 +15,7 @@ const LikeButton = ({
   // const [likedByMeState, setLikedByMeState] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
 
-  let token = localStorage.getItem("token");
+  let token = sessionStorage.getItem("token");
 
   // 서버에서 조회하여 좋아요 수와 좋아요 상태를 가져옴
   useEffect(() => {

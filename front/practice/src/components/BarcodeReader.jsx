@@ -27,7 +27,7 @@
 //   hints.set(DecodeHintType.TRY_HARDER, true);
 
 //   var fetchedProductInfo;
-//   const token = localStorage.getItem("token");
+//   const token = sessionStorage.getItem("token");
 
 //   useEffect(() => {
 //     console.log(productInfo);
@@ -70,7 +70,7 @@
 //     startDecoding(selectedDeviceId);
 //   };
 
-//   const userId = localStorage.getItem("email");
+//   const userId = sessionStorage.getItem("email");
 //   const navigate = useNavigate();
 //   const handleAddCart = () => {
 //     if (userId === null) {
@@ -207,7 +207,7 @@
 //   hints.set(DecodeHintType.TRY_HARDER, true);
 
 //   var fetchedProductInfo;
-//   const token = localStorage.getItem("token");
+//   const token = sessionStorage.getItem("token");
 
 //   // useEffect(() => {
 //   //   console.log(productInfo);
@@ -264,7 +264,7 @@
 //   //   startDecoding(selectedDeviceId);
 //   // };
 
-//   // const userId = localStorage.getItem("email"); // 세션 스토리지에서 이메일(사용자 ID) 가져오기
+//   // const userId = sessionStorage.getItem("email"); // 세션 스토리지에서 이메일(사용자 ID) 가져오기
 //   // const navigate = useNavigate(); // navigate 함수 사용
 //   // const handleAddCart = () => {
 //   //   // 장바구니 추가 핸들러
@@ -396,7 +396,7 @@ function BarcodeReader() {
   const formats = [BarcodeFormat.CODE_128];
   hints.set(DecodeHintType.POSSIBLE_FORMATS, formats);
   var fetchedProductInfo;
-  let token = localStorage.getItem("token");
+  let token = sessionStorage.getItem("token");
 
   useEffect(() => {
     console.log(productInfo);
@@ -441,7 +441,7 @@ function BarcodeReader() {
     startDecoding(selectedDeviceId);
   };
 
-  const userId = localStorage.getItem("email");
+  const userId = sessionStorage.getItem("email");
   const navigate = useNavigate();
   const handleAddCart = () => {
     if (userId === null) {

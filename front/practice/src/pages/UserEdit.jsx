@@ -14,9 +14,9 @@ const UserEdit = ({ user }) => {
   
 
   let navigate = useNavigate();
-  let token = localStorage.getItem("token");
-  const email = localStorage.getItem("email");
-  const RefreshToken = localStorage.getItem("RefreshToken");
+  let token = sessionStorage.getItem("token");
+  const email = sessionStorage.getItem("email");
+  const RefreshToken = sessionStorage.getItem("RefreshToken");
 
   const [nickname, setNickname] = useState();
   const [phoneNumber, setPhoneNumber] = useState();
@@ -58,8 +58,8 @@ const UserEdit = ({ user }) => {
         console.log("AccessToken 재발급 요청중!!!!!!!!!!!!");
         if (response.status === 201) {
           const result = await response.json();
-          localStorage.setItem("token", result.accessToken);  // 여기서 AccessToken을 저장합니다.
-          localStorage.setItem("RefreshToken", result.refreshToken); // 여기서 RefreshToken을 저장.
+          sessionStorage.setItem("token", result.accessToken);  // 여기서 AccessToken을 저장합니다.
+          sessionStorage.setItem("RefreshToken", result.refreshToken); // 여기서 RefreshToken을 저장.
 
           console.log("리프레시 토큰, 엑세스 토큰 재발급 완료!!!!!!!!!!!!");
 

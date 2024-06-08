@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "./Seller.css";
 
 function SellerHeader() {
-  const email = localStorage.getItem("email");
+  const email = sessionStorage.getItem("email");
 
   return (
     <header className="seller-header">

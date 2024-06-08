@@ -9,8 +9,8 @@ const PurchaseRedirect = () => {
   const urlParams = new URL(window.location.href).searchParams;
 
   // 로컬 스토리지에서 이메일과 토큰을 가져와 변수에 할당
-  const email = localStorage.getItem("email");
-  let token = localStorage.getItem("token");
+  const email = sessionStorage.getItem("email");
+  let token = sessionStorage.getItem("token");
   const [purchaseCompleted, setPurchaseCompleted] = useState(false); // 구매 완료 상태 관리
 
   // 각 쿼리 파라미터의 값을 변수에 할당
@@ -51,15 +51,15 @@ const PurchaseRedirect = () => {
           }
         );
         if (paymentResponse.status === 401 && tryVerificationAgain) {
-          const RefreshToken = localStorage.getItem("RefreshToken");
+          const RefreshToken = sessionStorage.getItem("RefreshToken");
           await fetchRefreshToken(RefreshToken);
-          token = localStorage.getItem("token");
+          token = sessionStorage.getItem("token");
           return paymentVerification(false);
         } else if (paymentResponse.status === 201) {
           message.success("모바일 결제 검증 성공");
 
-          // localStorage에서 checkList를 가져와서 배열로 파싱
-          let storedCheckList = localStorage.getItem("checkList");
+          // sessionStorage에서 checkList를 가져와서 배열로 파싱
+          let storedCheckList = sessionStorage.getItem("checkList");
           let checkList = storedCheckList ? JSON.parse(storedCheckList) : [];
 
           if (checkList.length > 0) {
@@ -87,7 +87,7 @@ const PurchaseRedirect = () => {
               );
               if (response.status === 204) {
                 console.log("장바구니 삭제 성공");
-                localStorage.removeItem("checkList");
+                sessionStorage.removeItem("checkList");
                 setPurchaseCompleted(true); // 구매 완료 상태 설정
               } else {
                 console.log(response);

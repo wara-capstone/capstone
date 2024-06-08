@@ -28,9 +28,9 @@ var imageSize = new kakao.maps.Size(42, 56); // 마커의 크기 기존 33, 36
 var choiceImageSize = new kakao.maps.Size(44, 58); // 선택한 마커의 크기 기존 38, 40
 
 export default function KakaoMap() {
-  const email = localStorage.getItem("email");
-  let token = localStorage.getItem("token");
-  const RefreshToken = localStorage.getItem("RefreshToken");
+  const email = sessionStorage.getItem("email");
+  let token = sessionStorage.getItem("token");
+  const RefreshToken = sessionStorage.getItem("RefreshToken");
   const CART_URL =
     process.env.NODE_ENV === "development"
       ? process.env.REACT_APP_DJANGO_CART_URL
@@ -67,16 +67,16 @@ export default function KakaoMap() {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: localStorage.getItem("token"),
+            Authorization: sessionStorage.getItem("token"),
           },
         }
       );
       const result = await response.json();
 
       if (response.status === 401) {
-        RefreshToken = localStorage.getItem("RefreshToken");
+        RefreshToken = sessionStorage.getItem("RefreshToken");
         fetchRefreshToken(RefreshToken);
-        token = localStorage.getItem("token");
+        token = sessionStorage.getItem("token");
       }
 
       if (response.status === 200) {
