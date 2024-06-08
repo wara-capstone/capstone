@@ -1,8 +1,5 @@
 import {
-  Avatar, Box,
-  CardHeader, CardMedia,
-  Card as MuiCard,
-  Typography
+  Avatar,Box,Button,CardHeader,CardMedia,Divider,IconButton,Modal,Card as MuiCard,TextField,Typography,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import React, { useEffect, useState } from "react";
@@ -11,13 +8,17 @@ import BottomNav from "../components/BottomNav";
 import Card from "../components/Card";
 import Header from "../components/Header";
 // 아이콘
-import CardContent from "@mui/material/CardContent";
 import Slider from "react-slick"; // react-slick 사용을 위해 import
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
+import { fetchRefreshToken } from "../utils/authUtil";
+import InputAdornment from '@mui/material/InputAdornment';
+import MoodIcon from '@mui/icons-material/Mood';
+import CommentIcon from "@mui/icons-material/Comment";
+import CardContent from "@mui/material/CardContent";
+import LikeButton from "../components/LikeButton";
 import Comment from "../components/Comment";
 import '../components/Comment.css';
-import LikeButton from "../components/LikeButton";
 import { formatCreatedAt } from "../utils/dateUtils";
 
 const StyledCardHeader = styled(CardHeader)(({ theme }) => ({
@@ -42,6 +43,7 @@ export default function ViewClothSharedFeed() {
   const [commentsList, setCommentsList] = useState([]);
   const [comments, setComments] = useState([]);
   const [buttonClicked, setButtonClicked] = useState(false);
+  const [reload, setReload] = useState(false); 
   // const [likedByMe, setLikedByMe] = useState(false);
   // const [likesCount, setLikesCount] = useState(0);
 
@@ -73,6 +75,7 @@ export default function ViewClothSharedFeed() {
     console.log("feedId 조회 가능?", id, userEmail);
 
     const fetchData = async () => {
+      const token = localStorage.getItem("token");
       const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -82,13 +85,11 @@ export default function ViewClothSharedFeed() {
       });
 
       if (response.status === 200) {
-        // const RefreshToken = localStorage.getItem("RefreshToken");
-        // await fetchRefreshToken(RefreshToken);
+        const RefreshToken = localStorage.getItem("RefreshToken");
+        await fetchRefreshToken(RefreshToken);
         const data = await response.json();
-
-        if (buttonClicked) {
-          setCommentsList(data.comments);
-        }
+        
+        setCommentsList(data.comments);
         setItemData(data);
         console.log(data);
       } else {
@@ -99,7 +100,8 @@ export default function ViewClothSharedFeed() {
     if (buttonClicked) {
       fetchData();
     }
-  }, [buttonClicked]);
+ 
+  }, [buttonClicked, token]);
 
   if (!itemData) {
     return <div>Loading...</div>;
@@ -136,8 +138,8 @@ export default function ViewClothSharedFeed() {
       );
 
       if (response.ok) {
-        // const RefreshToken = localStorage.getItem("RefreshToken");
-        // await fetchRefreshToken(RefreshToken);
+        const RefreshToken = localStorage.getItem("RefreshToken");
+        await fetchRefreshToken(RefreshToken);
         // 댓글 전송 성공 시 처리 로직
         console.log("댓글이 성공적으로 전송되었습니다.");
         //setCommentsList([...commentsList, { content: commentText }]); // 새로운 댓글 추가
@@ -183,13 +185,11 @@ export default function ViewClothSharedFeed() {
       <Slider {...sliderSettings}>
         {itemData.product &&
           itemData.product.map((result, index) => {
-            const isActive = index === currentSlide; // 현재 슬라이드 인덱스와 일치하는지 확인
-
             return (
               <Link
                 to={`/item/${result.productId}`}
                 key={result.productId}
-                className={`card-link ${isActive ? "active-slide" : ""}`} // 현재 슬라이드에 클래스 추가
+                className="card-link"
               >
                 <Card
                   key={index}
@@ -198,9 +198,6 @@ export default function ViewClothSharedFeed() {
                   price={result.productPrice}
                   mainImage={result.productImage}
                   // count={result.options[0].productStock}
-                  specialStyle={
-                    isActive ? "special-card-active" : "special-card"
-                  } // 현재 슬라이드에 다른 스타일 적용
                 />
               </Link>
             );
@@ -237,7 +234,6 @@ export default function ViewClothSharedFeed() {
     <LikeButton
 
             id={id}
-            userEmail = {userEmail}
 
           />
         <CardContent>
@@ -260,14 +256,14 @@ export default function ViewClothSharedFeed() {
       {commentsList.map((comment, index) => (
        <Box key={index} className="comment-box">
        <Box className="comment-content">
-         <Typography variant="body2" color="text" className="comment-user-name" mr={2} fontWeight="bold" marginLeft={"0.5rem"}>
+         <Typography variant="body2" color="text" className="comment-user-name">
            {comment.userName}
          </Typography>
          <Typography variant="body2" color="text.secondary" className="comment-text">
            {comment.content}
          </Typography>
        </Box>
-       <Typography variant="body2" color="text.secondary" className="comment-created-at" marginLeft={"0.5rem"} marginRight={"0.3rem"} lineHeight={1.5} fontSize={'0.7rem'} >
+       <Typography variant="body2" color="text.secondary" className="comment-created-at">
          {formatCreatedAt(comment.createdAt)}
        </Typography>
      </Box>
