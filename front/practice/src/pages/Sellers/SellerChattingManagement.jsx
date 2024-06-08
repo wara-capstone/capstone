@@ -10,6 +10,8 @@ export default function SellerChattingManagement() {
   const [chatMessages, setChatMessages] = useState([]);
   const [customerId, setCustomerId] = useState(null);
 
+  const [selectedUser, setSelectedUser] = useState(null); // 선택된 사용자 상태
+
   const userId = localStorage.getItem("email");
   let token = localStorage.getItem("token"); // 실제 token 값으로 대체
   const CHATTING_URL =
@@ -66,6 +68,7 @@ export default function SellerChattingManagement() {
 
   const handleCustomerIdChange = (value) => {
     setCustomerId(value);
+    setSelectedUser(value);
   };
 
   const getUserName = async (email) => {
@@ -303,7 +306,9 @@ export default function SellerChattingManagement() {
               {visitorUserEmails.map((user, index) => (
                 <div
                   key={index}
-                  className="list-item"
+                  className={`list-item ${
+                    selectedUser === user.email ? "selected" : ""
+                  }`}
                   onClick={() => handleCustomerIdChange(user.email)}
                 >
                   <div className="list-item-content">
@@ -314,7 +319,7 @@ export default function SellerChattingManagement() {
                           "사용자 이름을 가져오는 중..."}
                       </h2>
 
-                      <p>최근 메세지: {user.latestMessage}</p>
+                      <p>{user.latestMessage}</p>
                     </div>
                   </div>
                   <div className="card-separator"></div>

@@ -486,7 +486,15 @@ code {
 
 .chatting-list .list-item:active,
 .seller-chatting-management .list-item:active {
-  background-color: #dcdcdc;
+  background-color: #ffb1b1;
+
+  /* background-color: #dcdcdc; */
+  border-radius: 20px; /* 원형 모양 */
+}
+
+.chatting-list .list-item.selected,
+.seller-chatting-management .list-item.selected {
+  background-color: #fad9d9; /* 선택된 항목의 배경색 */
   border-radius: 20px; /* 원형 모양 */
 }
 
@@ -499,8 +507,8 @@ code {
 /* 이미지 스타일 */
 .chatting-list .round-image,
 .seller-chatting-management .round-image {
-  width: 75px; /* 너비 설정 */
-  height: 75px; /* 높이 설정 */
+  width: 50px; /* 너비 설정 */
+  height: 50px; /* 높이 설정 */
   border-radius: 50%; /* 원형 모양 */
   object-fit: cover; /* 이미지 크기 조정 */
   margin-right: 20px; /* 오른쪽 여백 추가 */
@@ -510,7 +518,7 @@ code {
 /* 사용자 세부 정보 스타일 */
 .chatting-list .user-details,
 .seller-chatting-management .user-details {
-  margin-left: 20px; /* 왼쪽 여백 추가 */
+  /* margin-left: 20px; 왼쪽 여백 추가 */
   flex-grow: 1; /* 남은 공간을 모두 채움 */
   text-align: left; /* 텍스트를 왼쪽으로 정렬 */
 }
@@ -519,7 +527,7 @@ code {
 .chatting-list h2,
 .seller-chatting-management h2 {
   margin: 1px;
-  font-size: 1.4em; /* 글자 크기를 약간 증가시킵니다 */
+  font-size: 1.3em; /* 글자 크기를 약간 증가시킵니다 */
 }
 
 /* 최신 메시지 스타일 */

@@ -19,6 +19,8 @@ export default function ChattingList() {
     "https://via.placeholder.com/150x150"
   );
 
+  const [selectedUser, setSelectedUser] = useState(null); // 선택된 사용자 상태
+
   // 서버에서 채팅 목록을 불러오는 기능 추가
   useEffect(() => {
     async function fetchChattingList() {
@@ -153,7 +155,13 @@ export default function ChattingList() {
         <div className="chatting-list-container">
           <div className="chatting-lists">
             {visitorUserEmails.map((user, index) => (
-              <div key={index} className="list-item">
+              <div
+                key={index}
+                className={`list-item ${
+                  selectedUser === user.email ? "selected" : ""
+                }`}
+                onClick={() => setSelectedUser(user.email)} // 클릭 시 선택된 사용자 설정
+              >
                 <div
                   className="button-link"
                   onClick={() => handleConnectChatting(user)}
@@ -166,7 +174,7 @@ export default function ChattingList() {
                           "사용자 이름을 가져오는 중..."}
                       </h2>
 
-                      <p>최근 메세지: {user.latestMessage}</p>
+                      <p>{user.latestMessage}</p>
                     </div>
                   </div>
                 </div>
