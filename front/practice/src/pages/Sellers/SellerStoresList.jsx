@@ -7,7 +7,7 @@ import { fetchRefreshToken } from "../../utils/authUtil";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import LoadingScreen from "../../components/LoadingScreen";
-let token = sessionStorage.getItem("token");
+let token = localStorage.getItem("token");
 
 const { Meta } = Card;
 
@@ -24,7 +24,7 @@ const StoresListPage = () => {
       const result = await axios.get(
         `${process.env.NODE_ENV === "development" ? "" : ""}${
           process.env.REACT_APP_API_URL
-        }store/read/seller/${sessionStorage.getItem("email")}`, // 이 부분은 실제 서버 주소와 API 경로로 변경해야 합니다.
+        }store/read/seller/${localStorage.getItem("email")}`, // 이 부분은 실제 서버 주소와 API 경로로 변경해야 합니다.
         {
           method: "GET",
           headers: {
@@ -34,9 +34,9 @@ const StoresListPage = () => {
         }
       );
       if (result.status === 401 && tryAgain) {
-        let RefreshToken = sessionStorage.getItem("RefreshToken");
+        let RefreshToken = localStorage.getItem("RefreshToken");
         await fetchRefreshToken(RefreshToken);
-        token = sessionStorage.getItem("token");
+        token = localStorage.getItem("token");
         return fetchData(false);
       }
 

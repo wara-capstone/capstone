@@ -61,9 +61,9 @@ import ClothFeedListItem from "./ClothFeedListItem";
 
 function ClothFeedList() {
   const [posts, setPosts] = useState([]);
-  const token = sessionStorage.getItem("token");
-  // const RefreshToken = sessionStorage.getItem("RefreshToken");
-  const isLogin = sessionStorage.getItem("token") ? true : false;
+  const token = localStorage.getItem("token");
+  // const RefreshToken = localStorage.getItem("RefreshToken");
+  const isLogin = localStorage.getItem("token") ? true : false;
 
   const navigate = useNavigate();
 

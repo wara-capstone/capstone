@@ -11,8 +11,8 @@ import OrderProducts from "../components/OrderProducts";
 import { fetchRefreshToken } from "../utils/authUtil";
 
 export default function Cart() {
-  const email = sessionStorage.getItem("email");
-  let token = sessionStorage.getItem("token");
+  const email = localStorage.getItem("email");
+  let token = localStorage.getItem("token");
   const [modalIsOpen, setModalIsOpen] = useState(false); //팝업창
   const CART_URL =
     process.env.NODE_ENV === "development"
@@ -78,9 +78,9 @@ export default function Cart() {
       const result = await response.json();
 
       if (response.status === 401) {
-        let RefreshToken = sessionStorage.getItem("RefreshToken");
+        let RefreshToken = localStorage.getItem("RefreshToken");
         await fetchRefreshToken(RefreshToken);
-        token = sessionStorage.getItem("token");
+        token = localStorage.getItem("token");
       }
 
       if (response.status === 200) {
@@ -145,9 +145,9 @@ export default function Cart() {
         }
       );
       if (response.status === 401 && tryAgain) {
-        const RefreshToken = sessionStorage.getItem("RefreshToken");
-        await fetchRefreshToken(RefreshToken); // fetchRefreshToken이 프로미스를 반환하고, 새로운 토큰을 sessionStorage에 저장한다고 가정
-        token = sessionStorage.getItem("token"); // 새로운 토큰으로 업데이트
+        const RefreshToken = localStorage.getItem("RefreshToken");
+        await fetchRefreshToken(RefreshToken); // fetchRefreshToken이 프로미스를 반환하고, 새로운 토큰을 localStorage에 저장한다고 가정
+        token = localStorage.getItem("token"); // 새로운 토큰으로 업데이트
         return deleteFunc(false); // 재귀 호출하지만, 무한 루프 방지를 위해 tryAgain을 false로 설정
       }
 

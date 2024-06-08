@@ -19,8 +19,8 @@ function ClothFeedCard({
   const [likedByMe, setLikedByMe] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
   const [liked, setLiked] = useState(false);
-  const userEmail = sessionStorage.getItem("email");
-  let token = sessionStorage.getItem("token");
+  const userEmail = localStorage.getItem("email");
+  let token = localStorage.getItem("token");
 
   // 서버에서 조회하여 좋아요 수와 좋아요 상태를 가져옴
   useEffect(() => {

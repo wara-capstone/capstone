@@ -11,8 +11,8 @@ import { FaCheck } from "react-icons/fa";
 
 export default function Search() {
   const [searchText, setSearchText] = useState(""); // 검색창 값
-  let token = sessionStorage.getItem("token");
-  const RefreshToken = sessionStorage.getItem("RefreshToken");
+  let token = localStorage.getItem("token");
+  const RefreshToken = localStorage.getItem("RefreshToken");
   const [searchData, setSearchData] = useState(null); // 상태 추가
   const [searchResultCount, setSearchResultCount] = useState(0); // 검색 결과 개수 상태
   const [sortText, setSortText] = useState("낮은가격순"); // 정렬 텍스트 상태

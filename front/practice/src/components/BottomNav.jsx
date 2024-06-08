@@ -11,10 +11,10 @@ const BottomNav = () => {
   // 현재 선택된 아이콘을 관리하는 state
   const locationNow = useLocation();
 
-  const userId = sessionStorage.getItem("email");
-  const userRole = sessionStorage.getItem("role");
-  const storeId = sessionStorage.getItem("storeid");
-  let token = sessionStorage.getItem("token");
+  const userId = localStorage.getItem("email");
+  const userRole = localStorage.getItem("role");
+  const storeId = localStorage.getItem("storeid");
+  let token = localStorage.getItem("token");
 
   let url;
 

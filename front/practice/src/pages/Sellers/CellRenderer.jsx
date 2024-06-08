@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import "./Seller.css";
 const CellRenderer = (props) => {
-  let token = sessionStorage.getItem("token");
+  let token = localStorage.getItem("token");
   const [storeInfo, setStoreInfo] = useState({ result: "", data: [] });
   const navigate = useNavigate();
   
@@ -16,7 +16,7 @@ const CellRenderer = (props) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}store/read/seller/${sessionStorage.getItem("email")}`,
+          `${process.env.NODE_ENV === 'development' ? '' : ''}${process.env.REACT_APP_API_URL}store/read/seller/${localStorage.getItem("email")}`,
           {
             headers: {
               "Content-Type": "application/json",

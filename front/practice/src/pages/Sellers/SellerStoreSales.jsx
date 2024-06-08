@@ -10,8 +10,8 @@ import SellerSideNav from "./SellerSideNav";
 import { fetchRefreshToken } from "../../utils/authUtil";
 
 export default function SellerStoreSales({ store }) {
-  const email = sessionStorage.getItem("email");
-  let token = sessionStorage.getItem("token");
+  const email = localStorage.getItem("email");
+  let token = localStorage.getItem("token");
 
   const { kakao } = window;
   var map;
@@ -67,9 +67,9 @@ export default function SellerStoreSales({ store }) {
         console.log("데이터 전송 실패");
       }
       else if(response.status === 401 && tryAgain){
-        let RefreshToken = sessionStorage.getItem("RefreshToken");
+        let RefreshToken = localStorage.getItem("RefreshToken");
         await fetchRefreshToken(RefreshToken);
-        token = sessionStorage.getItem("token");
+        token = localStorage.getItem("token");
         fetchData(initMarkers, false);
       }
     } catch (error) {
@@ -167,9 +167,9 @@ export default function SellerStoreSales({ store }) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         if (response.status === 401 && tryAgain) {
-          let RefreshToken = sessionStorage.getItem("RefreshToken");
+          let RefreshToken = localStorage.getItem("RefreshToken");
           await fetchRefreshToken(RefreshToken);
-          token = sessionStorage.getItem("token");
+          token = localStorage.getItem("token");
           return fetchPayments(false);
         }
 
