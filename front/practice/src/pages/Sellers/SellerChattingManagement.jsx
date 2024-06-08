@@ -169,7 +169,9 @@ export default function SellerChattingManagement() {
 
       setChatMessages((prevMessages) => {
         const newMessages = [...prevMessages, messageElem];
-        newMessages.sort((a, b) => new Date(a.key) - new Date(b.key));
+        newMessages.sort(
+          (a, b) => new Date(a.created_at) - new Date(b.created_at)
+        );
         return newMessages;
       });
     };
