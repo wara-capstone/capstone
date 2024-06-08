@@ -101,6 +101,7 @@ export default function ViewClothSharedFeed() {
     if (buttonClicked) {
       fetchData();
     }
+    fetchData();
   }, [buttonClicked]);
 
   if (!itemData) {
