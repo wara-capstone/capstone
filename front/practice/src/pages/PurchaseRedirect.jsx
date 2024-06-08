@@ -22,11 +22,11 @@ const PurchaseRedirect = () => {
   const imp_success = urlParams.get("imp_success");
   const error_code = urlParams.get("error_code"); // 이 파라미터는 에러가 있을 때만 존재
   const error_msg = urlParams.get("error_msg"); // 이 파라미터는 에러가 있을 때만 존재
-  const token = urlParams.get("token"); //
-  const refreshToken = urlParams.get("refreshToken"); //
-  const email = urlParams.get("email"); //
-  const role = urlParams.get("role"); //
-  const kakaoUserId = urlParams.get("kakaoUserId"); //
+  let token = urlParams.get("token"); //
+  let refreshToken = urlParams.get("refreshToken"); //
+  let email = urlParams.get("email"); //
+  let role = urlParams.get("role"); //
+  let kakaoUserId = urlParams.get("kakaoUserId"); //
 
   // 추출한 값 확인을 위해 콘솔에 출력
   console.log(`imp_uid: ${imp_uid}`);
