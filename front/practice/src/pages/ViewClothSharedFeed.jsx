@@ -42,6 +42,7 @@ export default function ViewClothSharedFeed() {
   const [commentText, setCommentText] = useState("");
   const [commentsList, setCommentsList] = useState([]);
   const [comments, setComments] = useState([]);
+  const [buttonClicked, setButtonClicked] = useState(false);
   // const [likedByMe, setLikedByMe] = useState(false);
   // const [likesCount, setLikesCount] = useState(0);
 
@@ -86,7 +87,10 @@ export default function ViewClothSharedFeed() {
         const RefreshToken = localStorage.getItem("RefreshToken");
         await fetchRefreshToken(RefreshToken);
         const data = await response.json();
-        setCommentsList(data.comments);
+
+        if (buttonClicked) {
+          setCommentsList(data.comments);
+        }
         setItemData(data);
         console.log(data);
       } else {
@@ -94,8 +98,10 @@ export default function ViewClothSharedFeed() {
       }
     };
 
-    fetchData();
-  }, []);
+    if (buttonClicked) {
+      fetchData();
+    }
+  }, [buttonClicked]);
 
   if (!itemData) {
     return <div>Loading...</div>;
@@ -112,6 +118,7 @@ export default function ViewClothSharedFeed() {
   
   const handleCommentSubmit = async (newComment) => {
     try {
+      setButtonClicked(true);
       const response = await fetch(
         `${process.env.NODE_ENV === "development" ? "" : ""}${
           process.env.REACT_APP_API_URL
