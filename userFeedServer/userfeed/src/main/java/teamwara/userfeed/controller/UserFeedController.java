@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import teamwara.userfeed.dto.*;
+import teamwara.userfeed.repository.LikeRepository;
 import teamwara.userfeed.service.UserFeedService;
 
 import java.util.List;
@@ -17,22 +18,23 @@ import java.util.List;
 @RequestMapping("api/user-feed")
 public class UserFeedController {
     private final UserFeedService userFeedService;
-
     @GetMapping("/{id}")
-    public ResponseEntity<?> getDetailUserFeed(@PathVariable("id") Long id){
+    public ResponseEntity<?> getDetailUserFeed(@PathVariable("id") Long id, @RequestParam(required = false) String email) {
         try {
-            return ResponseEntity.ok(userFeedService.getDetailUserFeed(id));
-        } catch (Exception e){
-            log.error("Error retrieving user feed details", e); // 로거를 사용한 에러 로깅
+            UserFeedDetailResponseDto response = userFeedService.getDetailUserFeed(id, email);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("Error retrieving user feed details", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
 
     @GetMapping()
-    public ResponseEntity<?> getUserFeeds() {
+    public ResponseEntity<?> getUserFeeds(@RequestParam(required = false) String email) {
         try {
-            return ResponseEntity.ok(userFeedService.getUserFeeds());
-        } catch (Exception e){
+            List<UserFeedAllResponseDto> feeds = userFeedService.getUserFeeds(email);
+            return ResponseEntity.ok(feeds);
+        } catch (Exception e) {
             log.error("Error retrieving user feeds", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
@@ -65,8 +67,7 @@ public class UserFeedController {
     @PostMapping("/like/toggle")
     public ResponseEntity<?> toggleLike(@RequestBody LikeDto likeDto) {
         try {
-            userFeedService.toggleLike(likeDto);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.status(HttpStatus.OK).body(userFeedService.toggleLike(likeDto));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to toggle like: " + e.getMessage());
         }
