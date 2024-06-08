@@ -71,6 +71,7 @@ const Login = () => {
 
       console.log("로그인성공, 이메일주소:" + result.email);
       console.log("로그인 후"+ localStorage.getItem("email"), localStorage.getItem("role"), localStorage.getItem("storeid"), localStorage.getItem("token"));
+      
       setSharedToken(result.accessToken);
  
       message.success("로그인되었습니다.", 2);

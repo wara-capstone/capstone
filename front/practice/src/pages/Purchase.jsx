@@ -13,19 +13,24 @@ import{
 } from "antd";
 import { fetchRefreshToken } from "../utils/authUtil";
 
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { tokenAtom } from '../utils/tokenAtom';
 
 export default function Purchase() {
   const { IMP } = window; // 아임포트 모듈
   const navigate = useNavigate();
     const email = localStorage.getItem("email");
     let token = localStorage.getItem("token");
-
+    const sharedToken = useRecoilValue(tokenAtom); // 토큰 읽기 전용 접근
   const location = useLocation();
     const { checkList, selectedItems } = location.state;
 
     // 총 금액
   const totalPrice = selectedItems.reduce((acc, item) => acc + (item.product.price), 0);
 
+  useEffect(() => {
+    console.log("업데이트된 토큰:", sharedToken);
+  }, [sharedToken]);
 
   useEffect(() => { // ProductId, pColor, pSize로 optionId 가져오기
     selectedItems.forEach(item => {
@@ -244,6 +249,7 @@ async function clickPurchase(tryAgain = true) { // 구매하기 버튼 클릭시
   };
   fetchPurchase();
   // 구매 버튼 클릭시 정보 가져오고 결제창 띄우기 끝
+  console.log(sharedToken);
 }
 
 // async function clickPurchase(tryAgain = true) {
