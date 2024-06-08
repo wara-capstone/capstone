@@ -143,6 +143,7 @@ export default function ViewClothSharedFeed() {
         await fetchRefreshToken(RefreshToken);
         // 댓글 전송 성공 시 처리 로직
         console.log("댓글이 성공적으로 전송되었습니다.");
+        window.location.reload();
         //setCommentsList([...commentsList, { content: commentText }]); // 새로운 댓글 추가
          // 댓글 목록에 새로운 댓글 추가
       //setComments([...comments, newComment]);
