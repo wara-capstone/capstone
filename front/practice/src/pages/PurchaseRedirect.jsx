@@ -4,15 +4,10 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { fetchRefreshToken } from "../utils/authUtil";
 
-import { useRecoilState } from 'recoil';
-import { tokenAtom } from '../utils/tokenAtom';
 
 const PurchaseRedirect = () => {
   // 현재 페이지의 URL에서 쿼리 파라미터 추출
   const urlParams = new URL(window.location.href).searchParams;
-  const [sharedToken, setSharedToken] = useRecoilState(tokenAtom);
-
-  console.log("토큰 확인: ", sharedToken);
 
 
   // 로컬 스토리지에서 이메일과 토큰을 가져와 변수에 할당
@@ -40,9 +35,7 @@ const PurchaseRedirect = () => {
   }, [purchaseCompleted]);
 
   useEffect(async () => {
-    message.success(`recoil 토큰 확인: ${sharedToken}`, 100);
-    token = sharedToken;
-    message.success(`변수에 넣은 토큰 확인:${token}`, 100);
+    message.success(`토큰 상태 확인:${token}`, 100);
 
     // async function paymentVerification(tryVerificationAgain = true) {
     //   // 결제 검증하기
