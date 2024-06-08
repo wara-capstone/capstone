@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import{
   message
 } from "antd";
-import KakaoButtonImage from "../adImages/kakao_login_large_wide.png";
+import KakaoButtonImage from "../adImages/kakao_login_large_narrow.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // 아래 줄에서 faEnvelope 아이콘을 import합니다.
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
@@ -68,8 +68,8 @@ const SignupChoice = () => {
     <div className="signup-container" style={{
       gap: "0.5rem", // 아이템 간의 간격을 0.5rem으로 설정
     }}>
-      <button className="signup-choice" onClick={handleSignup}>
-      <FontAwesomeIcon icon={faEnvelope} size="lg" style={{  marginLeft: '0.6rem'}} />
+      <button className="signup-choice" onClick={handleSignup} style={{width:"16.3rem"}}>
+      <FontAwesomeIcon icon={faEnvelope} size="lg" style={{  marginLeft: '0.8rem'}} />
       {/* 텍스트를 span 태그로 감싸고 스타일을 적용합니다. */}
       <span style={{ flex: 1, textAlign: 'center' }}>이메일로 회원가입</span>
       </button>
@@ -77,7 +77,7 @@ const SignupChoice = () => {
       style={{
         cursor: "pointer",
         height: "4rem",
-        width: "25rem",
+        // width: "20rem",
       }}
       onClick={handleKakaoSignup}></img>
 
