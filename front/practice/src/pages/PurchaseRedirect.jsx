@@ -12,6 +12,9 @@ const PurchaseRedirect = () => {
   const urlParams = new URL(window.location.href).searchParams;
   const [sharedToken, setSharedToken] = useRecoilState(tokenAtom);
 
+  console.log("토큰 확인: ", sharedToken);
+
+
   // 로컬 스토리지에서 이메일과 토큰을 가져와 변수에 할당
   const email = localStorage.getItem("email");
   let token = localStorage.getItem("token");
