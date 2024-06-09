@@ -1,3 +1,4 @@
+import { message } from "antd";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -36,6 +37,8 @@ const LoadingPage = () => {
 
             console.log("로그인성공, 이메일주소:" + result.email);
             console.log("로그인 후"+ localStorage.getItem("email"), localStorage.getItem("role"), localStorage.getItem("storeid"), localStorage.getItem("token"));
+            message.success("로그인되었습니다.", 2);
+            
             navigate("/"); // 로그인 성공시 홈으로 이동합니다.
           } else {
             console.log("로그인실패");
