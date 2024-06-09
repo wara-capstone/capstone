@@ -38,10 +38,10 @@ const LoadingPage = () => {
             console.log("로그인성공, 이메일주소:" + result.email);
             console.log("로그인 후"+ localStorage.getItem("email"), localStorage.getItem("role"), localStorage.getItem("storeid"), localStorage.getItem("token"));
             
-            await message.success("로그인되었습니다.", 2);
+            message.success("로그인되었습니다.", 2);
             setTimeout(() => {
               navigate("/"); // 2초 후에 홈으로 이동
-            }, 1); // 2000밀리초 지연
+            }, 50); // 2000밀리초 지연
           } else {
             console.log("로그인실패");
             navigate("/login"); // 로그인 실패시 로그인 페이지로 이동합니다.
