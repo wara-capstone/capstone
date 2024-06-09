@@ -59,8 +59,15 @@ const LikeButton = ({
   }, [id, userEmail, likedByMe]);
 
   const handleLike = async () => {
-    setLikedByMe(!likedByMe);
-    setLikesCount(likedByMe ? likesCount - 1 : likesCount + 1);
+    // setLikedByMe(!likedByMe);
+    // setLikesCount(likedByMe ? likesCount - 1 : likesCount + 1);
+
+    if (!userEmail) {
+      // userEmail이 없을 경우, 함수 실행을 중지합니다.
+      return;
+    }
+    // userEmail이 있을 경우, 여기에 좋아요/좋아요 취소 로직을 구현합니다.
+    // 예를 들어, 상태를 업데이트하거나 API 요청을 보내는 등의 작업을 수행합니다.
 
     try {
       const response = await fetch(
@@ -82,8 +89,8 @@ const LikeButton = ({
 
       if (response.ok) {
         console.log("POST 요청 성공");
-        // setLikedByMe(!likedByMe);
-        // setLikesCount(likedByMe ? likesCount - 1 : likesCount + 1);
+        setLikedByMe(!likedByMe);
+        setLikesCount(likedByMe ? likesCount - 1 : likesCount + 1);
         // setLikesCountState(likedByMe ? likesCount - 1 : likesCount + 1);
       } else {
         console.error("Error liking post:", response.status);
