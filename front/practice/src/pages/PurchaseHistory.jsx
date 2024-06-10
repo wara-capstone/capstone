@@ -155,7 +155,7 @@ export default function PurchaseHistory() {
             data={data}
         />
         ))}
-        <h3>총 구매 금액: {paymentDTO.paymentPrice}원</h3>
+        <h3>총 구매 금액: {parseInt(paymentDTO.paymentPrice).toLocaleString()}원</h3>
         <hr style={{height:"0.05rem", width:"80%"}}/>
         </div>
       ))
