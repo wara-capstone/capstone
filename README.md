@@ -43,7 +43,7 @@
 [![ON & OFF](http://img.youtube.com/vi/IlgYfPwYH28/0.jpg)](https://www.youtube.com/watch?v=IlgYfPwYH28)  
 
 ### 최종 데모 영상
-[![ON & OFF](https://youtu.be/B8RTkm_VYdI?si=rZCxWNMMjiypfWIk/0.jpg)](https://youtu.be/B8RTkm_VYdI?si=rZCxWNMMjiypfWIk) 
+[![ON & OFF](http://img.youtube.com/vi/B8RTkm_VYdI/0.jpg)](https://youtu.be/B8RTkm_VYdI?si=rZCxWNMMjiypfWIk) 
 
 
 
